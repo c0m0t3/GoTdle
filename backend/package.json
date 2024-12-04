@@ -13,7 +13,6 @@
     "format:fix": "prettier --write \"src/**/*.ts\"",
     "db:generate": "drizzle-kit generate --config=src/config/drizzle.config.ts",
     "db:migrate": "drizzle-kit migrate --config=src/config/drizzle.config.ts"
-
   },
   "keywords": [],
   "author": "",
