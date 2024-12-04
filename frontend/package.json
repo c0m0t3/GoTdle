@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate:api": "openapi-generator-cli generate -i ../openapispec.yml -g typescript-axios -o src/adapter/api/__generated --skip-validate-spec && rimraf src/api/__generated/git_push.sh",
+    "test": "vitest",
+    "cypress": "cypress open"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.2.4",
