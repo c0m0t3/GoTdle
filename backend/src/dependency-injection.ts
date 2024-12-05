@@ -2,27 +2,29 @@ import { App } from './app';
 import { ENV } from './config/env.config';
 //import { AuthController } from './controller/auth.controller';
 import { Database, db } from './database';
-//import { UserRepository } from './database/repository/user.repository';
+import { ScoreRepository } from './database/repository/score.repository';
+import { UserRepository } from './database/repository/user.repository';
 import { Routes } from './routes/routes';
 import { Server } from './server';
-//import { Jwt } from './utils/jwt';
-//import { PasswordHasher } from './utils/password-hasher';
+import { Jwt } from './utils/jwt';
+import { PasswordHasher } from './utils/password-hasher';
 
 export const DI = {} as {
   app: App;
   db: Database;
   server: Server;
   routes: Routes;
-  /*repositories: {
+  repositories: {
     user: UserRepository;
-  };*/
+    score: ScoreRepository;
+  };
   /*controllers: {
     auth: AuthController;
   };*/
-  /*utils: {
+  utils: {
     passwordHasher: PasswordHasher;
     jwt: Jwt;
-  };*/
+  };
 };
 
 export function initializeDependencyInjection() {
@@ -30,20 +32,20 @@ export function initializeDependencyInjection() {
   DI.db = db;
 
   // Initialize utils
-  /*
   DI.utils = {
     passwordHasher: new PasswordHasher(10),
     jwt: new Jwt(ENV.JWT_SECRET, {
       expiresIn: 3600, // in seconds
       issuer: 'http://fwe.auth',
     }),
-  };*/
+  };
 
   // Initialize repositories
-  /*
+  
   DI.repositories = {
     user: new UserRepository(DI.db),
-  };*/
+    score: new ScoreRepository(DI.db)
+  };
 
   // Initialize controllers
   /*

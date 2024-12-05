@@ -1,6 +1,7 @@
-// !Import all database schemas - import * as xyz from is necessary
-//import * as user from './user.schema';
+import { scoreSchema } from "./score.schema";
+import { userSchema } from "./user.schema";
 
 export const databaseSchema = {
-  //...user,
+  ...userSchema,
+  ...scoreSchema,
 };
