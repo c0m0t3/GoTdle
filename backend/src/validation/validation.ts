@@ -27,12 +27,41 @@ export const createUserZodSchema = createInsertSchema(userSchema, {
         password: hashedPassword,
       };
     } catch (error) {
-      console.error('Error while hashing password:', error);
       throw new Error('Error during password hashing');
     }
   });
 
-  export const createScoreZodSchema = createInsertSchema(scoreSchema, {
+export const updateUserZodSchema = createInsertSchema(userSchema, {
+    email: z.string().email().optional(),
+    password: z.string().min(8).refine(excludeInjectionChars).optional(),
+    username: z.string().min(3).refine(excludeInjectionChars).optional(),
+  }).transform(async (data) => {
+    if (data.password) {
+      try {
+        const hashedPassword = await DI.utils.passwordHasher.hashPassword(
+          data.password,
+        );
+  
+        return {
+          ...data,
+          password: hashedPassword,
+        };
+      } catch (error) {
+        throw new Error('Error during password hashing');
+      }
+    }
+  
+    return data;
+  });
+
+export const updateScoreZodSchema = createInsertSchema(scoreSchema, {
+    streak: z.number().int().nonnegative(),
+    lastPlayed: z.date().default(() => new Date()),
+    longestStreak: z.number().int().nonnegative(),
+    dailyScore: z.number().int().nonnegative(),
+  });
+
+export const createScoreZodSchema = createInsertSchema(scoreSchema, {
     userId: z.string().uuid(),
     streak: z.number().int().nonnegative(),
     lastPlayed: z.date().default(() => new Date()),
@@ -40,5 +69,7 @@ export const createUserZodSchema = createInsertSchema(userSchema, {
     dailyScore: z.number().int().nonnegative(),
 });
   
-  export type CreateUser = z.infer<typeof createUserZodSchema>;
-  export type CreateScore = z.infer<typeof createScoreZodSchema>;
+export type CreateUser = z.infer<typeof createUserZodSchema>;
+export type CreateScore = z.infer<typeof createScoreZodSchema>;
+export type UpdateScore = z.infer<typeof updateScoreZodSchema>;
+export type UpdateUser = z.infer<typeof updateUserZodSchema>;
