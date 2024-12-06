@@ -28,14 +28,16 @@ const ScoreboardButton = () => {
   const navigateToScoreboard = () => {
     navigate('/scoreboard');
   };
-  return <Button onClick={navigateToScoreboard} leftIcon={<ViewIcon />}>
-    Scoreboard
-  </Button>;
-}
+  return (
+    <Button onClick={navigateToScoreboard} leftIcon={<ViewIcon />}>
+      Scoreboard
+    </Button>
+  );
+};
 
 const LoginButtonDummy = () => {
   return <Button>Login</Button>;
-}
+};
 
 //const LoginButton = () => {
 //  const navigate = useNavigate();
@@ -80,10 +82,15 @@ export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
     >
       <HStack p={4} bg={'rgb(43, 45, 48)'} justifyContent="space-between">
         <a href={'/'}>
-          <Image src={'/Logo_GoTdle.heic'} alt="Home" boxSize="5em" />
+          <Image src={'/Logo_GoTdle.webp'} alt="Home" boxSize="5em" />
         </a>
         <Box flex={1} display="flex" justifyContent="center">
-          <Image src={'/GoTdle_Text.heic'} alt="GoTdle" width="25em" height="auto" />
+          <Image
+            src={'/GoTdle_Text.webp'}
+            alt="GoTdle"
+            width="25em"
+            height="auto"
+          />
         </Box>
         <Box gap={4} display={'flex'}>
           <ScoreboardButton />
