@@ -1,5 +1,5 @@
 import { Navigate, Route, RouteProps, Routes } from "react-router-dom";
-import HomePage from './pages/HomePage.tsx';
+import { HomePage } from './pages/HomePage.tsx';
 
 
 export type RouteConfig = RouteProps & {
