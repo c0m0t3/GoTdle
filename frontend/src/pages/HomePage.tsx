@@ -7,7 +7,8 @@ import {
   Button,
   Container,
   Text,
-  VStack
+  VStack,
+  Image
 } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 
@@ -33,8 +34,9 @@ export const HomePage = () => {
             borderRadius="md"
             margin={10}
           >
-            <VStack>
-              <Text>Test your Game of Thrones knowledge with some fun little Games</Text>
+            <VStack minWidth={"35em"}>
+              <Image src="/Logo_GoTdle.webp" alt="GoTdle Logo" width="200px" height="200px" />
+              <Text>Test your Game of Thrones knowledge </Text>
             </VStack>
           </Box>
 
@@ -131,7 +133,6 @@ const gotButtonStyle = {
   border: '2px solid #D2B48C',
   borderRadius: '8px',
   padding: '0.5em 1em',
-  //fontFamily: 'MedievalSharp, serif',
   textShadow: '1px 1px 2px #000',
   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
   width: '15em',
