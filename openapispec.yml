@@ -1,0 +1,304 @@
+openapi: 3.1.0
+x-stoplight:
+  id: r22nrccomf06q
+info:
+  title: openAPI_GoTdle
+  version: '1.0'
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /users:
+    post:
+      summary: Create New User
+      operationId: postUser
+      responses:
+        '201':
+          description: User Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '409':
+          description: Username/Email already exists
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - email
+                - password
+              properties:
+                username:
+                  type: string
+                  x-stoplight:
+                    id: pwwp3l11ur1c9
+                email:
+                  type: string
+                password:
+                  type: string
+                  x-stoplight:
+                    id: 6b25cmy6ykyih
+            examples:
+              Example 1:
+                value:
+                  username: string
+                  email: string
+                  password: string
+        description: "Necessary fields to create an user:\r\n- username\r\n- email\r\n- password\r\n\r\nEverything else get default values"
+      description: Create a new user.
+      x-stoplight:
+        id: luhmvb6wah5g2
+    parameters: [ ]
+    get:
+      summary: Get All Users
+      tags: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+                  x-stoplight:
+                    id: z2pebcc4h3eny
+      operationId: getUsers
+      x-stoplight:
+        id: 6csl7956pdx7w
+      description: Get all users for Scoreboard
+  '/users/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Get User Info by User ID
+      tags: [ ]
+      responses:
+        '200':
+          description: User Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                Example 1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    username: string
+                    email: user@example.com
+                    password: topSecret999!
+                    createdAt: '2019-08-24T14:15:22Z'
+                    scores:
+                      Streak: 0
+                      lastPlayed: '2019-08-24'
+                      LongestStreak: 0
+                      dailyScore:
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+                        - 0
+        '404':
+          description: User Not Found
+      operationId: getUserById
+      description: ''
+      x-stoplight:
+        id: fbx1jeknya520
+    put:
+      summary: Update User by User ID
+      tags: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User Not Found
+        '409':
+          description: Username/Email already exists
+      operationId: putUserById
+      x-stoplight:
+        id: ff9wv7hwpmr7f
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  x-stoplight:
+                    id: o67og4fxnpn48
+                password:
+                  type: string
+                  x-stoplight:
+                    id: os478zzgd9egn
+                email:
+                  type: string
+                  x-stoplight:
+                    id: 68d1pf9t1eqhg
+        description: "The user can optionally update their username, email, or password. \r\nWe need to ensure that empty input fields are handled properly to prevent the database from being updated with empty values."
+      parameters: [ ]
+    delete:
+      summary: Delete User by User ID
+      tags: [ ]
+      responses:
+        '204':
+          description: No Content
+      operationId: deleteUserById
+      x-stoplight:
+        id: jxryiatuqj5xr
+  '/users/name/{username}':
+    parameters:
+      - schema:
+          type: string
+        name: username
+        in: path
+        required: true
+    get:
+      summary: Get User Info by Username
+      tags: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Not Found
+      operationId: getUserByUsername
+      x-stoplight:
+        id: ek7jipxzq1u6x
+      description: for searching a specific user in scoreboard
+  '/finalMode/scores/{userId}':
+    put:
+      summary: Update Score by User ID
+      tags: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Scores'
+      operationId: putScoresByUserId
+      x-stoplight:
+        id: ocffdx3ewcbtw
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Scores'
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+components:
+  schemas:
+    User:
+      title: User
+      type: object
+      x-stoplight:
+        id: qkyoptgslgwt1
+      examples:
+        - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          username: string
+          email: user@example.com
+          password: topSecret999!
+          createdAt: '2019-08-24T14:15:22Z'
+          scores:
+            Streak: 0
+            lastPlayed: '2019-08-24'
+            LongestStreak: 0
+            dailyScore:
+              - 0
+              - 0
+              - 0
+              - 0
+              - 0
+      required:
+        - id
+        - username
+        - email
+        - password
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the given user.
+          x-stoplight:
+            id: rh2u6uqm096v2
+          format: uuid
+        username:
+          type: string
+          x-stoplight:
+            id: kddln0ig5o6ov
+        email:
+          type: string
+          format: email
+          x-stoplight:
+            id: 8cperjwnsx88z
+        password:
+          type: string
+          format: password
+          example: topSecret999!
+          x-stoplight:
+            id: c64wggf2hpjeb
+          minLength: 8
+        createdAt:
+          type: string
+          format: date-time
+          description: The date that the user was created.
+          x-stoplight:
+            id: xteqnrtwn4pyh
+        scores:
+          $ref: '#/components/schemas/Scores'
+          x-stoplight:
+            id: ef9zxmbp9qg5v
+    Scores:
+      title: Scores
+      x-stoplight:
+        id: pulqoicjwrbyp
+      type: object
+      properties:
+        lastPlayed:
+          type: string
+          x-stoplight:
+            id: b9703h5eyehpb
+          format: date
+          description: Erstellungsdatum des Accounts
+        Streak:
+          type: integer
+          x-stoplight:
+            id: zbmyv22eim06b
+          description: "deafult 0\r\n"
+        LongestStreak:
+          type: integer
+          x-stoplight:
+            id: 942pon3y9061b
+          description: deafult 0
+        dailyScore:
+          type: array
+          x-stoplight:
+            id: ltp8ngi9niqt7
+          description: deafult 0
+          items:
+            x-stoplight:
+              id: gciy0fhxlbsez
+            type: integer
+      examples:
+        - lastPlayed: '2019-08-24'
+          Streak: 0
+          LongestStreak: 0
+          dailyScore:
+            - 0
