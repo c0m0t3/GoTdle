@@ -11,8 +11,14 @@ import {
   Image
 } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
+import { useNavigate } from 'react-router-dom';
 
 export const HomePage = () => {
+  const navigate = useNavigate();
+
+  const handlePlayNow = () => {
+    navigate('/start');
+  }
   return (
     <Box
       bg="rgb(245, 221, 181)"
@@ -40,7 +46,7 @@ export const HomePage = () => {
             </VStack>
           </Box>
 
-            <Button sx={gotButtonStyle}> Play Now </Button>
+            <Button sx={gotButtonStyle} onClick={handlePlayNow}> Play Now </Button>
             <Button sx={gotButtonStyle}> Login </Button>
             <Button sx={gotButtonStyle}> Register </Button>
 
