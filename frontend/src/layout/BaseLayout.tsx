@@ -74,13 +74,7 @@ const LoginButtonDummy = () => {
 
 export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Box
-      bg={'gray.200'}
-      _dark={{ bg: 'gray.800' }}
-      minH={'100vh'}
-      display={'flex'}
-      flexDirection={'column'}
-    >
+    <Box>
       <HStack p={4} bg={'rgb(43, 45, 48)'} position="relative" justifyContent="space-between" alignItems="center">
         <a href={'/'}>
           <Image src={'/Logo_GoTdle.webp'} alt="Home" boxSize="5em" />
@@ -101,15 +95,11 @@ export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
       </HStack>
       <chakra.main
         flex={1}
-        px={4}
-        py={8}
         overflowX="hidden"
         display="flex"
         flexDirection="column"
         ml="auto"
         mr="auto"
-        maxWidth="90rem"
-        width="100%"
       >
         {children}
       </chakra.main>
