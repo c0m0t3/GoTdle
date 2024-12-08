@@ -3,6 +3,8 @@ import { Box, Button, HStack, Input, Text, VStack } from '@chakra-ui/react';
 import { CharacterGrid } from '../layout/CharacterGrid.tsx';
 import { useState } from 'react';
 import axios from 'axios';
+import { FaImage, FaQuestionCircle, FaQuoteRight } from 'react-icons/fa';
+import { gotButtonStyle } from '../styles/buttonStyles.ts';
 
 export const ClassicPage: React.FC = () => {
   const sampleCharacterData = [
@@ -46,16 +48,12 @@ export const ClassicPage: React.FC = () => {
             bgPosition="top"
             p={8}
             borderRadius="md"
-            margin={10}
+            margin={4}
           >
             <HStack>
-              <Button> Classic </Button>
-              <Button> Quote </Button>
-              <Button> Image </Button>
-            </HStack>
-            <HStack>
-              <Button> Streak </Button>
-              <Button> Patchnotes </Button>
+              <Button style={gotButtonStyle} width={"8em"} leftIcon={<FaQuestionCircle />}> Classic </Button>
+              <Button style={gotButtonStyle} width={"8em"} leftIcon={<FaQuoteRight />}> Quote </Button>
+              <Button style={gotButtonStyle} width={"8em"} leftIcon={<FaImage />}> Image </Button>
             </HStack>
           </Box>
           <Box
@@ -65,8 +63,9 @@ export const ClassicPage: React.FC = () => {
             bgPosition="top"
             p={4}
             borderRadius="md"
-            margin={0}>
-            <Text> Guess todays Game of Thrones character! </Text>
+            margin={0}
+          width={"30em"}>
+            <Text textAlign={"center"}> Guess todays Game of Thrones character! </Text>
             <Text textAlign={"center"}> Type any character to begin. </Text>
           </Box>
           <Box
