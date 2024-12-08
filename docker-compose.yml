@@ -5,7 +5,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: fwe-backend-backend
+    container_name: fwe-gotdle-backend
     volumes:
       - ./backend/:/app
     ports:
@@ -18,7 +18,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: fwe-backend-frontend
+    container_name: fwe-gotdle-frontend
     volumes:
       - ./frontend/:/app
     ports:
