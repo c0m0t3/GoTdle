@@ -7,7 +7,6 @@ export const gotButtonStyle = {
   padding: '0.5em 1em',
   textShadow: '1px 1px 2px #000',
   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-  width: '20em',
   marginBottom: '20px',
   _hover: {
     background: 'rgb(100, 0, 0)',
