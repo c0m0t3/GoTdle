@@ -1,7 +1,31 @@
 import { BaseLayout } from '../layout/BaseLayout.tsx';
 import { Box, Button, HStack, Input, Text, VStack } from '@chakra-ui/react';
+import { CharacterGrid } from '../layout/CharacterGrid.tsx';
+import { useState } from 'react';
+import axios from 'axios';
 
 export const ClassicPage: React.FC = () => {
+  const sampleCharacterData = [
+    ["Daenerys", "Female", "Targaryen", "Dragonstone", "Dead", "Faith of the Seven", "S01E01", "S08E06"],
+    ["Jon Snow", "Male", "Stark", "Winterfell", "Alive", "Old Gods of the Forest", "S01E01", "S08E06"],
+  ];
+
+  const [characterData, setCharacterData] = useState<string[][]>(sampleCharacterData.reverse());
+  const [inputValue, setInputValue] = useState<string>("");
+
+  const fetchCharacterData = async (characterName: string) => {
+    try {
+      const response = await axios.get(`/api/character/${characterName}`);
+      setCharacterData([response.data, ...characterData]);
+    } catch (error) {
+      console.error("Error fetching character data:", error);
+    }
+  };
+
+  const handleSubmit = () => {
+    fetchCharacterData(inputValue);
+  };
+
   return (
     <BaseLayout>
       <Box
@@ -53,13 +77,18 @@ export const ClassicPage: React.FC = () => {
             p={4}
             borderRadius="md"
           >
-          <HStack>
-            <Input placeholder="Type character name ..." />
-            <Button> Submit </Button>
-          </HStack>
+            <HStack>
+              <Input
+                placeholder="Type character name ..."
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+              />
+              <Button onClick={handleSubmit}> Submit </Button>
+            </HStack>
           </Box>
+          <CharacterGrid characterData={characterData} />
         </VStack>
       </Box>
     </BaseLayout>
   );
-}
+};
