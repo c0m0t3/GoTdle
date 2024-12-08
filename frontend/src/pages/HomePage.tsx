@@ -47,9 +47,9 @@ export const HomePage = () => {
             </VStack>
           </Box>
 
-            <Button sx={gotButtonStyle} onClick={handlePlayNow}> Play Now </Button>
-            <Button sx={gotButtonStyle}> Login </Button>
-            <Button sx={gotButtonStyle}> Register </Button>
+            <Button sx={gotButtonStyle} width={"15em"} onClick={handlePlayNow}> Play Now </Button>
+            <Button sx={gotButtonStyle} width={"15em"}> Login </Button>
+            <Button sx={gotButtonStyle} width={"15em"}> Register </Button>
 
         <Container width={"40em"}>
           <Accordion

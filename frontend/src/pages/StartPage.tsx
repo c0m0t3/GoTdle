@@ -1,8 +1,11 @@
 import { BaseLayout } from '../layout/BaseLayout.tsx';
 import { Box, Button, Text, VStack } from '@chakra-ui/react';
 import { gotButtonStyle } from '../styles/buttonStyles.ts';
+import { useNavigate } from 'react-router-dom';
 
 export const StartPage: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <BaseLayout>
       <Box
@@ -40,19 +43,19 @@ export const StartPage: React.FC = () => {
             width={"35em"}
           >
             <VStack py={6}>
-              <Button style={gotButtonStyle} height={"5em"}>
+              <Button style={gotButtonStyle} width={"20em"} height={"5em"} onClick={() => navigate('/classic')}>
                 <VStack>
                   <Text fontSize={"2em"}> Classic </Text>
                   <Text> Guess with wordle like infos </Text>
                 </VStack>
               </Button>
-              <Button style={gotButtonStyle} height={"5em"}>
+              <Button style={gotButtonStyle} width={"20em"} height={"5em"}>
                 <VStack>
                   <Text fontSize={"2em"}> Quote </Text>
                   <Text> Guess who said it </Text>
                 </VStack>
               </Button>
-              <Button style={gotButtonStyle} height={"5em"}>
+              <Button style={gotButtonStyle} width={"20em"} height={"5em"}>
                 <VStack>
                   <Text fontSize={"2em"}> Image </Text>
                   <Text> Guess from an image section  </Text>
