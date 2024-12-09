@@ -1,4 +1,4 @@
-import { Navigate, Route, RouteProps, Routes } from "react-router-dom";
+import { Navigate, Route, RouteProps, Routes } from 'react-router-dom';
 import { HomePage } from './pages/HomePage.tsx';
 import { StartPage } from './pages/StartPage.tsx';
 import { ClassicPage } from './pages/ClassicPage.tsx';
@@ -26,6 +26,7 @@ export const appRoutes: RouteConfig[] = [
     path: '/quoteMode',
     element: <QuoteModePage />
   },
+  {
     path: '/start',
     element: <StartPage />
   },
