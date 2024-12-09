@@ -1,18 +1,32 @@
 import { eq } from 'drizzle-orm';
 import type { Database } from '..';
-import { CreateUser, createUserZodSchema, updateUserZodSchema } from '../../validation/validation';
+import { CreateUser } from '../../validation/validation';
 import { userSchema } from '../schema/user.schema';
 import { z } from 'zod';
+import { scoreSchema } from '../schema/score.schema';
 
 export class UserRepository {
   constructor(private readonly database: Database) {}
 
   async createUser(data: CreateUser) {
     try {
-      const validatedUser = await createUserZodSchema.parseAsync(data);
-        await this.database
+        const createdUser = await this.database
         .insert(userSchema)
-        .values(validatedUser)
+        .values(data)
+        .returning({ id: userSchema.id })
+
+        const initialScore = {
+          userId: createdUser[0].id,
+          streak: 0,
+          lastPlayed: new Date(),
+          longestStreak: 0,
+          dailyScore: 0,
+        };
+
+        await this.database
+          .insert(scoreSchema)
+          .values(initialScore);
+
     } catch (error) {
       if (error instanceof z.ZodError) {
         throw new Error('Invalid registration data');
@@ -24,14 +38,10 @@ export class UserRepository {
 
   async getUserById(id: string) {
     try {
-      const validatedId = z.string().uuid().parse(id);
-      if (!validatedId) {
-        throw new Error('User ID is required');
-      }
       return this.database
         .select()
         .from(userSchema)
-        .where(eq(userSchema.id, validatedId))
+        .where(eq(userSchema.id, id))
         .execute();
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -44,14 +54,10 @@ export class UserRepository {
 
   async getUserByUsername(username: string) {
     try {
-      const validatedUsername = z.string().min(3).parse(username);
-      if (!validatedUsername) {
-        throw new Error('Username is required');
-      }
       const users = await this.database
         .select()
         .from(userSchema)
-        .where(eq(userSchema.username, validatedUsername))
+        .where(eq(userSchema.username, username))
         .execute();
 
       return users[0] || null;
@@ -66,14 +72,10 @@ export class UserRepository {
 
   async getUserByEmail(email: string) {
     try {
-      const validatedEmail = z.string().email().parse(email);
-      if (!validatedEmail) {
-        throw new Error('Email is required');
-      }
       const users = await this.database
         .select()
         .from(userSchema)
-        .where(eq(userSchema.email, validatedEmail))
+        .where(eq(userSchema.email, email))
         .execute();
 
       return users[0] || null;
@@ -88,14 +90,10 @@ export class UserRepository {
 
   async updateUser(data: Partial<CreateUser>) {
     try {
-      const validatedUser = await updateUserZodSchema.parseAsync(data);
-      if (!validatedUser.id) {
-        throw new Error('User ID is required');
-      }
       return this.database
         .update(userSchema)
-        .set(validatedUser)
-        .where(eq(userSchema.id, validatedUser.id));
+        .set(data)
+        .where(eq(userSchema.id, data.id!));
     } catch (error) {
       if (error instanceof z.ZodError) {
         throw new Error('Invalid user data');
@@ -107,10 +105,9 @@ export class UserRepository {
 
   async deleteUser(id: string) {
     try {
-      const validatedId = z.string().uuid().parse(id);
       return this.database
         .delete(userSchema)
-        .where(eq(userSchema.id, validatedId));
+        .where(eq(userSchema.id, id));
     } catch (error) {
       if (error instanceof z.ZodError) {
         throw new Error('Invalid ID format');
