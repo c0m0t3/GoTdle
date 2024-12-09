@@ -2,7 +2,7 @@ import { Navigate, Route, RouteProps, Routes } from "react-router-dom";
 import { HomePage } from './pages/HomePage.tsx';
 import { StartPage } from './pages/StartPage.tsx';
 import { ClassicPage } from './pages/ClassicPage.tsx';
-
+import { QuoteModePage } from './pages/QuoteModePage.tsx';
 
 export type RouteConfig = RouteProps & {
   /**
@@ -23,6 +23,9 @@ export const appRoutes: RouteConfig[] = [
     element: <HomePage />
   },
   {
+    path: '/quoteMode',
+    element: <QuoteModePage />
+  },
     path: '/start',
     element: <StartPage />
   },
@@ -30,6 +33,8 @@ export const appRoutes: RouteConfig[] = [
     path: '/classic',
     element: <ClassicPage />
   }
+
+
 ];
 
 export function renderRouteMap({ element, ...restRoute }: RouteConfig) {
