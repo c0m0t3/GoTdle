@@ -8,7 +8,8 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { MouseEventHandler } from 'react';
-import { MoonIcon, SunIcon, ViewIcon } from '@chakra-ui/icons';
+import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import './BaseLayout.css'
 //import { useAuth } from '../providers/AuthProvider.tsx';
 import { useNavigate } from 'react-router-dom';
 
@@ -29,8 +30,8 @@ const ScoreboardButton = () => {
     navigate('/scoreboard');
   };
   return (
-    <Button onClick={navigateToScoreboard} leftIcon={<ViewIcon />}>
-      Scoreboard
+    <Button onClick={navigateToScoreboard} className="scoreboard-button">
+      <img src="/icons/barChart_static.png" alt="Score Icon" className="static-icon" />
     </Button>
   );
 };
@@ -73,18 +74,12 @@ const LoginButtonDummy = () => {
 
 export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Box
-      bg={'gray.200'}
-      _dark={{ bg: 'gray.800' }}
-      minH={'100vh'}
-      display={'flex'}
-      flexDirection={'column'}
-    >
-      <HStack p={4} bg={'rgb(43, 45, 48)'} justifyContent="space-between">
+    <Box>
+      <HStack p={4} bg={'rgb(43, 45, 48)'} position="relative" justifyContent="space-between" alignItems="center">
         <a href={'/'}>
           <Image src={'/Logo_GoTdle.webp'} alt="Home" boxSize="5em" />
         </a>
-        <Box flex={1} display="flex" justifyContent="center">
+        <Box position="absolute" left="50%" transform="translateX(-50%)" display="flex" justifyContent="center" alignItems="center">
           <Image
             src={'/GoTdle_Text.webp'}
             alt="GoTdle"
@@ -92,7 +87,7 @@ export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
             height="auto"
           />
         </Box>
-        <Box gap={4} display={'flex'}>
+        <Box display="flex" gap={4} alignItems="center">
           <ScoreboardButton />
           <LoginButtonDummy />
           <ColorModeToggle />
@@ -100,15 +95,11 @@ export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
       </HStack>
       <chakra.main
         flex={1}
-        px={4}
-        py={8}
         overflowX="hidden"
         display="flex"
         flexDirection="column"
         ml="auto"
         mr="auto"
-        maxWidth="90rem"
-        width="100%"
       >
         {children}
       </chakra.main>
