@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fwe-gotdle-backend
+    volumes:
+      - ./backend/:/app
+      - /app/node_modules/
+    ports:
+      - 0.0.0.0:3000:3000
+    command: npm run dev
+    networks:
+      - default
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: fwe-gotdle-frontend
+    volumes:
+      - ./frontend/:/app
+      - /app/node_modules/
+    ports:
+      - 0.0.0.0:5173:5173
+    networks:
+      - default
+
+  fwe-gotdle-db:
+    image: postgres:latest
+    container_name: fwe-gotdle-db
+    restart: always
+    environment:
+      POSTGRES_DB: gotdle_db
+      POSTGRES_USER: gotdle_user
+      POSTGRES_PASSWORD: topSecret!
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', 'gotdle_user', '-d', 'gotdle_db']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - fwe-gotdle-db-data:/var/lib/postgresql/data
+    networks:
+      - default
+
+volumes:
+  fwe-gotdle-db-data:
+    driver: local
+
+networks:
+  default:
+    driver: bridge
