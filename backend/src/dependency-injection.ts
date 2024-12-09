@@ -1,9 +1,11 @@
 import { App } from './app';
 import { ENV } from './config/env.config';
-//import { AuthController } from './controller/auth.controller';
 import { Database, db } from './database';
 import { ScoreRepository } from './database/repository/score.repository';
 import { UserRepository } from './database/repository/user.repository';
+import { AuthController } from './controller/auth.controller';
+import { ScoreController } from './controller/score.controller';
+import { UserController } from './controller/user.controller';
 import { Routes } from './routes/routes';
 import { Server } from './server';
 import { Jwt } from './utils/jwt';
@@ -18,9 +20,11 @@ export const DI = {} as {
     user: UserRepository;
     score: ScoreRepository;
   };
-  /*controllers: {
+  controllers: {
     auth: AuthController;
-  };*/
+    user: UserController;
+    score: ScoreController;
+  };
   utils: {
     passwordHasher: PasswordHasher;
     jwt: Jwt;
@@ -41,25 +45,28 @@ export function initializeDependencyInjection() {
   };
 
   // Initialize repositories
-  
   DI.repositories = {
     user: new UserRepository(DI.db),
-    score: new ScoreRepository(DI.db)
+    score: new ScoreRepository(DI.db),
   };
 
   // Initialize controllers
-  /*
   DI.controllers = {
     auth: new AuthController(
       DI.repositories.user,
       DI.utils.passwordHasher,
       DI.utils.jwt,
     ),
-  };*/
+    user: new UserController(DI.repositories.user),
+    score: new ScoreController(DI.repositories.score),
+  };
 
   // Initialize routes
-
-  DI.routes = new Routes(/*DI.controllers.auth,*/);
+  DI.routes = new Routes(
+    DI.controllers.auth,
+    DI.controllers.user,
+    DI.controllers.score,
+  );
 
   // Initialize app
   DI.app = new App(DI.routes);

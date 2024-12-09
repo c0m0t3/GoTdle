@@ -12,6 +12,17 @@ export const excludeInjectionChars = (val: string) => {
     return val;
   };
 
+  export const loginZodSchema = z.object({
+    identifier: z.string().refine((val) => {
+      return z.string().email().safeParse(val).success || val.length >= 3;
+    }, {
+      message: 'Must be a valid email or username with at least 3 characters',
+    }).refine(excludeInjectionChars),
+    password: z.string().min(8).refine(excludeInjectionChars),
+    type: z.enum(['email', 'username']),
+  });
+  
+
 export const createUserZodSchema = createInsertSchema(userSchema, {
     email: z.string().email(),
     password: z.string().min(8).refine(excludeInjectionChars), // Passwort muss mindestens 8 Zeichen lang sein und keine schädlichen Zeichen enthalten

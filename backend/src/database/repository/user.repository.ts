@@ -48,11 +48,13 @@ export class UserRepository {
       if (!validatedUsername) {
         throw new Error('Username is required');
       }
-      return this.database
+      const users = await this.database
         .select()
         .from(userSchema)
         .where(eq(userSchema.username, validatedUsername))
         .execute();
+
+      return users[0] || null;
     } catch (error) {
       if (error instanceof z.ZodError) {
         throw new Error('Invalid username');
@@ -62,7 +64,29 @@ export class UserRepository {
     }
   }
 
-  async updateUser(data: CreateUser) {
+  async getUserByEmail(email: string) {
+    try {
+      const validatedEmail = z.string().email().parse(email);
+      if (!validatedEmail) {
+        throw new Error('Email is required');
+      }
+      const users = await this.database
+        .select()
+        .from(userSchema)
+        .where(eq(userSchema.email, validatedEmail))
+        .execute();
+
+      return users[0] || null;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        throw new Error('Invalid email format');
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  async updateUser(data: Partial<CreateUser>) {
     try {
       const validatedUser = await updateUserZodSchema.parseAsync(data);
       if (!validatedUser.id) {
@@ -93,6 +117,17 @@ export class UserRepository {
       } else {
         throw error;
       }
+    }
+  }
+
+  async getAllUsers() {
+    try {
+      return this.database
+        .select()
+        .from(userSchema)
+        .execute();
+    } catch (error) {
+      throw new Error('Failed to fetch users');
     }
   }
 }

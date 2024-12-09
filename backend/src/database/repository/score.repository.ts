@@ -42,6 +42,28 @@ export class ScoreRepository {
     }
   }
 
+  async getScoreByUserId(userId: string) {
+    try {
+      const validatedUserId = z.string().uuid().parse(userId);
+      if (!validatedUserId) {
+        throw new Error('User ID is required');
+      }
+      const scores = await this.database
+        .select()
+        .from(scoreSchema)
+        .where(eq(scoreSchema.userId, validatedUserId))
+        .execute();
+
+      return scores[0] || null; // Rückgabe des ersten Scores oder null, wenn kein Score gefunden wurde
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        throw new Error('Invalid ID format');
+      } else {
+        throw error;
+      }
+    }
+  }
+
   updateScore(data: CreateScore) {
     try {
       const validatedScore = createScoreZodSchema.parse(data);
@@ -49,6 +71,23 @@ export class ScoreRepository {
         .update(scoreSchema)
         .set(validatedScore)
         .where(eq(scoreSchema.userId, validatedScore.userId));
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        throw new Error('Invalid score data');
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  async updateScoreByUserId(userId: string, data: Partial<CreateScore>) {
+    try {
+      const validatedUserId = z.string().uuid().parse(userId);
+      const validatedScore = await createScoreZodSchema.partial().parseAsync(data);
+      return this.database
+        .update(scoreSchema)
+        .set(validatedScore)
+        .where(eq(scoreSchema.userId, validatedUserId));
     } catch (error) {
       if (error instanceof z.ZodError) {
         throw new Error('Invalid score data');
