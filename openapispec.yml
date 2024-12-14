@@ -7,10 +7,45 @@ info:
 servers:
   - url: 'http://localhost:3000'
 paths:
+  /users/login:
+    post:
+      summary: Your POST endpoint
+      tags: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    x-stoplight:
+                      id: csbuxo0nu5grn
+      operationId: postUserLogin
+      x-stoplight:
+        id: pcn6mii5j09ru
+      description: "Login user with email or username. \r\nIf successfully logged in, the user receives an access token in return."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                identifier:
+                  type: string
+                  x-stoplight:
+                    id: 70kn59eiopl9n
+                password:
+                  type: string
+                  x-stoplight:
+                    id: vxsr2zgap0rkf
+                  format: password
   /users:
     post:
       summary: Create New User
-      operationId: postUser
+      operationId: postUserRegister
       responses:
         '201':
           description: User Created
@@ -47,7 +82,7 @@ paths:
                   email: string
                   password: string
         description: "Necessary fields to create an user:\r\n- username\r\n- email\r\n- password\r\n\r\nEverything else get default values"
-      description: Create a new user.
+      description: Create a new user through Registration
       x-stoplight:
         id: luhmvb6wah5g2
     parameters: [ ]
@@ -179,7 +214,7 @@ paths:
       x-stoplight:
         id: ek7jipxzq1u6x
       description: for searching a specific user in scoreboard
-  '/finalMode/scores/{userId}':
+  '/scores/{userId}':
     put:
       summary: Update Score by User ID
       tags: [ ]
