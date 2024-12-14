@@ -7,10 +7,45 @@ info:
 servers:
   - url: 'http://localhost:3000'
 paths:
+  /users/login:
+    post:
+      summary: Login User
+      tags: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    x-stoplight:
+                      id: csbuxo0nu5grn
+      operationId: postUserLogin
+      x-stoplight:
+        id: pcn6mii5j09ru
+      description: "Login user with email or username. \r\nIf successfully logged in, the user receives an access token in return."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                identifier:
+                  type: string
+                  x-stoplight:
+                    id: 70kn59eiopl9n
+                password:
+                  type: string
+                  x-stoplight:
+                    id: vxsr2zgap0rkf
+                  format: password
   /users:
     post:
       summary: Create New User
-      operationId: postUser
+      operationId: postUserRegister
       responses:
         '201':
           description: User Created
@@ -47,7 +82,7 @@ paths:
                   email: string
                   password: string
         description: "Necessary fields to create an user:\r\n- username\r\n- email\r\n- password\r\n\r\nEverything else get default values"
-      description: Create a new user.
+      description: Create a new user through Registration
       x-stoplight:
         id: luhmvb6wah5g2
     parameters: [ ]
@@ -179,7 +214,7 @@ paths:
       x-stoplight:
         id: ek7jipxzq1u6x
       description: for searching a specific user in scoreboard
-  '/finalMode/scores/{userId}':
+  '/scores/{userId}':
     put:
       summary: Update Score by User ID
       tags: [ ]
@@ -204,6 +239,46 @@ paths:
         name: userId
         in: path
         required: true
+  '/characters/{_id}':
+    parameters:
+      - schema:
+          type: integer
+        name: _id
+        in: path
+        required: true
+    get:
+      summary: Get Character Info by Id
+      tags: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Characters'
+      operationId: getCharacterById
+      x-stoplight:
+        id: 2ibel5gzrue0g
+      description: Get character for classic mode
+  /characters:
+    get:
+      summary: Get All Characters
+      tags: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Characters'
+                  x-stoplight:
+                    id: rxg3p6uuglehb
+      operationId: getCharacters
+      x-stoplight:
+        id: anzq93pzyeipt
+      description: Get all characters to use its name for the Answer-SelectControl-Options
 components:
   schemas:
     User:
@@ -302,3 +377,109 @@ components:
           LongestStreak: 0
           dailyScore:
             - 0
+    Characters:
+      title: Characters
+      x-stoplight:
+        id: uu303wc29c4gp
+      type: object
+      properties:
+        _id:
+          type: integer
+          x-stoplight:
+            id: zg46lbxw2oztn
+        name:
+          type: string
+          x-stoplight:
+            id: 7ph7ardk4z1v6
+        gender:
+          type: string
+          x-stoplight:
+            id: twihrsd9u0kgt
+        born:
+          type: string
+          x-stoplight:
+            id: fwy3mesqvrdom
+        origin:
+          type: string
+          x-stoplight:
+            id: hr1jx46ut83sj
+        death:
+          type: string
+          x-stoplight:
+            id: s7nxs05sxbwdf
+        status:
+          type: string
+          x-stoplight:
+            id: neet1u4xr4rv3
+        culture:
+          type: string
+          x-stoplight:
+            id: hipd8nntmppu0
+        religion:
+          type: string
+          x-stoplight:
+            id: ywyf1hjzqswff
+        titles:
+          type: array
+          x-stoplight:
+            id: bpqry4zs819aj
+          items:
+            x-stoplight:
+              id: lqxpc0pzi9nd2
+            type: string
+        house:
+          type: string
+          x-stoplight:
+            id: zpr49d4m5s6p2
+        father:
+          type: string
+          x-stoplight:
+            id: 1lqq8dhwsmsjr
+        mother:
+          type: string
+          x-stoplight:
+            id: wzgy7ftvmyiah
+        spouse:
+          type: array
+          x-stoplight:
+            id: 1iob1pshytk80
+          items:
+            x-stoplight:
+              id: ja0fuelkatc04
+            type: string
+        children:
+          type: array
+          x-stoplight:
+            id: q43no97q1y4l9
+          items:
+            x-stoplight:
+              id: mn8hyryzjow0a
+            type: string
+        siblings:
+          type: array
+          x-stoplight:
+            id: iixlumjz6v4b1
+          items:
+            x-stoplight:
+              id: ogj14yc4ezird
+            type: string
+        lovers:
+          type: array
+          x-stoplight:
+            id: 59yp51czv660j
+          items:
+            x-stoplight:
+              id: hg9eftfxdt21z
+            type: string
+        seasons:
+          type: array
+          x-stoplight:
+            id: at5h4yrpu15pn
+          items:
+            x-stoplight:
+              id: 4b68yavzzvsyf
+            type: integer
+        actor:
+          type: string
+          x-stoplight:
+            id: 1b89byvk1w940
