@@ -6,7 +6,7 @@
     "born": "282 AC",
     "origin": "Dragonstone",
     "death": "",
-    "status": "alive",
+    "status": "deceased",
     "culture": "Valyrian",
     "religion": "",
     "titles": [
@@ -61,25 +61,19 @@
       "Kings of the Andals and the First Men",
       "Lord of the Seven Kingdoms",
       "Protector of the Realm",
-      "Prince"
+      "Prince",
+      "The Last Dragon"
     ],
     "house": "Targaryen",
     "father": "Aerys II Targaryen",
     "mother": "Rhaella Targaryen",
-    "spouse": [
-      "Drogo"
-    ],
-    "children": [
-      "Rhaego"
-    ],
+    "spouse": [],
+    "children": [],
     "siblings": [
       "Rhaegar Targaryen",
       "Daenerys Targaryen"
     ],
-    "lovers": [
-      "Daario Naharis",
-      "Jon Snow"
-    ],
+    "lovers": [],
     "seasons": [
       1
     ],
@@ -92,7 +86,7 @@
     "born": "281 AC",
     "origin": "Tower of Joy",
     "death": "302 AC",
-    "status": "resurrected",
+    "status": "alive",
     "culture": "Northmen",
     "religion": "Old Gods",
     "titles": [
@@ -146,7 +140,7 @@
     ],
     "house": "Stark",
     "father": "Eddard Stark",
-    "mother": "Catelyn Tully",
+    "mother": "Catelyn Stark",
     "spouse": [
       "Talisa Maegyr"
     ],
@@ -161,8 +155,7 @@
     "seasons": [
       1,
       2,
-      3,
-      6
+      3
     ],
     "actor": "Richard Madden"
   },
@@ -183,7 +176,7 @@
     ],
     "house": "Stark",
     "father": "Eddard Stark",
-    "mother": "Catelyn Tully",
+    "mother": "Catelyn Stark",
     "spouse": [
       "Tyrion Lannister",
       "Ramsay Bolton"
@@ -223,13 +216,13 @@
     ],
     "house": "Stark",
     "father": "Eddard Stark",
-    "mother": "Catelyn Tully",
+    "mother": "Catelyn Stark",
     "spouse": [],
     "children": [],
     "siblings": [
       "Robb Stark",
       "Sansa Stark",
-      "Arya Stark",
+      "Brandon Stark",
       "Rickon Stark"
     ],
     "lovers": [],
@@ -261,14 +254,14 @@
     ],
     "house": "Stark",
     "father": "Eddard Stark",
-    "mother": "Catelyn Tully",
+    "mother": "Catelyn Stark",
     "spouse": [],
     "children": [],
     "siblings": [
       "Robb Stark",
       "Sansa Stark",
       "Arya Stark",
-      "Brandon Stark"
+      "Rickon Stark"
     ],
     "lovers": [],
     "seasons": [
@@ -298,14 +291,14 @@
     ],
     "house": "Stark",
     "father": "Eddard Stark",
-    "mother": "Catelyn Tully",
+    "mother": "Catelyn Stark",
     "spouse": [],
     "children": [],
     "siblings": [
       "Robb Stark",
       "Arya Stark",
       "Brandon Stark",
-      "Rickon Stark"
+      "Sansa Stark"
     ],
     "lovers": [],
     "seasons": [
@@ -332,15 +325,8 @@
     "house": "Stark",
     "father": "Rickard Stark",
     "mother": "Lyarra Stark",
-    "spouse": [
-      "Catelyn Tully"
-    ],
-    "children": [
-      "Robb Stark",
-      "Arya Stark",
-      "Brandon Stark",
-      "Rickon Stark"
-    ],
+    "spouse": [],
+    "children": [],
     "siblings": [
       "Brandon Stark",
       "Lyanna Stark",
@@ -376,13 +362,14 @@
     "father": "Rickard Stark",
     "mother": "Lyarra Stark",
     "spouse": [
-      "Catelyn Tully"
+      "Catelyn Stark"
     ],
     "children": [
       "Robb Stark",
       "Arya Stark",
       "Brandon Stark",
-      "Rickon Stark"
+      "Rickon Stark",
+      "Sansa Stark"
     ],
     "siblings": [
       "Brandon Stark",
@@ -391,15 +378,13 @@
     ],
     "lovers": [],
     "seasons": [
-      1,
-      6,
-      7
+      1
     ],
     "actor": "Sean Bean"
   },
   {
     "_id": 11,
-    "name": "Catelyn Tully",
+    "name": "Catelyn Stark",
     "gender": "female",
     "born": "",
     "origin": "Riverrun",
@@ -420,10 +405,11 @@
       "Robb Stark",
       "Arya Stark",
       "Brandon Stark",
-      "Rickon Stark"
+      "Rickon Stark",
+      "Sansa Stark"
     ],
     "siblings": [
-      "Lysa Tully",
+      "Lysa Arryn",
       "Edmure Tully"
     ],
     "lovers": [],
@@ -457,8 +443,8 @@
     ],
     "children": [],
     "siblings": [
-      "Catelyn Tully",
-      "Lysa Tully"
+      "Catelyn Stark",
+      "Lysa Arryn"
     ],
     "lovers": [],
     "seasons": [
@@ -489,8 +475,8 @@
       "Minisa Whent"
     ],
     "children": [
-      "Catelyn Tully",
-      "Lysa Tully",
+      "Catelyn Stark",
+      "Lysa Arryn",
       "Edmure Tully"
     ],
     "siblings": [
@@ -533,7 +519,7 @@
   },
   {
     "_id": 15,
-    "name": "Lisa Tully",
+    "name": "Lysa Arryn",
     "gender": "female",
     "born": "",
     "origin": "Riverrun",
@@ -555,7 +541,7 @@
       "Robin Arryn"
     ],
     "siblings": [
-      "Catelyn Tully",
+      "Catelyn Stark",
       "Edmure Tully"
     ],
     "lovers": [],
@@ -572,7 +558,7 @@
     "born": "298 AC",
     "origin": "The Eyrie",
     "death": "",
-    "status": "alive",
+    "status": "deceased",
     "culture": "Andal",
     "religion": "The Sevens",
     "titles": [
@@ -585,7 +571,7 @@
     "father": "Jasper Arryn",
     "mother": "",
     "spouse": [
-      "Lisa Tully"
+      "Lysa Arryn"
     ],
     "children": [
       "Robin Arryn"
@@ -617,7 +603,7 @@
     ],
     "house": "Arryn",
     "father": "Jon Arryn",
-    "mother": "Lisa Tully",
+    "mother": "Lysa Arryn",
     "spouse": [],
     "children": [],
     "siblings": [],
@@ -728,7 +714,7 @@
     "children": [
       "Lancel Lannister",
       "Martyn Lannister",
-      "Willern Lannister"
+      "Willem Lannister"
     ],
     "siblings": [
       "Tywin Lannister"
@@ -826,11 +812,12 @@
     "born": "262 AC",
     "origin": "Casterly Rock",
     "death": "",
-    "status": "alive",
+    "status": "deceased",
     "culture": "Andal",
     "religion": "The Sevens",
     "titles": [
-      "Lord Commander of the Kingsguard"
+      "Lord Commander of the Kingsguard",
+      "Kingslayer"
     ],
     "house": "Lannister",
     "father": "Tywin Lannister",
@@ -867,7 +854,7 @@
     "born": "262 AC",
     "origin": "Casterly Rock",
     "death": "",
-    "status": "alive",
+    "status": "deceased",
     "culture": "Andal",
     "religion": "The Sevens",
     "titles": [
@@ -1026,7 +1013,7 @@
     "born": "",
     "origin": "Storm's End",
     "death": "298 AC",
-    "status": "alive",
+    "status": "desceased",
     "culture": "Andal",
     "religion": "The Sevens",
     "titles": [
@@ -1397,7 +1384,7 @@
     "born": "",
     "origin": "Pyke",
     "death": "",
-    "status": "alive",
+    "status": "deceased",
     "culture": "Ironborn",
     "religion": "Drowned God",
     "titles": [
@@ -1432,7 +1419,7 @@
     "born": "281 AC",
     "origin": "Pyke",
     "death": "",
-    "status": "alive",
+    "status": "deceased",
     "culture": "Ironborn",
     "religion": "Drowned God",
     "titles": [],
@@ -1602,7 +1589,7 @@
     "born": "",
     "origin": "Hellholt",
     "death": "",
-    "status": "alive",
+    "status": "unknown",
     "culture": "Dornish",
     "religion": "The Sevens",
     "titles": [
@@ -1647,7 +1634,6 @@
     "spouse": [],
     "children": [],
     "siblings": [
-      "Obara Sand",
       "Nymeria Sand",
       "Tyene Sand",
       "Sarella Sand",
@@ -1682,7 +1668,6 @@
     "children": [],
     "siblings": [
       "Obara Sand",
-      "Nymeria Sand",
       "Tyene Sand",
       "Sarella Sand",
       "Elia Sand",
@@ -1717,7 +1702,6 @@
     "siblings": [
       "Obara Sand",
       "Nymeria Sand",
-      "Tyene Sand",
       "Sarella Sand",
       "Elia Sand",
       "Obella Sand",
@@ -1846,7 +1830,9 @@
     "spouse": [
       ""
     ],
-    "children": [],
+    "children": [
+      "Jorah Mormont"
+    ],
     "siblings": [
       "Maege Mormont"
     ],
@@ -1865,7 +1851,7 @@
     "born": "280 AC",
     "origin": "Bear Island",
     "death": "",
-    "status": "alive",
+    "status": "deceased",
     "culture": "Northmen",
     "religion": "Old Gods",
     "titles": [
@@ -1904,6 +1890,7 @@
     "culture": "Andal",
     "religion": "Drowned God",
     "titles": [
+      "Littlefinger",
       "Lord Protector of the Vale",
       "Lord of Harrenhal",
       "Master of Coin"
@@ -1912,7 +1899,7 @@
     "father": "",
     "mother": "",
     "spouse": [
-      "Lysa Tully"
+      "Lysa Arryn"
     ],
     "children": [],
     "siblings": [],
@@ -1935,12 +1922,13 @@
     "born": "",
     "origin": "King's Landing",
     "death": "304 AC",
-    "status": "deceased",
+    "status": "alive",
     "culture": "Andal",
     "religion": "",
     "titles": [
       "Hand of the King",
-      "Ser"
+      "Ser",
+      "Onion knight"
     ],
     "house": "Seaworth",
     "father": "",
@@ -1980,12 +1968,8 @@
     "house": "Tarth",
     "father": "Selwyn Tarth",
     "mother": "",
-    "spouse": [
-      "Marya Seaworth"
-    ],
-    "children": [
-      "Matthos Seaworth"
-    ],
+    "spouse": [],
+    "children": [],
     "siblings": [],
     "lovers": [],
     "seasons": [
@@ -2006,11 +1990,12 @@
     "born": "",
     "origin": "Clegane's Keep",
     "death": "",
-    "status": "alive",
+    "status": "deceased",
     "culture": "Andal",
     "religion": "",
     "titles": [
-      "Kingsguard"
+      "Kingsguard",
+      "The hound"
     ],
     "house": "Clegane",
     "father": "",
@@ -2039,7 +2024,7 @@
     "born": "",
     "origin": "Lys",
     "death": "",
-    "status": "alive",
+    "status": "deceased",
     "culture": "Lysene",
     "religion": "",
     "titles": [
@@ -2102,10 +2087,13 @@
     "born": "97 AC",
     "origin": "Asshai",
     "death": "",
-    "status": "alive",
+    "status": "deceased",
     "culture": "Asshai'i",
-    "religion": "R'hllor",
-    "titles": [],
+    "religion": "Lord of Light",
+    "titles": [
+      "The Red Woman",
+      "The Red Witch"
+    ],
     "house": "",
     "father": "",
     "mother": "",
@@ -2116,10 +2104,13 @@
       "Stannis Baratheon"
     ],
     "seasons": [
-      1,
       2,
       3,
-      4
+      4,
+      5,
+      6,
+      7,
+      8
     ],
     "actor": "Carice van Houten"
   },
@@ -2204,7 +2195,7 @@
     "born": "",
     "origin": "Naath",
     "death": "",
-    "status": "alive",
+    "status": "deceased",
     "culture": "Naathi",
     "religion": "",
     "titles": [],
@@ -2230,7 +2221,7 @@
   {
     "_id": 63,
     "name": "Grey Worm",
-    "gender": "female",
+    "gender": "male",
     "born": "",
     "origin": "Summer Isles",
     "death": "",
@@ -2367,12 +2358,10 @@
       "Tywin Lannister"
     ],
     "seasons": [
+      1,
+      2,
       3,
-      4,
-      5,
-      6,
-      7,
-      8
+      4
     ],
     "actor": "Sibel Kekilli"
   },
@@ -2427,8 +2416,7 @@
     "siblings": [],
     "lovers": [],
     "seasons": [
-      1,
-      2
+      1
     ],
     "actor": "Jason Momoa"
   },
@@ -2550,7 +2538,7 @@
     "born": "~12 000 BC",
     "origin": "Beyond the Wall",
     "death": "",
-    "status": "alive",
+    "status": "deceased",
     "culture": "White Walkers",
     "religion": "",
     "titles": [],
@@ -2587,11 +2575,13 @@
     "father": "Aerys II Targaryen",
     "mother": "Rhaella Targaryen",
     "spouse": [
-      "Elia Martell"
+      "Elia Martell",
+      "Lyanna Stark"
     ],
     "children": [
       "Rhaenys Targaryen",
-      "Aegon Targaryen"
+      "Aegon Targaryen",
+      "Jon Snow"
     ],
     "siblings": [
       "Viserys Targaryen",
@@ -2610,7 +2600,7 @@
     "born": "292 AC",
     "origin": "Bear Island",
     "death": "",
-    "status": "alive",
+    "status": "deceased",
     "culture": "Northmen",
     "religion": "Old Gods",
     "titles": [
@@ -2631,3 +2621,6 @@
     "actor": "Bella Ramsey"
   }
 ]
+//Es fehlen: Hodor, The Mountain, Begleiter Bran in Norden, 3 Drache, 5 Wölfe, Night Watch son wichtiger Typ der auch hingerichtet wurde, Jons Freunde Nightwatch, Aemon Targaryan,
+//Wildling Boss(Mence Raider?), Heiße Pastete(Arya Freund), Syrio Forel, Kingsgurad(Meryn Trant, Boss(weiße Haare), Pycelle und Qyburn, Septa Unella, Maester Luwin, Oliver,
+//Rodrick Cassel, Dreiäugiger Rabe, Walder Frey, Beric Dondarrion, Thoros von Myr, Dontos, Janos Slynt,
