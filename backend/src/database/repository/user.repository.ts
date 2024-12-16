@@ -10,13 +10,13 @@ export class UserRepository {
 
   async createUser(data: CreateUser) {
     try {
-        const createdUser = await this.database
+        const [createdUser] = await this.database
         .insert(userSchema)
         .values(data)
-        .returning({ id: userSchema.id })
+        .returning({ createdAt: userSchema.createdAt, id: userSchema.id, password: userSchema.password, username: userSchema.username, email: userSchema.email });
 
         const initialScore = {
-          userId: createdUser[0].id,
+          userId: createdUser.id,
           streak: 0,
           lastPlayed: new Date(),
           longestStreak: 0,
@@ -27,93 +27,79 @@ export class UserRepository {
           .insert(scoreSchema)
           .values(initialScore);
 
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        throw new Error('Invalid registration data');
-      } else {
+        return createdUser;
+
+      } catch (error) {
         throw error;
-      }
     }
   }
 
   async getUserById(id: string) {
     try {
-      return this.database
+      const [user] = await this.database
         .select()
         .from(userSchema)
         .where(eq(userSchema.id, id))
         .execute();
+
+      return user || undefined;
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        throw new Error('Invalid ID format');
-      } else {
-        throw error;
-      }
-    }
+      throw error;
+  }
   }
 
   async getUserByUsername(username: string) {
     try {
-      const users = await this.database
+      const [users] = await this.database
         .select()
         .from(userSchema)
         .where(eq(userSchema.username, username))
         .execute();
 
-      return users[0] || null;
+      return users || null;
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        throw new Error('Invalid username');
-      } else {
-        throw error;
-      }
-    }
+      throw error;
+  }
   }
 
   async getUserByEmail(email: string) {
     try {
-      const users = await this.database
+      const [users] = await this.database
         .select()
         .from(userSchema)
         .where(eq(userSchema.email, email))
         .execute();
 
-      return users[0] || null;
+      return users || null;
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        throw new Error('Invalid email format');
-      } else {
         throw error;
-      }
     }
   }
 
   async updateUser(data: Partial<CreateUser>) {
     try {
-      return this.database
+      const [updatedUser] = await this.database
         .update(userSchema)
         .set(data)
-        .where(eq(userSchema.id, data.id!));
+        .where(eq(userSchema.id, data.id!))
+        .returning();
+  
+      return updatedUser || null;
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        throw new Error('Invalid user data');
-      } else {
-        throw error;
-      }
+      throw error;
     }
   }
 
   async deleteUser(id: string) {
     try {
-      return this.database
+      const [deletedUser] = await this.database
         .delete(userSchema)
-        .where(eq(userSchema.id, id));
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        throw new Error('Invalid ID format');
-      } else {
+        .where(eq(userSchema.id, id))
+        .returning();
+
+      return deletedUser || null;
+      } catch (error) {
         throw error;
-      }
     }
   }
 

@@ -2,8 +2,12 @@ import { NextFunction, Request, Response } from 'express';
 import { TokenExpiredError } from 'jsonwebtoken';
 import { ZodError } from 'zod';
 
+interface CustomError extends Error {
+  statusCode?: number;
+}
+
 export function globalErrorHandler(
-  err: Error,
+  err: CustomError,
   _req: Request,
   res: Response,
   _next: NextFunction,
@@ -16,9 +20,26 @@ export function globalErrorHandler(
     return;
   }
 
+  // Handle JWT token expiration errors
   if (err instanceof TokenExpiredError) {
     res.status(401).json({
       errors: ['Token expired'],
+    });
+    return;
+  }
+
+  // Handle Mongoose validation errors
+  if (err.name === 'ValidationError') {
+    res.status(400).json({
+      errors: Object.values(err).map((error: any) => error.message),
+    });
+    return;
+  }
+
+  // Handle custom application errors
+  if (err.name === 'CustomError') {
+    res.status(err.statusCode || 400).json({
+      errors: [err.message],
     });
     return;
   }

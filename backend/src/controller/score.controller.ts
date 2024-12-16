@@ -6,16 +6,6 @@ import { createScoreZodSchema, updateScoreZodSchema } from '../validation/valida
 export class ScoreController {
   constructor(private readonly scoreRepository: ScoreRepository) {}
 
-  async createScore(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const scoreData = createScoreZodSchema.parse(req.body);
-      const createdScore = await this.scoreRepository.createScore(scoreData);
-      res.status(201).json(createdScore);
-    } catch (error) {
-      next(error);
-    }
-  }
-
   async getScoreById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const idSchema = z.string().uuid();
@@ -54,8 +44,7 @@ export class ScoreController {
     try {
       const userIdSchema = z.string().uuid();
       const userId = userIdSchema.parse(req.params.userId);
-      const scoreData = updateScoreZodSchema.parse(req.body);
-
+      const scoreData = await updateScoreZodSchema.parseAsync({ ...req.body, userId });
       const updatedScore = await this.scoreRepository.updateScoreByUserId(userId, scoreData);
 
       if (!updatedScore) {
@@ -64,19 +53,6 @@ export class ScoreController {
       }
 
       res.status(200).json(updatedScore);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async deleteScore(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const idSchema = z.string().uuid();
-      const scoreId = idSchema.parse(req.params.id);
-
-      await this.scoreRepository.deleteScore(scoreId);
-
-      res.status(204).send();
     } catch (error) {
       next(error);
     }

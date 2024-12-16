@@ -1,6 +1,6 @@
 import express, { Application } from 'express';
-import helmet from 'helmet';
 import cors from 'cors';
+import { prepareAuthentication } from './middleware/auth.middleware';
 
 //import { prepareAuthentication } from './middleware/auth.middleware';
 import { Routes } from './routes/routes';
@@ -32,7 +32,7 @@ export class App {
     );
 
     this.app.use(express.json());
-    //this.app.use(prepareAuthentication);
+    this.app.use(prepareAuthentication);
 
     this.app.use((req, _res, next) => {
       console.info(`New request to ${req.path}`);
@@ -48,4 +48,9 @@ export class App {
     // The errorHandler could also be injected via constructor which would be even better and easily testable
     this.app.use(globalErrorHandler);
   }
+
+  public getServer() {
+    return this.app;
+  }
+
 }

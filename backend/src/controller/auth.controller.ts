@@ -27,6 +27,7 @@ export class AuthController {
 
   async loginUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
+      
       const data = loginZodSchema.parse(req.body); // Validierung der Eingabedaten
       let user;
 
