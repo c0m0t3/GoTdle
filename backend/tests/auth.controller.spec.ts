@@ -32,11 +32,11 @@ describe('AuthController', () => {
         }),
       };
     authController = new AuthController(userRepository, DI.utils.passwordHasher, DI.utils.jwt);
-  });
+  }, 50000);
 
   afterAll(async () => {
     await testDatabase.teardown();
-  }, 50000);
+  });
 
   beforeEach(() => {
     req = {};
