@@ -64,11 +64,6 @@ export class Routes {
     );
 
     // Score routes
-    this.router.post(
-      '/scores',
-      verifyAccess,
-      this.scoreController.createScore.bind(this.scoreController),
-    );
     this.router.get(
       '/scores/:userId',
       verifyAccess,
@@ -78,11 +73,6 @@ export class Routes {
       '/scores/:userId',
       verifyAccess,
       this.scoreController.updateScoreByUserId.bind(this.scoreController),
-    );
-    this.router.delete(
-      '/scores/:id',
-      verifyAccess,
-      this.scoreController.deleteScore.bind(this.scoreController),
     );
   }
 }

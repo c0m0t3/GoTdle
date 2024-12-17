@@ -9,106 +9,76 @@ export class ScoreRepository {
 
   async createScore(data: CreateScore) {
     try {
-      const validatedScore = await createScoreZodSchema.parseAsync(data);
-        await this.database
+      const scores = await this.database
         .insert(scoreSchema)
-        .values(validatedScore)
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        throw new Error('Invalid score data');
-      } else {
+        .values(data)
+
+      return scores;
+      } catch (error) {
         throw error;
-      }
     }
   }
 
   async getScoreById(id: string) {
     try {
-      const validatedId = z.string().uuid().parse(id);
-      if (!validatedId) {
-        throw new Error('User ID is required');
-      }
-      return this.database
+      const [scores] = await this.database
         .select()
         .from(scoreSchema)
-        .where(eq(scoreSchema.userId, validatedId))
+        .where(eq(scoreSchema.userId, id))
         .execute();
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        throw new Error('Invalid ID format');
-      } else {
+
+      return scores || null; // Rückgabe des ersten Scores oder null, wenn kein Score gefunden wurde
+      } catch (error) {
         throw error;
-      }
     }
   }
 
   async getScoreByUserId(userId: string) {
     try {
-      const validatedUserId = z.string().uuid().parse(userId);
-      if (!validatedUserId) {
-        throw new Error('User ID is required');
-      }
-      const scores = await this.database
+      const [scores] = await this.database
         .select()
         .from(scoreSchema)
-        .where(eq(scoreSchema.userId, validatedUserId))
+        .where(eq(scoreSchema.userId, userId))
         .execute();
 
-      return scores[0] || null; // Rückgabe des ersten Scores oder null, wenn kein Score gefunden wurde
+      return scores || null; // Rückgabe des ersten Scores oder null, wenn kein Score gefunden wurde
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        throw new Error('Invalid ID format');
-      } else {
-        throw error;
-      }
-    }
+      throw error;
+  }
   }
 
   updateScore(data: CreateScore) {
     try {
-      const validatedScore = createScoreZodSchema.parse(data);
       return this.database
         .update(scoreSchema)
-        .set(validatedScore)
-        .where(eq(scoreSchema.userId, validatedScore.userId));
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        throw new Error('Invalid score data');
-      } else {
+        .set(data)
+        .where(eq(scoreSchema.userId, data.userId));
+      } catch (error) {
         throw error;
-      }
     }
   }
 
   async updateScoreByUserId(userId: string, data: Partial<CreateScore>) {
     try {
-      const validatedUserId = z.string().uuid().parse(userId);
-      const validatedScore = await createScoreZodSchema.partial().parseAsync(data);
-      return this.database
+      const [updatedScore] = await this.database
         .update(scoreSchema)
-        .set(validatedScore)
-        .where(eq(scoreSchema.userId, validatedUserId));
+        .set(data)
+        .where(eq(scoreSchema.userId, userId))
+        .returning();
+
+      return updatedScore || null;
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        throw new Error('Invalid score data');
-      } else {
-        throw error;
-      }
+      throw error;
     }
   }
 
   async deleteScore(id: string) {
     try {
-      const validatedId = z.string().uuid().parse(id);
       return this.database
         .delete(scoreSchema)
-        .where(eq(scoreSchema.userId, validatedId));
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        throw new Error('Invalid ID format');
-      } else {
+        .where(eq(scoreSchema.userId, id));
+      } catch (error) {
         throw error;
-      }
     }
   }
 

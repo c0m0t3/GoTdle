@@ -57,47 +57,50 @@ export class UserController {
     }
   }
 
-  async createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const userData = createUserZodSchema.parse(req.body);
 
-      const createdUser = await this.userRepository.createUser(userData);
 
-      res.status(201).json(createdUser);
-    } catch (error) {
-      next(error);
-    }
+async createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const user = await this.userRepository.createUser(req.body);
+    res.status(201).json(user);
+  } catch (error) {
+    next(error);
   }
+}
 
-  async updateUser(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const userData = updateUserZodSchema.parse({ ...req.body, id: req.params.id });
+async updateUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const userData = await updateUserZodSchema.parseAsync({ ...req.body, id: req.params.id });
+    const updatedUser = await this.userRepository.updateUser(userData);
 
-      const updatedUser = await this.userRepository.updateUser(userData);
-
-      if (!updatedUser) {
-        res.status(404).json({ errors: ['User not found'] });
-        return;
-      }
-
-      res.status(200).json(updatedUser);
-    } catch (error) {
-      next(error);
+    if (!updatedUser) {
+      res.status(404).json({ errors: ['User not found'] });
+      return;
     }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    next(error);
   }
+}
 
-  async deleteUser(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const idSchema = z.string().uuid();
-      const userId = idSchema.parse(req.params.id);
+async deleteUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const idSchema = z.string().uuid();
+    const userId = idSchema.parse(req.params.id);
 
-      await this.userRepository.deleteUser(userId);
+    const deletedUser = await this.userRepository.deleteUser(userId);
 
-      res.status(204).send();
-    } catch (error) {
-      next(error);
+    if (!deletedUser) {
+      res.status(404).json({ errors: ['User not found'] });
+      return;
     }
+
+    res.status(204).send();
+  } catch (error) {
+    next(error);
   }
+}
 
   async getAllUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
