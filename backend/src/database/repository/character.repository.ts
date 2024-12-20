@@ -6,11 +6,7 @@ export class CharacterRepository {
   constructor(private readonly database: Database) {}
 
   async createCharacter(data: CreateCharacter) {
-    const [createdCharacter] = await this.database
-      .insert(characterSchema)
-      .values(data)
-      .returning();
-    return createdCharacter;
+    return this.database.insert(characterSchema).values(data).returning();
   }
 
   async getCharacters() {
