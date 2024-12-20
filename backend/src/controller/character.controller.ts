@@ -27,7 +27,7 @@ export class CharacterController {
   }
 
   async getCharacterById(req: Request, res: Response): Promise<void> {
-    const { characterId } = req.params;
+    const characterId = req.params._id;
     const validatedId = this.isValidCharacterId(Number(characterId));
 
     if (!(await this.checkCharacterExists(validatedId, res))) {
@@ -47,7 +47,7 @@ export class CharacterController {
 
   //Helper functions
   private isValidCharacterId(characterId: number): number {
-    return z.number().int().nonnegative().parse(characterId);
+    return z.number().int().min(1).parse(characterId);
   }
 
   private async checkCharacterExists(
