@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { AuthController } from '../controller/auth.controller';
 import { UserController } from '../controller/user.controller';
 import { ScoreController } from '../controller/score.controller';
+import { CharacterController } from '../controller/character.controller';
 import { verifyAccess } from '../middleware/auth.middleware';
 
 export class Routes {
@@ -11,6 +12,7 @@ export class Routes {
     private readonly authController: AuthController,
     private readonly userController: UserController,
     private readonly scoreController: ScoreController,
+    private readonly characterController: CharacterController,
   ) {
     this.router = Router();
     this.initializeRoutes();
@@ -73,6 +75,26 @@ export class Routes {
       '/scores/:userId',
       verifyAccess,
       this.scoreController.updateScoreByUserId.bind(this.scoreController),
+    );
+
+    // Character routes
+    this.router.post(
+      '/characters',
+      this.characterController.createCharacter.bind(this.characterController),
+    );
+    this.router.get(
+      '/characters',
+      this.characterController.getCharacters.bind(this.characterController),
+    );
+    this.router.get(
+      '/characters/:_id',
+      this.characterController.getCharacterById.bind(this.characterController),
+    );
+    this.router.delete(
+      '/characters',
+      this.characterController.deleteAllCharacters.bind(
+        this.characterController,
+      ),
     );
   }
 }

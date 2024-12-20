@@ -23,6 +23,12 @@ export class CharacterRepository {
     });
   }
 
+  async getCharacterByName(name: string) {
+    return this.database.query.characterSchema.findFirst({
+      where: (character, { eq }) => eq(character.name, name),
+    });
+  }
+
   async deleteAllCharacters() {
     return this.database.delete(characterSchema);
   }
