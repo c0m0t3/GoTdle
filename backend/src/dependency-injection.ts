@@ -3,9 +3,11 @@ import { ENV } from './config/env.config';
 import { Database, db } from './database';
 import { ScoreRepository } from './database/repository/score.repository';
 import { UserRepository } from './database/repository/user.repository';
+import { CharacterRepository } from './database/repository/character.repository';
 import { AuthController } from './controller/auth.controller';
 import { ScoreController } from './controller/score.controller';
 import { UserController } from './controller/user.controller';
+import { CharacterController } from './controller/character.controller';
 import { Routes } from './routes/routes';
 import { Server } from './server';
 import { Jwt } from './utils/jwt';
@@ -19,11 +21,13 @@ export const DI = {} as {
   repositories: {
     user: UserRepository;
     score: ScoreRepository;
+    character: CharacterRepository;
   };
   controllers: {
     auth: AuthController;
     user: UserController;
     score: ScoreController;
+    character: CharacterController;
   };
   utils: {
     passwordHasher: PasswordHasher;
@@ -48,6 +52,7 @@ export function initializeDependencyInjection() {
   DI.repositories = {
     user: new UserRepository(DI.db),
     score: new ScoreRepository(DI.db),
+    character: new CharacterRepository(DI.db),
   };
 
   // Initialize controllers
@@ -59,6 +64,7 @@ export function initializeDependencyInjection() {
     ),
     user: new UserController(DI.repositories.user),
     score: new ScoreController(DI.repositories.score),
+    character: new CharacterController(DI.repositories.character),
   };
 
   // Initialize routes
@@ -66,6 +72,7 @@ export function initializeDependencyInjection() {
     DI.controllers.auth,
     DI.controllers.user,
     DI.controllers.score,
+    DI.controllers.character,
   );
 
   // Initialize app
