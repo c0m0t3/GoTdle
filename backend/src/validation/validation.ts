@@ -86,27 +86,29 @@ export const createScoreZodSchema = createInsertSchema(scoreSchema, {
   dailyScore: z.number().int().nonnegative(),
 });
 
-export const createCharacterZodSchema = createInsertSchema(characterSchema, {
-  _id: z.number().int().nonnegative(),
-  name: z.string().min(1),
-  gender: z.string().optional(),
-  born: z.string().optional(),
-  origin: z.string().optional(),
-  death: z.string().optional(),
-  status: z.string().optional(),
-  culture: z.string().optional(),
-  religion: z.string().optional(),
-  titles: z.array(z.string()).optional(),
-  house: z.string().optional(),
-  father: z.string().optional(),
-  mother: z.string().optional(),
-  spouse: z.array(z.string()).optional(),
-  children: z.array(z.string()).optional(),
-  siblings: z.array(z.string()).optional(),
-  lovers: z.array(z.string()).optional(),
-  seasons: z.array(z.number().int().min(1).max(8)).optional(),
-  actor: z.string().optional(),
-});
+export const createCharacterZodSchema = z.array(
+  createInsertSchema(characterSchema, {
+    _id: z.number().int().nonnegative(),
+    name: z.string().min(1),
+    gender: z.string().optional(),
+    born: z.string().optional(),
+    origin: z.string().optional(),
+    death: z.string().optional(),
+    status: z.string().optional(),
+    culture: z.string().optional(),
+    religion: z.string().optional(),
+    titles: z.array(z.string()).optional(),
+    house: z.string().optional(),
+    father: z.string().optional(),
+    mother: z.string().optional(),
+    spouse: z.array(z.string()).optional(),
+    children: z.array(z.string()).optional(),
+    siblings: z.array(z.string()).optional(),
+    lovers: z.array(z.string()).optional(),
+    seasons: z.array(z.number().int().min(1).max(8)).optional(),
+    actor: z.string().optional(),
+  }),
+);
 
 export type CreateUser = z.infer<typeof createUserZodSchema>;
 export type CreateScore = z.infer<typeof createScoreZodSchema>;
