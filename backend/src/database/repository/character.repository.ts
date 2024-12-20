@@ -12,4 +12,18 @@ export class CharacterRepository {
       .returning();
     return createdCharacter;
   }
+
+  async getCharacters() {
+    return this.database.query.characterSchema.findMany();
+  }
+
+  async getCharacterById(id: number) {
+    return this.database.query.characterSchema.findFirst({
+      where: (character, { eq }) => eq(character._id, id),
+    });
+  }
+
+  async deleteAllCharacters() {
+    return this.database.delete(characterSchema);
+  }
 }
