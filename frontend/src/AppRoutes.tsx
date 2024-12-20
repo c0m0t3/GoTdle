@@ -3,6 +3,7 @@ import { HomePage } from './pages/HomePage.tsx';
 import { StartPage } from './pages/StartPage.tsx';
 import { ClassicPage } from './pages/ClassicPage.tsx';
 import { QuoteModePage } from './pages/QuoteModePage.tsx';
+import { ImageModePage } from './pages/ImageModePage.tsx';
 
 export type RouteConfig = RouteProps & {
   /**
@@ -23,8 +24,12 @@ export const appRoutes: RouteConfig[] = [
     element: <HomePage />
   },
   {
-    path: '/quoteMode',
+    path: '/quote',
     element: <QuoteModePage />
+  },
+  {
+    path: '/image',
+    element: <ImageModePage />
   },
   {
     path: '/start',
