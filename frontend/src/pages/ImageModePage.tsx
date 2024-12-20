@@ -46,7 +46,7 @@ export const ImageModePage = () => {
             maxW="sm"
             textAlign="center"
           >
-            <Text fontSize={'md'}>Which character has the whole image?</Text>
+            <Text fontSize={'md'}>Which character is shown in this image?</Text>
             <Image src={apiData?.imageUrl} alt={apiData?.fullName} objectFit="contain" maxW="100%" maxH="100%" />
             <Text fontSize={'sm'}> Pssst...answer is...{apiData?.fullName}</Text>
             <Input
