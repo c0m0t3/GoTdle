@@ -9,8 +9,10 @@ export class CharacterController {
   async createCharacter(req: Request, res: Response): Promise<void> {
     const validatedData = createCharacterZodSchema.parse(req.body);
 
-    if (await this.checkCharacterNameExists(validatedData.name, res)) {
-      return;
+    for (const character of validatedData) {
+      if (await this.checkCharacterNameExists(character.name, res)) {
+        return;
+      }
     }
 
     const createdCharacter =
