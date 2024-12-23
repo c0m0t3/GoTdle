@@ -35,7 +35,8 @@ export const ImageModePage = () => {
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
       setSelectedCharacter(selected);
-      if (selected.value.toLowerCase() === apiData?.fullName.toLowerCase()) {
+      const adjustedSelected = nameExceptions(selected);
+      if (adjustedSelected.value.toLowerCase() === apiData?.fullName.toLowerCase()) {
         setIsCorrect(true);
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
@@ -43,6 +44,31 @@ export const ImageModePage = () => {
       setUsedOptions((prev) => [...prev, selected.value]);
       setSelectedCharacter(null);
     }
+  };
+
+  /**
+   * The character names from the external API do not exactly match those in our internal database.
+   * Since the data in the database is correct, but we still want to use the external API,
+   * we adjust the discrepancies using this method so that the validation of the selected options works correctly.
+   * @param selected - The selected character option, which will be adjusted to match the names from the external API.
+   * @returns The adjusted character option with the corrected name, if an exception is found; otherwise, the original option.
+   */
+  const nameExceptions = (selected: CharacterOption): CharacterOption => {
+    const exceptions: { [key: string]: string } = {
+      'Eddard Stark': 'Ned Stark',
+      'Jaime Lannister': 'Jamie Lannister',
+      'Robb Stark': 'Rob Stark',
+      'Drogo': 'Khal Drogo',
+      'Viserys Targaryen': 'Viserys Targaryn',
+      'Daario Naharis': 'Daario',
+      'Gendry': 'Gendry Baratheon',
+      'Ramsay Bolton': 'Ramsey Bolton',
+      'High Sparrow': 'The High Sparrow',
+      'Tormund': 'Tormund Giantsbane',
+      'Bronn': 'Lord Bronn'
+    };
+    const newValue = exceptions[selected.value];
+    return newValue ? { ...selected, value: newValue } : selected;
   };
 
   const loadCharacterOptions = async (inputValue: string) => {
