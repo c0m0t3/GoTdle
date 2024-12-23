@@ -7,7 +7,7 @@ import { ScoreController } from '../src/controller/score.controller';
 import { CharacterController } from '../src/controller/character.controller';
 
 jest.mock('../src/middleware/auth.middleware', () => ({
-  verifyAccess: (req: Request, res: Response, next: NextFunction) => {
+  verifyAccess: (_req: Request, _res: Response, next: NextFunction) => {
     next();
   },
 }));
@@ -26,58 +26,58 @@ describe('Routes', () => {
   beforeAll(() => {
     authController = {
       // Mock methods
-      loginUser: jest.fn((req, res) =>
+      loginUser: jest.fn((_req, res) =>
         res.status(200).json({ token: 'test-token' }),
       ),
-      registerUser: jest.fn((req, res) =>
+      registerUser: jest.fn((_req, res) =>
         res.status(201).json({ id: TEST_IDS.USER_ID }),
       ),
     } as any;
 
     userController = {
       // Mock methods
-      getUserById: jest.fn((req, res) =>
+      getUserById: jest.fn((_req, res) =>
         res.status(200).json({ id: TEST_IDS.USER_ID }),
       ),
-      getUserByUsername: jest.fn((req, res) =>
+      getUserByUsername: jest.fn((_req, res) =>
         res.status(200).json({ id: TEST_IDS.USER_ID }),
       ),
-      getUserByEmail: jest.fn((req, res) =>
+      getUserByEmail: jest.fn((_req, res) =>
         res.status(200).json({ id: TEST_IDS.USER_ID }),
       ),
-      updateUser: jest.fn((req, res) =>
+      updateUser: jest.fn((_req, res) =>
         res.status(200).json({ id: TEST_IDS.USER_ID }),
       ),
-      deleteUser: jest.fn((req, res) =>
+      deleteUser: jest.fn((_req, res) =>
         res.status(200).json({ id: TEST_IDS.USER_ID }),
       ),
-      getAllUsers: jest.fn((req, res) =>
+      getAllUsers: jest.fn((_req, res) =>
         res.status(200).json([{ id: TEST_IDS.USER_ID }]),
       ),
     } as any;
 
     scoreController = {
       // Mock methods
-      getScoreByUserId: jest.fn((req, res) =>
+      getScoreByUserId: jest.fn((_req, res) =>
         res.status(200).json({ userId: TEST_IDS.USER_ID }),
       ),
-      updateScoreByUserId: jest.fn((req, res) =>
+      updateScoreByUserId: jest.fn((_req, res) =>
         res.status(200).json({ userId: TEST_IDS.USER_ID }),
       ),
     } as any;
 
     characterController = {
       // Mock methods
-      getCharacterById: jest.fn((req, res) =>
+      getCharacterById: jest.fn((_req, res) =>
         res.status(200).json({ userId: TEST_IDS.USER_ID }),
       ),
-      getCharacters: jest.fn((req, res) =>
+      getCharacters: jest.fn((_req, res) =>
         res.status(200).json({ userId: TEST_IDS.USER_ID }),
       ),
-      createCharacter: jest.fn((req, res) =>
+      createCharacter: jest.fn((_req, res) =>
         res.status(200).json({ userId: TEST_IDS.USER_ID }),
       ),
-      deleteAllCharacters: jest.fn((req, res) => res.status(204).json({})),
+      deleteAllCharacters: jest.fn((_req, res) => res.status(204).json({})),
     } as any;
 
     const routes = new Routes(
