@@ -15,6 +15,7 @@ interface CharacterOption extends OptionBase {
 export const ImageModePage = () => {
   const { fetchApi, apiData } = useImageApi();
   const [incorrectGuesses, setIncorrectGuesses] = useState<string[]>([]);
+  const [correctGuesses, setCorrectGuesses] = useState<string>('');
   const [isCorrect, setIsCorrect] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterOption | null>(null);
   const [usedOptions, setUsedOptions] = useState<string[]>([]);
@@ -23,6 +24,7 @@ export const ImageModePage = () => {
 
   useEffect(() => {
     setIsCorrect(false);
+    setCorrectGuesses('');
     setSelectedCharacter(null);
     setIncorrectGuesses([]);
     setUsedOptions([]);
@@ -38,6 +40,7 @@ export const ImageModePage = () => {
       const adjustedSelected = nameExceptions(selected);
       if (adjustedSelected.value.toLowerCase() === apiData?.fullName.toLowerCase()) {
         setIsCorrect(true);
+        setCorrectGuesses(selected.value);
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
@@ -122,7 +125,7 @@ export const ImageModePage = () => {
           <Box maxW="sm" width="100%">
             {isCorrect && (
               <Text mt={2} textAlign={'center'} bg="green.500" color="white" p={2} rounded="md">
-                {apiData?.fullName}
+                {correctGuesses}
               </Text>
             )}
           </Box>
