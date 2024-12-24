@@ -1,6 +1,6 @@
-import { sql } from 'drizzle-orm';
 import { integer, pgTable, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { userSchema } from './user.schema';
+import { sql } from 'drizzle-orm';
 
 export const scoreSchema = pgTable('score', {
   userId: uuid('userId')
@@ -10,11 +10,6 @@ export const scoreSchema = pgTable('score', {
   streak: integer('streak').notNull().default(0),
   lastPlayed: timestamp('lastPlayed'),
   longestStreak: integer('longestStreak').notNull().default(0),
-  dailyScore: integer('dailyScore')
-    .notNull()
-    .default(
-      sql`ARRAY
-      [0]::INTEGER[]`,
-    )
-    .array(),
+  dailyScore: integer('dailyScore').notNull().array().default(sql`ARRAY
+  [0]::INTEGER[]`),
 });
