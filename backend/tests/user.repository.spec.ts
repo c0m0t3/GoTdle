@@ -53,7 +53,7 @@ describe('UserRepository', () => {
       expect(scores[0].userId).toBe(createdUser.id);
       expect(scores[0].streak).toBe(0);
       expect(scores[0].longestStreak).toBe(0);
-      expect(scores[0].dailyScore).toBe(0);
+      expect(scores[0].dailyScore).toStrictEqual([0]);
     });
   });
 

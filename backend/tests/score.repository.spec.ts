@@ -44,9 +44,9 @@ describe('ScoreRepository', () => {
       const scoreData = {
         userId: TEST_IDS.USER_ID,
         streak: 0,
-        lastPlayed: new Date(),
+        lastPlayed: null,
         longestStreak: 0,
-        dailyScore: 0,
+        dailyScore: [0],
       };
 
       const scores = await testDatabase.database
@@ -58,8 +58,9 @@ describe('ScoreRepository', () => {
       expect(scores.length).toBe(1);
       expect(scores[0].userId).toBe(scoreData.userId);
       expect(scores[0].streak).toBe(scoreData.streak);
+      expect(scores[0].lastPlayed).toEqual(scoreData.lastPlayed);
       expect(scores[0].longestStreak).toBe(scoreData.longestStreak);
-      expect(scores[0].dailyScore).toBe(scoreData.dailyScore);
+      expect(scores[0].dailyScore).toStrictEqual(scoreData.dailyScore);
     });
   });
 
@@ -77,17 +78,18 @@ describe('ScoreRepository', () => {
       const scoreData = {
         userId: TEST_IDS.USER_ID,
         streak: 0,
-        lastPlayed: new Date(),
+        lastPlayed: null,
         longestStreak: 0,
-        dailyScore: 0,
+        dailyScore: [0], // Ensure dailyScore is an array of numbers
       };
 
       const result = await scoreRepository.getScoreById(scoreData.userId);
 
       expect(result.userId).toBe(scoreData.userId);
       expect(result.streak).toBe(scoreData.streak);
+      expect(result.lastPlayed).toEqual(scoreData.lastPlayed);
       expect(result.longestStreak).toBe(scoreData.longestStreak);
-      expect(result.dailyScore).toBe(scoreData.dailyScore);
+      expect(result.dailyScore).toStrictEqual(scoreData.dailyScore);
     });
   });
 
@@ -105,17 +107,18 @@ describe('ScoreRepository', () => {
       const scoreData = {
         userId: TEST_IDS.USER_ID,
         streak: 0,
-        lastPlayed: new Date(),
+        lastPlayed: null,
         longestStreak: 0,
-        dailyScore: 0,
+        dailyScore: [0],
       };
 
       const result = await scoreRepository.getScoreByUserId(scoreData.userId);
 
       expect(result.userId).toBe(scoreData.userId);
       expect(result.streak).toBe(scoreData.streak);
+      expect(result.lastPlayed).toEqual(scoreData.lastPlayed);
       expect(result.longestStreak).toBe(scoreData.longestStreak);
-      expect(result.dailyScore).toBe(scoreData.dailyScore);
+      expect(result.dailyScore).toStrictEqual(scoreData.dailyScore);
     });
   });
 
@@ -130,20 +133,12 @@ describe('ScoreRepository', () => {
 
       await userRepository.createUser(userData);
 
-      const scoreData = {
-        userId: TEST_IDS.USER_ID,
-        streak: 0,
-        lastPlayed: new Date(),
-        longestStreak: 0,
-        dailyScore: 0,
-      };
-
       const updatedScoreData = {
         userId: TEST_IDS.USER_ID,
         streak: 5,
         lastPlayed: new Date(),
         longestStreak: 5,
-        dailyScore: 10,
+        dailyScore: [10],
       };
 
       await scoreRepository.updateScore(updatedScoreData);
@@ -157,8 +152,9 @@ describe('ScoreRepository', () => {
       expect(scores.length).toBe(1);
       expect(scores[0].userId).toBe(updatedScoreData.userId);
       expect(scores[0].streak).toBe(updatedScoreData.streak);
+      expect(scores[0].lastPlayed).toEqual(updatedScoreData.lastPlayed);
       expect(scores[0].longestStreak).toBe(updatedScoreData.longestStreak);
-      expect(scores[0].dailyScore).toBe(updatedScoreData.dailyScore);
+      expect(scores[0].dailyScore).toStrictEqual(updatedScoreData.dailyScore);
     });
   });
 
@@ -176,9 +172,9 @@ describe('ScoreRepository', () => {
       const scoreData = {
         userId: TEST_IDS.USER_ID,
         streak: 0,
-        lastPlayed: new Date(),
+        lastPlayed: null,
         longestStreak: 0,
-        dailyScore: 0,
+        dailyScore: [0],
       };
 
       await scoreRepository.deleteScore(scoreData.userId);

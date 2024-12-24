@@ -71,19 +71,19 @@ export const updateUserZodSchema = createInsertSchema(userSchema, {
   return data;
 });
 
-export const updateScoreZodSchema = createInsertSchema(scoreSchema, {
-  streak: z.number().int().nonnegative(),
-  lastPlayed: z.date().default(() => new Date()),
-  longestStreak: z.number().int().nonnegative(),
-  dailyScore: z.number().int().nonnegative(),
+export const updateScoreZodSchema = z.object({
+  streak: z.number().optional(),
+  lastPlayed: z.date().nullable().optional(),
+  longestStreak: z.number().optional(),
+  dailyScore: z.array(z.number()).optional(),
 });
 
 export const createScoreZodSchema = createInsertSchema(scoreSchema, {
   userId: z.string().uuid(),
-  streak: z.number().int().nonnegative(),
-  lastPlayed: z.date().default(() => new Date()),
-  longestStreak: z.number().int().nonnegative(),
-  dailyScore: z.number().int().nonnegative(),
+  streak: z.number().optional(),
+  lastPlayed: z.date().nullable().optional(),
+  longestStreak: z.number().optional(),
+  dailyScore: z.array(z.number()).optional(),
 });
 
 export const createCharacterZodSchema = z.array(

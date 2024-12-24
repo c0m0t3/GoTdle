@@ -10,27 +10,26 @@ export class UserRepository {
 
   async createUser(data: CreateUser) {
     try {
-        const [createdUser] = await this.database
+      const [createdUser] = await this.database
         .insert(userSchema)
         .values(data)
         .returning({ createdAt: userSchema.createdAt, id: userSchema.id, password: userSchema.password, username: userSchema.username, email: userSchema.email });
 
-        const initialScore = {
-          userId: createdUser.id,
-          streak: 0,
-          lastPlayed: new Date(),
-          longestStreak: 0,
-          dailyScore: 0,
-        };
+      const initialScore = {
+        userId: createdUser.id,
+        streak: 0,
+        lastPlayed: null,
+        longestStreak: 0,
+        dailyScore: [0],
+      };
 
-        await this.database
-          .insert(scoreSchema)
-          .values(initialScore);
+      await this.database
+        .insert(scoreSchema)
+        .values(initialScore);
 
-        return createdUser;
-
-      } catch (error) {
-        throw error;
+      return createdUser;
+    } catch (error) {
+      throw error;
     }
   }
 

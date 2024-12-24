@@ -1,17 +1,22 @@
 import { eq } from 'drizzle-orm';
 import type { Database } from '..';
-import { CreateScore, createScoreZodSchema } from '../../validation/validation';
+import { CreateScore } from '../../validation/validation';
 import { scoreSchema } from '../schema/score.schema';
-import { z } from 'zod';
 
 export class ScoreRepository {
   constructor(private readonly database: Database) {}
 
   async createScore(data: CreateScore) {
     try {
+
+      const scoreData = {
+        ...data,
+        dailyScore: Array.isArray(data.dailyScore) ? data.dailyScore : [data.dailyScore || 0],
+      };
+
       const scores = await this.database
         .insert(scoreSchema)
-        .values(data)
+        .values(scoreData)
 
       return scores;
       } catch (error) {
@@ -27,7 +32,7 @@ export class ScoreRepository {
         .where(eq(scoreSchema.userId, id))
         .execute();
 
-      return scores || null; // Rückgabe des ersten Scores oder null, wenn kein Score gefunden wurde
+      return scores || null;
       } catch (error) {
         throw error;
     }
@@ -41,25 +46,26 @@ export class ScoreRepository {
         .where(eq(scoreSchema.userId, userId))
         .execute();
 
-      return scores || null; // Rückgabe des ersten Scores oder null, wenn kein Score gefunden wurde
+      return scores || null;
     } catch (error) {
       throw error;
   }
   }
 
-  updateScore(data: CreateScore) {
+  async updateScore(data: CreateScore) {
     try {
       return this.database
         .update(scoreSchema)
         .set(data)
         .where(eq(scoreSchema.userId, data.userId));
-      } catch (error) {
-        throw error;
+    } catch (error) {
+      throw error;
     }
   }
 
   async updateScoreByUserId(userId: string, data: Partial<CreateScore>) {
     try {
+
       const [updatedScore] = await this.database
         .update(scoreSchema)
         .set(data)
