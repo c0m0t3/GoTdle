@@ -32,7 +32,7 @@ describe('Routes', () => {
       registerUser: jest.fn((_req, res) =>
         res.status(201).json({ id: TEST_IDS.USER_ID }),
       ),
-    } as any;
+    } as unknown as AuthController;
 
     userController = {
       // Mock methods
@@ -54,7 +54,7 @@ describe('Routes', () => {
       getAllUsers: jest.fn((_req, res) =>
         res.status(200).json([{ id: TEST_IDS.USER_ID }]),
       ),
-    } as any;
+    } as unknown as UserController;
 
     scoreController = {
       // Mock methods
@@ -64,7 +64,7 @@ describe('Routes', () => {
       updateScoreByUserId: jest.fn((_req, res) =>
         res.status(200).json({ userId: TEST_IDS.USER_ID }),
       ),
-    } as any;
+    } as unknown as ScoreController;
 
     characterController = {
       // Mock methods
@@ -78,7 +78,7 @@ describe('Routes', () => {
         res.status(200).json({ userId: TEST_IDS.USER_ID }),
       ),
       deleteAllCharacters: jest.fn((_req, res) => res.status(204).json({})),
-    } as any;
+    } as unknown as CharacterController;
 
     const routes = new Routes(
       authController,
