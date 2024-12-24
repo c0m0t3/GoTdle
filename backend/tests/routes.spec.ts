@@ -92,9 +92,7 @@ describe('Routes', () => {
   }, 50000);
 
   it('should call getUserById', async () => {
-    await request(app)
-      .get('/users/123e4567-e89b-12d3-a456-426614174000')
-      .expect(200);
+    await request(app).get(`/users/${TEST_IDS.USER_ID}`).expect(200);
     expect(userController.getUserById).toHaveBeenCalled();
   }, 10000);
 
@@ -110,29 +108,25 @@ describe('Routes', () => {
 
   it('should call updateUser', async () => {
     await request(app)
-      .put('/users/123e4567-e89b-12d3-a456-426614174000')
+      .put(`/users/${TEST_IDS.USER_ID}`)
       .send({ email: 'updated@example.com' })
       .expect(200);
     expect(userController.updateUser).toHaveBeenCalled();
   }, 10000);
 
   it('should call deleteUser', async () => {
-    await request(app)
-      .delete('/users/123e4567-e89b-12d3-a456-426614174000')
-      .expect(200);
+    await request(app).delete(`/users/${TEST_IDS.USER_ID}`).expect(200);
     expect(userController.deleteUser).toHaveBeenCalled();
   }, 10000);
 
   it('should call getScoreByUserId', async () => {
-    await request(app)
-      .get('/scores/123e4567-e89b-12d3-a456-426614174000')
-      .expect(200);
+    await request(app).get(`/scores/${TEST_IDS.USER_ID}`).expect(200);
     expect(scoreController.getScoreByUserId).toHaveBeenCalled();
   }, 10000);
 
   it('should call updateScoreByUserId', async () => {
     await request(app)
-      .put('/scores/123e4567-e89b-12d3-a456-426614174000')
+      .put(`/scores/${TEST_IDS.USER_ID}`)
       .send({ streak: 5 })
       .expect(200);
     expect(scoreController.updateScoreByUserId).toHaveBeenCalled();
