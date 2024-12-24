@@ -4,12 +4,11 @@ import { eq } from 'drizzle-orm';
 import { scoreSchema } from '../src/database/schema/score.schema';
 
 const TEST_IDS = {
-    NON_EXISTENT_USER: '123e4567-e89b-12d3-a456-426614174010',
-    USER_ID: '123e4567-e89b-12d3-a456-426614174000',
-    USER_ID2: '123e4567-e89b-12d3-a456-426614174001',
-  } as const;
+  NON_EXISTENT_USER: '123e4567-e89b-12d3-a456-426614174010',
+  USER_ID: '123e4567-e89b-12d3-a456-426614174000',
+  USER_ID2: '123e4567-e89b-12d3-a456-426614174001',
+} as const;
 
-  
 describe('UserRepository', () => {
   let testDatabase: TestDatabase;
   let userRepository: UserRepository;
@@ -59,11 +58,11 @@ describe('UserRepository', () => {
 
   describe('getUserById', () => {
     it('should return a user by ID', async () => {
-        const userData = {
-            email: 'test@example.com',
-            password: 'password123',
-            username: 'testuser',
-          };
+      const userData = {
+        email: 'test@example.com',
+        password: 'password123',
+        username: 'testuser',
+      };
 
       const createdUser = await userRepository.createUser(userData);
 
@@ -75,16 +74,18 @@ describe('UserRepository', () => {
 
   describe('getUserByUsername', () => {
     it('should return a user by username', async () => {
-        const userData = {
-            email: 'test@example.com',
-            password: 'password123',
-            username: 'testuser',
-            id: TEST_IDS.USER_ID,
-          };
+      const userData = {
+        email: 'test@example.com',
+        password: 'password123',
+        username: 'testuser',
+        id: TEST_IDS.USER_ID,
+      };
 
       const createdUser = await userRepository.createUser(userData);
 
-      const result = await userRepository.getUserByUsername(createdUser.username);
+      const result = await userRepository.getUserByUsername(
+        createdUser.username,
+      );
 
       expect(result).toEqual(createdUser);
     });
@@ -92,12 +93,12 @@ describe('UserRepository', () => {
 
   describe('getUserByEmail', () => {
     it('should return a user by email', async () => {
-        const userData = {
-            email: 'test@example.com',
-            password: 'password123',
-            username: 'testuser',
-            id: TEST_IDS.USER_ID,
-          };
+      const userData = {
+        email: 'test@example.com',
+        password: 'password123',
+        username: 'testuser',
+        id: TEST_IDS.USER_ID,
+      };
 
       const createdUser = await userRepository.createUser(userData);
 
@@ -109,16 +110,16 @@ describe('UserRepository', () => {
 
   describe('deleteUser', () => {
     it('should successfully delete a user', async () => {
-        const userData = {
-            email: 'test@example.com',
-            password: 'password123',
-            username: 'testuser',
-            id: TEST_IDS.USER_ID,
-          };
+      const userData = {
+        email: 'test@example.com',
+        password: 'password123',
+        username: 'testuser',
+        id: TEST_IDS.USER_ID,
+      };
 
       const createdUser = await userRepository.createUser(userData);
 
-      await userRepository.deleteUser(createdUser.id);
+      await userRepository.deleteUserById(createdUser.id);
       const deletedUser = await userRepository.getUserById(createdUser.id);
 
       expect(deletedUser).toBeUndefined();
@@ -127,19 +128,19 @@ describe('UserRepository', () => {
 
   describe('getAllUsers', () => {
     it('should return all users', async () => {
-        const userData1 = {
-            email: 'test@example.com',
-            password: 'password123',
-            username: 'testuser',
-            id: TEST_IDS.USER_ID,
-          };
+      const userData1 = {
+        email: 'test@example.com',
+        password: 'password123',
+        username: 'testuser',
+        id: TEST_IDS.USER_ID,
+      };
 
-          const userData2 = {
-            email: 'test2@example.com',
-            password: 'password123',
-            username: 'testuser2',
-            id: TEST_IDS.USER_ID2,
-          };
+      const userData2 = {
+        email: 'test2@example.com',
+        password: 'password123',
+        username: 'testuser2',
+        id: TEST_IDS.USER_ID2,
+      };
 
       await userRepository.createUser(userData1);
       await userRepository.createUser(userData2);
