@@ -1,6 +1,6 @@
 {
-  "id": "548b1dd2-9759-4846-8605-c5409dc54ebf",
-  "prevId": "aa0614e6-ed25-440e-a1b4-1f88a5e163d6",
+  "id": "abd22c93-0b3c-47be-a4e1-9fb888749d38",
+  "prevId": "548b1dd2-9759-4846-8605-c5409dc54ebf",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -168,6 +168,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": 0
+        },
+        "dailyScore": {
+          "name": "dailyScore",
+          "type": "integer[]",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "ARRAY\n  [0]::INTEGER[]"
         }
       },
       "indexes": {},
