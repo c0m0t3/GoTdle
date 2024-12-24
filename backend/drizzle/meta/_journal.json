@@ -22,6 +22,13 @@
       "when": 1734651224299,
       "tag": "0002_rich_ultron",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1735040429676,
+      "tag": "0003_spooky_nitro",
+      "breakpoints": true
     }
   ]
 }
