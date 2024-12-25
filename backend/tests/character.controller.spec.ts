@@ -37,7 +37,7 @@ describe('CharacterController', () => {
     await testDatabase.setup();
     characterRepository = new CharacterRepository(testDatabase.database);
     characterController = new CharacterController(characterRepository);
-  });
+  }, 50000);
 
   beforeEach(() => {
     req = {};

@@ -1,20 +1,11 @@
 import { TestDatabase } from './helpers/database';
 import { UserRepository } from '../src/database/repository/user.repository';
 import { ScoreRepository } from '../src/database/repository/score.repository';
-import { UserController } from '../src/controller/user.controller';
 import { ScoreController } from '../src/controller/score.controller';
 import { CreateUser } from '../src/validation/validation';
-import { Request, Response, NextFunction } from 'express';
-
-jest.mock('../src/dependency-injection', () => ({
-  DI: {
-    utils: {
-      passwordHasher: {
-        hashPassword: jest.fn((password: string) => Promise.resolve(`hashed-${password}`)),
-      },
-    },
-  },
-}));
+import { Request, Response } from 'express';
+import { AuthController } from '../src/controller/auth.controller';
+import { DI } from '../src/dependency-injection';
 
 const TEST_IDS = {
   USER_ID: '123e4567-e89b-12d3-a456-426614174000',
@@ -31,18 +22,17 @@ describe('ScoreController', () => {
   let testDatabase: TestDatabase;
   let userRepository: UserRepository;
   let scoreRepository: ScoreRepository;
-  let userController: UserController;
+  let authController: AuthController;
   let scoreController: ScoreController;
   let req: Partial<Request>;
   let res: Partial<Response>;
-  let next: NextFunction;
 
   beforeAll(async () => {
     testDatabase = new TestDatabase();
     await testDatabase.setup();
     userRepository = new UserRepository(testDatabase.database);
     scoreRepository = new ScoreRepository(testDatabase.database);
-    userController = new UserController(userRepository, scoreRepository);
+    authController = new AuthController(userRepository, scoreRepository, DI.utils.passwordHasher, DI.utils.jwt);
     scoreController = new ScoreController(scoreRepository);
   }, 50000);
 
@@ -53,7 +43,6 @@ describe('ScoreController', () => {
       json: jest.fn(),
       send: jest.fn(),
     };
-    next = jest.fn();
   });
 
   afterEach(async () => {
@@ -63,16 +52,16 @@ describe('ScoreController', () => {
   afterAll(async () => {
     await testDatabase.teardown();
   });
-  
+
   describe('getScoreByUserId', () => {
     it('should return a score by user ID', async () => {
       req.body = TEST_USER;
 
-      await userController.createUser(req as Request, res as Response, next);
+      await authController.registerUser(req as Request, res as Response);
       
       req.params = { userId: TEST_IDS.USER_ID };
 
-      await scoreController.getScoreByUserId(req as Request, res as Response, next);
+      await scoreController.getScoreByUserId(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledTimes(2);
@@ -90,12 +79,13 @@ describe('ScoreController', () => {
   describe('updateScoreByUserId', () => {
     it('should update a score by user ID', async () => {
       req.body = TEST_USER;
-      await userController.createUser(req as Request, res as Response, next);
+
+      await authController.registerUser(req as Request, res as Response);
 
       req.params = { userId: TEST_IDS.USER_ID };
       req.body = { streak: 5, longestStreak: 10, dailyScore: [1, 2, 3] };
 
-      await scoreController.updateScoreByUserId(req as Request, res as Response, next);
+      await scoreController.updateScoreByUserId(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledTimes(2);

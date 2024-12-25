@@ -4,25 +4,11 @@ import { prepareAuthentication, verifyAccess } from '../src/middleware/auth.midd
 import { DI } from '../src/dependency-injection';
 import { TokenExpiredError } from 'jsonwebtoken';
 
-jest.mock('../src/dependency-injection', () => ({
-  DI: {
-    utils: {
-      jwt: {
-        verifyToken: jest.fn(),
-      },
-    },
-    repositories: {
-      user: {
-        getUserById: jest.fn(),
-      },
-    },
-  },
-}));
-
 describe('Auth Middleware', () => {
   let app: express.Application;
 
   beforeAll(() => {
+    
     app = express();
     app.use(express.json());
 

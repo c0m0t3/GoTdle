@@ -28,22 +28,6 @@ export function globalErrorHandler(
     return;
   }
 
-  // Handle Mongoose validation errors
-  if (err.name === 'ValidationError') {
-    res.status(400).json({
-      errors: Object.values(err).map((error) => error.message),
-    });
-    return;
-  }
-
-  // Handle custom application errors
-  if (err.name === 'CustomError') {
-    res.status(err.statusCode || 400).json({
-      errors: [err.message],
-    });
-    return;
-  }
-
   console.error('Unhandled error:', err);
 
   // Default error response

@@ -17,8 +17,7 @@ export class Jwt {
 type JwtUserData = {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  username: string;
 };
 
 export type JwtToken = JwtUserData & JwtPayload;

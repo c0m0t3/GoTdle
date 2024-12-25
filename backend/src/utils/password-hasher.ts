@@ -7,17 +7,10 @@ export class PasswordHasher {
     return bcrypt.hashSync(password, this.salt);
   }
 
-  // Funktion, um ein Passwort mit einem Hash zu vergleichen
-  async comparePasswordsWithHash(
-    password: string,
-    hash: string,
-  ): Promise<boolean> {
+  async comparePasswordWithHash(password: string, hash: string) {
     try {
-      const isMatch = await bcrypt.compareSync(password, hash);
-
-      return isMatch;
-    } catch (error) {
-      console.error('Fehler beim Vergleichen der Passwörter:', error);
+      return await bcrypt.compare(password, hash);
+    } catch {
       return false;
     }
   }

@@ -1,76 +1,66 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { UserRepository } from '../database/repository/user.repository';
 import { Jwt } from '../utils/jwt';
 import { PasswordHasher } from '../utils/password-hasher';
-import { loginZodSchema } from '../validation/validation';
+import { createUserZodSchema, loginZodSchema } from '../validation/validation';
+import { ScoreRepository } from '../database/repository/score.repository';
 
 export class AuthController {
   constructor(
     private readonly userRepository: UserRepository,
+    private readonly scoreRepository: ScoreRepository,
     private readonly passwordHasher: PasswordHasher,
     private readonly jwt: Jwt,
   ) {}
 
-  async registerUser(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
-    try {
-      const existingUser = await this.userRepository.getUserById(req.body.id);
-      if (existingUser) {
-        res.status(400).send('User already exists');
-        return;
-      }
-      const [createdUser] = await this.userRepository.createUser(req.body);
-      res.status(201).send({ user: createdUser });
-    } catch (error) {
-      next(error);
+  async registerUser(req: Request, res: Response): Promise<void> {
+    const validatedUser = await createUserZodSchema.parseAsync(req.body);
+
+    if (
+      (await this.userRepository.getUserByEmail(validatedUser.email)) ||
+      (await this.userRepository.getUserByUsername(validatedUser.username))
+    ) {
+      res.status(400).send('User already exists');
+      return;
     }
+    const [createdUser] = await this.userRepository.createUser(validatedUser);
+    await this.scoreRepository.createScore({ userId: createdUser.id });
+    res.status(201).send({ user: createdUser });
   }
 
-  async loginUser(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
-    try {
-      const data = loginZodSchema.parse(req.body); // Validierung der Eingabedaten
-      let user;
+  async loginUser(req: Request, res: Response): Promise<void> {
+    const data = loginZodSchema.parse(req.body);
+    let user;
 
-      // Prüfen, ob der Identifier eine E-Mail-Adresse oder ein Benutzername ist
-      if (data.type === 'email') {
-        user = await this.userRepository.getUserByEmail(data.identifier);
-      } else {
-        user = await this.userRepository.getUserByUsername(data.identifier);
-      }
-
-      if (!user) {
-        res.status(401).json({ errors: ['Invalid credentials'] });
-        return;
-      }
-
-      const matchingPassword =
-        await this.passwordHasher.comparePasswordsWithHash(
-          // Überprüfen, ob das eingegebene Passwort mit dem gespeicherten Passwort übereinstimmt
-          data.password,
-          user.password,
-        );
-
-      if (!matchingPassword) {
-        res.status(401).send({ errors: ['Invalid credentials'] });
-        return;
-      }
-
-      const token = this.jwt.generateToken({
-        id: user.id,
-        email: user.email,
-        username: user.username,
-      });
-
-      res.status(200).send({ accessToken: token });
-    } catch (error) {
-      next(error);
+    if (data.type === 'email') {
+      user = await this.userRepository.getUserByEmail(data.identifier);
+    } else {
+      user = await this.userRepository.getUserByUsername(data.identifier);
     }
+
+    if (!user) {
+      res.status(401).json({ errors: ['Invalid credentials'] });
+      console.log('hallo credentials');
+      return;
+    }
+
+    const matchingPassword = await this.passwordHasher.comparePasswordWithHash(
+      data.password,
+      user.password,
+    );
+
+    if (!matchingPassword) {
+      res.status(401).send({ errors: ['Invalid credentials'] });
+      console.log('hallo password');
+      return;
+    }
+
+    const token = this.jwt.generateToken({
+      id: user.id,
+      email: user.email,
+      username: user.username,
+    });
+
+    res.status(200).send({ accessToken: token });
   }
 }

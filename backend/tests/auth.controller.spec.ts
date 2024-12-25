@@ -1,11 +1,12 @@
 import { AuthController } from '../src/controller/auth.controller';
 import { UserRepository } from '../src/database/repository/user.repository';
 import { TestDatabase } from './helpers/database';
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { PasswordHasher } from '../src/utils/password-hasher';
 import { Jwt } from '../src/utils/jwt';
 import { ENV } from '../src/config/env.config';
 import { DI } from '../src/dependency-injection';
+import { ScoreRepository } from '../src/database/repository/score.repository';
 
 const TEST_IDS = {
   USER_ID: '123e4567-e89b-12d3-a456-426614174000',
@@ -15,21 +16,22 @@ describe('AuthController', () => {
   let testDatabase: TestDatabase;
   let userRepository: UserRepository;
   let authController: AuthController;
+  let scoreRepository: ScoreRepository
   let req: Partial<Request>;
   let res: Partial<Response>;
-  let next: NextFunction;
 
   beforeAll(async () => {
     testDatabase = new TestDatabase();
     await testDatabase.setup();
     userRepository = new UserRepository(testDatabase.database);
+    scoreRepository = new ScoreRepository(testDatabase.database);
     DI.utils = {
         passwordHasher: new PasswordHasher(10),
         jwt: new Jwt(ENV.JWT_SECRET, {
           issuer: 'http://fwe.auth',
         }),
       };
-    authController = new AuthController(userRepository, DI.utils.passwordHasher, DI.utils.jwt);
+    authController = new AuthController(userRepository, scoreRepository, DI.utils.passwordHasher, DI.utils.jwt);
   }, 50000);
 
   afterAll(async () => {
@@ -43,7 +45,6 @@ describe('AuthController', () => {
       json: jest.fn(),
       send: jest.fn(),
     };
-    next = jest.fn();
   });
 
   afterEach(async () => {
@@ -59,7 +60,7 @@ describe('AuthController', () => {
         username: 'testuser',
       };
 
-      await authController.registerUser(req as Request, res as Response, next);
+      await authController.registerUser(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.send).toHaveBeenCalledWith(expect.objectContaining({
@@ -82,7 +83,7 @@ describe('AuthController', () => {
 
       req.body = userData;
 
-      await authController.registerUser(req as Request, res as Response, next);
+      await authController.registerUser(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.send).toHaveBeenCalledWith('User already exists');
@@ -106,7 +107,7 @@ describe('AuthController', () => {
         password: 'password123',
       };
 
-      await authController.loginUser(req as Request, res as Response, next);
+      await authController.loginUser(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledWith(expect.objectContaining({
@@ -130,7 +131,7 @@ describe('AuthController', () => {
           password: 'password123',
         };
   
-        await authController.loginUser(req as Request, res as Response, next);
+        await authController.loginUser(req as Request, res as Response);
   
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.send).toHaveBeenCalledWith(expect.objectContaining({
@@ -145,7 +146,7 @@ describe('AuthController', () => {
         password: 'password123',
       };
 
-      await authController.loginUser(req as Request, res as Response, next);
+      await authController.loginUser(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(401);
       expect(res.json).toHaveBeenCalledWith({ errors: ['Invalid credentials'] });
@@ -167,7 +168,7 @@ describe('AuthController', () => {
           password: 'wrongpassword',
         };
   
-        await authController.loginUser(req as Request, res as Response, next);
+        await authController.loginUser(req as Request, res as Response);
   
         expect(res.status).toHaveBeenCalledWith(401);
         expect(res.send).toHaveBeenCalledWith({ errors: ['Invalid credentials'] });

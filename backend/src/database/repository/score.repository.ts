@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import type { Database } from '..';
-import { CreateScore } from '../../validation/validation';
 import { scoreSchema } from '../schema/score.schema';
+import { CreateScore } from '../../validation/validation';
 
 export class ScoreRepository {
   constructor(private readonly database: Database) {}

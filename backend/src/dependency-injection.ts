@@ -59,10 +59,11 @@ export function initializeDependencyInjection() {
   DI.controllers = {
     auth: new AuthController(
       DI.repositories.user,
+      DI.repositories.score,
       DI.utils.passwordHasher,
       DI.utils.jwt,
     ),
-    user: new UserController(DI.repositories.user, DI.repositories.score),
+    user: new UserController(DI.repositories.user),
     score: new ScoreController(DI.repositories.score),
     character: new CharacterController(DI.repositories.character),
   };
