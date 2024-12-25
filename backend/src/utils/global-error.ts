@@ -31,7 +31,7 @@ export function globalErrorHandler(
   // Handle Mongoose validation errors
   if (err.name === 'ValidationError') {
     res.status(400).json({
-      errors: Object.values(err).map((error: any) => error.message),
+      errors: Object.values(err).map((error) => error.message),
     });
     return;
   }

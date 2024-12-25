@@ -62,7 +62,7 @@ export function initializeDependencyInjection() {
       DI.utils.passwordHasher,
       DI.utils.jwt,
     ),
-    user: new UserController(DI.repositories.user),
+    user: new UserController(DI.repositories.user, DI.repositories.score),
     score: new ScoreController(DI.repositories.score),
     character: new CharacterController(DI.repositories.character),
   };

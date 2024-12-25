@@ -31,7 +31,7 @@ export const loginZodSchema = z.object({
 
 export const createUserZodSchema = createInsertSchema(userSchema, {
   email: z.string().email(),
-  password: z.string().min(8).refine(excludeInjectionChars), // Passwort muss mindestens 8 Zeichen lang sein und keine schädlichen Zeichen enthalten
+  password: z.string().min(8).refine(excludeInjectionChars),
   username: z.string().min(3).refine(excludeInjectionChars),
 }).transform(async (data) => {
   try {
@@ -44,6 +44,7 @@ export const createUserZodSchema = createInsertSchema(userSchema, {
       password: hashedPassword,
     };
   } catch (error) {
+    console.error('Error during password hashing:', error);
     throw new Error('Error during password hashing');
   }
 });
@@ -64,6 +65,7 @@ export const updateUserZodSchema = createInsertSchema(userSchema, {
         password: hashedPassword,
       };
     } catch (error) {
+      console.error('Error during password hashing:', error);
       throw new Error('Error during password hashing');
     }
   }

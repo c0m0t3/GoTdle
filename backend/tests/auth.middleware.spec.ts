@@ -1,5 +1,5 @@
 import request from 'supertest';
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response } from 'express';
 import { prepareAuthentication, verifyAccess } from '../src/middleware/auth.middleware';
 import { DI } from '../src/dependency-injection';
 import { TokenExpiredError } from 'jsonwebtoken';
@@ -26,11 +26,11 @@ describe('Auth Middleware', () => {
     app = express();
     app.use(express.json());
 
-    app.get('/protected', prepareAuthentication, (req: Request, res: Response) => {
+    app.get('/protected', prepareAuthentication, (_req: Request, res: Response) => {
       res.status(200).json({ message: 'Protected route accessed' });
     });
 
-    app.get('/verify', verifyAccess, (req: Request, res: Response) => {
+    app.get('/verify', verifyAccess, (_req: Request, res: Response) => {
       res.status(200).json({ message: 'Access verified' });
     });
   }, 50000);
@@ -38,6 +38,7 @@ describe('Auth Middleware', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
+
 
   describe('prepareAuthentication', () => {
     it('should set user and token on request if valid token is provided', async () => {
@@ -124,10 +125,10 @@ describe('Auth Middleware', () => {
       const res = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn(),
-      } as any as Response;
+      } as Partial<Response> & { status: jest.Mock; json: jest.Mock };
       const next = jest.fn();
 
-      verifyAccess(req, res, next);
+      verifyAccess(req, res as Response, next);
 
       expect(res.status).toHaveBeenCalledWith(401);
       expect(res.json).toHaveBeenCalledWith({ errors: ['No or invalid authentication provided'] });

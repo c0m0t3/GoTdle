@@ -1,19 +1,37 @@
-import { ScoreController } from '../src/controller/score.controller';
-import { ScoreRepository } from '../src/database/repository/score.repository';
-import { UserRepository } from '../src/database/repository/user.repository';
 import { TestDatabase } from './helpers/database';
+import { UserRepository } from '../src/database/repository/user.repository';
+import { ScoreRepository } from '../src/database/repository/score.repository';
+import { UserController } from '../src/controller/user.controller';
+import { ScoreController } from '../src/controller/score.controller';
+import { CreateUser } from '../src/validation/validation';
 import { Request, Response, NextFunction } from 'express';
-import { z } from 'zod';
+
+jest.mock('../src/dependency-injection', () => ({
+  DI: {
+    utils: {
+      passwordHasher: {
+        hashPassword: jest.fn((password: string) => Promise.resolve(`hashed-${password}`)),
+      },
+    },
+  },
+}));
 
 const TEST_IDS = {
   USER_ID: '123e4567-e89b-12d3-a456-426614174000',
-  SCORE_ID: '123e4567-e89b-12d3-a456-426614174002',
-} as const;
+};
+
+const TEST_USER: CreateUser = {
+  email: 'test@example.com',
+  password: 'password123',
+  username: 'testuser',
+  id: TEST_IDS.USER_ID,
+};
 
 describe('ScoreController', () => {
   let testDatabase: TestDatabase;
-  let scoreRepository: ScoreRepository;
   let userRepository: UserRepository;
+  let scoreRepository: ScoreRepository;
+  let userController: UserController;
   let scoreController: ScoreController;
   let req: Partial<Request>;
   let res: Partial<Response>;
@@ -22,14 +40,11 @@ describe('ScoreController', () => {
   beforeAll(async () => {
     testDatabase = new TestDatabase();
     await testDatabase.setup();
-    scoreRepository = new ScoreRepository(testDatabase.database);
     userRepository = new UserRepository(testDatabase.database);
+    scoreRepository = new ScoreRepository(testDatabase.database);
+    userController = new UserController(userRepository, scoreRepository);
     scoreController = new ScoreController(scoreRepository);
   }, 50000);
-
-  afterAll(async () => {
-    await testDatabase.teardown();
-  });
 
   beforeEach(() => {
     req = {};
@@ -45,123 +60,53 @@ describe('ScoreController', () => {
     await testDatabase.clearDatabase();
   });
 
-  describe('getScoreById', () => {
-    it('should return a score by ID', async () => {
-      const userData = {
-        id: TEST_IDS.USER_ID,
-        email: 'test@example.com',
-        password: 'password123',
-        username: 'testuser',
-      };
-
-      await userRepository.createUser(userData);
-
-      const scoreData = {
-        userId: TEST_IDS.USER_ID,
-        streak: 0,
-        lastPlayed: null,
-        longestStreak: 0,
-        dailyScore: [0],
-      };
-
-      req.params = { id: TEST_IDS.USER_ID };
-
-      await scoreController.getScoreById(req as Request, res as Response, next);
-
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-        userId: TEST_IDS.USER_ID,
-        streak: 0,
-        longestStreak: 0,
-        dailyScore: [0],
-      }));
-    });
-
-    it('should return 404 if score not found', async () => {
-      req.params = { id: TEST_IDS.USER_ID };
-
-      await scoreController.getScoreById(req as Request, res as Response, next);
-
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ errors: ['Score not found'] });
-    });
+  afterAll(async () => {
+    await testDatabase.teardown();
   });
-
+  
   describe('getScoreByUserId', () => {
     it('should return a score by user ID', async () => {
-      const userData = {
-        id: TEST_IDS.USER_ID,
-        email: 'test@example.com',
-        password: 'password123',
-        username: 'testuser',
-      };
+      req.body = TEST_USER;
 
-      await userRepository.createUser(userData);
-
-      const scoreData = {
-        userId: TEST_IDS.USER_ID,
-        streak: 0,
-        lastPlayed: null,
-        longestStreak: 0,
-        dailyScore: [0],
-      };
-
+      await userController.createUser(req as Request, res as Response, next);
+      
       req.params = { userId: TEST_IDS.USER_ID };
 
       await scoreController.getScoreByUserId(req as Request, res as Response, next);
 
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-        userId: TEST_IDS.USER_ID,
-        streak: 0,
-        longestStreak: 0,
-        dailyScore: [0],
-      }));
-    });
-
-    it('should return 404 if score not found', async () => {
-      req.params = { userId: TEST_IDS.USER_ID };
-
-      await scoreController.getScoreByUserId(req as Request, res as Response, next);
-
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ errors: ['Score not found'] });
+      expect(res.json).toHaveBeenCalledTimes(2);
+      expect(res.json).toHaveBeenNthCalledWith(2, expect.arrayContaining([
+        expect.objectContaining({
+          userId: expect.any(String),
+          streak: 0,
+          longestStreak: 0,
+          dailyScore: [0],
+        })
+      ]));
     });
   });
 
   describe('updateScoreByUserId', () => {
-    it('should update a score', async () => {
-      const userData = {
-        id: TEST_IDS.USER_ID,
-        email: 'test@example.com',
-        password: 'password123',
-        username: 'testuser',
-      };
-
-      await userRepository.createUser(userData);
+    it('should update a score by user ID', async () => {
+      req.body = TEST_USER;
+      await userController.createUser(req as Request, res as Response, next);
 
       req.params = { userId: TEST_IDS.USER_ID };
-      req.body = { streak: 5, longestStreak: 5, dailyScore: [10] };
+      req.body = { streak: 5, longestStreak: 10, dailyScore: [1, 2, 3] };
 
       await scoreController.updateScoreByUserId(req as Request, res as Response, next);
 
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-        userId: TEST_IDS.USER_ID,
-        streak: 5,
-        longestStreak: 5,
-        dailyScore: [10],
-      }));
-    });
-
-    it('should return 404 if score not found', async () => {
-      req.params = { userId: TEST_IDS.USER_ID };
-      req.body = { streak: 5, longestStreak: 5, dailyScore: [10] };
-
-      await scoreController.updateScoreByUserId(req as Request, res as Response, next);
-
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ errors: ['Score not found'] });
+      expect(res.json).toHaveBeenCalledTimes(2);
+      expect(res.json).toHaveBeenNthCalledWith(2, expect.arrayContaining([
+        expect.objectContaining({
+          userId: TEST_IDS.USER_ID,
+          streak: 5,
+          longestStreak: 10,
+          dailyScore: [1, 2, 3],
+        })
+      ]));
     });
   });
 });

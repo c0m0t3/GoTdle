@@ -1,7 +1,5 @@
 import { TestDatabase } from './helpers/database';
 import { UserRepository } from '../src/database/repository/user.repository';
-import { eq } from 'drizzle-orm';
-import { scoreSchema } from '../src/database/schema/score.schema';
 
 const TEST_IDS = {
   NON_EXISTENT_USER: '123e4567-e89b-12d3-a456-426614174010',
@@ -28,7 +26,7 @@ describe('UserRepository', () => {
   });
 
   describe('createUser', () => {
-    it('should create a user and an initial score', async () => {
+    it('should create a user', async () => {
       const userData = {
         email: 'test@example.com',
         password: 'password123',
@@ -36,23 +34,11 @@ describe('UserRepository', () => {
         id: TEST_IDS.USER_ID,
       };
 
-      const createdUser = await userRepository.createUser(userData);
+      const [createdUser] = await userRepository.createUser(userData);
 
       expect(createdUser).toHaveProperty('id');
       expect(createdUser.email).toBe(userData.email);
       expect(createdUser.username).toBe(userData.username);
-
-      const scores = await testDatabase.database
-        .select()
-        .from(scoreSchema)
-        .where(eq(scoreSchema.userId, createdUser.id))
-        .execute();
-
-      expect(scores.length).toBe(1);
-      expect(scores[0].userId).toBe(createdUser.id);
-      expect(scores[0].streak).toBe(0);
-      expect(scores[0].longestStreak).toBe(0);
-      expect(scores[0].dailyScore).toStrictEqual([0]);
     });
   });
 
@@ -64,11 +50,17 @@ describe('UserRepository', () => {
         username: 'testuser',
       };
 
-      const createdUser = await userRepository.createUser(userData);
+      const [createdUser] = await userRepository.createUser(userData);
 
       const result = await userRepository.getUserById(createdUser.id);
 
-      expect(result).toEqual(createdUser);
+      expect(result).toEqual({
+        id: createdUser.id,
+        email: createdUser.email,
+        password: userData.password,
+        username: createdUser.username,
+        createdAt: createdUser.createdAt,
+      });
     });
   });
 
@@ -81,13 +73,19 @@ describe('UserRepository', () => {
         id: TEST_IDS.USER_ID,
       };
 
-      const createdUser = await userRepository.createUser(userData);
+      const [createdUser] = await userRepository.createUser(userData);
 
       const result = await userRepository.getUserByUsername(
         createdUser.username,
       );
 
-      expect(result).toEqual(createdUser);
+      expect(result).toEqual({
+        id: createdUser.id,
+        email: createdUser.email,
+        password: userData.password,
+        username: createdUser.username,
+        createdAt: createdUser.createdAt,
+      });
     });
   });
 
@@ -100,11 +98,17 @@ describe('UserRepository', () => {
         id: TEST_IDS.USER_ID,
       };
 
-      const createdUser = await userRepository.createUser(userData);
+      const [createdUser] = await userRepository.createUser(userData);
 
       const result = await userRepository.getUserByEmail(createdUser.email);
 
-      expect(result).toEqual(createdUser);
+      expect(result).toEqual({
+        id: createdUser.id,
+        email: createdUser.email,
+        password: userData.password,
+        username: createdUser.username,
+        createdAt: createdUser.createdAt,
+      });
     });
   });
 
@@ -117,7 +121,7 @@ describe('UserRepository', () => {
         id: TEST_IDS.USER_ID,
       };
 
-      const createdUser = await userRepository.createUser(userData);
+      const [createdUser] = await userRepository.createUser(userData);
 
       await userRepository.deleteUserById(createdUser.id);
       const deletedUser = await userRepository.getUserById(createdUser.id);

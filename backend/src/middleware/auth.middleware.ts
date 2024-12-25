@@ -16,8 +16,8 @@ export const prepareAuthentication = async (
         throw new Error('User not found');
       }
 
-      req.user = user; 
-      req.token = token; 
+      req.user = user;
+      req.token = token;
     } catch (error) {
       if (error instanceof TokenExpiredError) {
         console.error('Token expired:', error);

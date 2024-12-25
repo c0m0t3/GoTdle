@@ -11,23 +11,30 @@ export class AuthController {
     private readonly jwt: Jwt,
   ) {}
 
-  async registerUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async registerUser(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const existingUser = await this.userRepository.getUserById(req.body.id);
       if (existingUser) {
         res.status(400).send('User already exists');
         return;
       }
-      const createdUser = await this.userRepository.createUser(req.body);
+      const [createdUser] = await this.userRepository.createUser(req.body);
       res.status(201).send({ user: createdUser });
     } catch (error) {
       next(error);
     }
   }
 
-  async loginUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async loginUser(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
-      
       const data = loginZodSchema.parse(req.body); // Validierung der Eingabedaten
       let user;
 
@@ -63,7 +70,7 @@ export class AuthController {
 
       res.status(200).send({ accessToken: token });
     } catch (error) {
-        next(error);
-      }
+      next(error);
+    }
   }
 }

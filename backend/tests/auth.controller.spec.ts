@@ -15,8 +15,6 @@ describe('AuthController', () => {
   let testDatabase: TestDatabase;
   let userRepository: UserRepository;
   let authController: AuthController;
-  let passwordHasher: PasswordHasher;
-  let jwt: Jwt;
   let req: Partial<Request>;
   let res: Partial<Response>;
   let next: NextFunction;

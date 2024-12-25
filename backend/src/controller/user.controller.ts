@@ -1,10 +1,17 @@
 import { NextFunction, Request, Response } from 'express';
 import { UserRepository } from '../database/repository/user.repository';
 import { z } from 'zod';
-import { updateUserZodSchema } from '../validation/validation';
+import {
+  createUserZodSchema,
+  updateUserZodSchema,
+} from '../validation/validation';
+import { ScoreRepository } from '../database/repository/score.repository';
 
 export class UserController {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly scoreRepository: ScoreRepository,
+  ) {}
 
   async getUserById(
     req: Request,
@@ -75,7 +82,9 @@ export class UserController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const user = await this.userRepository.createUser(req.body);
+      const validatedUser = await createUserZodSchema.parseAsync(req.body);
+      const [user] = await this.userRepository.createUser(validatedUser);
+      await this.scoreRepository.createScore({ userId: user.id });
       res.status(201).json(user);
     } catch (error) {
       next(error);
@@ -92,7 +101,7 @@ export class UserController {
         ...req.body,
         id: req.params.id,
       });
-      const updatedUser = await this.userRepository.updateUserById(userData);
+      const [updatedUser] = await this.userRepository.updateUserById(userData);
 
       if (!updatedUser) {
         res.status(404).json({ errors: ['User not found'] });
@@ -114,7 +123,7 @@ export class UserController {
       const idSchema = z.string().uuid();
       const userId = idSchema.parse(req.params.id);
 
-      const deletedUser = await this.userRepository.deleteUserById(userId);
+      const [deletedUser] = await this.userRepository.deleteUserById(userId);
 
       if (!deletedUser) {
         res.status(404).json({ errors: ['User not found'] });
@@ -128,7 +137,7 @@ export class UserController {
   }
 
   async getAllUsers(
-    req: Request,
+    _req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<void> {

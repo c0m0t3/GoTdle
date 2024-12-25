@@ -1,6 +1,4 @@
-import { z } from 'zod';
 import { excludeInjectionChars, loginZodSchema, createUserZodSchema, updateUserZodSchema } from '../src/validation/validation';
-import { DI } from '../src/dependency-injection';
 
 jest.mock('../src/dependency-injection', () => ({
   DI: {

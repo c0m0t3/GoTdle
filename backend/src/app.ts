@@ -52,5 +52,4 @@ export class App {
   public getServer() {
     return this.app;
   }
-
 }
