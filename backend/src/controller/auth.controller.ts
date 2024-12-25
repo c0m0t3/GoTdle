@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { UserRepository } from '../database/repository/user.repository';
 import { Jwt } from '../utils/jwt';
 import { PasswordHasher } from '../utils/password-hasher';
-import { loginZodSchema } from '../validation/validation';
+import { createUserZodSchema, loginZodSchema } from '../validation/validation';
 
 export class AuthController {
   constructor(
@@ -11,27 +11,37 @@ export class AuthController {
     private readonly jwt: Jwt,
   ) {}
 
-  async registerUser(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const existingUser = await this.userRepository.getUserById(req.body.id);
-      if (existingUser) {
-        res.status(400).send('User already exists');
-        return;
-      }
-      const createdUser = await this.userRepository.createUser(req.body);
-      res.status(201).send({ user: createdUser });
-    } catch (error) {
-      next(error);
+  async registerUser(req: Request, res: Response): Promise<void> {
+    const validatedData = await createUserZodSchema.parseAsync(req.body);
+
+    const existingEmail = await this.userRepository.getUserByEmail(
+      validatedData.email,
+    );
+    if (existingEmail) {
+      res.status(400).send({ errors: ['Email already in use'] });
+      return;
     }
+    const existingUsername = await this.userRepository.getUserByUsername(
+      validatedData.username,
+    );
+    if (existingUsername) {
+      res.status(400).send({ errors: ['Username already in use'] });
+      return;
+    }
+
+    const createdUser = await this.userRepository.createUser(validatedData);
+    res.status(201).send({ user: createdUser });
   }
 
-  async loginUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async loginUser(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
-      
-      const data = loginZodSchema.parse(req.body); // Validierung der Eingabedaten
+      const data = loginZodSchema.parse(req.body);
       let user;
 
-      // Prüfen, ob der Identifier eine E-Mail-Adresse oder ein Benutzername ist
       if (data.type === 'email') {
         user = await this.userRepository.getUserByEmail(data.identifier);
       } else {
@@ -45,7 +55,6 @@ export class AuthController {
 
       const matchingPassword =
         await this.passwordHasher.comparePasswordsWithHash(
-          // Überprüfen, ob das eingegebene Passwort mit dem gespeicherten Passwort übereinstimmt
           data.password,
           user.password,
         );
@@ -63,7 +72,7 @@ export class AuthController {
 
       res.status(200).send({ accessToken: token });
     } catch (error) {
-        next(error);
-      }
+      next(error);
+    }
   }
 }
