@@ -2994,8 +2994,63 @@
       6
     ],
     "actor": "Hannah Waddingham"
+  },
+  {
+    "_id": 90,
+    "name": "High Sparrow",
+    "gender": "male",
+    "born": "",
+    "origin": "",
+    "death": "303 AC",
+    "status": "deceased",
+    "culture": "Andal",
+    "religion": "Faith of the Seven",
+    "titles": [
+      "High Septon",
+      "His High Holiness"
+    ],
+    "house": "",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      5,
+      6
+    ],
+    "actor": "Jonathan Pryce"
+  },
+  {
+    "_id": 91,
+    "name": "Rodrik Cassel",
+    "gender": "male",
+    "born": "",
+    "origin": "Winterfell",
+    "death": "299 AC",
+    "status": "deceased",
+    "culture": "Northern",
+    "religion": "",
+    "titles": [
+      "Master-at-Arms",
+      "Ser",
+      "Castellan of Winterfell"
+    ],
+    "house": "",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      1,
+      2
+    ],
+    "actor": "Ron Donachie"
   }
 ]
 //Es fehlen:, Begleiter Bran in Norden, 3 Drache, 5 Wölfe, Night Watch son wichtiger Typ der auch hingerichtet wurde, Jons Freunde Nightwatch,
 //Heiße Pastete(Arya Freund), Oliver,
-//Rodrick Cassel, Dreiäugiger Rabe, Beric Dondarrion, Thoros von Myr, Dontos, Janos Slynt, Ser Alliser?
+//Dreiäugiger Rabe, Beric Dondarrion, Thoros von Myr, Dontos, Janos Slynt, Ser Alliser?
