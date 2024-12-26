@@ -2682,8 +2682,62 @@
       8
     ],
     "actor": "Hafþór Júlíus Björnsson"
+  },
+  {
+    "_id": 79,
+    "name": "Syrio Forel",
+    "gender": "male",
+    "born": "",
+    "origin": "Bravos",
+    "death": "298 AC",
+    "status": "deceased",
+    "culture": "Braavosi",
+    "religion": "Many-Faced God",
+    "titles": [
+      "First Sword of Braavos"
+    ],
+    "house": "",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      1
+    ],
+    "actor": "Miltos Yerolemou"
+  },
+  {
+    "_id": 80,
+    "name": "Baristan Selmy",
+    "gender": "male",
+    "born": "",
+    "origin": "Stormlands",
+    "death": "302 AC",
+    "status": "deceased",
+    "culture": "Marcher",
+    "religion": "",
+    "titles": [
+      "Ser",
+      "Lord Commander of the Kingsguard"
+    ],
+    "house": "Selmy",
+    "father": "Lyonel Selmy",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      1,
+      3,
+      4,
+      5
+    ],
+    "actor": "Ian McElhinney"
   }
 ]
 //Es fehlen:, Begleiter Bran in Norden, 3 Drache, 5 Wölfe, Night Watch son wichtiger Typ der auch hingerichtet wurde, Jons Freunde Nightwatch, Aemon Targaryan,
-//Wildling Boss(Mence Raider?), Heiße Pastete(Arya Freund), Syrio Forel, Kingsgurad(Meryn Trant, Boss(weiße Haare), Pycelle und Qyburn, Septa Unella, Maester Luwin, Oliver,
+//Wildling Boss(Mence Raider?), Heiße Pastete(Arya Freund), Kingsgurad(Meryn Trant, Boss(weiße Haare), Pycelle und Qyburn, Septa Unella, Maester Luwin, Oliver,
 //Rodrick Cassel, Dreiäugiger Rabe, Walder Frey, Beric Dondarrion, Thoros von Myr, Dontos, Janos Slynt,
