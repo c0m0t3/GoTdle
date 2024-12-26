@@ -3037,7 +3037,7 @@
       "Ser",
       "Castellan of Winterfell"
     ],
-    "house": "",
+    "house": "Cassel",
     "father": "",
     "mother": "",
     "spouse": [],
@@ -3049,8 +3049,64 @@
       2
     ],
     "actor": "Ron Donachie"
+  },
+  {
+    "_id": 92,
+    "name": "Thoros of Myr",
+    "gender": "male",
+    "born": "",
+    "origin": "Myr",
+    "death": "304 AC",
+    "status": "deceased",
+    "culture": "Myrish",
+    "religion": "Lord of Light",
+    "titles": [
+      "Red Priest"
+    ],
+    "house": "",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      3,
+      6,
+      7
+    ],
+    "actor": "Paul Kaye"
+  },
+  {
+    "_id": 93,
+    "name": "Beric Dondarrion",
+    "gender": "male",
+    "born": "",
+    "origin": "Blackhaven",
+    "death": "305 AC",
+    "status": "deceased",
+    "culture": "Marcher",
+    "religion": "Lord of Light",
+    "titles": [
+      "King-Beyond-the-Wall"
+    ],
+    "house": "Dondarrion",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      1,
+      3,
+      6,
+      7,
+      8
+    ],
+    "actor": "Richard Dormer"
   }
 ]
 //Es fehlen:, Begleiter Bran in Norden, 3 Drache, 5 Wölfe, Night Watch son wichtiger Typ der auch hingerichtet wurde, Jons Freunde Nightwatch,
 //Heiße Pastete(Arya Freund), Oliver,
-//Dreiäugiger Rabe, Beric Dondarrion, Thoros von Myr, Dontos, Janos Slynt, Ser Alliser?
+//Dreiäugiger Rabe, Dontos, Janos Slynt, Ser Alliser?
