@@ -2619,8 +2619,71 @@
       8
     ],
     "actor": "Bella Ramsey"
+  },
+  {
+    "_id": 77,
+    "name": "Hodor",
+    "gender": "male",
+    "born": "",
+    "origin": "",
+    "death": "303 AC",
+    "status": "deceased",
+    "culture": "Northmen",
+    "religion": "Old Gods",
+    "titles": [
+    ],
+    "house": "Stark",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      1,
+      2,
+      3,
+      4,
+      6
+    ],
+    "actor": "Kristian Nairn"
+  },
+  {
+    "_id": 78,
+    "name": "Gregor Clegane",
+    "gender": "male",
+    "born": "",
+    "origin": "",
+    "death": "305 AC",
+    "status": "deceased",
+    "culture": "Westermen",
+    "religion": "",
+    "titles": [
+      "Ser",
+      "The Mountain"
+    ],
+    "house": "Clegane",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [
+      "Sandor Clegane"
+    ],
+    "lovers": [],
+    "seasons": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "actor": "Hafþór Júlíus Björnsson"
   }
 ]
-//Es fehlen: Hodor, The Mountain, Begleiter Bran in Norden, 3 Drache, 5 Wölfe, Night Watch son wichtiger Typ der auch hingerichtet wurde, Jons Freunde Nightwatch, Aemon Targaryan,
+//Es fehlen:, Begleiter Bran in Norden, 3 Drache, 5 Wölfe, Night Watch son wichtiger Typ der auch hingerichtet wurde, Jons Freunde Nightwatch, Aemon Targaryan,
 //Wildling Boss(Mence Raider?), Heiße Pastete(Arya Freund), Syrio Forel, Kingsgurad(Meryn Trant, Boss(weiße Haare), Pycelle und Qyburn, Septa Unella, Maester Luwin, Oliver,
 //Rodrick Cassel, Dreiäugiger Rabe, Walder Frey, Beric Dondarrion, Thoros von Myr, Dontos, Janos Slynt,
