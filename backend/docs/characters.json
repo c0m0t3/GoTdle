@@ -2850,8 +2850,68 @@
       5
     ],
     "actor": "Ciarán Hinds"
+  },
+  {
+    "_id": 85,
+    "name": "Walder Frey",
+    "gender": "male",
+    "born": "208 AC",
+    "origin": "Riverlands",
+    "death": "303 AC",
+    "status": "deceased",
+    "culture": "Rivermen",
+    "religion": "",
+    "titles": [
+      "Lord of the Crossing",
+      "Lord of Riverrun",
+      "Lord Paramount of the Trident"
+    ],
+    "house": "Frey",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      1,
+      3,
+      6,
+      7
+    ],
+    "actor": "David Bradley"
+  },
+  {
+    "_id": 86,
+    "name": "Pycelle",
+    "gender": "male",
+    "born": "231 AC",
+    "origin": "",
+    "death": "303 AC",
+    "status": "deceased",
+    "culture": "Andal",
+    "religion": "Faith of the Seven",
+    "titles": [
+      "Grand Maester"
+    ],
+    "house": "",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "actor": "Julian Glover"
   }
 ]
 //Es fehlen:, Begleiter Bran in Norden, 3 Drache, 5 Wölfe, Night Watch son wichtiger Typ der auch hingerichtet wurde, Jons Freunde Nightwatch,
-//Wildling Boss(Mence Raider?), Heiße Pastete(Arya Freund), Pycelle und Qyburn, Septa Unella, Maester Luwin, Oliver,
-//Rodrick Cassel, Dreiäugiger Rabe, Walder Frey, Beric Dondarrion, Thoros von Myr, Dontos, Janos Slynt, Ser Alliser?
+//Heiße Pastete(Arya Freund), Pycelle und Qyburn, Septa Unella, Maester Luwin, Oliver,
+//Rodrick Cassel, Dreiäugiger Rabe, Beric Dondarrion, Thoros von Myr, Dontos, Janos Slynt, Ser Alliser?
