@@ -140,7 +140,16 @@ export const ImageModePage = () => {
           </Box>
 
           {isCorrect && (
-            <Button mt={4}>Next</Button>
+            <VStack>
+              <Text>Congratulations, you finished today's GoTdle!!</Text>
+              <Text>Here are your Scores!</Text>
+              <Text>Classic: ...</Text>
+              <Text>Quote: ...</Text>
+              <Text>Image: {incorrectGuesses.length + 1}</Text>
+              <Text>Actual Streak: ...</Text>
+              {/*TODO: 1. Get Attempts from other modes. 2. Store whole Score in database*/}
+              <Button mt={4}>Jump to Scoreboard</Button>
+            </VStack>
           )}
 
         </VStack>
