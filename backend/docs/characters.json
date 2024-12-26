@@ -2794,8 +2794,64 @@
       6
     ],
     "actor": "Wilko Johnson"
+  },
+  {
+    "_id": 83,
+    "name": "Aemon Targaryen",
+    "gender": "male",
+    "born": "202 AC",
+    "origin": "King's Landing",
+    "death": "302 AC",
+    "status": "deceased",
+    "culture": "Valyrian",
+    "religion": "",
+    "titles": [
+      "Maester",
+      "Prince"
+    ],
+    "house": "Targaryen",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      1,
+      3,
+      4,
+      5
+    ],
+    "actor": "Peter Vaughan"
+  },
+  {
+    "_id": 84,
+    "name": "Mence Rayder",
+    "gender": "male",
+    "born": "",
+    "origin": "Beyond the Wall",
+    "death": "302 AC",
+    "status": "deceased",
+    "culture": "Free Folk",
+    "religion": "Old Gods",
+    "titles": [
+      "King-Beyond-the-Wall"
+    ],
+    "house": "",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      3,
+      4,
+      5
+    ],
+    "actor": "Ciarán Hinds"
   }
 ]
-//Es fehlen:, Begleiter Bran in Norden, 3 Drache, 5 Wölfe, Night Watch son wichtiger Typ der auch hingerichtet wurde, Jons Freunde Nightwatch, Aemon Targaryan,
+//Es fehlen:, Begleiter Bran in Norden, 3 Drache, 5 Wölfe, Night Watch son wichtiger Typ der auch hingerichtet wurde, Jons Freunde Nightwatch,
 //Wildling Boss(Mence Raider?), Heiße Pastete(Arya Freund), Pycelle und Qyburn, Septa Unella, Maester Luwin, Oliver,
-//Rodrick Cassel, Dreiäugiger Rabe, Walder Frey, Beric Dondarrion, Thoros von Myr, Dontos, Janos Slynt,
+//Rodrick Cassel, Dreiäugiger Rabe, Walder Frey, Beric Dondarrion, Thoros von Myr, Dontos, Janos Slynt, Ser Alliser?
