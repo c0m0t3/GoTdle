@@ -3105,8 +3105,63 @@
       8
     ],
     "actor": "Richard Dormer"
+  },
+  {
+    "_id": 94,
+    "name": "Dontos Hollard",
+    "gender": "male",
+    "born": "",
+    "origin": "Duskendale",
+    "death": "301 AC",
+    "status": "deceased",
+    "culture": "Andal",
+    "religion": "Faith of the Seven",
+    "titles": [
+      "Fool"
+    ],
+    "house": "Hollard",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      2,
+      4
+    ],
+    "actor": "Tony Way"
+  },
+  {
+    "_id": 95,
+    "name": "Janos Slynt",
+    "gender": "male",
+    "born": "",
+    "origin": "King's Landing",
+    "death": "302 AC",
+    "status": "deceased",
+    "culture": "Andal",
+    "religion": "Faith of the Seven",
+    "titles": [
+      "Commander of the City Watch",
+      "Lord of Harrenhal"
+    ],
+    "house": "Slynt",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      1,
+      2,
+      4,
+      5
+    ],
+    "actor": "Dominic Carter"
   }
 ]
 //Es fehlen:, Begleiter Bran in Norden, 3 Drache, 5 Wölfe, Night Watch son wichtiger Typ der auch hingerichtet wurde, Jons Freunde Nightwatch,
 //Heiße Pastete(Arya Freund), Oliver,
-//Dreiäugiger Rabe, Dontos, Janos Slynt, Ser Alliser?
+//Dreiäugiger Rabe, Ser Alliser?
