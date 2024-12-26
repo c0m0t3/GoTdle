@@ -2736,8 +2736,66 @@
       5
     ],
     "actor": "Ian McElhinney"
+  },
+  {
+    "_id": 81,
+    "name": "Meryn Trant",
+    "gender": "male",
+    "born": "",
+    "origin": "Stormlands",
+    "death": "302 AC",
+    "status": "deceased",
+    "culture": "Stormlander",
+    "religion": "Faith of the Seven",
+    "titles": [
+      "Ser"
+    ],
+    "house": "Trant",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "actor": "Ian Beattie"
+  },
+  {
+    "_id": 82,
+    "name": "Ilyn Payne",
+    "gender": "male",
+    "born": "",
+    "origin": "The Westerlands",
+    "death": "",
+    "status": "alive",
+    "culture": "Westermen",
+    "religion": "",
+    "titles": [
+      "Ser",
+      "King's Justice",
+      "Captain of the guard"
+    ],
+    "house": "Payne",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      1,
+      2,
+      6
+    ],
+    "actor": "Wilko Johnson"
   }
 ]
 //Es fehlen:, Begleiter Bran in Norden, 3 Drache, 5 Wölfe, Night Watch son wichtiger Typ der auch hingerichtet wurde, Jons Freunde Nightwatch, Aemon Targaryan,
-//Wildling Boss(Mence Raider?), Heiße Pastete(Arya Freund), Kingsgurad(Meryn Trant, Boss(weiße Haare), Pycelle und Qyburn, Septa Unella, Maester Luwin, Oliver,
+//Wildling Boss(Mence Raider?), Heiße Pastete(Arya Freund), Pycelle und Qyburn, Septa Unella, Maester Luwin, Oliver,
 //Rodrick Cassel, Dreiäugiger Rabe, Walder Frey, Beric Dondarrion, Thoros von Myr, Dontos, Janos Slynt,
