@@ -2910,8 +2910,92 @@
       6
     ],
     "actor": "Julian Glover"
+  },
+  {
+    "_id": 87,
+    "name": "Qyburn",
+    "gender": "male",
+    "born": "",
+    "origin": "",
+    "death": "305 AC",
+    "status": "deceased",
+    "culture": "",
+    "religion": "",
+    "titles": [
+      "Maester",
+      "Master of Whisperers",
+      "Hand of the Queen"
+    ],
+    "house": "",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "actor": "Anton Lesser"
+  },
+  {
+    "_id": 88,
+    "name": "Luwin",
+    "gender": "male",
+    "born": "",
+    "origin": "",
+    "death": "299 AC",
+    "status": "deceased",
+    "culture": "",
+    "religion": "",
+    "titles": [
+      "Maester"
+    ],
+    "house": "Stark",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      1,
+      2
+    ],
+    "actor": "Donald Sumpter"
+  },
+  {
+    "_id": 89,
+    "name": "Unella",
+    "gender": "female",
+    "born": "",
+    "origin": "",
+    "death": "",
+    "status": "Unknown",
+    "culture": "Andal",
+    "religion": "Faith of the Seven",
+    "titles": [
+      "Septa"
+    ],
+    "house": "",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      5,
+      6
+    ],
+    "actor": "Hannah Waddingham"
   }
 ]
 //Es fehlen:, Begleiter Bran in Norden, 3 Drache, 5 Wölfe, Night Watch son wichtiger Typ der auch hingerichtet wurde, Jons Freunde Nightwatch,
-//Heiße Pastete(Arya Freund), Pycelle und Qyburn, Septa Unella, Maester Luwin, Oliver,
+//Heiße Pastete(Arya Freund), Oliver,
 //Rodrick Cassel, Dreiäugiger Rabe, Beric Dondarrion, Thoros von Myr, Dontos, Janos Slynt, Ser Alliser?
