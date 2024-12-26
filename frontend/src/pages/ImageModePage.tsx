@@ -117,7 +117,8 @@ export const ImageModePage = () => {
                 placeholder: 'Type character name...',
                 loadOptions: loadCharacterOptions,
                 onChange: handleCharacterSelect,
-                value: selectedCharacter
+                value: selectedCharacter,
+                isDisabled: isCorrect
               }}
             />
           </Box>
