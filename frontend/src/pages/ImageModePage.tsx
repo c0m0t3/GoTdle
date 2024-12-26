@@ -118,7 +118,8 @@ export const ImageModePage = () => {
                 loadOptions: loadCharacterOptions,
                 onChange: handleCharacterSelect,
                 value: selectedCharacter,
-                isDisabled: isCorrect
+                isDisabled: isCorrect,
+                components: { DropdownIndicator: () => null }
               }}
             />
           </Box>
