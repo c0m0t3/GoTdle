@@ -70,8 +70,16 @@ export const createUserZodSchema = createInsertSchema(userSchema, {
 
 export const updateUserZodSchema = createInsertSchema(userSchema, {
   email: z.string().email().optional(),
-  password: z.string().min(8).refine(excludeInjectionChars).optional(),
-  username: z.string().min(3).refine(excludeInjectionChars).optional(),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters long')
+    .refine(excludeInjectionChars)
+    .optional(),
+  username: z
+    .string()
+    .min(3, 'Username must be at least 3 characters long')
+    .refine(excludeInjectionChars)
+    .optional(),
 }).transform(async (data) => {
   if (data.password) {
     try {

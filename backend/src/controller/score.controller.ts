@@ -12,7 +12,7 @@ export class ScoreController {
 
     const score = await this.scoreRepository.getScoreByUserId(userId);
 
-    if (!score) {
+    if (score.length === 0) {
       res.status(404).json({ errors: ['Score not found'] });
       return;
     }
@@ -32,7 +32,7 @@ export class ScoreController {
       parsedScoreData,
     );
 
-    if (!updatedScore) {
+    if (updatedScore.length === 0) {
       res.status(404).json({ errors: ['Score not found'] });
       return;
     }
