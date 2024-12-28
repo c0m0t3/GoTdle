@@ -13,3 +13,11 @@ export const scoreSchema = pgTable('score', {
   dailyScore: integer('dailyScore').notNull().array().default(sql`ARRAY
   [0]::INTEGER[]`),
 });
+
+export type Score = {
+  userId: string;
+  streak: number;
+  lastPlayed: Date | null;
+  longestStreak: number;
+  dailyScore: number[];
+};

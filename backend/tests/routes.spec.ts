@@ -25,7 +25,6 @@ describe('Routes', () => {
 
   beforeAll(() => {
     authController = {
-      // Mock methods
       loginUser: jest.fn((_req, res) =>
         res.status(200).json({ token: 'test-token' }),
       ),
@@ -35,7 +34,6 @@ describe('Routes', () => {
     } as unknown as AuthController;
 
     userController = {
-      // Mock methods
       getUserById: jest.fn((_req, res) =>
         res.status(200).json({ id: TEST_IDS.USER_ID }),
       ),
@@ -57,7 +55,6 @@ describe('Routes', () => {
     } as unknown as UserController;
 
     scoreController = {
-      // Mock methods
       getScoreByUserId: jest.fn((_req, res) =>
         res.status(200).json({ userId: TEST_IDS.USER_ID }),
       ),
@@ -67,7 +64,6 @@ describe('Routes', () => {
     } as unknown as ScoreController;
 
     characterController = {
-      // Mock methods
       getCharacterById: jest.fn((_req, res) =>
         res.status(200).json({ userId: TEST_IDS.USER_ID }),
       ),

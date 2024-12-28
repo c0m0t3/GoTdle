@@ -1,6 +1,4 @@
-import { z } from 'zod';
 import { excludeInjectionChars, loginZodSchema, createUserZodSchema, updateUserZodSchema } from '../src/validation/validation';
-import { DI } from '../src/dependency-injection';
 
 jest.mock('../src/dependency-injection', () => ({
   DI: {
@@ -46,11 +44,56 @@ describe('Validation Schemas', () => {
       expect(() => loginZodSchema.parse(validData)).not.toThrow();
     });
 
-    it('should throw an error for invalid login data', () => {
+    it('should throw an error for invalid identifier data', () => {
       const invalidData = {
-        identifier: 'te',
+        identifier: 'username',
+        password: 'password123',
+        type: 'invalidType',
+      };
+      expect(() => loginZodSchema.parse(invalidData)).toThrow();
+    });
+
+    it('should throw an error for invalid password data', () => {
+      const invalidData = {
+        identifier: 'username',
         password: 'pass',
         type: 'username',
+      };
+      expect(() => loginZodSchema.parse(invalidData)).toThrow();
+    });
+
+    it('should throw an error for invalid username data', () => {
+      const invalidData = {
+        identifier: 's',
+        password: 'password123',
+        type: 'username',
+      };
+      expect(() => loginZodSchema.parse(invalidData)).toThrow();
+    });
+
+    it('should throw an error for invalid email data', () => {
+      const invalidData = {
+        identifier: 'noEmail',
+        password: 'password123',
+        type: 'email',
+      };
+      expect(() => loginZodSchema.parse(invalidData)).toThrow();
+    });
+
+    it('should throw an error for injection-characters in username data', () => {
+      const invalidData = {
+        identifier: '<testuser>',
+        password: 'password123',
+        type: 'username',
+      };
+      expect(() => loginZodSchema.parse(invalidData)).toThrow();
+    });
+
+    it('should throw an error for injection-characters in password data', () => {
+      const invalidData = {
+        identifier: 'test@example.com',
+        password: '<<password123>',
+        type: 'email',
       };
       expect(() => loginZodSchema.parse(invalidData)).toThrow();
     });
@@ -70,11 +113,49 @@ describe('Validation Schemas', () => {
       });
     });
 
-    it('should throw an error for invalid user data', async () => {
+    it('should throw an error for invalid email data', async () => {
       const invalidData = {
         email: 'invalid-email',
         password: 'pass',
+        username: 'testuser',
+      };
+      await expect(createUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
+    });
+
+    it('should throw an error for invalid username data', async () => {
+      const invalidData = {
+        email: 'test@example.com',
+        password: 'pass',
         username: 'te',
+      };
+      await expect(createUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
+    });
+
+    it('should throw an error for invalid password data', async () => {
+      const invalidData = {
+        email: 'test@example.com',
+        password: 'pass',
+        username: 'testuser',
+      };
+      await expect(createUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
+    });
+
+    
+    it('should throw an error for injection-characters in username data', async () => {
+      const invalidData = {
+        email: 'test@example.com',
+        password: 'password',
+        username: '<testuser>',
+      };
+      await expect(createUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
+    });
+
+    
+    it('should throw an error for injection-characters in password data', async () => {
+      const invalidData = {
+        email: 'test@example.com',
+        password: '<<password>',
+        username: 'testuser',
       };
       await expect(createUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
     });
@@ -94,11 +175,47 @@ describe('Validation Schemas', () => {
       });
     });
 
-    it('should throw an error for invalid user data', async () => {
+    it('should throw an error for invalid email data', async () => {
       const invalidData = {
         email: 'invalid-email',
+        password: 'password123',
+        username: 'testuser',
+      };
+      await expect(updateUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
+    });
+
+    it('should throw an error for invalid password data', async () => {
+      const invalidData = {
+        email: 'test@example.com',
         password: 'pass',
+        username: 'testuser',
+      };
+      await expect(updateUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
+    });
+
+    it('should throw an error for invalid username data', async () => {
+      const invalidData = {
+        email: 'test@example.com',
+        password: 'password123',
         username: 'te',
+      };
+      await expect(updateUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
+    });
+
+    it('should throw an error for injection-characters in username data', async () => {
+      const invalidData = {
+        email: 'test@example.com',
+        password: 'password123',
+        username: '<Peter>>>',
+      };
+      await expect(updateUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
+    });
+
+    it('should throw an error for injection-characters in password data', async () => {
+      const invalidData = {
+        email: 'test@example.com',
+        password: '<<password123',
+        username: 'testuser',
       };
       await expect(updateUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
     });

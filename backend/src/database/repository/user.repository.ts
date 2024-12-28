@@ -7,17 +7,12 @@ export class UserRepository {
   constructor(private readonly database: Database) {}
 
   async createUser(data: CreateUser) {
-    const [createdUser] = await this.database
-      .insert(userSchema)
-      .values(data)
-      .returning({
-        id: userSchema.id,
-        email: userSchema.email,
-        username: userSchema.username,
-        createdAt: userSchema.createdAt,
-      });
-
-    return createdUser;
+    return this.database.insert(userSchema).values(data).returning({
+      id: userSchema.id,
+      email: userSchema.email,
+      username: userSchema.username,
+      createdAt: userSchema.createdAt,
+    });
   }
 
   async getAllUsers() {
@@ -43,21 +38,17 @@ export class UserRepository {
   }
 
   async updateUserById(data: Partial<CreateUser>) {
-    const [updatedUser] = await this.database
+    return this.database
       .update(userSchema)
       .set(data)
       .where(eq(userSchema.id, data.id!))
       .returning();
-
-    return updatedUser || null;
   }
 
   async deleteUserById(id: string) {
-    const [deletedUser] = await this.database
+    return this.database
       .delete(userSchema)
       .where(eq(userSchema.id, id))
       .returning();
-
-    return deletedUser || null;
   }
 }

@@ -1,61 +1,42 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { ScoreRepository } from '../database/repository/score.repository';
 import { z } from 'zod';
-import { createScoreZodSchema, updateScoreZodSchema } from '../validation/validation';
+import { updateScoreZodSchema } from '../validation/validation';
 
 export class ScoreController {
   constructor(private readonly scoreRepository: ScoreRepository) {}
 
-  async getScoreById(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const idSchema = z.string().uuid();
-      const scoreID = idSchema.parse(req.params.id);
+  async getScoreByUserId(req: Request, res: Response): Promise<void> {
+    const userIdSchema = z.string().uuid();
+    const userId = userIdSchema.parse(req.params.userId);
 
-      const score = await this.scoreRepository.getScoreById(scoreID);
+    const score = await this.scoreRepository.getScoreByUserId(userId);
 
-      if (!score) {
-        res.status(404).json({ errors: ['Score not found'] });
-        return;
-      }
-      res.status(200).json(score);
-    } catch (error) {
-      next(error);
+    if (score.length === 0) {
+      res.status(404).json({ errors: ['Score not found'] });
+      return;
     }
+    res.status(200).json(score);
   }
 
-  async getScoreByUserId(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const userIdSchema = z.string().uuid();
-      const userId = userIdSchema.parse(req.params.userId);
+  async updateScoreByUserId(req: Request, res: Response): Promise<void> {
+    const userIdSchema = z.string().uuid();
+    const userId = userIdSchema.parse(req.params.userId);
+    const parsedScoreData = await updateScoreZodSchema.parseAsync({
+      ...req.body,
+      userId,
+    });
 
-      const score = await this.scoreRepository.getScoreByUserId(userId);
+    const updatedScore = await this.scoreRepository.updateScoreByUserId(
+      userId,
+      parsedScoreData,
+    );
 
-      if (!score) {
-        res.status(404).json({ errors: ['Score not found'] });
-        return;
-      }
-      res.status(200).json(score);
-    } catch (error) {
-      next(error);
+    if (updatedScore.length === 0) {
+      res.status(404).json({ errors: ['Score not found'] });
+      return;
     }
-  }
 
-  async updateScoreByUserId(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const userIdSchema = z.string().uuid();
-      const userId = userIdSchema.parse(req.params.userId);
-      const parsedScoreData = await updateScoreZodSchema.parseAsync({ ...req.body , userId });
-      
-      const updatedScore = await this.scoreRepository.updateScoreByUserId(userId, parsedScoreData);
-
-      if (!updatedScore) {
-        res.status(404).json({ errors: ['Score not found'] });
-        return;
-      }
-
-      res.status(200).json(updatedScore);
-    } catch (error) {
-      next(error);
-    }
+    res.status(200).json(updatedScore);
   }
 }

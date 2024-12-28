@@ -26,12 +26,12 @@ export class TestDatabase {
     await (this.database.$client as { end: () => Promise<void> }).end();
     await this.container.stop();
   }
-  //Fals Tests fehlschlagen und Einträge zurücklassen, wird diese Funktion immer vor den Tests aufgerufen
+
   async clearDatabase() {
     const client = await (this.database.$client as any).connect();
     try {
       await client.query('BEGIN');
-      await client.query('TRUNCATE TABLE "user", "score" RESTART IDENTITY CASCADE');
+      await client.query('TRUNCATE TABLE "user", "score", "character" RESTART IDENTITY CASCADE');
       await client.query('COMMIT');
     } catch (error) {
       await client.query('ROLLBACK');

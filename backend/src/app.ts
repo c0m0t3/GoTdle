@@ -1,5 +1,4 @@
 import express, { Application } from 'express';
-import cors from 'cors';
 import { prepareAuthentication } from './middleware/auth.middleware';
 
 //import { prepareAuthentication } from './middleware/auth.middleware';
@@ -21,16 +20,6 @@ export class App {
   }
 
   private _registerMiddlewares() {
-    // Middlewares could also be injected via constructor which would be even better and easily testable
-    this.app.use(
-      cors({
-        origin: 'http://localhost:5000',
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-        credentials: true,
-        allowedHeaders: 'Content-Type,Authorization',
-      }),
-    );
-
     this.app.use(express.json());
     this.app.use(prepareAuthentication);
 
@@ -45,12 +34,10 @@ export class App {
   }
 
   private _registerErrorHandlers() {
-    // The errorHandler could also be injected via constructor which would be even better and easily testable
     this.app.use(globalErrorHandler);
   }
 
   public getServer() {
     return this.app;
   }
-
 }

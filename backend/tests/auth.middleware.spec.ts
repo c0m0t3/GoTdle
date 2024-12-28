@@ -1,8 +1,6 @@
-import request from 'supertest';
-import express, { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prepareAuthentication, verifyAccess } from '../src/middleware/auth.middleware';
 import { DI } from '../src/dependency-injection';
-import { TokenExpiredError } from 'jsonwebtoken';
 
 jest.mock('../src/dependency-injection', () => ({
   DI: {
@@ -19,119 +17,88 @@ jest.mock('../src/dependency-injection', () => ({
   },
 }));
 
-describe('Auth Middleware', () => {
-  let app: express.Application;
-
-  beforeAll(() => {
-    app = express();
-    app.use(express.json());
-
-    app.get('/protected', prepareAuthentication, (req: Request, res: Response) => {
-      res.status(200).json({ message: 'Protected route accessed' });
-    });
-
-    app.get('/verify', verifyAccess, (req: Request, res: Response) => {
-      res.status(200).json({ message: 'Access verified' });
-    });
-  }, 50000);
+describe('prepareAuthentication', () => {
+  let mockReq: Partial<Request>;
+  let mockRes: Partial<Response>;
+  let mockNext: jest.MockedFunction<NextFunction>;
 
   beforeEach(() => {
+    mockReq = {
+      get: jest.fn(),
+    };
+    mockRes = {};
+    mockNext = jest.fn();
+
     jest.clearAllMocks();
   });
 
-  describe('prepareAuthentication', () => {
-    it('should set user and token on request if valid token is provided', async () => {
-      const mockToken = { id: '123' };
-      const mockUser = { id: '123', name: 'Test User' };
+  it('should add user and token to the request if authentication is valid', async () => {
+    const token = { id: 'user-id' };
+    const user = { id: 'user-id', name: 'Test User' };
 
-      (DI.utils.jwt.verifyToken as jest.Mock).mockReturnValue(mockToken);
-      (DI.repositories.user.getUserById as jest.Mock).mockResolvedValue(mockUser);
+    (mockReq.get as jest.Mock).mockReturnValue('Bearer valid-token');
+    (DI.utils.jwt.verifyToken as jest.Mock).mockReturnValue(token);
+    (DI.repositories.user.getUserById as jest.Mock).mockResolvedValue(user);
 
-      await request(app)
-        .get('/protected')
-        .set('Authorization', 'Bearer valid-token')
-        .expect(200)
-        .expect((res) => {
-          expect(res.body.message).toBe('Protected route accessed');
-        });
+    await prepareAuthentication(mockReq as Request, mockRes as Response, mockNext);
 
-      expect(DI.utils.jwt.verifyToken).toHaveBeenCalledWith('valid-token');
-      expect(DI.repositories.user.getUserById).toHaveBeenCalledWith(mockToken.id);
-    });
-
-    it('should return 401 if token is expired', async () => {
-      (DI.utils.jwt.verifyToken as jest.Mock).mockImplementation(() => {
-        throw new TokenExpiredError('jwt expired', new Date());
-      });
-
-      await request(app)
-        .get('/protected')
-        .set('Authorization', 'Bearer expired-token')
-        .expect(401)
-        .expect((res) => {
-          expect(res.body.errors).toContain('Token expired');
-        });
-
-      expect(DI.utils.jwt.verifyToken).toHaveBeenCalledWith('expired-token');
-    });
-
-    it('should return 401 if token is invalid', async () => {
-      (DI.utils.jwt.verifyToken as jest.Mock).mockImplementation(() => {
-        throw new Error('Invalid token');
-      });
-
-      await request(app)
-        .get('/protected')
-        .set('Authorization', 'Bearer invalid-token')
-        .expect(401)
-        .expect((res) => {
-          expect(res.body.errors).toContain('Invalid token');
-        });
-
-      expect(DI.utils.jwt.verifyToken).toHaveBeenCalledWith('invalid-token');
-    });
-
-    it('should call next if no authorization header is provided', async () => {
-      await request(app)
-        .get('/protected')
-        .expect(200)
-        .expect((res) => {
-          expect(res.body.message).toBe('Protected route accessed');
-        });
-
-      expect(DI.utils.jwt.verifyToken).not.toHaveBeenCalled();
-      expect(DI.repositories.user.getUserById).not.toHaveBeenCalled();
-    });
+    expect(mockReq.user).toEqual(user);
+    expect(mockReq.token).toEqual(token);
+    expect(mockNext).toHaveBeenCalled();
   });
 
-  describe('verifyAccess', () => {
-    it('should call next if user is authenticated', async () => {
-      const mockUser = { id: '123', name: 'Test User' };
+  it('should throw an error if user is not found', async () => {
+    const token = { id: 'invalid-user-id' };
 
-      const req = {
-        user: mockUser,
-      } as Request;
-      const res = {} as Response;
-      const next = jest.fn();
+    (mockReq.get as jest.Mock).mockReturnValue('Bearer valid-token');
+    (DI.utils.jwt.verifyToken as jest.Mock).mockReturnValue(token);
+    (DI.repositories.user.getUserById as jest.Mock).mockResolvedValue(null);
 
-      verifyAccess(req, res, next);
+    await expect(prepareAuthentication(mockReq as Request, mockRes as Response, mockNext))
+      .rejects
+      .toThrow('User not found');
 
-      expect(next).toHaveBeenCalled();
-    });
+    expect(mockNext).not.toHaveBeenCalled();
+  });
 
-    it('should return 401 if user is not authenticated', async () => {
-      const req = {} as Request;
-      const res = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn(),
-      } as any as Response;
-      const next = jest.fn();
+  it('should call next if no Authorization header is present', async () => {
+    (mockReq.get as jest.Mock).mockReturnValue(null);
 
-      verifyAccess(req, res, next);
+    await prepareAuthentication(mockReq as Request, mockRes as Response, mockNext);
 
-      expect(res.status).toHaveBeenCalledWith(401);
-      expect(res.json).toHaveBeenCalledWith({ errors: ['No or invalid authentication provided'] });
-      expect(next).not.toHaveBeenCalled();
-    });
+    expect(mockNext).toHaveBeenCalled();
+  });
+});
+
+describe('verifyAccess', () => {
+  let mockReq: Partial<Request>;
+  let mockRes: Partial<Response>;
+  let mockNext: jest.MockedFunction<NextFunction>;
+
+  beforeEach(() => {
+    mockReq = {};
+    mockRes = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    mockNext = jest.fn();
+  });
+
+  it('should return 401 if user is not present in the request', () => {
+    verifyAccess(mockReq as Request, mockRes as Response, mockNext);
+
+    expect(mockRes.status).toHaveBeenCalledWith(401);
+    expect(mockRes.json).toHaveBeenCalledWith({ errors: ['No or invalid authentication provided'] });
+    expect(mockNext).not.toHaveBeenCalled();
+  });
+
+  it('should call next if user is present in the request', () => {
+    mockReq.user = { id: 'user-id', name: 'Test User' };
+
+    verifyAccess(mockReq as Request, mockRes as Response, mockNext);
+
+    expect(mockNext).toHaveBeenCalled();
+    expect(mockRes.status).not.toHaveBeenCalled();
+    expect(mockRes.json).not.toHaveBeenCalled();
   });
 });

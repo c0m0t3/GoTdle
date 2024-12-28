@@ -13,26 +13,45 @@ export const excludeInjectionChars = (val: string) => {
   return val;
 };
 
-export const loginZodSchema = z.object({
-  identifier: z
-    .string()
-    .refine(
-      (val) => {
-        return z.string().email().safeParse(val).success || val.length >= 3;
-      },
-      {
-        message: 'Must be a valid email or username with at least 3 characters',
-      },
-    )
-    .refine(excludeInjectionChars),
-  password: z.string().min(8).refine(excludeInjectionChars),
-  type: z.enum(['email', 'username']),
-});
+export const loginZodSchema = z
+  .object({
+    type: z.enum(['email', 'username']),
+    identifier: z.string().refine(excludeInjectionChars),
+    password: z
+      .string()
+      .min(8, 'Password must be at least 8 characters long')
+      .refine(excludeInjectionChars),
+  })
+  .superRefine((data, ctx) => {
+    if (data.type === 'email') {
+      if (!z.string().email().safeParse(data.identifier).success) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Invalid email address',
+          path: ['identifier'],
+        });
+      }
+    } else if (data.type === 'username') {
+      if (data.identifier.length < 3) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Username must be at least 3 characters long',
+          path: ['identifier'],
+        });
+      }
+    }
+  });
 
 export const createUserZodSchema = createInsertSchema(userSchema, {
   email: z.string().email(),
-  password: z.string().min(8).refine(excludeInjectionChars), // Passwort muss mindestens 8 Zeichen lang sein und keine schädlichen Zeichen enthalten
-  username: z.string().min(3).refine(excludeInjectionChars),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters long')
+    .refine(excludeInjectionChars),
+  username: z
+    .string()
+    .min(3, 'Username must be at least 3 characters long')
+    .refine(excludeInjectionChars),
 }).transform(async (data) => {
   try {
     const hashedPassword = await DI.utils.passwordHasher.hashPassword(
@@ -44,14 +63,23 @@ export const createUserZodSchema = createInsertSchema(userSchema, {
       password: hashedPassword,
     };
   } catch (error) {
+    console.error('Error during password hashing:', error);
     throw new Error('Error during password hashing');
   }
 });
 
 export const updateUserZodSchema = createInsertSchema(userSchema, {
   email: z.string().email().optional(),
-  password: z.string().min(8).refine(excludeInjectionChars).optional(),
-  username: z.string().min(3).refine(excludeInjectionChars).optional(),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters long')
+    .refine(excludeInjectionChars)
+    .optional(),
+  username: z
+    .string()
+    .min(3, 'Username must be at least 3 characters long')
+    .refine(excludeInjectionChars)
+    .optional(),
 }).transform(async (data) => {
   if (data.password) {
     try {
@@ -64,6 +92,7 @@ export const updateUserZodSchema = createInsertSchema(userSchema, {
         password: hashedPassword,
       };
     } catch (error) {
+      console.error('Error during password hashing:', error);
       throw new Error('Error during password hashing');
     }
   }
