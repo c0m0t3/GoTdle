@@ -1,7 +1,7 @@
 import { BaseLayout } from '../layout/BaseLayout.tsx';
 import { Box, Button, Image, Text, VStack } from '@chakra-ui/react';
 import { useImageApi } from '../hooks/useImageApi.ts';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CharacterSelect } from '../components/CharacterSelect.tsx';
 import { useApiClient } from '../hooks/useApiClient.ts';
 import { GroupBase } from 'react-select';
@@ -19,7 +19,7 @@ export const ImageModePage = () => {
   const [isCorrect, setIsCorrect] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterOption | null>(null);
   const [usedOptions, setUsedOptions] = useState<string[]>([]);
-
+  const correctSectionRef = useRef<HTMLDivElement>(null);
   const client = useApiClient();
 
   useEffect(() => {
@@ -32,6 +32,12 @@ export const ImageModePage = () => {
       console.error('Failed to fetch image:', error);
     });
   }, [fetchApi]);
+
+  useEffect(() => {
+    if (isCorrect && correctSectionRef.current) {
+      correctSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [isCorrect]);
 
 
   const handleCharacterSelect = (selected: CharacterOption | null) => {
@@ -80,7 +86,7 @@ export const ImageModePage = () => {
       return characters.data
         .filter((character) =>
           character?.name?.toLowerCase().startsWith(inputValue.toLowerCase()) &&
-          !usedOptions.includes(character.name) // Filtere verwendete Optionen aus
+          !usedOptions.includes(character.name)
         )
         .map((character) => ({
           label: character.name ?? '',
@@ -117,7 +123,9 @@ export const ImageModePage = () => {
                 placeholder: 'Type character name...',
                 loadOptions: loadCharacterOptions,
                 onChange: handleCharacterSelect,
-                value: selectedCharacter
+                value: selectedCharacter,
+                isDisabled: isCorrect,
+                components: { DropdownIndicator: () => null }
               }}
             />
           </Box>
@@ -130,15 +138,24 @@ export const ImageModePage = () => {
             )}
           </Box>
           <Box maxW="sm" width="100%">
-            {incorrectGuesses.map((guess, index) => (
-              <Text textAlign={'center'} key={index} mt={2} bg="red.500" color="white" p={2} rounded="md">
+            {incorrectGuesses.map((guess) => (
+              <Text textAlign={'center'} key={guess} mt={2} bg="red.500" color="white" p={2} rounded="md">
                 {guess}
               </Text>
             ))}
           </Box>
 
           {isCorrect && (
-            <Button mt={4}>Next</Button>
+            <VStack ref={correctSectionRef}>
+              <Text>Congratulations, you finished today's GoTdle!!</Text>
+              <Text>Here are your Scores!</Text>
+              <Text>Classic: ...</Text>
+              <Text>Quote: ...</Text>
+              <Text>Image: {incorrectGuesses.length + 1}</Text>
+              <Text>Actual Streak: ...</Text>
+              {/*TODO: 1. Get Attempts from other modes. 2. Store whole Score in database*/}
+              <Button mt={4}>Jump to Scoreboard</Button>
+            </VStack>
           )}
 
         </VStack>

@@ -32,6 +32,10 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - identifier
+                - password
+                - type
               properties:
                 identifier:
                   type: string
@@ -42,6 +46,10 @@ paths:
                   x-stoplight:
                     id: vxsr2zgap0rkf
                   format: password
+                type:
+                  type: string
+                  x-stoplight:
+                    id: goxsbqooowmk1
   /users:
     post:
       summary: Create New User
@@ -52,7 +60,32 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                type: object
+                properties:
+                  user:
+                    type: object
+                    x-stoplight:
+                      id: c4nomhcwen07j
+                    properties:
+                      id:
+                        type: string
+                        x-stoplight:
+                          id: l9mi9r5kj33w8
+                        format: uuid
+                      email:
+                        type: string
+                        x-stoplight:
+                          id: hhthtd8upp0q7
+                        format: email
+                      username:
+                        type: string
+                        x-stoplight:
+                          id: r6bcleardrmxa
+                      createdAt:
+                        type: string
+                        x-stoplight:
+                          id: r7xzu1z1sxm37
+                        format: date-time
         '409':
           description: Username/Email already exists
       requestBody:
@@ -61,20 +94,20 @@ paths:
             schema:
               type: object
               required:
-                - username
                 - email
                 - password
+                - username
               properties:
-                username:
-                  type: string
-                  x-stoplight:
-                    id: pwwp3l11ur1c9
                 email:
                   type: string
                 password:
                   type: string
                   x-stoplight:
                     id: 6b25cmy6ykyih
+                username:
+                  type: string
+                  x-stoplight:
+                    id: pwwp3l11ur1c9
             examples:
               Example 1:
                 value:

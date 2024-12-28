@@ -1,15 +1,7 @@
-import {
-  Box,
-  Button,
-  chakra,
-  HStack,
-  Image,
-  useColorMode,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Box, Button, chakra, HStack, Image, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import { MouseEventHandler } from 'react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
-import './BaseLayout.css'
+import './BaseLayout.css';
 //import { useAuth } from '../providers/AuthProvider.tsx';
 import { useNavigate } from 'react-router-dom';
 
@@ -79,7 +71,8 @@ export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
         <a href={'/'}>
           <Image src={'/Logo_GoTdle.webp'} alt="Home" boxSize="5em" />
         </a>
-        <Box position="absolute" left="50%" transform="translateX(-50%)" display="flex" justifyContent="center" alignItems="center">
+        <Box position="absolute" left="50%" transform="translateX(-50%)" display="flex" justifyContent="center"
+             alignItems="center">
           <Image
             src={'/GoTdle_Text.webp'}
             alt="GoTdle"
@@ -95,7 +88,6 @@ export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
       </HStack>
       <chakra.main
         flex={1}
-        overflowX="hidden"
         display="flex"
         flexDirection="column"
         ml="auto"
