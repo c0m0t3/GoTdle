@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { TokenExpiredError } from 'jsonwebtoken';
+import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { ZodError } from 'zod';
 
 interface CustomError extends Error {
@@ -15,7 +15,7 @@ export function globalErrorHandler(
   // Handle Zod validation errors
   if (err instanceof ZodError) {
     res.status(400).json({
-      errors: err.errors,
+      errors: err.errors.map((error) => ({ message: error.message })),
     });
     return;
   }
@@ -24,6 +24,22 @@ export function globalErrorHandler(
   if (err instanceof TokenExpiredError) {
     res.status(401).json({
       errors: ['Token expired'],
+    });
+    return;
+  }
+
+  // Handle JWT invalid token errors
+  if (err instanceof JsonWebTokenError) {
+    res.status(401).json({
+      errors: ['Invalid token'],
+    });
+    return;
+  }
+
+  // Handle custom errors with statusCode
+  if (err.statusCode) {
+    res.status(err.statusCode).json({
+      errors: [err.message],
     });
     return;
   }

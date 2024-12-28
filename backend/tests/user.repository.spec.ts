@@ -7,6 +7,13 @@ const TEST_IDS = {
   USER_ID2: '123e4567-e89b-12d3-a456-426614174001',
 } as const;
 
+const userData = {
+  email: 'test@example.com',
+  password: 'password123',
+  username: 'testuser',
+  id: TEST_IDS.USER_ID,
+};
+
 describe('UserRepository', () => {
   let testDatabase: TestDatabase;
   let userRepository: UserRepository;
@@ -27,12 +34,6 @@ describe('UserRepository', () => {
 
   describe('createUser', () => {
     it('should create a user', async () => {
-      const userData = {
-        email: 'test@example.com',
-        password: 'password123',
-        username: 'testuser',
-        id: TEST_IDS.USER_ID,
-      };
 
       const [createdUser] = await userRepository.createUser(userData);
 
@@ -44,11 +45,6 @@ describe('UserRepository', () => {
 
   describe('getUserById', () => {
     it('should return a user by ID', async () => {
-      const userData = {
-        email: 'test@example.com',
-        password: 'password123',
-        username: 'testuser',
-      };
 
       const [createdUser] = await userRepository.createUser(userData);
 
@@ -66,12 +62,6 @@ describe('UserRepository', () => {
 
   describe('getUserByUsername', () => {
     it('should return a user by username', async () => {
-      const userData = {
-        email: 'test@example.com',
-        password: 'password123',
-        username: 'testuser',
-        id: TEST_IDS.USER_ID,
-      };
 
       const [createdUser] = await userRepository.createUser(userData);
 
@@ -91,12 +81,6 @@ describe('UserRepository', () => {
 
   describe('getUserByEmail', () => {
     it('should return a user by email', async () => {
-      const userData = {
-        email: 'test@example.com',
-        password: 'password123',
-        username: 'testuser',
-        id: TEST_IDS.USER_ID,
-      };
 
       const [createdUser] = await userRepository.createUser(userData);
 
@@ -114,12 +98,6 @@ describe('UserRepository', () => {
 
   describe('deleteUser', () => {
     it('should successfully delete a user', async () => {
-      const userData = {
-        email: 'test@example.com',
-        password: 'password123',
-        username: 'testuser',
-        id: TEST_IDS.USER_ID,
-      };
 
       const [createdUser] = await userRepository.createUser(userData);
 
@@ -132,12 +110,6 @@ describe('UserRepository', () => {
 
   describe('getAllUsers', () => {
     it('should return all users', async () => {
-      const userData1 = {
-        email: 'test@example.com',
-        password: 'password123',
-        username: 'testuser',
-        id: TEST_IDS.USER_ID,
-      };
 
       const userData2 = {
         email: 'test2@example.com',
@@ -146,7 +118,7 @@ describe('UserRepository', () => {
         id: TEST_IDS.USER_ID2,
       };
 
-      await userRepository.createUser(userData1);
+      await userRepository.createUser(userData);
       await userRepository.createUser(userData2);
 
       const result = await userRepository.getAllUsers();

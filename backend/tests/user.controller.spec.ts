@@ -18,6 +18,13 @@ const TEST_IDS = {
   USER_ID2: '123e4567-e89b-12d3-a456-426614174001',
 } as const;
 
+const userData = {
+  id: TEST_IDS.USER_ID,
+  email: 'test@example.com',
+  password: 'password123',
+  username: 'testuser',
+};
+
 describe('UserController', () => {
   let testDatabase: TestDatabase;
   let userRepository: UserRepository;
@@ -51,12 +58,6 @@ describe('UserController', () => {
 
   describe('getUserById', () => {
     it('should return a user by ID', async () => {
-      const userData = {
-        id: TEST_IDS.USER_ID,
-        email: 'test@example.com',
-        password: 'password123',
-        username: 'testuser',
-      };
 
       await userRepository.createUser(userData);
 
@@ -83,12 +84,6 @@ describe('UserController', () => {
 
   describe('getUserByUsername', () => {
     it('should return a user by username', async () => {
-      const userData = {
-        id: TEST_IDS.USER_ID,
-        email: 'test@example.com',
-        password: 'password123',
-        username: 'testuser',
-      };
 
       await userRepository.createUser(userData);
 
@@ -115,12 +110,6 @@ describe('UserController', () => {
 
   describe('getUserByEmail', () => {
     it('should return a user by email', async () => {
-      const userData = {
-        id: TEST_IDS.USER_ID,
-        email: 'test@example.com',
-        password: 'password123',
-        username: 'testuser',
-      };
 
       await userRepository.createUser(userData);
 
@@ -147,12 +136,6 @@ describe('UserController', () => {
 
   describe('updateUser', () => {
     it('should update a user', async () => {
-      const userData = {
-        id: TEST_IDS.USER_ID,
-        email: 'test@example.com',
-        password: 'password123',
-        username: 'testuser',
-      };
 
       await userRepository.createUser(userData);
 
@@ -180,12 +163,6 @@ describe('UserController', () => {
 
   describe('deleteUser', () => {
     it('should delete a user', async () => {
-      const userData = {
-        id: TEST_IDS.USER_ID,
-        email: 'test@example.com',
-        password: 'password123',
-        username: 'testuser',
-      };
 
       await userRepository.createUser(userData);
 
@@ -209,12 +186,6 @@ describe('UserController', () => {
 
   describe('getAllUsers', () => {
     it('should return all users', async () => {
-      const userData1 = {
-        id: TEST_IDS.USER_ID,
-        email: 'test@example.com',
-        password: 'password123',
-        username: 'testuser',
-      };
 
       const userData2 = {
         id: TEST_IDS.USER_ID2,
@@ -223,7 +194,7 @@ describe('UserController', () => {
         username: 'testuser2',
       };
 
-      await userRepository.createUser(userData1);
+      await userRepository.createUser(userData);
       await userRepository.createUser(userData2);
 
       await userController.getAllUsers(req as Request, res as Response);

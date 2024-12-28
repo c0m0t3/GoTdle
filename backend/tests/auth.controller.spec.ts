@@ -17,8 +17,12 @@ describe('AuthController', () => {
   let userRepository: UserRepository;
   let authController: AuthController;
   let scoreRepository: ScoreRepository
-  let req: Partial<Request>;
-  let res: Partial<Response>;
+  const req: Partial<Request> = {};
+  const res: Partial<Response> = {
+    status: jest.fn().mockReturnThis(),
+    send: jest.fn(),
+    json: jest.fn(),
+  };
 
   beforeAll(async () => {
     testDatabase = new TestDatabase();
@@ -36,19 +40,6 @@ describe('AuthController', () => {
 
   afterAll(async () => {
     await testDatabase.teardown();
-  });
-
-  beforeEach(() => {
-    req = {};
-    res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-      send: jest.fn(),
-    };
-  });
-
-  afterEach(async () => {
-    await testDatabase.clearDatabase();
   });
 
   describe('registerUser', () => {
@@ -71,35 +62,38 @@ describe('AuthController', () => {
       }));
     });
 
-    it('should return 400 if user already exists', async () => {
-      const userData = {
-        id: TEST_IDS.USER_ID,
-        email: 'test@example.com',
-        password: 'password123',
-        username: 'testuser',
-      };
+    it('should return 400 if email or username already exists', async () => {
 
-      await userRepository.createUser(userData);
-
-      req.body = userData;
+        req.body = {
+          id: TEST_IDS.USER_ID,
+          email: 'test@example.com',
+          password: 'password123',
+          username: 'testuser',
+        };
 
       await authController.registerUser(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.send).toHaveBeenCalledWith('User already exists');
     });
+
+    it('should return 400 if the input data is invalid', async () => {
+      req.body = { email: 'invalid-email', password: 'password123', username: 'testuser' };
+    
+      await authController.registerUser(req as Request, res as Response);
+    
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        errors: expect.arrayContaining([
+          expect.objectContaining({
+            message: 'Invalid email',
+          })])
+    });
+  });
   });
 
   describe('loginUser', () => {
     it('should login a user with email', async () => {
-      const userData = {
-        id: TEST_IDS.USER_ID,
-        email: 'test@example.com',
-        password: await DI.utils.passwordHasher.hashPassword('password123'),
-        username: 'testuser',
-      };
-
-      await userRepository.createUser(userData);
 
       req.body = {
         type: 'email',
@@ -116,14 +110,6 @@ describe('AuthController', () => {
     });
 
     it('should login a user with username', async () => {
-        const userData = {
-          id: TEST_IDS.USER_ID,
-          email: 'test@example.com',
-          password: await DI.utils.passwordHasher.hashPassword('password123'),
-          username: 'testuser',
-        };
-  
-        await userRepository.createUser(userData);
   
         req.body = {
           type: 'username',
@@ -140,6 +126,7 @@ describe('AuthController', () => {
       });
 
     it('should return 401 if credentials are invalid', async () => {
+
       req.body = {
         type: 'email',
         identifier: 'nonexistent@example.com',
@@ -153,14 +140,6 @@ describe('AuthController', () => {
     });
 
     it('should return 401 if password is incorrect', async () => {
-        const userData = {
-          id: TEST_IDS.USER_ID,
-          email: 'test@example.com',
-          password: await DI.utils.passwordHasher.hashPassword('password123'),
-          username: 'testuser',
-        };
-  
-        await userRepository.createUser(userData);
   
         req.body = {
           type: 'email',
@@ -173,5 +152,38 @@ describe('AuthController', () => {
         expect(res.status).toHaveBeenCalledWith(401);
         expect(res.send).toHaveBeenCalledWith({ errors: ['Invalid credentials'] });
       });
+
+    it('should return 400 if the email data is invalid', async () => {
+
+      req.body = { type: 'email', identifier: 'invalid-email', password: 'password123', };
+    
+      await authController.loginUser(req as Request, res as Response);
+    
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        errors: expect.any(Array),
+      });
+    });
+    
+    it('should return 400 if the username data is invalid', async () => {
+
+      req.body = { type: 'username', identifier: 'test@example.com', password: 'password123', };
+    
+      await authController.loginUser(req as Request, res as Response);
+    
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        errors: expect.any(Array),
+      });
+    });
+
+    it('should return 400 if the password data is invalid', async () => {
+
+      req.body = { type: 'email', identifier: 'test@example.com', password: 'short' };
+  
+      await authController.loginUser(req as Request, res as Response);
+  
+      expect(res.status).toHaveBeenCalledWith(400);
     });
   });
+});

@@ -6,6 +6,9 @@ import { CreateUser } from '../src/validation/validation';
 import { Request, Response } from 'express';
 import { AuthController } from '../src/controller/auth.controller';
 import { DI } from '../src/dependency-injection';
+import { PasswordHasher } from '../src/utils/password-hasher';
+import { Jwt } from '../src/utils/jwt';
+import { ENV } from '../src/config/env.config';
 
 const TEST_IDS = {
   USER_ID: '123e4567-e89b-12d3-a456-426614174000',
@@ -30,6 +33,12 @@ describe('ScoreController', () => {
   beforeAll(async () => {
     testDatabase = new TestDatabase();
     await testDatabase.setup();
+    DI.utils = {
+        passwordHasher: new PasswordHasher(10),
+        jwt: new Jwt(ENV.JWT_SECRET, {
+          issuer: 'http://fwe.auth',
+        }),
+      };
     userRepository = new UserRepository(testDatabase.database);
     scoreRepository = new ScoreRepository(testDatabase.database);
     authController = new AuthController(userRepository, scoreRepository, DI.utils.passwordHasher, DI.utils.jwt);
@@ -64,8 +73,8 @@ describe('ScoreController', () => {
       await scoreController.getScoreByUserId(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledTimes(2);
-      expect(res.json).toHaveBeenNthCalledWith(2, expect.arrayContaining([
+      expect(res.json).toHaveBeenCalledTimes(1);
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([
         expect.objectContaining({
           userId: expect.any(String),
           streak: 0,
@@ -88,8 +97,8 @@ describe('ScoreController', () => {
       await scoreController.updateScoreByUserId(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledTimes(2);
-      expect(res.json).toHaveBeenNthCalledWith(2, expect.arrayContaining([
+      expect(res.json).toHaveBeenCalledTimes(1);
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([
         expect.objectContaining({
           userId: TEST_IDS.USER_ID,
           streak: 5,

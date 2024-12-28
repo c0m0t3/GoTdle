@@ -40,7 +40,6 @@ export class AuthController {
 
     if (!user) {
       res.status(401).json({ errors: ['Invalid credentials'] });
-      console.log('hallo credentials');
       return;
     }
 
@@ -51,7 +50,6 @@ export class AuthController {
 
     if (!matchingPassword) {
       res.status(401).send({ errors: ['Invalid credentials'] });
-      console.log('hallo password');
       return;
     }
 

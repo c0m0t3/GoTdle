@@ -13,21 +13,31 @@ export const excludeInjectionChars = (val: string) => {
   return val;
 };
 
-export const loginZodSchema = z.object({
-  identifier: z
-    .string()
-    .refine(
-      (val) => {
-        return z.string().email().safeParse(val).success || val.length >= 3;
-      },
-      {
-        message: 'Must be a valid email or username with at least 3 characters',
-      },
-    )
-    .refine(excludeInjectionChars),
-  password: z.string().min(8).refine(excludeInjectionChars),
-  type: z.enum(['email', 'username']),
-});
+export const loginZodSchema = z
+  .object({
+    type: z.enum(['email', 'username']),
+    identifier: z.string().refine(excludeInjectionChars),
+    password: z.string().min(8).refine(excludeInjectionChars),
+  })
+  .superRefine((data, ctx) => {
+    if (data.type === 'email') {
+      if (!z.string().email().safeParse(data.identifier).success) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Invalid email address',
+          path: ['identifier'],
+        });
+      }
+    } else if (data.type === 'username') {
+      if (data.identifier.length < 3) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Username must be at least 3 characters long',
+          path: ['identifier'],
+        });
+      }
+    }
+  });
 
 export const createUserZodSchema = createInsertSchema(userSchema, {
   email: z.string().email(),
