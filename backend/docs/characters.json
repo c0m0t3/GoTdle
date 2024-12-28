@@ -3297,6 +3297,196 @@
       4
     ],
     "actor": "Noah Taylor"
+  },
+  {
+    "_id": 101,
+    "name": "Podrick Payne",
+    "gender": "male",
+    "born": "",
+    "origin": "Westlands",
+    "death": "",
+    "status": "alive",
+    "culture": "Westermen",
+    "religion": "Faith of the Seven",
+    "titles": [
+      "Ser"
+    ],
+    "house": "Payne",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "actor": "Daniel Portman"
+  },
+  {
+    "_id": 102,
+    "name": "Jojen Reed",
+    "gender": "male",
+    "born": "",
+    "origin": "Greywater Watch",
+    "death": "301 AC",
+    "status": "deceased",
+    "culture": "Crannogmen",
+    "religion": "Old Gods",
+    "titles": [
+    ],
+    "house": "Reed",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [
+      "Meera Reed"
+    ],
+    "lovers": [],
+    "seasons": [
+      3,
+      4
+    ],
+    "actor": "Thomas Brodie-Sangster"
+  },
+  {
+    "_id": 103,
+    "name": "Meera Reed",
+    "gender": "female",
+    "born": "",
+    "origin": "Greywater Watch",
+    "death": "",
+    "status": "alive",
+    "culture": "Crannogmen",
+    "religion": "Old Gods",
+    "titles": [
+    ],
+    "house": "Reed",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [
+      "Jojen Reed"
+    ],
+    "lovers": [],
+    "seasons": [
+      3,
+      4,
+      6,
+      7
+    ],
+    "actor": "Ellie Kendrick"
+  },
+  {
+    "_id": 104,
+    "name": "Drogon",
+    "gender": "male",
+    "born": "298 AC",
+    "origin": "Wastelands",
+    "death": "",
+    "status": "alive",
+    "culture": "Valyrian",
+    "religion": "",
+    "titles": [
+      "The winged shadow"
+    ],
+    "house": "Targaryen",
+    "father": "",
+    "mother": "Syrax",
+    "spouse": [],
+    "children": [],
+    "siblings": [
+      "Rhaegal",
+      "Viserion"
+    ],
+    "lovers": [],
+    "seasons": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "actor": "CGI"
+  },
+  {
+    "_id": 105,
+    "name": "Rhaegal",
+    "gender": "male",
+    "born": "298 AC",
+    "origin": "Wastelands",
+    "death": "305 AC",
+    "status": "deceased",
+    "culture": "Valyrian",
+    "religion": "",
+    "titles": [
+    ],
+    "house": "Targaryen",
+    "father": "",
+    "mother": "Syrax",
+    "spouse": [],
+    "children": [],
+    "siblings": [
+      "Drogon",
+      "Viserion"
+    ],
+    "lovers": [],
+    "seasons": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "actor": "CGI"
+  },
+  {
+    "_id": 106,
+    "name": "Viserion",
+    "gender": "male",
+    "born": "298 AC",
+    "origin": "Wastelands",
+    "death": "305 AC",
+    "status": "deceased",
+    "culture": "Valyrian",
+    "religion": "",
+    "titles": [
+    ],
+    "house": "Targaryen",
+    "father": "",
+    "mother": "Syrax",
+    "spouse": [],
+    "children": [],
+    "siblings": [
+      "Drogon",
+      "Rhaegal"
+    ],
+    "lovers": [],
+    "seasons": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "actor": "CGI"
   }
 ]
-//Es fehlen:, Begleiter Bran in Norden, 3 Drache, 5 Wölfe, Night Watch son wichtiger Typ der auch hingerichtet wurde, Jons Freunde Nightwatch
+//Es fehlen: 5 Wölfe,
