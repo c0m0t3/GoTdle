@@ -3212,7 +3212,91 @@
       2
     ],
     "actor": "Simon Armstrong"
+  },
+  {
+    "_id": 98,
+    "name": "Alliser Thorne",
+    "gender": "male",
+    "born": "",
+    "origin": "Crownlands",
+    "death": "303 AC",
+    "status": "deceased",
+    "culture": "Crownlander",
+    "religion": "Faith of the Seven",
+    "titles": [
+      "First Ranger",
+      "Master-at-Arms",
+      "Lord Commander of the Night's Watch"
+    ],
+    "house": "Thorne",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      1,
+      4,
+      5,
+      6
+    ],
+    "actor": "Owen Teale"
+  },
+  {
+    "_id": 99,
+    "name": "Brynden Rivers",
+    "gender": "male",
+    "born": "",
+    "origin": "",
+    "death": "303 AC",
+    "status": "deceased",
+    "culture": "Valyrian",
+    "religion": "Old Gods",
+    "titles": [
+      "Three-Eyed Raven"
+    ],
+    "house": "Targaryen",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      1,
+      2,
+      3,
+      4,
+      6
+    ],
+    "actor": "Struan Rodger"
+  },
+  {
+    "_id": 100,
+    "name": "Locke",
+    "gender": "male",
+    "born": "",
+    "origin": "North",
+    "death": "301 AC",
+    "status": "deceased",
+    "culture": "Northern",
+    "religion": "Old Gods",
+    "titles": [
+      "Castellan of Harrenhal"
+    ],
+    "house": "",
+    "father": "",
+    "mother": "",
+    "spouse": [],
+    "children": [],
+    "siblings": [],
+    "lovers": [],
+    "seasons": [
+      3,
+      4
+    ],
+    "actor": "Noah Taylor"
   }
 ]
-//Es fehlen:, Begleiter Bran in Norden, 3 Drache, 5 Wölfe, Night Watch son wichtiger Typ der auch hingerichtet wurde, Jons Freunde Nightwatch,
-//Dreiäugiger Rabe, Ser Alliser?
+//Es fehlen:, Begleiter Bran in Norden, 3 Drache, 5 Wölfe, Night Watch son wichtiger Typ der auch hingerichtet wurde, Jons Freunde Nightwatch
