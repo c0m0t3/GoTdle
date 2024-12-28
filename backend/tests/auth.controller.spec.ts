@@ -4,7 +4,6 @@ import { TestDatabase } from './helpers/database';
 import { Request, Response } from 'express';
 import { PasswordHasher } from '../src/utils/password-hasher';
 import { Jwt } from '../src/utils/jwt';
-import { ENV } from '../src/config/env.config';
 import { DI } from '../src/dependency-injection';
 import { ScoreRepository } from '../src/database/repository/score.repository';
 
@@ -13,32 +12,39 @@ const TEST_IDS = {
 } as const;
 
 describe('AuthController', () => {
-  let testDatabase: TestDatabase;
-  let userRepository: UserRepository;
   let authController: AuthController;
-  let scoreRepository: ScoreRepository
-  const req: Partial<Request> = {};
-  const res: Partial<Response> = {
-    status: jest.fn().mockReturnThis(),
-    send: jest.fn(),
-    json: jest.fn(),
-  };
+  let userRepository: UserRepository;
+  let scoreRepository: ScoreRepository;
+  let req: Partial<Request>;
+  let res: Partial<Response>;
+  let testDatabase: TestDatabase;
 
   beforeAll(async () => {
+    DI.utils = {
+      passwordHasher: new PasswordHasher(10),
+      jwt: new Jwt('secret', { issuer: 'http://fwe.auth' }),
+    };
     testDatabase = new TestDatabase();
     await testDatabase.setup();
     userRepository = new UserRepository(testDatabase.database);
     scoreRepository = new ScoreRepository(testDatabase.database);
-    DI.utils = {
-        passwordHasher: new PasswordHasher(10),
-        jwt: new Jwt(ENV.JWT_SECRET, {
-          issuer: 'http://fwe.auth',
-        }),
-      };
     authController = new AuthController(userRepository, scoreRepository, DI.utils.passwordHasher, DI.utils.jwt);
-  }, 50000);
+
+  });
+
+  beforeEach(() => {
+    req = {
+      body: {},
+    };
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+      send: jest.fn(),
+    };
+  });
 
   afterAll(async () => {
+    await testDatabase.clearDatabase();
     await testDatabase.teardown();
   });
 
@@ -167,7 +173,7 @@ describe('AuthController', () => {
     
     it('should return 400 if the username data is invalid', async () => {
 
-      req.body = { type: 'username', identifier: 'test@example.com', password: 'password123', };
+      req.body = { type: 'username', identifier: 'qw', password: 'password123', };
     
       await authController.loginUser(req as Request, res as Response);
     
@@ -182,8 +188,11 @@ describe('AuthController', () => {
       req.body = { type: 'email', identifier: 'test@example.com', password: 'short' };
   
       await authController.loginUser(req as Request, res as Response);
-  
+
       expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        errors: expect.any(Array),
+      });
     });
   });
 });

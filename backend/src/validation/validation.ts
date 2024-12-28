@@ -17,7 +17,10 @@ export const loginZodSchema = z
   .object({
     type: z.enum(['email', 'username']),
     identifier: z.string().refine(excludeInjectionChars),
-    password: z.string().min(8).refine(excludeInjectionChars),
+    password: z
+      .string()
+      .min(8, 'Password must be at least 8 characters long')
+      .refine(excludeInjectionChars),
   })
   .superRefine((data, ctx) => {
     if (data.type === 'email') {
@@ -41,8 +44,14 @@ export const loginZodSchema = z
 
 export const createUserZodSchema = createInsertSchema(userSchema, {
   email: z.string().email(),
-  password: z.string().min(8).refine(excludeInjectionChars),
-  username: z.string().min(3).refine(excludeInjectionChars),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters long')
+    .refine(excludeInjectionChars),
+  username: z
+    .string()
+    .min(3, 'Username must be at least 3 characters long')
+    .refine(excludeInjectionChars),
 }).transform(async (data) => {
   try {
     const hashedPassword = await DI.utils.passwordHasher.hashPassword(
