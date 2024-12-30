@@ -34,16 +34,21 @@ describe('ScoreController', () => {
     testDatabase = new TestDatabase();
     await testDatabase.setup();
     DI.utils = {
-        passwordHasher: new PasswordHasher(10),
-        jwt: new Jwt(ENV.JWT_SECRET, {
-          issuer: 'http://fwe.auth',
-        }),
-      };
+      passwordHasher: new PasswordHasher(10),
+      jwt: new Jwt(ENV.JWT_SECRET, {
+        issuer: 'http://fwe.auth',
+      }),
+    };
     userRepository = new UserRepository(testDatabase.database);
     scoreRepository = new ScoreRepository(testDatabase.database);
-    authController = new AuthController(userRepository, scoreRepository, DI.utils.passwordHasher, DI.utils.jwt);
+    authController = new AuthController(
+      userRepository,
+      scoreRepository,
+      DI.utils.passwordHasher,
+      DI.utils.jwt,
+    );
     scoreController = new ScoreController(scoreRepository);
-  }, 50000);
+  }, 100000);
 
   beforeEach(() => {
     req = {};
@@ -67,21 +72,23 @@ describe('ScoreController', () => {
       req.body = TEST_USER;
 
       await authController.registerUser(req as Request, res as Response);
-      
+
       req.params = { userId: TEST_IDS.USER_ID };
 
       await scoreController.getScoreByUserId(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledTimes(1);
-      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([
-        expect.objectContaining({
-          userId: expect.any(String),
-          streak: 0,
-          longestStreak: 0,
-          dailyScore: [0],
-        })
-      ]));
+      expect(res.json).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({
+            userId: expect.any(String),
+            streak: 0,
+            longestStreak: 0,
+            dailyScore: [0],
+          }),
+        ]),
+      );
     });
   });
 
@@ -94,18 +101,23 @@ describe('ScoreController', () => {
       req.params = { userId: TEST_IDS.USER_ID };
       req.body = { streak: 5, longestStreak: 10, dailyScore: [1, 2, 3] };
 
-      await scoreController.updateScoreByUserId(req as Request, res as Response);
+      await scoreController.updateScoreByUserId(
+        req as Request,
+        res as Response,
+      );
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledTimes(1);
-      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([
-        expect.objectContaining({
-          userId: TEST_IDS.USER_ID,
-          streak: 5,
-          longestStreak: 10,
-          dailyScore: [1, 2, 3],
-        })
-      ]));
+      expect(res.json).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({
+            userId: TEST_IDS.USER_ID,
+            streak: 5,
+            longestStreak: 10,
+            dailyScore: [1, 2, 3],
+          }),
+        ]),
+      );
     });
   });
 });
