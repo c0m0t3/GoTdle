@@ -45,18 +45,36 @@ export class UserRepository {
   async getUserById(id: string) {
     return this.database.query.userSchema.findFirst({
       where: (user, { eq }) => eq(user.id, id),
+      columns: {
+        id: true,
+        email: true,
+        username: true,
+        createdAt: true,
+      },
     });
   }
 
   async getUserByUsername(username: string) {
     return this.database.query.userSchema.findFirst({
       where: (user, { eq }) => eq(user.username, username),
+      columns: {
+        id: true,
+        email: true,
+        username: true,
+        createdAt: true,
+      },
     });
   }
 
   async getUserByEmail(email: string) {
     return this.database.query.userSchema.findFirst({
       where: (user, { eq }) => eq(user.email, email),
+      columns: {
+        id: true,
+        email: true,
+        username: true,
+        createdAt: true,
+      },
     });
   }
 
