@@ -50,9 +50,6 @@ export class UserRepository {
   }
 
   async deleteUserById(id: string) {
-    return this.database
-      .delete(userSchema)
-      .where(eq(userSchema.id, id))
-      .returning();
+    return this.database.delete(userSchema).where(eq(userSchema.id, id));
   }
 }

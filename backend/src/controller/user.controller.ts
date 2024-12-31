@@ -61,17 +61,8 @@ export class UserController {
   }
 
   async deleteUser(req: Request, res: Response): Promise<void> {
-    const idSchema = z.string().uuid();
-    const userId = idSchema.parse(req.params.id);
-
-    const [deletedUser] = await this.userRepository.deleteUserById(userId);
-
-    if (!deletedUser) {
-      res.status(404).json({ errors: ['User not found'] });
-      return;
-    }
-
-    res.status(204).send();
+    await this.userRepository.deleteUserById(req.user!.id);
+    res.status(204).send({});
   }
 
   async getAllUsers(_req: Request, res: Response): Promise<void> {

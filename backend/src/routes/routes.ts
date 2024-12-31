@@ -60,7 +60,7 @@ export class Routes {
       this.userController.updateUser.bind(this.userController),
     );
     this.router.delete(
-      '/users/:id',
+      '/users',
       verifyAccess,
       this.userController.deleteUser.bind(this.userController),
     );
