@@ -7,12 +7,16 @@ export class UserRepository {
   constructor(private readonly database: Database) {}
 
   async createUser(data: CreateUser) {
-    return this.database.insert(userSchema).values(data).returning({
-      id: userSchema.id,
-      email: userSchema.email,
-      username: userSchema.username,
-      createdAt: userSchema.createdAt,
-    });
+    const [createdUser] = await this.database
+      .insert(userSchema)
+      .values(data)
+      .returning({
+        id: userSchema.id,
+        email: userSchema.email,
+        username: userSchema.username,
+        createdAt: userSchema.createdAt,
+      });
+    return createdUser;
   }
 
   async getAllUsers() {

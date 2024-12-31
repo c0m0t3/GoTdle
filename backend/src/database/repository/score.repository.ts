@@ -6,8 +6,12 @@ import { CreateScore } from '../../validation/validation';
 export class ScoreRepository {
   constructor(private readonly database: Database) {}
 
-  async createScore(data: CreateScore): Promise<CreateScore[]> {
-    return this.database.insert(scoreSchema).values(data).returning();
+  async createScore(userId: string) {
+    const [createdScore] = await this.database
+      .insert(scoreSchema)
+      .values({ userId: userId })
+      .returning();
+    return createdScore;
   }
 
   async getScoreByUserId(userId: string) {
