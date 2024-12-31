@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import type { Database } from '..';
 import { scoreSchema } from '../schema/score.schema';
-import { CreateScore } from '../../validation/validation';
+import { UpdateScore } from '../../validation/validation';
 
 export class ScoreRepository {
   constructor(private readonly database: Database) {}
@@ -22,12 +22,16 @@ export class ScoreRepository {
       .execute();
   }
 
-  async updateScoreByUserId(userId: string, data: Partial<CreateScore>) {
-    return await this.database
+  async updateScoreByUserId(userId: string, data: UpdateScore) {
+    const [updatedScore] = await this.database
       .update(scoreSchema)
-      .set(data)
+      .set({
+        ...data,
+        lastPlayed: new Date(),
+      })
       .where(eq(scoreSchema.userId, userId))
       .returning();
+    return updatedScore;
   }
 
   async deleteScore(id: string) {

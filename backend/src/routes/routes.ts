@@ -72,7 +72,7 @@ export class Routes {
       this.scoreController.getScoreByUserId.bind(this.scoreController),
     );
     this.router.put(
-      '/scores/:userId',
+      '/scores',
       verifyAccess,
       this.scoreController.updateScoreByUserId.bind(this.scoreController),
     );
