@@ -62,8 +62,7 @@ export const createUserZodSchema = createInsertSchema(userSchema, {
       ...data,
       password: hashedPassword,
     };
-  } catch (error) {
-    console.error('Error during password hashing:', error);
+  } catch (_error) {
     throw new Error('Error during password hashing');
   }
 });
@@ -91,8 +90,7 @@ export const updateUserZodSchema = createInsertSchema(userSchema, {
         ...data,
         password: hashedPassword,
       };
-    } catch (error) {
-      console.error('Error during password hashing:', error);
+    } catch (_error) {
       throw new Error('Error during password hashing');
     }
   }
