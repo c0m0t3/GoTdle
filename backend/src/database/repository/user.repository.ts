@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import type { Database } from '..';
-import { CreateUser } from '../../validation/validation';
+import { CreateUser, UpdateUser } from '../../validation/validation';
 import { userSchema } from '../schema/user.schema';
 
 export class UserRepository {
@@ -60,12 +60,18 @@ export class UserRepository {
     });
   }
 
-  async updateUserById(data: Partial<CreateUser>) {
-    return this.database
+  async updateUserById(userId: string, data: UpdateUser) {
+    const [updatedUser] = await this.database
       .update(userSchema)
       .set(data)
-      .where(eq(userSchema.id, data.id!))
-      .returning();
+      .where(eq(userSchema.id, userId))
+      .returning({
+        id: userSchema.id,
+        email: userSchema.email,
+        username: userSchema.username,
+        createdAt: userSchema.createdAt,
+      });
+    return updatedUser;
   }
 
   async deleteUserById(id: string) {

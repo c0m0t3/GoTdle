@@ -55,7 +55,7 @@ export class Routes {
       this.userController.getUserByEmail.bind(this.userController),
     );
     this.router.put(
-      '/users/:id',
+      '/users',
       verifyAccess,
       this.userController.updateUser.bind(this.userController),
     );
