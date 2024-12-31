@@ -1,6 +1,6 @@
 import { integer, pgTable, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { userSchema } from './user.schema';
-import { sql } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 
 export const scoreSchema = pgTable('score', {
   userId: uuid('userId')
@@ -13,6 +13,13 @@ export const scoreSchema = pgTable('score', {
   dailyScore: integer('dailyScore').notNull().array().default(sql`ARRAY
   [0]::INTEGER[]`),
 });
+
+export const scoreRelations = relations(scoreSchema, ({ one }) => ({
+  user: one(userSchema, {
+    fields: [scoreSchema.userId],
+    references: [userSchema.id],
+  }),
+}));
 
 export type Score = {
   userId: string;

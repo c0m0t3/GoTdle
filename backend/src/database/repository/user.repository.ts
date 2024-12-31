@@ -19,8 +19,27 @@ export class UserRepository {
     return createdUser;
   }
 
-  async getAllUsers() {
-    return this.database.query.userSchema.findMany();
+  async getAllUsers(includeScoreRelation = true) {
+    return this.database.query.userSchema.findMany({
+      columns: {
+        id: true,
+        email: true,
+        username: true,
+        createdAt: true,
+      },
+      with: includeScoreRelation
+        ? {
+            score: {
+              columns: {
+                streak: true,
+                lastPlayed: true,
+                longestStreak: true,
+                dailyScore: true,
+              },
+            },
+          }
+        : undefined,
+    });
   }
 
   async getUserById(id: string) {

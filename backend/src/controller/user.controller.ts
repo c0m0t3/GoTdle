@@ -6,6 +6,19 @@ import { updateUserZodSchema } from '../validation/validation';
 export class UserController {
   constructor(private readonly userRepository: UserRepository) {}
 
+  async getAllUsers(req: Request, res: Response): Promise<void> {
+    const withScoreRelation = z
+      .boolean()
+      .default(true)
+      .parse(
+        req.query.withScoreRelation === 'true' ||
+          req.query.withScoreRelation === undefined,
+      );
+
+    const users = await this.userRepository.getAllUsers(withScoreRelation);
+    res.send(users);
+  }
+
   async getUserById(req: Request, res: Response): Promise<void> {
     const idSchema = z.string().uuid();
     const userID = idSchema.parse(req.params.id);
@@ -63,10 +76,5 @@ export class UserController {
   async deleteUser(req: Request, res: Response): Promise<void> {
     await this.userRepository.deleteUserById(req.user!.id);
     res.status(204).send({});
-  }
-
-  async getAllUsers(_req: Request, res: Response): Promise<void> {
-    const users = await this.userRepository.getAllUsers();
-    res.status(200).json(users);
   }
 }
