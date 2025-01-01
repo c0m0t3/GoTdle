@@ -37,13 +37,13 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData, sol
     if (solutionCharacter) {
       if (column === 'First Appearance') {
         const solutionValue = `S${solutionCharacter.seasons[0]}`;
-        return value === solutionValue ? 'green.200' : 'red.200';
+        return value === solutionValue ? 'green.500' : 'red.500';
       } else if (column === 'Last Appearance') {
         const solutionValue = `S${solutionCharacter.seasons[solutionCharacter.seasons.length - 1]}`;
-        return value === solutionValue ? 'green.200' : 'red.200';
+        return value === solutionValue ? 'green.500' : 'red.500';
       } else {
         const solutionValue = solutionCharacter[column.toLowerCase() as keyof Character];
-        return value === solutionValue ? 'green.200' : 'red.200';
+        return value === solutionValue ? 'green.500' : 'red.500';
       }
     }
     return 'red.200';
@@ -64,12 +64,13 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData, sol
 
   return (
     <Box
-      bgImage={'url(\'/bg_border.png\')'}
-      bgSize="100% 100%"
-      bgRepeat="no-repeat"
-      bgPosition="top"
+      bg="gray.800"
       p={4}
       px={'4em'}
+      border="1px solid"
+      borderColor="white.600"
+      borderRadius="md"
+      textColor={'white'}
     >
       <Grid templateColumns={`repeat(${initialColumns.length}, 1fr)`} gap={4}>
         {characters.map((row, rowIndex) =>
