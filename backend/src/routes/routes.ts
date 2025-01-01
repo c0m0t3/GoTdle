@@ -40,7 +40,7 @@ export class Routes {
       this.userController.getAllUsers.bind(this.userController),
     );
     this.router.get(
-      '/users/:id',
+      '/users/me',
       this.userController.getUserById.bind(this.userController),
     );
     this.router.get(

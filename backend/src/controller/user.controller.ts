@@ -20,16 +20,19 @@ export class UserController {
   }
 
   async getUserById(req: Request, res: Response): Promise<void> {
-    const idSchema = z.string().uuid();
-    const userID = idSchema.parse(req.params.id);
+    const withScoreRelation = z
+      .boolean()
+      .default(true)
+      .parse(
+        req.query.withScoreRelation === 'true' ||
+          req.query.withScoreRelation === undefined,
+      );
 
-    const user = await this.userRepository.getUserById(userID);
-
-    if (!user) {
-      res.status(404).json({ errors: ['User not found'] });
-      return;
-    }
-    res.status(200).json(user);
+    const user = await this.userRepository.getLoggedUserById(
+      req.user!.id,
+      withScoreRelation,
+    );
+    res.send(user);
   }
 
   async getUserByUsername(req: Request, res: Response): Promise<void> {

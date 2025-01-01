@@ -42,6 +42,30 @@ export class UserRepository {
     });
   }
 
+  async getLoggedUserById(id: string, includeScoreRelation = true) {
+    return this.database.query.userSchema.findFirst({
+      where: (user, { eq }) => eq(user.id, id),
+      columns: {
+        id: true,
+        email: true,
+        username: true,
+        createdAt: true,
+      },
+      with: includeScoreRelation
+        ? {
+            score: {
+              columns: {
+                streak: true,
+                lastPlayed: true,
+                longestStreak: true,
+                dailyScore: true,
+              },
+            },
+          }
+        : undefined,
+    });
+  }
+
   async getUserById(id: string) {
     return this.database.query.userSchema.findFirst({
       where: (user, { eq }) => eq(user.id, id),
