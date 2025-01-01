@@ -150,6 +150,7 @@ export const ClassicPage: React.FC = () => {
                 loadOptions: loadCharacterOptions,
                 onChange: handleCharacterSelect,
                 value: null,
+                isDisabled: !!correctGuess,
                 components: { DropdownIndicator: () => null }
               }}
             />
