@@ -7,7 +7,62 @@ info:
 servers:
   - url: 'http://localhost:3000'
 paths:
-  /users/login:
+  /auth/register:
+    post:
+      summary: Register New User
+      operationId: postUserRegister
+      responses:
+        '201':
+          description: User Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      email:
+                        type: string
+                        format: email
+                      username:
+                        type: string
+                      createdAt:
+                        type: string
+                        format: date-time
+        '409':
+          description: Username/Email already exists
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - username
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                username:
+                  type: string
+            examples:
+              Example 1:
+                value:
+                  username: string
+                  email: string
+                  password: string
+        description: "Necessary fields to create an user:\r\n- username\r\n- email\r\n- password\r\n\r\nEverything else get default values"
+      description: Create a new user through Registration
+      x-stoplight:
+        id: 1w0j0w26f90ya
+    parameters: [ ]
+  /auth/login:
     post:
       summary: Login User
       tags: [ ]
@@ -50,74 +105,8 @@ paths:
                   type: string
                   x-stoplight:
                     id: goxsbqooowmk1
+    parameters: [ ]
   /users:
-    post:
-      summary: Create New User
-      operationId: postUserRegister
-      responses:
-        '201':
-          description: User Created
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  user:
-                    type: object
-                    x-stoplight:
-                      id: c4nomhcwen07j
-                    properties:
-                      id:
-                        type: string
-                        x-stoplight:
-                          id: l9mi9r5kj33w8
-                        format: uuid
-                      email:
-                        type: string
-                        x-stoplight:
-                          id: hhthtd8upp0q7
-                        format: email
-                      username:
-                        type: string
-                        x-stoplight:
-                          id: r6bcleardrmxa
-                      createdAt:
-                        type: string
-                        x-stoplight:
-                          id: r7xzu1z1sxm37
-                        format: date-time
-        '409':
-          description: Username/Email already exists
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - email
-                - password
-                - username
-              properties:
-                email:
-                  type: string
-                password:
-                  type: string
-                  x-stoplight:
-                    id: 6b25cmy6ykyih
-                username:
-                  type: string
-                  x-stoplight:
-                    id: pwwp3l11ur1c9
-            examples:
-              Example 1:
-                value:
-                  username: string
-                  email: string
-                  password: string
-        description: "Necessary fields to create an user:\r\n- username\r\n- email\r\n- password\r\n\r\nEverything else get default values"
-      description: Create a new user through Registration
-      x-stoplight:
-        id: luhmvb6wah5g2
     parameters: [ ]
     get:
       summary: Get All Users
@@ -132,52 +121,13 @@ paths:
                 items:
                   $ref: '#/components/schemas/User'
                   x-stoplight:
-                    id: z2pebcc4h3eny
+                    id: 9r947hr8pfl5h
       operationId: getUsers
       x-stoplight:
-        id: 6csl7956pdx7w
+        id: u71vv2hgh0zlc
       description: Get all users for Scoreboard
-  '/users/{id}':
-    parameters:
-      - schema:
-          type: string
-        name: id
-        in: path
-        required: true
-    get:
-      summary: Get User Info by User ID
-      tags: [ ]
-      responses:
-        '200':
-          description: User Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-              examples:
-                Example 1:
-                  value:
-                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
-                    username: string
-                    email: user@example.com
-                    password: topSecret999!
-                    createdAt: '2019-08-24T14:15:22Z'
-                    scores:
-                      Streak: 0
-                      lastPlayed: '2019-08-24'
-                      LongestStreak: 0
-                      dailyScore:
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-                        - 0
-        '404':
-          description: User Not Found
-      operationId: getUserById
-      description: ''
-      x-stoplight:
-        id: fbx1jeknya520
+      security:
+        - Authorization: [ ]
     put:
       summary: Update User by User ID
       tags: [ ]
@@ -205,16 +155,19 @@ paths:
                   type: string
                   x-stoplight:
                     id: o67og4fxnpn48
-                password:
-                  type: string
-                  x-stoplight:
-                    id: os478zzgd9egn
                 email:
                   type: string
                   x-stoplight:
                     id: 68d1pf9t1eqhg
+                password:
+                  type: string
+                  x-stoplight:
+                    id: os478zzgd9egn
         description: "The user can optionally update their username, email, or password. \r\nWe need to ensure that empty input fields are handled properly to prevent the database from being updated with empty values."
       parameters: [ ]
+      security:
+        - Authorization: [ ]
+      description: Update logged user. UserId in Auth-Token.
     delete:
       summary: Delete User by User ID
       tags: [ ]
@@ -224,15 +177,12 @@ paths:
       operationId: deleteUserById
       x-stoplight:
         id: jxryiatuqj5xr
-  '/users/name/{username}':
-    parameters:
-      - schema:
-          type: string
-        name: username
-        in: path
-        required: true
+      security:
+        - Authorization: [ ]
+      description: Delete logged user. UserId in Auth-Token.
+  /users/me:
     get:
-      summary: Get User Info by Username
+      summary: Get User By Id
       tags: [ ]
       responses:
         '200':
@@ -241,13 +191,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        '404':
-          description: Not Found
-      operationId: getUserByUsername
+      operationId: getUserById
       x-stoplight:
-        id: ek7jipxzq1u6x
-      description: for searching a specific user in scoreboard
-  '/scores/{userId}':
+        id: zapdv6a36wf87
+      description: Get logged user. UserId in Auth-Token.
+      security:
+        - Authorization: [ ]
+  /scores:
     put:
       summary: Update Score by User ID
       tags: [ ]
@@ -257,21 +207,66 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Scores'
-      operationId: putScoresByUserId
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    x-stoplight:
+                      id: 4eu1l0ufyw5li
+                    format: uuid
+                  streak:
+                    x-stoplight:
+                      id: tjbly8mbcnq17
+                    type: integer
+                  lastPlayed:
+                    type: string
+                    x-stoplight:
+                      id: ctgtcw4aysowp
+                    format: date-time
+                  longestStreak:
+                    type: integer
+                    x-stoplight:
+                      id: fwiafpnj162gd
+                  dailyScore:
+                    type: array
+                    x-stoplight:
+                      id: yxiwqt3c1hsif
+                    items:
+                      x-stoplight:
+                        id: ij6xyakfoyhop
+                      type: integer
+      operationId: putScoreByUserId
       x-stoplight:
         id: ocffdx3ewcbtw
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Scores'
-    parameters:
-      - schema:
-          type: string
-        name: userId
-        in: path
-        required: true
+              type: object
+              required:
+                - streak
+                - dailyScore
+              properties:
+                streak:
+                  type: string
+                  x-stoplight:
+                    id: tdsy0hkpvo2v3
+                longestStreak:
+                  type: string
+                  x-stoplight:
+                    id: ilsy4y927hm5y
+                dailyScore:
+                  type: array
+                  x-stoplight:
+                    id: lx1z28cauee31
+                  items:
+                    x-stoplight:
+                      id: 61jtw3atx83jv
+                    type: integer
+      security:
+        - Authorization: [ ]
+      description: Update score of logged user. UserId in Auth-Token.
+    parameters: [ ]
   '/characters/{_id}':
     parameters:
       - schema:
@@ -335,11 +330,6 @@ components:
               - 0
               - 0
               - 0
-      required:
-        - id
-        - username
-        - email
-        - password
       properties:
         id:
           type: string
@@ -347,50 +337,49 @@ components:
           x-stoplight:
             id: rh2u6uqm096v2
           format: uuid
-        username:
-          type: string
-          x-stoplight:
-            id: kddln0ig5o6ov
         email:
           type: string
           format: email
           x-stoplight:
             id: 8cperjwnsx88z
-        password:
+        username:
           type: string
-          format: password
-          example: topSecret999!
           x-stoplight:
-            id: c64wggf2hpjeb
-          minLength: 8
+            id: kddln0ig5o6ov
         createdAt:
           type: string
           format: date-time
           description: The date that the user was created.
           x-stoplight:
             id: xteqnrtwn4pyh
-        scores:
+        score:
           $ref: '#/components/schemas/Scores'
           x-stoplight:
             id: ef9zxmbp9qg5v
     Scores:
-      title: Scores
+      title: Score
       x-stoplight:
         id: pulqoicjwrbyp
       type: object
+      examples:
+        - lastPlayed: '2019-08-24'
+          Streak: 0
+          LongestStreak: 0
+          dailyScore:
+            - 0
       properties:
+        streak:
+          type: integer
+          x-stoplight:
+            id: zbmyv22eim06b
+          description: "deafult 0\r\n"
         lastPlayed:
           type: string
           x-stoplight:
             id: b9703h5eyehpb
           format: date
           description: Erstellungsdatum des Accounts
-        Streak:
-          type: integer
-          x-stoplight:
-            id: zbmyv22eim06b
-          description: "deafult 0\r\n"
-        LongestStreak:
+        longestStreak:
           type: integer
           x-stoplight:
             id: 942pon3y9061b
@@ -404,12 +393,6 @@ components:
             x-stoplight:
               id: gciy0fhxlbsez
             type: integer
-      examples:
-        - lastPlayed: '2019-08-24'
-          Streak: 0
-          LongestStreak: 0
-          dailyScore:
-            - 0
     Characters:
       title: Characters
       x-stoplight:
@@ -516,3 +499,7 @@ components:
           type: string
           x-stoplight:
             id: 1b89byvk1w940
+  securitySchemes:
+    Authorization:
+      type: http
+      scheme: bearer
