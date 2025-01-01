@@ -15,7 +15,7 @@ export function globalErrorHandler(
   // Handle Zod validation errors
   if (err instanceof ZodError) {
     res.status(400).json({
-      errors: err.errors.map((error) => ({ message: error.message })),
+      errors: err.errors,
     });
     return;
   }

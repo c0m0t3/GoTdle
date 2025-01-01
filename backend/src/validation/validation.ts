@@ -1,5 +1,4 @@
 import { userSchema } from '../database/schema/user.schema';
-import { scoreSchema } from '../database/schema/score.schema';
 import { characterSchema } from '../database/schema/character.schema';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
@@ -62,8 +61,7 @@ export const createUserZodSchema = createInsertSchema(userSchema, {
       ...data,
       password: hashedPassword,
     };
-  } catch (error) {
-    console.error('Error during password hashing:', error);
+  } catch (_error) {
     throw new Error('Error during password hashing');
   }
 });
@@ -91,8 +89,7 @@ export const updateUserZodSchema = createInsertSchema(userSchema, {
         ...data,
         password: hashedPassword,
       };
-    } catch (error) {
-      console.error('Error during password hashing:', error);
+    } catch (_error) {
       throw new Error('Error during password hashing');
     }
   }
@@ -101,18 +98,9 @@ export const updateUserZodSchema = createInsertSchema(userSchema, {
 });
 
 export const updateScoreZodSchema = z.object({
-  streak: z.number().optional(),
-  lastPlayed: z.date().nullable().optional(),
+  streak: z.number(),
   longestStreak: z.number().optional(),
-  dailyScore: z.array(z.number()).optional(),
-});
-
-export const createScoreZodSchema = createInsertSchema(scoreSchema, {
-  userId: z.string().uuid(),
-  streak: z.number().optional(),
-  lastPlayed: z.date().nullable().optional(),
-  longestStreak: z.number().optional(),
-  dailyScore: z.array(z.number()).optional(),
+  dailyScore: z.array(z.number()),
 });
 
 export const createCharacterZodSchema = z.array(
@@ -140,7 +128,6 @@ export const createCharacterZodSchema = z.array(
 );
 
 export type CreateUser = z.infer<typeof createUserZodSchema>;
-export type CreateScore = z.infer<typeof createScoreZodSchema>;
 export type UpdateScore = z.infer<typeof updateScoreZodSchema>;
 export type UpdateUser = z.infer<typeof updateUserZodSchema>;
 export type CreateCharacter = z.infer<typeof createCharacterZodSchema>;

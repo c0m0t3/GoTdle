@@ -20,23 +20,13 @@ export class ScoreController {
   }
 
   async updateScoreByUserId(req: Request, res: Response): Promise<void> {
-    const userIdSchema = z.string().uuid();
-    const userId = userIdSchema.parse(req.params.userId);
-    const parsedScoreData = await updateScoreZodSchema.parseAsync({
-      ...req.body,
-      userId,
-    });
+    const validatedData = updateScoreZodSchema.parse(req.body);
 
     const updatedScore = await this.scoreRepository.updateScoreByUserId(
-      userId,
-      parsedScoreData,
+      req.user!.id,
+      validatedData,
     );
 
-    if (updatedScore.length === 0) {
-      res.status(404).json({ errors: ['Score not found'] });
-      return;
-    }
-
-    res.status(200).json(updatedScore);
+    res.send(updatedScore);
   }
 }

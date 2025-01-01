@@ -4,6 +4,7 @@ import { Jwt } from '../utils/jwt';
 import { PasswordHasher } from '../utils/password-hasher';
 import { createUserZodSchema, loginZodSchema } from '../validation/validation';
 import { ScoreRepository } from '../database/repository/score.repository';
+import { z } from 'zod';
 
 export class AuthController {
   constructor(
@@ -14,17 +15,26 @@ export class AuthController {
   ) {}
 
   async registerUser(req: Request, res: Response): Promise<void> {
-    const validatedUser = await createUserZodSchema.parseAsync(req.body);
+    const validatedData = await createUserZodSchema.parseAsync(req.body);
 
-    if (
-      (await this.userRepository.getUserByEmail(validatedUser.email)) ||
-      (await this.userRepository.getUserByUsername(validatedUser.username))
-    ) {
-      res.status(400).send('User already exists');
+    const existingEmail = await this.userRepository.getUserByEmail(
+      validatedData.email,
+    );
+    if (existingEmail) {
+      res.status(400).send({ errors: ['Email already in use'] });
       return;
     }
-    const [createdUser] = await this.userRepository.createUser(validatedUser);
-    await this.scoreRepository.createScore({ userId: createdUser.id });
+    const existingUsername = await this.userRepository.getUserByUsername(
+      validatedData.username,
+    );
+    if (existingUsername) {
+      res.status(400).send({ errors: ['Username already in use'] });
+      return;
+    }
+
+    const createdUser = await this.userRepository.createUser(validatedData);
+    const validatedId = z.string().uuid().parse(createdUser.id);
+    await this.scoreRepository.createScore(validatedId);
     res.status(201).send({ user: createdUser });
   }
 

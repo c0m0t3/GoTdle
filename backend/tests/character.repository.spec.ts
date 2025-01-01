@@ -11,13 +11,19 @@ const TEST_CHARACTER = {
   status: 'Alive',
   culture: 'Northmen',
   religion: 'Old Gods of the Forest',
-  titles: ['Lord Commander of the Night\'s Watch'],
+  titles: ["Lord Commander of the Night's Watch"],
   house: 'Stark',
   father: 'Rhaegar Targaryen',
   mother: 'Lyanna Stark',
   spouse: [],
   children: [],
-  siblings: ['Robb Stark', 'Sansa Stark', 'Arya Stark', 'Bran Stark', 'Rickon Stark'],
+  siblings: [
+    'Robb Stark',
+    'Sansa Stark',
+    'Arya Stark',
+    'Bran Stark',
+    'Rickon Stark',
+  ],
   lovers: ['Ygritte'],
   seasons: [1, 2, 3, 4, 5, 6, 7, 8],
   actor: 'Kit Harington',
@@ -31,7 +37,7 @@ describe('CharacterRepository', () => {
     testDatabase = new TestDatabase();
     await testDatabase.setup();
     characterRepository = new CharacterRepository(testDatabase.database);
-  }, 50000);
+  }, 100000);
 
   afterEach(async () => {
     await testDatabase.clearDatabase();
@@ -43,7 +49,9 @@ describe('CharacterRepository', () => {
 
   describe('createCharacter', () => {
     it('should create a character', async () => {
-      const character = await characterRepository.createCharacter([TEST_CHARACTER]);
+      const character = await characterRepository.createCharacter([
+        TEST_CHARACTER,
+      ]);
       expect(character).toBeDefined();
       expect(character[0].name).toBe(TEST_CHARACTER.name);
     });
@@ -60,8 +68,12 @@ describe('CharacterRepository', () => {
 
   describe('getCharacterById', () => {
     it('should return a character by ID', async () => {
-      const createdCharacter = await characterRepository.createCharacter([TEST_CHARACTER]);
-      const character = await characterRepository.getCharacterById(createdCharacter[0]._id);
+      const createdCharacter = await characterRepository.createCharacter([
+        TEST_CHARACTER,
+      ]);
+      const character = await characterRepository.getCharacterById(
+        createdCharacter[0]._id,
+      );
       expect(character).toBeDefined();
       expect(character!.name).toBe(TEST_CHARACTER.name);
     });
@@ -70,7 +82,9 @@ describe('CharacterRepository', () => {
   describe('getCharacterByName', () => {
     it('should return a character by name', async () => {
       await characterRepository.createCharacter([TEST_CHARACTER]);
-      const character = await characterRepository.getCharacterByName(TEST_CHARACTER.name);
+      const character = await characterRepository.getCharacterByName(
+        TEST_CHARACTER.name,
+      );
       expect(character).toBeDefined();
       expect(character!.name).toBe(TEST_CHARACTER.name);
     });

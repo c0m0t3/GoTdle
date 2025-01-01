@@ -20,11 +20,7 @@ export const prepareAuthentication = async (
   next();
 };
 
-export const verifyAccess: RequestHandler = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const verifyAccess: RequestHandler = (req: Request, res, next) => {
   if (!req.user) {
     res.status(401).json({ errors: ['No or invalid authentication provided'] });
     return;

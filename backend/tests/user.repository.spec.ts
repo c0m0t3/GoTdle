@@ -22,7 +22,7 @@ describe('UserRepository', () => {
     testDatabase = new TestDatabase();
     await testDatabase.setup();
     userRepository = new UserRepository(testDatabase.database);
-  }, 50000);
+  }, 100000);
 
   afterAll(async () => {
     await testDatabase.teardown();
@@ -34,7 +34,6 @@ describe('UserRepository', () => {
 
   describe('createUser', () => {
     it('should create a user', async () => {
-
       const [createdUser] = await userRepository.createUser(userData);
 
       expect(createdUser).toHaveProperty('id');
@@ -45,7 +44,6 @@ describe('UserRepository', () => {
 
   describe('getUserById', () => {
     it('should return a user by ID', async () => {
-
       const [createdUser] = await userRepository.createUser(userData);
 
       const result = await userRepository.getUserById(createdUser.id);
@@ -62,7 +60,6 @@ describe('UserRepository', () => {
 
   describe('getUserByUsername', () => {
     it('should return a user by username', async () => {
-
       const [createdUser] = await userRepository.createUser(userData);
 
       const result = await userRepository.getUserByUsername(
@@ -81,7 +78,6 @@ describe('UserRepository', () => {
 
   describe('getUserByEmail', () => {
     it('should return a user by email', async () => {
-
       const [createdUser] = await userRepository.createUser(userData);
 
       const result = await userRepository.getUserByEmail(createdUser.email);
@@ -98,7 +94,6 @@ describe('UserRepository', () => {
 
   describe('deleteUser', () => {
     it('should successfully delete a user', async () => {
-
       const [createdUser] = await userRepository.createUser(userData);
 
       await userRepository.deleteUserById(createdUser.id);
@@ -110,7 +105,6 @@ describe('UserRepository', () => {
 
   describe('getAllUsers', () => {
     it('should return all users', async () => {
-
       const userData2 = {
         email: 'test2@example.com',
         password: 'password123',

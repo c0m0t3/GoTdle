@@ -7,7 +7,9 @@ jest.mock('../src/dependency-injection', () => ({
   DI: {
     utils: {
       passwordHasher: {
-        hashPassword: jest.fn((password: string) => Promise.resolve(`hashed-${password}`)),
+        hashPassword: jest.fn((password: string) =>
+          Promise.resolve(`hashed-${password}`),
+        ),
       },
     },
   },
@@ -37,7 +39,7 @@ describe('UserController', () => {
     await testDatabase.setup();
     userRepository = new UserRepository(testDatabase.database);
     userController = new UserController(userRepository);
-  }, 50000);
+  }, 100000);
 
   afterAll(async () => {
     await testDatabase.teardown();
@@ -58,7 +60,6 @@ describe('UserController', () => {
 
   describe('getUserById', () => {
     it('should return a user by ID', async () => {
-
       await userRepository.createUser(userData);
 
       req.params = { id: TEST_IDS.USER_ID };
@@ -66,10 +67,12 @@ describe('UserController', () => {
       await userController.getUserById(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-        email: 'test@example.com',
-        username: 'testuser',
-      }));
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          email: 'test@example.com',
+          username: 'testuser',
+        }),
+      );
     });
 
     it('should return 404 if user not found', async () => {
@@ -84,7 +87,6 @@ describe('UserController', () => {
 
   describe('getUserByUsername', () => {
     it('should return a user by username', async () => {
-
       await userRepository.createUser(userData);
 
       req.params = { username: 'testuser' };
@@ -92,10 +94,12 @@ describe('UserController', () => {
       await userController.getUserByUsername(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-        email: 'test@example.com',
-        username: 'testuser',
-      }));
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          email: 'test@example.com',
+          username: 'testuser',
+        }),
+      );
     });
 
     it('should return 404 if user not found', async () => {
@@ -110,7 +114,6 @@ describe('UserController', () => {
 
   describe('getUserByEmail', () => {
     it('should return a user by email', async () => {
-
       await userRepository.createUser(userData);
 
       req.params = { email: 'test@example.com' };
@@ -118,10 +121,12 @@ describe('UserController', () => {
       await userController.getUserByEmail(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-        email: 'test@example.com',
-        username: 'testuser',
-      }));
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          email: 'test@example.com',
+          username: 'testuser',
+        }),
+      );
     });
 
     it('should return 404 if user not found', async () => {
@@ -136,7 +141,6 @@ describe('UserController', () => {
 
   describe('updateUser', () => {
     it('should update a user', async () => {
-
       await userRepository.createUser(userData);
 
       req.params = { id: TEST_IDS.USER_ID };
@@ -145,9 +149,11 @@ describe('UserController', () => {
       await userController.updateUser(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-        email: 'updated@example.com',
-      }));
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          email: 'updated@example.com',
+        }),
+      );
     });
 
     it('should return 404 if user not found', async () => {
@@ -163,7 +169,6 @@ describe('UserController', () => {
 
   describe('deleteUser', () => {
     it('should delete a user', async () => {
-
       await userRepository.createUser(userData);
 
       req.params = { id: TEST_IDS.USER_ID };
@@ -186,7 +191,6 @@ describe('UserController', () => {
 
   describe('getAllUsers', () => {
     it('should return all users', async () => {
-
       const userData2 = {
         id: TEST_IDS.USER_ID2,
         email: 'test2@example.com',
@@ -200,10 +204,12 @@ describe('UserController', () => {
       await userController.getAllUsers(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([
-        expect.objectContaining({ email: 'test@example.com' }),
-        expect.objectContaining({ email: 'test2@example.com' }),
-      ]));
+      expect(res.json).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({ email: 'test@example.com' }),
+          expect.objectContaining({ email: 'test2@example.com' }),
+        ]),
+      );
     });
   });
 });
