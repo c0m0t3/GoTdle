@@ -33,10 +33,16 @@ export const ClassicPage: React.FC = () => {
   const [usedOptions, setUsedOptions] = useState<string[]>([]);
   const client = useApiClient();
 
+  const getCharacterOfTheDay = (characters: Character[]) => {
+    const date = new Date().toISOString().split('T')[0];
+    const hash = date.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const index = hash % characters.length;
+    return characters[index];
+  };
+
   useEffect(() => {
     setIncorrectGuesses([]);
     setSelectedCharacter([]);
-    setIncorrectGuesses([]);
 
     const fetchCharacters = async () => {
       try {
@@ -47,8 +53,9 @@ export const ClassicPage: React.FC = () => {
             name: char.name || 'Unknown'
           }));
           setAllCharacters(characterData);
-          const randomCharacter = characterData[Math.floor(Math.random() * characterData.length)];
-          setSolutionCharacter(randomCharacter);
+
+          const todayCharacter = getCharacterOfTheDay(characterData);
+          setSolutionCharacter(todayCharacter);
         }
       } catch (error) {
         console.error('Error fetching character data:', error);
@@ -78,9 +85,10 @@ export const ClassicPage: React.FC = () => {
     const characters = await client.getCharacters();
     if (characters.status === 200) {
       return characters.data
-        .filter((character) =>
-          character?.name?.toLowerCase().startsWith(inputValue.toLowerCase()) &&
-          !usedOptions.includes(character.name)
+        .filter(
+          (character) =>
+            character?.name?.toLowerCase().startsWith(inputValue.toLowerCase()) &&
+            !usedOptions.includes(character.name)
         )
         .map((character) => ({
           label: character.name ?? '',
