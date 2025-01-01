@@ -168,13 +168,63 @@ export interface PostUserLoginRequest {
      * @type {string}
      * @memberof PostUserLoginRequest
      */
-    'identifier'?: string;
+    'identifier': string;
     /**
      * 
      * @type {string}
      * @memberof PostUserLoginRequest
      */
-    'password'?: string;
+    'password': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostUserLoginRequest
+     */
+    'type': string;
+}
+/**
+ * 
+ * @export
+ * @interface PostUserRegister201Response
+ */
+export interface PostUserRegister201Response {
+    /**
+     * 
+     * @type {PostUserRegister201ResponseUser}
+     * @memberof PostUserRegister201Response
+     */
+    'user'?: PostUserRegister201ResponseUser;
+}
+/**
+ * 
+ * @export
+ * @interface PostUserRegister201ResponseUser
+ */
+export interface PostUserRegister201ResponseUser {
+    /**
+     * 
+     * @type {string}
+     * @memberof PostUserRegister201ResponseUser
+     */
+    'id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostUserRegister201ResponseUser
+     */
+    'email'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostUserRegister201ResponseUser
+     */
+    'username'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostUserRegister201ResponseUser
+     */
+    'createdAt'?: string;
 }
 /**
  * 
@@ -187,12 +237,6 @@ export interface PostUserRegisterRequest {
      * @type {string}
      * @memberof PostUserRegisterRequest
      */
-    'username': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PostUserRegisterRequest
-     */
     'email': string;
     /**
      * 
@@ -200,6 +244,74 @@ export interface PostUserRegisterRequest {
      * @memberof PostUserRegisterRequest
      */
     'password': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostUserRegisterRequest
+     */
+    'username': string;
+}
+/**
+ * 
+ * @export
+ * @interface PutScoreByUserId200Response
+ */
+export interface PutScoreByUserId200Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof PutScoreByUserId200Response
+     */
+    'userId'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PutScoreByUserId200Response
+     */
+    'streak'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PutScoreByUserId200Response
+     */
+    'lastPlayed'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PutScoreByUserId200Response
+     */
+    'longestStreak'?: number;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof PutScoreByUserId200Response
+     */
+    'dailyScore'?: Array<number>;
+}
+/**
+ * 
+ * @export
+ * @interface PutScoreByUserIdRequest
+ */
+export interface PutScoreByUserIdRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof PutScoreByUserIdRequest
+     */
+    'streak': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PutScoreByUserIdRequest
+     */
+    'longestStreak'?: string;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof PutScoreByUserIdRequest
+     */
+    'dailyScore': Array<number>;
 }
 /**
  * 
@@ -218,13 +330,13 @@ export interface PutUserByIdRequest {
      * @type {string}
      * @memberof PutUserByIdRequest
      */
-    'password'?: string;
+    'email'?: string;
     /**
      * 
      * @type {string}
      * @memberof PutUserByIdRequest
      */
-    'email'?: string;
+    'password'?: string;
 }
 /**
  * 
@@ -233,23 +345,23 @@ export interface PutUserByIdRequest {
  */
 export interface Scores {
     /**
+     * deafult 0  
+     * @type {number}
+     * @memberof Scores
+     */
+    'streak'?: number;
+    /**
      * Erstellungsdatum des Accounts
      * @type {string}
      * @memberof Scores
      */
     'lastPlayed'?: string;
     /**
-     * deafult 0  
-     * @type {number}
-     * @memberof Scores
-     */
-    'Streak'?: number;
-    /**
      * deafult 0
      * @type {number}
      * @memberof Scores
      */
-    'LongestStreak'?: number;
+    'longestStreak'?: number;
     /**
      * deafult 0
      * @type {Array<number>}
@@ -268,25 +380,19 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    'id': string;
+    'id'?: string;
     /**
      * 
      * @type {string}
      * @memberof User
      */
-    'username': string;
+    'email'?: string;
     /**
      * 
      * @type {string}
      * @memberof User
      */
-    'email': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    'password': string;
+    'username'?: string;
     /**
      * The date that the user was created.
      * @type {string}
@@ -298,7 +404,7 @@ export interface User {
      * @type {Scores}
      * @memberof User
      */
-    'scores'?: Scores;
+    'score'?: Scores;
 }
 
 /**
@@ -308,17 +414,13 @@ export interface User {
 export const DefaultApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * 
+         * Delete logged user. UserId in Auth-Token.
          * @summary Delete User by User ID
-         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteUserById: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('deleteUserById', 'id', id)
-            const localVarPath = `/users/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+        deleteUserById: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/users`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -329,6 +431,10 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication Authorization required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
     
@@ -406,17 +512,13 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * 
-         * @summary Get User Info by User ID
-         * @param {string} id 
+         * Get logged user. UserId in Auth-Token.
+         * @summary Get User By Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserById: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('getUserById', 'id', id)
-            const localVarPath = `/users/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+        getUserById: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/users/me`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -428,39 +530,9 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * for searching a specific user in scoreboard
-         * @summary Get User Info by Username
-         * @param {string} username 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserByUsername: async (username: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'username' is not null or undefined
-            assertParamExists('getUserByUsername', 'username', username)
-            const localVarPath = `/users/name/{username}`
-                .replace(`{${"username"}}`, encodeURIComponent(String(username)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+            // authentication Authorization required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
     
@@ -492,6 +564,10 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            // authentication Authorization required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -511,7 +587,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
          * @throws {RequiredError}
          */
         postUserLogin: async (postUserLoginRequest?: PostUserLoginRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/users/login`;
+            const localVarPath = `/auth/login`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -539,13 +615,13 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * Create a new user through Registration
-         * @summary Create New User
+         * @summary Register New User
          * @param {PostUserRegisterRequest} [postUserRegisterRequest] Necessary fields to create an user:  - username  - email  - password    Everything else get default values
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         postUserRegister: async (postUserRegisterRequest?: PostUserRegisterRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/users`;
+            const localVarPath = `/auth/register`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -572,18 +648,14 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * 
+         * Update score of logged user. UserId in Auth-Token.
          * @summary Update Score by User ID
-         * @param {string} userId 
-         * @param {Scores} [scores] 
+         * @param {PutScoreByUserIdRequest} [putScoreByUserIdRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        putScoresByUserId: async (userId: string, scores?: Scores, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'userId' is not null or undefined
-            assertParamExists('putScoresByUserId', 'userId', userId)
-            const localVarPath = `/scores/{userId}`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+        putScoreByUserId: async (putScoreByUserIdRequest?: PutScoreByUserIdRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/scores`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -594,6 +666,10 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication Authorization required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
     
@@ -602,7 +678,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(scores, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(putScoreByUserIdRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -610,18 +686,14 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * 
+         * Update logged user. UserId in Auth-Token.
          * @summary Update User by User ID
-         * @param {string} id 
          * @param {PutUserByIdRequest} [putUserByIdRequest] The user can optionally update their username, email, or password.   We need to ensure that empty input fields are handled properly to prevent the database from being updated with empty values.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        putUserById: async (id: string, putUserByIdRequest?: PutUserByIdRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('putUserById', 'id', id)
-            const localVarPath = `/users/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+        putUserById: async (putUserByIdRequest?: PutUserByIdRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/users`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -632,6 +704,10 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication Authorization required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
     
@@ -658,14 +734,13 @@ export const DefaultApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = DefaultApiAxiosParamCreator(configuration)
     return {
         /**
-         * 
+         * Delete logged user. UserId in Auth-Token.
          * @summary Delete User by User ID
-         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteUserById(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserById(id, options);
+        async deleteUserById(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserById(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.deleteUserById']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -696,29 +771,15 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * 
-         * @summary Get User Info by User ID
-         * @param {string} id 
+         * Get logged user. UserId in Auth-Token.
+         * @summary Get User By Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUserById(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserById(id, options);
+        async getUserById(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserById(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.getUserById']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * for searching a specific user in scoreboard
-         * @summary Get User Info by Username
-         * @param {string} username 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getUserByUsername(username: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserByUsername(username, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DefaultApi.getUserByUsername']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -748,41 +809,39 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * Create a new user through Registration
-         * @summary Create New User
+         * @summary Register New User
          * @param {PostUserRegisterRequest} [postUserRegisterRequest] Necessary fields to create an user:  - username  - email  - password    Everything else get default values
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postUserRegister(postUserRegisterRequest?: PostUserRegisterRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
+        async postUserRegister(postUserRegisterRequest?: PostUserRegisterRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostUserRegister201Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.postUserRegister(postUserRegisterRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.postUserRegister']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * 
+         * Update score of logged user. UserId in Auth-Token.
          * @summary Update Score by User ID
-         * @param {string} userId 
-         * @param {Scores} [scores] 
+         * @param {PutScoreByUserIdRequest} [putScoreByUserIdRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async putScoresByUserId(userId: string, scores?: Scores, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Scores>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.putScoresByUserId(userId, scores, options);
+        async putScoreByUserId(putScoreByUserIdRequest?: PutScoreByUserIdRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PutScoreByUserId200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.putScoreByUserId(putScoreByUserIdRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DefaultApi.putScoresByUserId']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.putScoreByUserId']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * 
+         * Update logged user. UserId in Auth-Token.
          * @summary Update User by User ID
-         * @param {string} id 
          * @param {PutUserByIdRequest} [putUserByIdRequest] The user can optionally update their username, email, or password.   We need to ensure that empty input fields are handled properly to prevent the database from being updated with empty values.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async putUserById(id: string, putUserByIdRequest?: PutUserByIdRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.putUserById(id, putUserByIdRequest, options);
+        async putUserById(putUserByIdRequest?: PutUserByIdRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.putUserById(putUserByIdRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.putUserById']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -798,14 +857,13 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
     const localVarFp = DefaultApiFp(configuration)
     return {
         /**
-         * 
+         * Delete logged user. UserId in Auth-Token.
          * @summary Delete User by User ID
-         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteUserById(id: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.deleteUserById(id, options).then((request) => request(axios, basePath));
+        deleteUserById(options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteUserById(options).then((request) => request(axios, basePath));
         },
         /**
          * Get character for classic mode
@@ -827,24 +885,13 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.getCharacters(options).then((request) => request(axios, basePath));
         },
         /**
-         * 
-         * @summary Get User Info by User ID
-         * @param {string} id 
+         * Get logged user. UserId in Auth-Token.
+         * @summary Get User By Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserById(id: string, options?: RawAxiosRequestConfig): AxiosPromise<User> {
-            return localVarFp.getUserById(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * for searching a specific user in scoreboard
-         * @summary Get User Info by Username
-         * @param {string} username 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserByUsername(username: string, options?: RawAxiosRequestConfig): AxiosPromise<User> {
-            return localVarFp.getUserByUsername(username, options).then((request) => request(axios, basePath));
+        getUserById(options?: RawAxiosRequestConfig): AxiosPromise<User> {
+            return localVarFp.getUserById(options).then((request) => request(axios, basePath));
         },
         /**
          * Get all users for Scoreboard
@@ -867,35 +914,33 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * Create a new user through Registration
-         * @summary Create New User
+         * @summary Register New User
          * @param {PostUserRegisterRequest} [postUserRegisterRequest] Necessary fields to create an user:  - username  - email  - password    Everything else get default values
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postUserRegister(postUserRegisterRequest?: PostUserRegisterRequest, options?: RawAxiosRequestConfig): AxiosPromise<User> {
+        postUserRegister(postUserRegisterRequest?: PostUserRegisterRequest, options?: RawAxiosRequestConfig): AxiosPromise<PostUserRegister201Response> {
             return localVarFp.postUserRegister(postUserRegisterRequest, options).then((request) => request(axios, basePath));
         },
         /**
-         * 
+         * Update score of logged user. UserId in Auth-Token.
          * @summary Update Score by User ID
-         * @param {string} userId 
-         * @param {Scores} [scores] 
+         * @param {PutScoreByUserIdRequest} [putScoreByUserIdRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        putScoresByUserId(userId: string, scores?: Scores, options?: RawAxiosRequestConfig): AxiosPromise<Scores> {
-            return localVarFp.putScoresByUserId(userId, scores, options).then((request) => request(axios, basePath));
+        putScoreByUserId(putScoreByUserIdRequest?: PutScoreByUserIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<PutScoreByUserId200Response> {
+            return localVarFp.putScoreByUserId(putScoreByUserIdRequest, options).then((request) => request(axios, basePath));
         },
         /**
-         * 
+         * Update logged user. UserId in Auth-Token.
          * @summary Update User by User ID
-         * @param {string} id 
          * @param {PutUserByIdRequest} [putUserByIdRequest] The user can optionally update their username, email, or password.   We need to ensure that empty input fields are handled properly to prevent the database from being updated with empty values.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        putUserById(id: string, putUserByIdRequest?: PutUserByIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<User> {
-            return localVarFp.putUserById(id, putUserByIdRequest, options).then((request) => request(axios, basePath));
+        putUserById(putUserByIdRequest?: PutUserByIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<User> {
+            return localVarFp.putUserById(putUserByIdRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -908,15 +953,14 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
  */
 export class DefaultApi extends BaseAPI {
     /**
-     * 
+     * Delete logged user. UserId in Auth-Token.
      * @summary Delete User by User ID
-     * @param {string} id 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public deleteUserById(id: string, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).deleteUserById(id, options).then((request) => request(this.axios, this.basePath));
+    public deleteUserById(options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).deleteUserById(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -943,27 +987,14 @@ export class DefaultApi extends BaseAPI {
     }
 
     /**
-     * 
-     * @summary Get User Info by User ID
-     * @param {string} id 
+     * Get logged user. UserId in Auth-Token.
+     * @summary Get User By Id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public getUserById(id: string, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).getUserById(id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * for searching a specific user in scoreboard
-     * @summary Get User Info by Username
-     * @param {string} username 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public getUserByUsername(username: string, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).getUserByUsername(username, options).then((request) => request(this.axios, this.basePath));
+    public getUserById(options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getUserById(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -991,7 +1022,7 @@ export class DefaultApi extends BaseAPI {
 
     /**
      * Create a new user through Registration
-     * @summary Create New User
+     * @summary Register New User
      * @param {PostUserRegisterRequest} [postUserRegisterRequest] Necessary fields to create an user:  - username  - email  - password    Everything else get default values
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1002,29 +1033,27 @@ export class DefaultApi extends BaseAPI {
     }
 
     /**
-     * 
+     * Update score of logged user. UserId in Auth-Token.
      * @summary Update Score by User ID
-     * @param {string} userId 
-     * @param {Scores} [scores] 
+     * @param {PutScoreByUserIdRequest} [putScoreByUserIdRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public putScoresByUserId(userId: string, scores?: Scores, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).putScoresByUserId(userId, scores, options).then((request) => request(this.axios, this.basePath));
+    public putScoreByUserId(putScoreByUserIdRequest?: PutScoreByUserIdRequest, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).putScoreByUserId(putScoreByUserIdRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * 
+     * Update logged user. UserId in Auth-Token.
      * @summary Update User by User ID
-     * @param {string} id 
      * @param {PutUserByIdRequest} [putUserByIdRequest] The user can optionally update their username, email, or password.   We need to ensure that empty input fields are handled properly to prevent the database from being updated with empty values.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public putUserById(id: string, putUserByIdRequest?: PutUserByIdRequest, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).putUserById(id, putUserByIdRequest, options).then((request) => request(this.axios, this.basePath));
+    public putUserById(putUserByIdRequest?: PutUserByIdRequest, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).putUserById(putUserByIdRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
