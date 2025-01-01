@@ -12,9 +12,10 @@ interface Character {
 
 interface CharacterGridProps {
   characterData: Character[];
+  solutionCharacter: Character | null;
 }
 
-export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData }) => {
+export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData, solutionCharacter }) => {
   const initialColumns = ['Character', 'Gender', 'House', 'Origin', 'Status', 'Religion', 'First Appearance', 'Last Appearance'];
 
   const transformCharacterData = (data: Character[]): string[][] => {
@@ -25,23 +26,38 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData }) =
       character.origin,
       character.status,
       character.religion,
-      character.seasons[0] ? `S${character.seasons[0]}E01` : '',
-      character.seasons[character.seasons.length - 1] ? `S${character.seasons[character.seasons.length - 1]}E10` : ''
+      character.seasons[0] ? `S${character.seasons[0]}` : '',
+      character.seasons[character.seasons.length - 1] ? `S${character.seasons[character.seasons.length - 1]}` : ''
     ]);
   };
 
   const characters = [initialColumns, ...transformCharacterData(characterData)];
 
   const getColor = (value: string, column: string) => {
-    if (column === 'Status') {
-      return value === 'alive' ? 'green.200' : 'red.200';
+    if (solutionCharacter) {
+      if (column === 'First Appearance') {
+        const solutionValue = `S${solutionCharacter.seasons[0]}`;
+        return value === solutionValue ? 'green.200' : 'red.200';
+      } else if (column === 'Last Appearance') {
+        const solutionValue = `S${solutionCharacter.seasons[solutionCharacter.seasons.length - 1]}`;
+        return value === solutionValue ? 'green.200' : 'red.200';
+      } else {
+        const solutionValue = solutionCharacter[column.toLowerCase() as keyof Character];
+        return value === solutionValue ? 'green.200' : 'red.200';
+      }
     }
-    return 'yellow.200';
+    return 'red.200';
   };
 
   const getArrow = (value: string, column: string) => {
-    if (column === 'First Appearance' || column === 'Last Appearance') {
-      return value.includes('E01') ? '↑' : '↓';
+    if (solutionCharacter) {
+      if (column === 'First Appearance') {
+        const solutionValue = `S${solutionCharacter.seasons[0]}`;
+        return value === solutionValue ? '' : value < solutionValue ? '↑' : '↓';
+      } else if (column === 'Last Appearance') {
+        const solutionValue = `S${solutionCharacter.seasons[solutionCharacter.seasons.length - 1]}`;
+        return value === solutionValue ? '' : value < solutionValue ? '↑' : '↓';
+      }
     }
     return '';
   };

@@ -167,7 +167,7 @@ export const ClassicPage: React.FC = () => {
               <Text textAlign={'center'} color="green.500">Correct! The character is {correctGuess}.</Text>
             </Box>
           )}
-          <CharacterGrid characterData={selectedCharacter} />
+          <CharacterGrid characterData={selectedCharacter} solutionCharacter={solutionCharacter} />
         </VStack>
       </Box>
     </BaseLayout>
