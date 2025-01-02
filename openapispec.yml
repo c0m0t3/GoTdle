@@ -398,6 +398,14 @@ components:
       x-stoplight:
         id: uu303wc29c4gp
       type: object
+      required:
+        - name
+        - gender
+        - origin
+        - status
+        - religion
+        - house
+        - seasons
       properties:
         _id:
           type: integer

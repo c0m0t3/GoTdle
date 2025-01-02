@@ -40,13 +40,13 @@ export interface Characters {
      * @type {string}
      * @memberof Characters
      */
-    'name'?: string;
+    'name': string;
     /**
      * 
      * @type {string}
      * @memberof Characters
      */
-    'gender'?: string;
+    'gender': string;
     /**
      * 
      * @type {string}
@@ -58,7 +58,7 @@ export interface Characters {
      * @type {string}
      * @memberof Characters
      */
-    'origin'?: string;
+    'origin': string;
     /**
      * 
      * @type {string}
@@ -70,7 +70,7 @@ export interface Characters {
      * @type {string}
      * @memberof Characters
      */
-    'status'?: string;
+    'status': string;
     /**
      * 
      * @type {string}
@@ -82,7 +82,7 @@ export interface Characters {
      * @type {string}
      * @memberof Characters
      */
-    'religion'?: string;
+    'religion': string;
     /**
      * 
      * @type {Array<string>}
@@ -94,7 +94,7 @@ export interface Characters {
      * @type {string}
      * @memberof Characters
      */
-    'house'?: string;
+    'house': string;
     /**
      * 
      * @type {string}
@@ -136,7 +136,7 @@ export interface Characters {
      * @type {Array<number>}
      * @memberof Characters
      */
-    'seasons'?: Array<number>;
+    'seasons': Array<number>;
     /**
      * 
      * @type {string}

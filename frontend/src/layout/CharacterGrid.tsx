@@ -1,48 +1,89 @@
 import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
 
-interface CharacterGridProps {
-  characterData: string[][];
+interface Character {
+  name: string;
+  gender: string;
+  house: string;
+  origin: string;
+  status: string;
+  religion: string;
+  seasons: number[];
 }
 
-export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData }) => {
-  const initialColumns = ["Character", "Gender", "House", "Origin", "Status", "Religion", "First Appearance", "Last Appearance"];
-  const characters = [initialColumns, ...characterData];
+interface CharacterGridProps {
+  characterData: Character[];
+  solutionCharacter: Character | null;
+}
+
+export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData, solutionCharacter }) => {
+  const initialColumns = ['Character', 'Gender', 'House', 'Origin', 'Status', 'Religion', 'First Appearance', 'Last Appearance'];
+
+  const transformCharacterData = (data: Character[]): string[][] => {
+    return data.map((character: Character) => [
+      character.name,
+      character.gender,
+      character.house,
+      character.origin,
+      character.status,
+      character.religion,
+      character.seasons[0] ? `S${character.seasons[0]}` : '',
+      character.seasons[character.seasons.length - 1] ? `S${character.seasons[character.seasons.length - 1]}` : ''
+    ]);
+  };
+
+  const characters = [initialColumns, ...transformCharacterData(characterData)];
 
   const getColor = (value: string, column: string) => {
-    if (column === "Status") {
-      return value === "Alive" ? "green.200" : "red.200";
+    if (solutionCharacter) {
+      if (column === 'First Appearance') {
+        const solutionValue = `S${solutionCharacter.seasons[0]}`;
+        return value === solutionValue ? 'green.500' : 'red.500';
+      } else if (column === 'Last Appearance') {
+        const solutionValue = `S${solutionCharacter.seasons[solutionCharacter.seasons.length - 1]}`;
+        return value === solutionValue ? 'green.500' : 'red.500';
+      } else {
+        const solutionValue = solutionCharacter[column.toLowerCase() as keyof Character];
+        return value === solutionValue ? 'green.500' : 'red.500';
+      }
     }
-    return "yellow.200";
+    return 'red.200';
   };
 
   const getArrow = (value: string, column: string) => {
-    if (column === "First Appearance" || column === "Last Appearance") {
-      return value.includes("E01") ? "↑" : "↓";
+    if (solutionCharacter) {
+      if (column === 'First Appearance') {
+        const solutionValue = `S${solutionCharacter.seasons[0]}`;
+        return value === solutionValue ? '' : value < solutionValue ? '↑' : '↓';
+      } else if (column === 'Last Appearance') {
+        const solutionValue = `S${solutionCharacter.seasons[solutionCharacter.seasons.length - 1]}`;
+        return value === solutionValue ? '' : value < solutionValue ? '↑' : '↓';
+      }
     }
-    return "";
+    return '';
   };
 
   return (
     <Box
-      bgImage={"url('/bg_border.png')"}
-      bgSize="100% 100%"
-      bgRepeat="no-repeat"
-      bgPosition="top"
+      bg="gray.800"
       p={4}
-      px={"4em"}
+      px={'4em'}
+      border="1px solid"
+      borderColor="white.600"
+      borderRadius="md"
+      textColor={'white'}
     >
       <Grid templateColumns={`repeat(${initialColumns.length}, 1fr)`} gap={4}>
         {characters.map((row, rowIndex) =>
-          row.map((char, colIndex) => (
+          row.map((char: string, colIndex: number) => (
             <GridItem
               key={`${rowIndex}-${colIndex}`}
               p={2}
               borderRadius="md"
               textAlign="center"
-              bg={rowIndex === 0 || colIndex === 0 ? "transparent" : getColor(char, initialColumns[colIndex])}
+              bg={rowIndex === 0 || colIndex === 0 ? 'transparent' : getColor(char, initialColumns[colIndex])}
             >
-              <Text fontWeight={rowIndex === 0 ? "bold" : "normal"}>
-                {char || "-"} {getArrow(char, initialColumns[colIndex])}
+              <Text fontWeight={rowIndex === 0 ? 'bold' : 'normal'}>
+                {char || '-'} {getArrow(char, initialColumns[colIndex])}
               </Text>
             </GridItem>
           ))
