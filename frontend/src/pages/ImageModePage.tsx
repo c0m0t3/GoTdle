@@ -39,7 +39,6 @@ export const ImageModePage = () => {
     }
   }, [isCorrect]);
 
-
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
       setSelectedCharacter(selected);
@@ -55,13 +54,6 @@ export const ImageModePage = () => {
     }
   };
 
-  /**
-   * The character names from the external API do not exactly match those in our internal database.
-   * Since the data in the database is correct, but we still want to use the external API,
-   * we adjust the discrepancies using this method so that the validation of the selected options works correctly.
-   * @param selected - The selected character option, which will be adjusted to match the names from the external API.
-   * @returns The adjusted character option with the corrected name, if an exception is found; otherwise, the original option.
-   */
   const nameExceptions = (selected: CharacterOption): CharacterOption => {
     const exceptions: { [key: string]: string } = {
       'Eddard Stark': 'Ned Stark',
@@ -96,12 +88,19 @@ export const ImageModePage = () => {
     }
     return [];
   };
+  const calculateBlur = (attempts: number, isCorrect: boolean) => {
+    if (isCorrect) {
+      return 0;
+    }
+    const maxBlur = 20;
+    const blurStep = 1;
+    return Math.max(maxBlur - attempts * blurStep, 0);
+  };
 
   return (
     <BaseLayout>
       <Box p={4} display="flex" justifyContent="center" alignItems="center">
         <VStack>
-
           <Box
             position="relative"
             bg="rgba(0, 0, 0, 0.6)"
@@ -114,7 +113,15 @@ export const ImageModePage = () => {
             textAlign="center"
           >
             <Text fontSize={'md'}>Which character is shown in this image?</Text>
-            <Image src={apiData?.imageUrl} alt={apiData?.fullName} objectFit="contain" maxW="100%" maxH="100%" />
+            <Image
+              src={apiData?.imageUrl}
+              alt={apiData?.fullName}
+              objectFit="contain"
+              maxW="100%"
+              maxH="100%"
+              style={{ filter: `blur(${calculateBlur(incorrectGuesses.length, isCorrect)}px)` }}
+              mx={'auto'}
+            />
             <Text fontSize={'sm'}> Pssst...answer is...{apiData?.fullName}</Text>
 
             <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
@@ -154,7 +161,6 @@ export const ImageModePage = () => {
               <Text>Quote: ...</Text>
               <Text>Image: {incorrectGuesses.length + 1}</Text>
               <Text>Actual Streak: ...</Text>
-              {/*TODO: 1. Get Attempts from other modes. 2. Store whole Score in database*/}
               <Button mt={4}>Jump to Scoreboard</Button>
             </VStack>
           )}
