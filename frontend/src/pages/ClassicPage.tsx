@@ -194,7 +194,8 @@ export const ClassicPage: React.FC = () => {
             >
               <VStack>
                 <Text textAlign={'center'}>Correct! The character is {correctGuess}.</Text>
-                <Text textAlign={'center'}>It took you {incorrectGuesses.length + 1} attempts to guess correctly.</Text>
+                <Text textAlign={'center'} marginBottom={'4'}>It took you {incorrectGuesses.length + 1} attempts to
+                  guess correctly.</Text>
                 <PulsingButton label={'Next'} url={'/quote'} style={gotButtonStyle} />
                 <CountdownTimer />
               </VStack>
