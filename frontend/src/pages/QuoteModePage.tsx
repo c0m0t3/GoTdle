@@ -1,11 +1,13 @@
 import { BaseLayout } from '../layout/BaseLayout.tsx';
-import { Box, Button, Text, VStack } from '@chakra-ui/react';
+import { Box, Text, VStack } from '@chakra-ui/react';
 import { useQuoteApi } from '../hooks/useQuoteApi.ts';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { OptionBase } from 'chakra-react-select';
 import { GroupBase } from 'react-select';
 import { CharacterSelect } from '../components/CharacterSelect.tsx';
 import { useApiClient } from '../hooks/useApiClient.ts';
+import { CountdownTimer } from '../components/CountdownTimer.tsx';
+import { PulsingButton } from '../components/PulsingButton.tsx';
 
 interface CharacterOption extends OptionBase {
   label: string;
@@ -19,6 +21,7 @@ export const QuoteModePage = () => {
   const [isCorrect, setIsCorrect] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterOption | null>(null);
   const [usedOptions, setUsedOptions] = useState<string[]>([]);
+  const correctSectionRef = useRef<HTMLDivElement>(null);
   const client = useApiClient();
 
   useEffect(() => {
@@ -31,6 +34,12 @@ export const QuoteModePage = () => {
       console.error('Failed to fetch quote:', error);
     });
   }, [fetchApi]);
+
+  useEffect(() => {
+    if (isCorrect && correctSectionRef.current) {
+      correctSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [isCorrect]);
 
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
@@ -131,9 +140,19 @@ export const QuoteModePage = () => {
               </Text>
             ))}
           </Box>
+
           {isCorrect && (
-            <Button mt={4}>Next</Button>
+            <VStack ref={correctSectionRef}>
+              <Text>When You Play The Game Of Thrones, You Win Or You Die.</Text>
+              <Text>You guessed {correctGuesses}</Text>
+              <Text>Number of tries: {incorrectGuesses.length + 1}</Text>
+              <CountdownTimer />
+              {/*TODO: 1. Get Attempts from classic modes. 2. Store somehow the attempt of quote to pass it to image*/}
+              <Text mt={4}>Next mode: </Text>
+              <PulsingButton label="Image" url="/image" />
+            </VStack>
           )}
+
         </VStack>
       </Box>
     </BaseLayout>
