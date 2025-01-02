@@ -101,7 +101,6 @@ export const ImageModePage = () => {
     <BaseLayout>
       <Box p={4} display="flex" justifyContent="center" alignItems="center">
         <VStack>
-
           <Box
             position="relative"
             bg="rgba(0, 0, 0, 0.6)"
@@ -121,6 +120,7 @@ export const ImageModePage = () => {
               maxW="100%"
               maxH="100%"
               style={{ filter: `blur(${calculateBlur(incorrectGuesses.length, isCorrect)}px)` }}
+              mx={'auto'}
             />
             <Text fontSize={'sm'}> Pssst...answer is...{apiData?.fullName}</Text>
 
