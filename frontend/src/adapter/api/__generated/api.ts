@@ -40,13 +40,13 @@ export interface Characters {
      * @type {string}
      * @memberof Characters
      */
-    'name'?: string;
+    'name': string;
     /**
      * 
      * @type {string}
      * @memberof Characters
      */
-    'gender'?: string;
+    'gender': string;
     /**
      * 
      * @type {string}
@@ -58,7 +58,7 @@ export interface Characters {
      * @type {string}
      * @memberof Characters
      */
-    'origin'?: string;
+    'origin': string;
     /**
      * 
      * @type {string}
@@ -70,7 +70,7 @@ export interface Characters {
      * @type {string}
      * @memberof Characters
      */
-    'status'?: string;
+    'status': string;
     /**
      * 
      * @type {string}
@@ -82,7 +82,7 @@ export interface Characters {
      * @type {string}
      * @memberof Characters
      */
-    'religion'?: string;
+    'religion': string;
     /**
      * 
      * @type {Array<string>}
@@ -94,7 +94,7 @@ export interface Characters {
      * @type {string}
      * @memberof Characters
      */
-    'house'?: string;
+    'house': string;
     /**
      * 
      * @type {string}
@@ -136,7 +136,7 @@ export interface Characters {
      * @type {Array<number>}
      * @memberof Characters
      */
-    'seasons'?: Array<number>;
+    'seasons': Array<number>;
     /**
      * 
      * @type {string}
@@ -168,13 +168,63 @@ export interface PostUserLoginRequest {
      * @type {string}
      * @memberof PostUserLoginRequest
      */
-    'identifier'?: string;
+    'identifier': string;
     /**
      * 
      * @type {string}
      * @memberof PostUserLoginRequest
      */
-    'password'?: string;
+    'password': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostUserLoginRequest
+     */
+    'type': string;
+}
+/**
+ * 
+ * @export
+ * @interface PostUserRegister201Response
+ */
+export interface PostUserRegister201Response {
+    /**
+     * 
+     * @type {PostUserRegister201ResponseUser}
+     * @memberof PostUserRegister201Response
+     */
+    'user'?: PostUserRegister201ResponseUser;
+}
+/**
+ * 
+ * @export
+ * @interface PostUserRegister201ResponseUser
+ */
+export interface PostUserRegister201ResponseUser {
+    /**
+     * 
+     * @type {string}
+     * @memberof PostUserRegister201ResponseUser
+     */
+    'id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostUserRegister201ResponseUser
+     */
+    'email'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostUserRegister201ResponseUser
+     */
+    'username'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostUserRegister201ResponseUser
+     */
+    'createdAt'?: string;
 }
 /**
  * 
@@ -187,12 +237,6 @@ export interface PostUserRegisterRequest {
      * @type {string}
      * @memberof PostUserRegisterRequest
      */
-    'username': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PostUserRegisterRequest
-     */
     'email': string;
     /**
      * 
@@ -200,6 +244,12 @@ export interface PostUserRegisterRequest {
      * @memberof PostUserRegisterRequest
      */
     'password': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostUserRegisterRequest
+     */
+    'username': string;
 }
 /**
  * 
@@ -753,7 +803,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postUserRegister(postUserRegisterRequest?: PostUserRegisterRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
+        async postUserRegister(postUserRegisterRequest?: PostUserRegisterRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostUserRegister201Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.postUserRegister(postUserRegisterRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.postUserRegister']?.[localVarOperationServerIndex]?.url;
@@ -872,7 +922,7 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postUserRegister(postUserRegisterRequest?: PostUserRegisterRequest, options?: RawAxiosRequestConfig): AxiosPromise<User> {
+        postUserRegister(postUserRegisterRequest?: PostUserRegisterRequest, options?: RawAxiosRequestConfig): AxiosPromise<PostUserRegister201Response> {
             return localVarFp.postUserRegister(postUserRegisterRequest, options).then((request) => request(axios, basePath));
         },
         /**
