@@ -149,7 +149,7 @@ export const ImageModePage = () => {
             <VStack ref={correctSectionRef}>
               <Text>Congratulations, you finished today's GoTdle!!</Text>
               <Text>Here are your Scores!</Text>
-              <Text>Classic: ...</Text>
+              <Text>Classic: {localStorage.getItem('classicModeAttempts')}</Text>
               <Text>Quote: ...</Text>
               <Text>Image: {incorrectGuesses.length + 1}</Text>
               <Text>Actual Streak: ...</Text>

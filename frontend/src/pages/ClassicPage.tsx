@@ -74,13 +74,14 @@ export const ClassicPage: React.FC = () => {
       }
       if (solutionCharacter && selected.value === solutionCharacter.name) {
         setCorrectGuess(selected.value);
+        const attempts = incorrectGuesses.length + 1;
+        localStorage.setItem('classicModeAttempts', attempts.toString());
       } else {
         setIncorrectGuesses([...incorrectGuesses, selected.value]);
       }
       setUsedOptions((prev) => [...prev, selected.value]);
     }
   };
-
   const loadCharacterOptions = async (inputValue: string) => {
     const characters = await client.getCharacters();
     if (characters.status === 200) {
