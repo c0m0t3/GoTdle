@@ -1,8 +1,15 @@
 // Fetch Api for QuoteMode
 import { useCallback, useState } from 'react';
 
+interface QuoteData {
+  sentence: string;
+  character: {
+    name: string;
+  };
+}
+
 export const useQuoteApi = () => {
-  const [apiData, setApiData] = useState<any>(null);
+  const [apiData, setApiData] = useState<QuoteData | null>(null);
 
   const fetchApi = useCallback(async () => {
     const storedQuote = localStorage.getItem('quote');
@@ -18,7 +25,6 @@ export const useQuoteApi = () => {
     } else {
       const response = await fetch('https://api.gameofthronesquotes.xyz/v1/random');
       const data = await response.json();
-      console.log(data);
       setApiData(data);
       localStorage.setItem('quote', JSON.stringify(data));
       localStorage.setItem('quoteTimestamp', currentTime.toString());

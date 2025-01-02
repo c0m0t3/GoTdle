@@ -5,7 +5,7 @@
     "name_quoteApi": "Eddard \"Ned\" Stark",
     "problem": "Different name",
     "approach": "Exception handling",
-    "status_fixed": false
+    "status_fixed": true
   },
   {
     "name_database": "Jaime Lannister",
@@ -157,7 +157,7 @@
     "name_quoteApi": "Bran Stark",
     "problem": "Different name",
     "approach": "Exception handling",
-    "status_fixed": false
+    "status_fixed": true
   },
   {
     "name_database": "Jeor Mormont",
@@ -165,7 +165,7 @@
     "name_quoteApi": "Joer Mormont",
     "problem": "Incorrect spelling",
     "approach": "Exception handling",
-    "status_fixed": false
+    "status_fixed": true
   },
   {
     "name_database": "Mence Rayder",
@@ -181,6 +181,6 @@
     "name_quoteApi": "Lord Varys",
     "problem": "Different name",
     "approach": "Exception handling",
-    "status_fixed": false
+    "status_fixed": true
   }
 ]
