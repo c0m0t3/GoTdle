@@ -183,18 +183,15 @@ export const ClassicPage: React.FC = () => {
           </Box>
           {correctGuess && (
             <Box
-              bgImage={'url(\'/bg_border.png\')'}
-              bgSize="100% 100%"
-              bgRepeat="no-repeat"
-              bgPosition="top"
+              bg={'rgba(32, 70, 48, 1)'}
+              textColor={'white'}
               p={4}
-              borderRadius="md"
-              margin={4}
-              display="flex"
-              justifyContent="center"
+              borderRadius="lg"
+              border={'0.25em solid lightgreen'}
+
             >
               <VStack>
-                <Text textAlign={'center'} color="green.500">Correct! The character is {correctGuess}.</Text>
+                <Text textAlign={'center'}>Correct! The character is {correctGuess}.</Text>
                 <Text textAlign={'center'}>It took you {incorrectGuesses.length + 1} attempts to guess correctly.</Text>
                 <Button style={gotButtonStyle} width={'8em'} onClick={handleNavigateToQuote}> Next </Button>
               </VStack>
