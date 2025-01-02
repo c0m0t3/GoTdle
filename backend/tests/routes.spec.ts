@@ -85,7 +85,7 @@ describe('Routes', () => {
     app = express();
     app.use(express.json());
     app.use(routes.getRouter());
-  }, 50000);
+  }, 100000);
 
   it('should call getUserById', async () => {
     await request(app).get(`/users/${TEST_IDS.USER_ID}`).expect(200);

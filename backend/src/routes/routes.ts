@@ -25,55 +25,49 @@ export class Routes {
   private initializeRoutes(): void {
     // Auth routes
     this.router.post(
-      '/users',
+      '/auth/register',
       this.authController.registerUser.bind(this.authController),
     );
     this.router.post(
-      '/users/login',
+      '/auth/login',
       this.authController.loginUser.bind(this.authController),
     );
 
     // User routes
+    this.router.use('/users', verifyAccess);
     this.router.get(
       '/users',
-      verifyAccess,
       this.userController.getAllUsers.bind(this.userController),
     );
     this.router.get(
-      '/users/:id',
-      verifyAccess,
+      '/users/me',
       this.userController.getUserById.bind(this.userController),
     );
     this.router.get(
       '/users/username/:username',
-      verifyAccess,
       this.userController.getUserByUsername.bind(this.userController),
     );
     this.router.get(
       '/users/email/:email',
-      verifyAccess,
       this.userController.getUserByEmail.bind(this.userController),
     );
     this.router.put(
-      '/users/:id',
-      verifyAccess,
+      '/users',
       this.userController.updateUser.bind(this.userController),
     );
     this.router.delete(
-      '/users/:id',
-      verifyAccess,
+      '/users',
       this.userController.deleteUser.bind(this.userController),
     );
 
     // Score routes
+    this.router.use('/scores', verifyAccess);
     this.router.get(
       '/scores/:userId',
-      verifyAccess,
       this.scoreController.getScoreByUserId.bind(this.scoreController),
     );
     this.router.put(
-      '/scores/:userId',
-      verifyAccess,
+      '/scores',
       this.scoreController.updateScoreByUserId.bind(this.scoreController),
     );
 

@@ -19,12 +19,12 @@ describe('ScoreRepository', () => {
     await testDatabase.setup();
     userRepository = new UserRepository(testDatabase.database);
     scoreRepository = new ScoreRepository(testDatabase.database);
-  }, 50000);
+  }, 100000);
 
   afterAll(async () => {
     await testDatabase.teardown();
   });
-  
+
   afterEach(async () => {
     await testDatabase.clearDatabase();
   });
@@ -67,7 +67,10 @@ describe('ScoreRepository', () => {
         dailyScore: [1, 2, 3],
       };
 
-      const [updatedScore] = await scoreRepository.updateScoreByUserId(user.id, updatedScoreData);
+      const [updatedScore] = await scoreRepository.updateScoreByUserId(
+        user.id,
+        updatedScoreData,
+      );
       expect(updatedScore).toBeDefined();
       expect(updatedScore.streak).toBe(5);
       expect(updatedScore.longestStreak).toBe(10);

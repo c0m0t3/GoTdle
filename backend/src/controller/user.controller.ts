@@ -6,17 +6,33 @@ import { updateUserZodSchema } from '../validation/validation';
 export class UserController {
   constructor(private readonly userRepository: UserRepository) {}
 
+  async getAllUsers(req: Request, res: Response): Promise<void> {
+    const withScoreRelation = z
+      .boolean()
+      .default(true)
+      .parse(
+        req.query.withScoreRelation === 'true' ||
+          req.query.withScoreRelation === undefined,
+      );
+
+    const users = await this.userRepository.getAllUsers(withScoreRelation);
+    res.send(users);
+  }
+
   async getUserById(req: Request, res: Response): Promise<void> {
-    const idSchema = z.string().uuid();
-    const userID = idSchema.parse(req.params.id);
+    const withScoreRelation = z
+      .boolean()
+      .default(true)
+      .parse(
+        req.query.withScoreRelation === 'true' ||
+          req.query.withScoreRelation === undefined,
+      );
 
-    const user = await this.userRepository.getUserById(userID);
-
-    if (!user) {
-      res.status(404).json({ errors: ['User not found'] });
-      return;
-    }
-    res.status(200).json(user);
+    const user = await this.userRepository.getLoggedUserById(
+      req.user!.id,
+      withScoreRelation,
+    );
+    res.send(user);
   }
 
   async getUserByUsername(req: Request, res: Response): Promise<void> {
@@ -46,36 +62,37 @@ export class UserController {
   }
 
   async updateUser(req: Request, res: Response): Promise<void> {
-    const userData = await updateUserZodSchema.parseAsync({
-      ...req.body,
-      id: req.params.id,
-    });
-    const [updatedUser] = await this.userRepository.updateUserById(userData);
+    const validatedData = await updateUserZodSchema.parseAsync(req.body);
 
-    if (!updatedUser) {
-      res.status(404).json({ errors: ['User not found'] });
-      return;
+    if (validatedData.email) {
+      const existingEmail = await this.userRepository.getUserByEmail(
+        validatedData.email,
+      );
+      if (existingEmail) {
+        res.status(400).send({ errors: ['Email already in use'] });
+        return;
+      }
+    }
+    if (validatedData.username) {
+      const existingUsername = await this.userRepository.getUserByUsername(
+        validatedData.username,
+      );
+      if (existingUsername) {
+        res.status(400).send({ errors: ['Username already in use'] });
+        return;
+      }
     }
 
-    res.status(200).json(updatedUser);
+    const updatedUser = await this.userRepository.updateUserById(
+      req.user!.id,
+      validatedData,
+    );
+
+    res.send(updatedUser);
   }
 
   async deleteUser(req: Request, res: Response): Promise<void> {
-    const idSchema = z.string().uuid();
-    const userId = idSchema.parse(req.params.id);
-
-    const [deletedUser] = await this.userRepository.deleteUserById(userId);
-
-    if (!deletedUser) {
-      res.status(404).json({ errors: ['User not found'] });
-      return;
-    }
-
-    res.status(204).send();
-  }
-
-  async getAllUsers(_req: Request, res: Response): Promise<void> {
-    const users = await this.userRepository.getAllUsers();
-    res.status(200).json(users);
+    await this.userRepository.deleteUserById(req.user!.id);
+    res.status(204).send({});
   }
 }

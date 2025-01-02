@@ -1,4 +1,6 @@
 import { pgTable, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import { scoreSchema } from './score.schema';
 
 export const userSchema = pgTable('user', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -7,3 +9,7 @@ export const userSchema = pgTable('user', {
   username: varchar('username', { length: 256 }).notNull().unique(),
   createdAt: timestamp().defaultNow(),
 });
+
+export const userRelations = relations(userSchema, ({ one }) => ({
+  score: one(scoreSchema),
+}));

@@ -1,7 +1,6 @@
 import express, { Application } from 'express';
+import helmet from 'helmet';
 import { prepareAuthentication } from './middleware/auth.middleware';
-
-//import { prepareAuthentication } from './middleware/auth.middleware';
 import { Routes } from './routes/routes';
 import { globalErrorHandler } from './utils/global-error';
 
@@ -20,6 +19,7 @@ export class App {
   }
 
   private _registerMiddlewares() {
+    this.app.use(helmet());
     this.app.use(express.json());
     this.app.use(prepareAuthentication);
 
@@ -35,9 +35,5 @@ export class App {
 
   private _registerErrorHandlers() {
     this.app.use(globalErrorHandler);
-  }
-
-  public getServer() {
-    return this.app;
   }
 }

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { globalErrorHandler } from '../src/utils/global-error';
 import { ZodError } from 'zod';
 import { TokenExpiredError } from 'jsonwebtoken';
@@ -15,7 +15,7 @@ describe('Global Error Handler', () => {
       json: jest.fn(),
     };
     next = jest.fn();
-  }, 50000);
+  }, 100000);
 
   it('should handle Zod validation errors', () => {
     const error = new ZodError([]);
@@ -35,6 +35,8 @@ describe('Global Error Handler', () => {
     const error = new Error('Test error');
     globalErrorHandler(error, req as Request, res as Response, next);
     expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.json).toHaveBeenCalledWith({ errors: ['Internal Server Error'] });
+    expect(res.json).toHaveBeenCalledWith({
+      errors: ['Internal Server Error'],
+    });
   });
 });

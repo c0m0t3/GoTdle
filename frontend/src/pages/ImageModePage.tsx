@@ -74,7 +74,8 @@ export const ImageModePage = () => {
       'Ramsay Bolton': 'Ramsey Bolton',
       'High Sparrow': 'The High Sparrow',
       'Tormund': 'Tormund Giantsbane',
-      'Bronn': 'Lord Bronn'
+      'Bronn': 'Lord Bronn',
+      'Sandor Clegane': 'The Hound'
     };
     const newValue = exceptions[selected.value];
     return newValue ? { ...selected, value: newValue } : selected;
