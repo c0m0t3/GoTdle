@@ -2,7 +2,7 @@ import { Button } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
-export const PulsingButton = ({ label, url }: { label: string; url: string }) => {
+export const PulsingButton = ({ label, url, style }: { label: string; url: string; style?: React.CSSProperties }) => {
   const navigate = useNavigate();
   const handleClick = () => {
     navigate(url);
@@ -18,7 +18,7 @@ export const PulsingButton = ({ label, url }: { label: string; url: string }) =>
         ease: 'easeInOut'
       }}
     >
-      <Button onClick={handleClick}>
+      <Button onClick={handleClick} style={style}>
         {label}
       </Button>
     </motion.div>

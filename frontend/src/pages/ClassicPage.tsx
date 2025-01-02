@@ -10,6 +10,7 @@ import { GroupBase } from 'react-select';
 import { OptionBase } from 'chakra-react-select';
 import { useNavigate } from 'react-router-dom';
 import { CountdownTimer } from '../components/CountdownTimer.tsx';
+import { PulsingButton } from '../components/PulsingButton.tsx';
 
 interface Character {
   name: string;
@@ -194,7 +195,7 @@ export const ClassicPage: React.FC = () => {
               <VStack>
                 <Text textAlign={'center'}>Correct! The character is {correctGuess}.</Text>
                 <Text textAlign={'center'}>It took you {incorrectGuesses.length + 1} attempts to guess correctly.</Text>
-                <Button style={gotButtonStyle} width={'8em'} onClick={handleNavigateToQuote}> Next </Button>
+                <PulsingButton label={'Next'} url={'/quote'} style={gotButtonStyle} />
                 <CountdownTimer />
               </VStack>
             </Box>
