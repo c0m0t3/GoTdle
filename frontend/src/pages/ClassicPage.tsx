@@ -195,6 +195,7 @@ export const ClassicPage: React.FC = () => {
             >
               <VStack>
                 <Text textAlign={'center'} color="green.500">Correct! The character is {correctGuess}.</Text>
+                <Text textAlign={'center'}>It took you {incorrectGuesses.length + 1} attempts to guess correctly.</Text>
                 <Button style={gotButtonStyle} width={'8em'} onClick={handleNavigateToQuote}> Next </Button>
               </VStack>
             </Box>
