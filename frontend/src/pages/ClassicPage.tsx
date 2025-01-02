@@ -9,6 +9,8 @@ import { CharacterSelect } from '../components/CharacterSelect.tsx';
 import { GroupBase } from 'react-select';
 import { OptionBase } from 'chakra-react-select';
 import { useNavigate } from 'react-router-dom';
+import { CountdownTimer } from '../components/CountdownTimer.tsx';
+import { PulsingButton } from '../components/PulsingButton.tsx';
 
 interface Character {
   name: string;
@@ -183,20 +185,19 @@ export const ClassicPage: React.FC = () => {
           </Box>
           {correctGuess && (
             <Box
-              bgImage={'url(\'/bg_border.png\')'}
-              bgSize="100% 100%"
-              bgRepeat="no-repeat"
-              bgPosition="top"
+              bg={'rgba(32, 70, 48, 1)'}
+              textColor={'white'}
               p={4}
-              borderRadius="md"
-              margin={4}
-              display="flex"
-              justifyContent="center"
+              borderRadius="lg"
+              border={'0.25em solid lightgreen'}
+
             >
               <VStack>
-                <Text textAlign={'center'} color="green.500">Correct! The character is {correctGuess}.</Text>
-                <Text textAlign={'center'}>It took you {incorrectGuesses.length + 1} attempts to guess correctly.</Text>
-                <Button style={gotButtonStyle} width={'8em'} onClick={handleNavigateToQuote}> Next </Button>
+                <Text textAlign={'center'}>Correct! The character is {correctGuess}.</Text>
+                <Text textAlign={'center'} marginBottom={'4'}>It took you {incorrectGuesses.length + 1} attempts to
+                  guess correctly.</Text>
+                <PulsingButton label={'Next'} url={'/quote'} style={gotButtonStyle} />
+                <CountdownTimer />
               </VStack>
             </Box>
           )}
