@@ -142,7 +142,7 @@
     "father": "Eddard Stark",
     "mother": "Catelyn Stark",
     "spouse": [
-      "Talisa Maegyr"
+      "Talisa Stark"
     ],
     "children": [],
     "siblings": [
@@ -824,9 +824,9 @@
     "mother": "Joanna Lannister",
     "spouse": [],
     "children": [
-      "Joffrey Lannister",
-      "Myrcella Lannister",
-      "Tommen Lannister"
+      "Joffrey Baratheon",
+      "Myrcella Baratheon",
+      "Tommen Baratheon"
     ],
     "siblings": [
       "Cersei Lannister",
@@ -874,9 +874,9 @@
       "Robert Baratheon"
     ],
     "children": [
-      "Joffrey Lannister",
-      "Myrcella Lannister",
-      "Tommen Lannister"
+      "Joffrey Baratheon",
+      "Myrcella Baratheon",
+      "Tommen Baratheon"
     ],
     "siblings": [
       "Jaime Lannister",
@@ -900,7 +900,7 @@
   },
   {
     "_id": 25,
-    "name": "Joffrey Lannister",
+    "name": "Joffrey Baratheon",
     "gender": "male",
     "born": "282 AC",
     "origin": "King's Landing",
@@ -923,8 +923,8 @@
     ],
     "children": [],
     "siblings": [
-      "Myrcella Lannister",
-      "Tommen Lannister"
+      "Myrcella Baratheon",
+      "Tommen Baratheon"
     ],
     "lovers": [],
     "seasons": [
@@ -937,7 +937,7 @@
   },
   {
     "_id": 26,
-    "name": "Myrcella Lannister",
+    "name": "Myrcella Baratheon",
     "gender": "female",
     "born": "283 AC",
     "origin": "King's Landing",
@@ -954,8 +954,8 @@
     "spouse": [],
     "children": [],
     "siblings": [
-      "Joffrey Lannister",
-      "Tommen Lannister"
+      "Joffrey Baratheon",
+      "Tommen Baratheon"
     ],
     "lovers": [
       "Trystane Martell"
@@ -970,7 +970,7 @@
   },
   {
     "_id": 27,
-    "name": "Tommen Lannister",
+    "name": "Tommen Baratheon",
     "gender": "male",
     "born": "287 AC",
     "origin": "King's Landing",
@@ -993,8 +993,8 @@
     ],
     "children": [],
     "siblings": [
-      "Joffrey Lannister",
-      "Myrcella Lannister"
+      "Joffrey Baratheon",
+      "Myrcella Baratheon"
     ],
     "lovers": [],
     "seasons": [
@@ -1319,8 +1319,8 @@
     "mother": "Alerie Hightower",
     "spouse": [
       "Renly Baratheon",
-      "Joffrey Lannister",
-      "Tommen Lannister"
+      "Joffrey Baratheon",
+      "Tommen Baratheon"
     ],
     "children": [],
     "siblings": [
@@ -1574,7 +1574,7 @@
     "children": [],
     "siblings": [],
     "lovers": [
-      "Myrcella Lannister"
+      "Myrcella Baratheon"
     ],
     "seasons": [
       5,
@@ -2505,7 +2505,7 @@
   },
   {
     "_id": 73,
-    "name": "Talisa Maegyr",
+    "name": "Talisa Stark",
     "gender": "female",
     "born": "",
     "origin": "Volantis",
@@ -2516,7 +2516,7 @@
     "titles": [
       "Queen Consort"
     ],
-    "house": "",
+    "house": "Maegyr",
     "father": "",
     "mother": "",
     "spouse": [
@@ -2826,7 +2826,7 @@
   },
   {
     "_id": 84,
-    "name": "Mence Rayder",
+    "name": "Mance Rayder",
     "gender": "male",
     "born": "",
     "origin": "Beyond the Wall",
@@ -2997,18 +2997,15 @@
   },
   {
     "_id": 90,
-    "name": "High Sparrow",
-    "gender": "male",
+    "name": "Ros",
+    "gender": "female",
     "born": "",
-    "origin": "",
-    "death": "303 AC",
+    "origin": "North",
+    "death": "300 AC",
     "status": "deceased",
-    "culture": "Andal",
-    "religion": "Faith of the Seven",
-    "titles": [
-      "High Septon",
-      "His High Holiness"
-    ],
+    "culture": "Northern",
+    "religion": "",
+    "titles": [],
     "house": "",
     "father": "",
     "mother": "",
@@ -3017,10 +3014,11 @@
     "siblings": [],
     "lovers": [],
     "seasons": [
-      5,
-      6
+      1,
+      2,
+      3
     ],
-    "actor": "Jonathan Pryce"
+    "actor": "Esmé Bianco"
   },
   {
     "_id": 91,

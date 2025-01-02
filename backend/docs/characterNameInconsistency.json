@@ -2,109 +2,185 @@
   {
     "name_database": "Eddard Stark",
     "name_imageApi": "Ned Stark",
+    "name_quoteApi": "Eddard \"Ned\" Stark",
     "problem": "Different name",
-    "approach": "Exception handling"
+    "approach": "Exception handling",
+    "status_fixed": false
   },
   {
     "name_database": "Jaime Lannister",
     "name_imageApi": "Jamie Lannister",
+    "name_quoteApi": null,
     "problem": "Incorrect spelling",
-    "approach": "Exception handling"
+    "approach": "Exception handling",
+    "status_fixed": true
   },
   {
     "name_database": "Robb Stark",
     "name_imageApi": "Rob Stark",
+    "name_quoteApi": null,
     "problem": "Incorrect spelling",
-    "approach": "Exception handling"
+    "approach": "Exception handling",
+    "status_fixed": true
   },
   {
     "name_database": "Joffrey Lannister",
     "name_imageApi": "Joffrey Baratheon",
+    "name_quoteApi": "Joffrey Baratheon",
     "problem": "Different name",
-    "approach": "Adjust database? Wiki_name: Joffrey Baratheon"
+    "approach": "Adjust database? Wiki_name: Joffrey Baratheon",
+    "status_fixed": true
   },
   {
-    "name_database": "",
+    "name_database": "Sandor Clegane",
     "name_imageApi": "The Hound",
-    "problem": "Not in database",
-    "approach": "Add Character to database, but as Sandor Clegane?"
+    "name_quoteApi": null,
+    "problem": "Different name",
+    "approach": "Exception handling",
+    "status_fixed": true
   },
   {
     "name_database": "Drogo",
     "name_imageApi": "Khal Drogo",
+    "name_quoteApi": null,
     "problem": "Different name",
-    "approach": "Exception handling"
+    "approach": "Exception handling",
+    "status_fixed": true
   },
   {
     "name_database": "Viserys Targaryen",
     "name_imageApi": "Viserys Targaryn",
+    "name_quoteApi": null,
     "problem": "Incorrect spelling",
-    "approach": "Exception handling"
+    "approach": "Exception handling",
+    "status_fixed": true
   },
   {
     "name_database": "Daario Naharis",
     "name_imageApi": "Daario",
+    "name_quoteApi": null,
     "problem": "Different name",
-    "approach": "Exception handling"
+    "approach": "Exception handling",
+    "status_fixed": true
   },
   {
     "name_database": "Tommen Lannister",
     "name_imageApi": "Tommen Baratheon",
+    "name_quoteApi": null,
     "problem": "Different name",
-    "approach": "Adjust database? Wiki_name: Tommen Baratheon"
+    "approach": "Adjust database? Wiki_name: Tommen Baratheon",
+    "status_fixed": true
   },
   {
     "name_database": "Gendry",
     "name_imageApi": "Gendry Baratheon",
+    "name_quoteApi": null,
     "problem": "Different name",
-    "approach": "Exception handling"
+    "approach": "Exception handling",
+    "status_fixed": true
   },
   {
     "name_database": "Ramsay Bolton",
     "name_imageApi": "Ramsey Bolton",
+    "name_quoteApi": null,
     "problem": "Incorrect spelling",
-    "approach": "Exception handling"
+    "approach": "Exception handling",
+    "status_fixed": true
   },
   {
     "name_database": "Talisa Maegyr",
     "name_imageApi": "Talisa Stark",
+    "name_quoteApi": null,
     "problem": "Different name",
-    "approach": "Adjust database? Wiki_name: Talisa Stark"
+    "approach": "Adjust database? Wiki_name: Talisa Stark",
+    "status_fixed": true
   },
   {
     "name_database": "High Sparrow",
     "name_imageApi": "The High Sparrow",
+    "name_quoteApi": null,
     "problem": "Different name",
-    "approach": "Exception handling"
+    "approach": "Exception handling",
+    "status_fixed": true
   },
   {
     "name_database": "Tormund",
     "name_imageApi": "Tormund Giantsbane",
+    "name_quoteApi": null,
     "problem": "Different name",
-    "approach": "Exception handling"
+    "approach": "Exception handling",
+    "status_fixed": true
   },
   {
-    "name_database": "",
+    "name_database": "Hodor",
     "name_imageApi": "Hodor",
+    "name_quoteApi": null,
     "problem": "Not in database",
-    "approach": "Add Character to database"
+    "approach": "Add Character to database",
+    "status_fixed": true
   },
   {
-    "name_database": "",
+    "name_database": "Pycelle",
     "name_imageApi": "Pycelle",
+    "name_quoteApi": null,
     "problem": "Not in database",
-    "approach": "Add Character to database"
+    "approach": "Add Character to database",
+    "status_fixed": true
   },
   {
-    "name_database": "",
+    "name_database": "Qyburn",
     "name_imageApi": "Qyburn",
+    "name_quoteApi": null,
     "problem": "Not in database",
-    "approach": "Add Character to database"
+    "approach": "Add Character to database",
+    "status_fixed": true
   },
   {
     "name_database": "Bronn",
     "name_imageApi": "Lord Bronn",
+    "name_quoteApi": null,
     "problem": "Different name",
-    "approach": "Exception handling"
+    "approach": "Exception handling",
+    "status_fixed": true
+  },
+  {
+    "name_database": "",
+    "name_imageApi": null,
+    "name_quoteApi": "Aerys II Targaryen",
+    "problem": "Not in database",
+    "approach": "Add Character to database",
+    "status_fixed": false
+  },
+  {
+    "name_database": "Brandon Stark",
+    "name_imageApi": null,
+    "name_quoteApi": "Bran Stark",
+    "problem": "Different name",
+    "approach": "Exception handling",
+    "status_fixed": false
+  },
+  {
+    "name_database": "Jeor Mormont",
+    "name_imageApi": null,
+    "name_quoteApi": "Joer Mormont",
+    "problem": "Incorrect spelling",
+    "approach": "Exception handling",
+    "status_fixed": false
+  },
+  {
+    "name_database": "Mence Rayder",
+    "name_imageApi": null,
+    "name_quoteApi": "Mance Rayder",
+    "problem": "Incorrect spelling",
+    "approach": "Adjust database? Wiki_name: Mance Rayder",
+    "status_fixed": true
+  },
+  {
+    "name_database": "Varys",
+    "name_imageApi": null,
+    "name_quoteApi": "Lord Varys",
+    "problem": "Different name",
+    "approach": "Exception handling",
+    "status_fixed": false
   }
 ]
