@@ -8,6 +8,7 @@ import { useApiClient } from '../hooks/useApiClient.ts';
 import { CharacterSelect } from '../components/CharacterSelect.tsx';
 import { GroupBase } from 'react-select';
 import { OptionBase } from 'chakra-react-select';
+import { useNavigate } from 'react-router-dom';
 
 interface Character {
   name: string;
@@ -32,6 +33,7 @@ export const ClassicPage: React.FC = () => {
   const [correctGuess, setCorrectGuess] = useState<string>('');
   const [usedOptions, setUsedOptions] = useState<string[]>([]);
   const client = useApiClient();
+  const navigate = useNavigate();
 
   const getCharacterOfTheDay = (characters: Character[]) => {
     const date = new Date().toISOString().split('T')[0];
@@ -99,6 +101,18 @@ export const ClassicPage: React.FC = () => {
     return [];
   };
 
+  const handleNavigateToQuote = () => {
+    navigate('/quote');
+  };
+
+  const handleNavigateToImage = () => {
+    navigate('/image');
+  };
+
+  const handleNavigateToClassic = () => {
+    navigate('/classic');
+  };
+
   return (
     <BaseLayout>
       <Box
@@ -122,9 +136,12 @@ export const ClassicPage: React.FC = () => {
             margin={4}
           >
             <HStack>
-              <Button style={gotButtonStyle} width={'8em'} leftIcon={<FaQuestionCircle />}> Classic </Button>
-              <Button style={gotButtonStyle} width={'8em'} leftIcon={<FaQuoteRight />}> Quote </Button>
-              <Button style={gotButtonStyle} width={'8em'} leftIcon={<FaImage />}> Image </Button>
+              <Button style={gotButtonStyle} width={'8em'} leftIcon={<FaQuestionCircle />}
+                      onClick={handleNavigateToClassic}> Classic </Button>
+              <Button style={gotButtonStyle} width={'8em'} leftIcon={<FaQuoteRight />}
+                      onClick={handleNavigateToQuote}> Quote </Button>
+              <Button style={gotButtonStyle} width={'8em'} leftIcon={<FaImage />}
+                      onClick={handleNavigateToImage}> Image </Button>
             </HStack>
           </Box>
           <Box
@@ -173,8 +190,13 @@ export const ClassicPage: React.FC = () => {
               p={4}
               borderRadius="md"
               margin={4}
+              display="flex"
+              justifyContent="center"
             >
-              <Text textAlign={'center'} color="green.500">Correct! The character is {correctGuess}.</Text>
+              <VStack>
+                <Text textAlign={'center'} color="green.500">Correct! The character is {correctGuess}.</Text>
+                <Button style={gotButtonStyle} width={'8em'} onClick={handleNavigateToQuote}> Next </Button>
+              </VStack>
             </Box>
           )}
           <CharacterGrid characterData={selectedCharacter} solutionCharacter={solutionCharacter} />
