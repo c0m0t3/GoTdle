@@ -1,10 +1,9 @@
-// frontend/src/hooks/useLoadCharacterOptions.ts
-import { useApiClient } from '../hooks/useApiClient.ts';
+import { useApiClient } from '../hooks/useApiClient';
 import { useCallback } from 'react';
 
 export const useLoadCharacterOptions = () => {
   const client = useApiClient();
-  const loadCharacterOptions = useCallback(async (inputValue: string, usedOptions: string[]) => {
+  return useCallback(async (inputValue: string, usedOptions: string[]) => {
     const characters = await client.getCharacters();
     if (characters.status === 200) {
       return characters.data
@@ -19,6 +18,4 @@ export const useLoadCharacterOptions = () => {
     }
     return [];
   }, [client]);
-
-  return loadCharacterOptions;
 };
