@@ -11,6 +11,7 @@ import { OptionBase } from 'chakra-react-select';
 import { useNavigate } from 'react-router-dom';
 import { CountdownTimer } from '../components/CountdownTimer.tsx';
 import { PulsingButton } from '../components/PulsingButton.tsx';
+import murmurhash from 'murmurhash';
 
 interface Character {
   name: string;
@@ -38,8 +39,14 @@ export const ClassicPage: React.FC = () => {
   const navigate = useNavigate();
 
   const getCharacterOfTheDay = (characters: Character[]) => {
-    const date = new Date().toISOString().split('T')[0];
-    const hash = date.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const date = new Date();
+    const berlinTime = date.toLocaleString('en-US', {
+      timeZone: 'Europe/Berlin',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+    const hash = murmurhash.v3(berlinTime);
     const index = hash % characters.length;
     return characters[index];
   };

@@ -1,5 +1,5 @@
-// Fetch Api for ImageMode
 import { useCallback, useState } from 'react';
+import murmurhash from 'murmurhash';
 
 interface CharacterData {
   id: number;
@@ -12,67 +12,40 @@ interface CharacterData {
   imageUrl: string;
 }
 
+const getCharacterOfTheDay = (characters: CharacterData[]) => {
+  const date = new Date();
+  const berlinTime = date.toLocaleString('en-US', {
+    timeZone: 'Europe/Berlin',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+  const hash = murmurhash.v3(berlinTime);
+  const index = hash % characters.length;
+  return characters[index];
+};
+
 export const useImageApi = () => {
   const [apiData, setApiData] = useState<CharacterData | null>(null);
 
-  const getRandomCharacterId = () => {
-    const allCharacters = 53;
-
-    let characterIds = JSON.parse(localStorage.getItem('characterIds') || '[]');
-
-    if (characterIds.length === 0) {
-      characterIds = Array.from({ length: allCharacters }, (_, i) => i);
-    }
-
-    const randomIndex = Math.floor(Math.random() * characterIds.length);
-    const randomId = characterIds.splice(randomIndex, 1)[0];
-    localStorage.setItem('characterIds', JSON.stringify(characterIds));
-
-    return randomId;
-  };
-
   const fetchApi = useCallback(async () => {
     const storedImage = localStorage.getItem('image');
-    const storedTimestamp = localStorage.getItem('imageTimestamp');
-    const currentTime = new Date().getTime();
+    const storedDate = localStorage.getItem('imageDate');
+    const currentDate = new Date().toISOString().split('T')[0];
 
-    //For test purposes, different times
-    const threeMinutes = 3 * 60 * 1000; // 3 minutes in milliseconds
-    //const TwentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-
-    if (storedImage && storedTimestamp && currentTime - parseInt(storedTimestamp) < threeMinutes) {
+    if (storedImage && storedDate === currentDate) {
       setApiData(JSON.parse(storedImage));
     } else {
-      const id = getRandomCharacterId();
-      const response = await fetch(`https://thronesapi.com/api/v2/Characters/${id}`);
-      const data = await response.json();
+      const response = await fetch('https://thronesapi.com/api/v2/Characters');
+      const data: CharacterData[] = await response.json();
 
-      setApiData(data);
-      localStorage.setItem('image', JSON.stringify(data));
-      localStorage.setItem('imageTimestamp', currentTime.toString());
+      const characterOfTheDay = getCharacterOfTheDay(data);
+
+      setApiData(characterOfTheDay);
+      localStorage.setItem('image', JSON.stringify(characterOfTheDay));
+      localStorage.setItem('imageDate', currentDate);
     }
   }, []);
 
-  /**
-   * For Production Environment
-   * Fetch always, if we have a new date
-   const fetchApi = useCallback(async () => {
-   const storedImage = localStorage.getItem('image');
-   const storedTimestamp = localStorage.getItem('imageTimestamp');
-   const currentDate = new Date().toLocaleDateString('de-DE');
-
-   if (storedImage && storedDate === currentDate) {
-   setApiData(JSON.parse(storedImage));
-   } else {
-   const id = getRandomCharacterId();
-   const response = await fetch(`https://thronesapi.com/api/v2/Characters/${id}`);
-   const data = await response.json();
-
-   setApiData(data);
-   localStorage.setItem('image', JSON.stringify(data));
-   localStorage.setItem('imageTimestamp', currentTime.toString());
-   }
-   }, []);
-   */
   return { fetchApi, apiData };
 };
