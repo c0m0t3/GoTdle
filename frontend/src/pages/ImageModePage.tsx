@@ -7,6 +7,7 @@ import { useApiClient } from '../hooks/useApiClient.ts';
 import { GroupBase } from 'react-select';
 import { OptionBase } from 'chakra-react-select';
 import { BaseBox } from '../components/BaseBox.tsx';
+import { ModeNavigationBox } from '../components/ModeNavigationBox.tsx';
 
 interface CharacterOption extends OptionBase {
   label: string;
@@ -102,7 +103,8 @@ export const ImageModePage = () => {
     <BaseLayout>
       <Box p={4} display="flex" justifyContent="center" alignItems="center">
         <VStack>
-          
+
+          <ModeNavigationBox />
           <BaseBox>
             <Text fontSize={'md'}>Which character is shown in this image?</Text>
             <Image

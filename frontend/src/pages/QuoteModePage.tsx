@@ -9,6 +9,7 @@ import { useApiClient } from '../hooks/useApiClient.ts';
 import { CountdownTimer } from '../components/CountdownTimer.tsx';
 import { PulsingButton } from '../components/PulsingButton.tsx';
 import { BaseBox } from '../components/BaseBox.tsx';
+import { ModeNavigationBox } from '../components/ModeNavigationBox.tsx';
 
 interface CharacterOption extends OptionBase {
   label: string;
@@ -96,6 +97,7 @@ export const QuoteModePage = () => {
       <Box p={4} display="flex" justifyContent="center" alignItems="center">
         <VStack>
 
+          <ModeNavigationBox />
           <BaseBox>
             <Text fontSize={'md'}>Which characters says</Text>
             <Text fontSize={'xl'} py={5}>"{apiData?.sentence}"</Text>
