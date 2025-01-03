@@ -1,8 +1,6 @@
 import React from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage.ts';
 import { useNavigate } from 'react-router-dom';
-import { useApiClient } from '../hooks/useApiClient.ts';
-import axios from 'axios';
 
 export type LoginData = {
   identifier: string;
@@ -38,23 +36,28 @@ const authContext = React.createContext<AuthContext | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
-  const client = useApiClient();
 
   const [accessToken, setAccessToken] = useLocalStorage<string | null>(
     'accessToken',
     null
   );
+
   const onLogin = async (loginData: LoginData) => {
-    try {
-      const res = await client.postUserLogin(loginData);
-      if ('accessToken' in res.data && res.data.accessToken) {
-        setAccessToken(res.data.accessToken);
-        navigate('/', { replace: true });
-      }
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.errors[0]);
-      }
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(loginData)
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.errors.join(', '));
+    }
+    if ('accessToken' in data && data.accessToken) {
+      setAccessToken(data.accessToken);
+      navigate('/', { replace: true });
     }
   };
 
@@ -64,24 +67,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const onRegister = async (registerData: RegisterData) => {
-    try {
-      const res = await client.postUserRegister(registerData);
-      if ('user' in res.data) {
-        const loginData: LoginData = {
-          identifier: registerData.email,
-          password: registerData.password,
-          type: 'email'
-        };
-        await onLogin(loginData);
-        return;
-      }
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.errors[0]);
-      } else {
-        throw new Error('Registration failed');
-      }
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(registerData)
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.errors.join(', '));
     }
+    if ('user' in data && res.ok) {
+      const loginData: LoginData = {
+        identifier: registerData.email,
+        password: registerData.password,
+        type: 'email'
+      };
+      await onLogin(loginData);
+      return;
+    }
+    throw new Error('Registration failed');
   };
 
   const user = accessToken ? JSON.parse(atob(accessToken.split('.')[1])) : null;

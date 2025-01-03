@@ -33,8 +33,21 @@ paths:
                       createdAt:
                         type: string
                         format: date-time
-        '409':
-          description: Username/Email already exists
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    x-stoplight:
+                      id: 5brqvctlx5qyt
+                    items:
+                      x-stoplight:
+                        id: ox454bc2s2d50
+                      type: string
       requestBody:
         content:
           application/json:
