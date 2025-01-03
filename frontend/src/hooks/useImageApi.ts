@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import murmurhash from 'murmurhash';
 
 interface CharacterData {
   id: number;
@@ -13,7 +14,7 @@ interface CharacterData {
 
 const getCharacterOfTheDay = (characters: CharacterData[]) => {
   const date = new Date().toISOString().split('T')[0];
-  const hash = date.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const hash = murmurhash.v3(date);
   const index = hash % characters.length;
   return characters[index];
 };
