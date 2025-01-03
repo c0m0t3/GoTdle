@@ -5,10 +5,10 @@ import { useEffect, useState } from 'react';
 import { OptionBase } from 'chakra-react-select';
 import { GroupBase } from 'react-select';
 import { CharacterSelect } from '../components/CharacterSelect.tsx';
-import { useApiClient } from '../hooks/useApiClient.ts';
 import { BaseBox } from '../components/BaseBox.tsx';
 import { ModeNavigationBox } from '../components/ModeNavigationBox.tsx';
 import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
+import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
 
 interface CharacterOption extends OptionBase {
   label: string;
@@ -21,15 +21,12 @@ export const QuoteModePage = () => {
   const [correctGuess, setCorrectGuess] = useState<string>('');
   const [isCorrect, setIsCorrect] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterOption | null>(null);
-  const [usedOptions, setUsedOptions] = useState<string[]>([]);
-  const client = useApiClient();
 
   useEffect(() => {
     setIsCorrect(false);
     setCorrectGuess('');
     setSelectedCharacter(null);
     setIncorrectGuesses([]);
-    setUsedOptions([]);
     fetchApi().catch((error) => {
       console.error('Failed to fetch quote:', error);
     });
@@ -45,7 +42,6 @@ export const QuoteModePage = () => {
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
-      setUsedOptions((prev) => [...prev, selected.value]);
       setSelectedCharacter(null);
     }
   };
@@ -68,21 +64,8 @@ export const QuoteModePage = () => {
     return newValue ? { ...selected, value: newValue } : selected;
   };
 
-  const loadCharacterOptions = async (inputValue: string) => {
-    const characters = await client.getCharacters();
-    if (characters.status === 200) {
-      return characters.data
-        .filter((character) =>
-          character?.name?.toLowerCase().startsWith(inputValue.toLowerCase()) &&
-          !usedOptions.includes(character.name)
-        )
-        .map((character) => ({
-          label: character.name ?? '',
-          value: character.name ?? ''
-        }));
-    }
-    return [];
-  };
+  const loadCharacterOptions = useLoadCharacterOptions();
+
 
   return (
     <BaseLayout>
@@ -102,7 +85,9 @@ export const QuoteModePage = () => {
               selectProps={{
                 isMulti: false,
                 placeholder: 'Type character name...',
-                loadOptions: loadCharacterOptions,
+                loadOptions: (inputValue: string, callback: (options: CharacterOption[]) => void) => {
+                  loadCharacterOptions(inputValue, []).then(callback);
+                },
                 onChange: handleCharacterSelect,
                 value: selectedCharacter,
                 isDisabled: isCorrect,
