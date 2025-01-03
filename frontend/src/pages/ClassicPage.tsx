@@ -119,7 +119,7 @@ export const ClassicPage: React.FC = () => {
             <Button onClick={onOpen} isDisabled={incorrectGuesses.length < 5} sx={gotButtonStyle}> Hint </Button>
           </HStack>
         </BaseBox>
-        <BaseBox>
+        <BaseBox textAlign={'left'}>
           <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
             name="character"
             selectProps={{

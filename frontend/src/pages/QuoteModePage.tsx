@@ -79,7 +79,7 @@ export const QuoteModePage = () => {
             <Text fontSize={'xl'} py={5}>"{apiData?.sentence}"</Text>
             <Text fontSize={'sm'}> Pssst...answer is...{apiData?.character.name}</Text>
           </BaseBox>
-          <BaseBox>
+          <BaseBox textAlign={'left'}>
             <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
               name="character"
               selectProps={{
