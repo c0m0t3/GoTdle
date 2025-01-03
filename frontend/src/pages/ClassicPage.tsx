@@ -1,5 +1,5 @@
 import { BaseLayout } from '../layout/BaseLayout.tsx';
-import { Box, Text, VStack } from '@chakra-ui/react';
+import { Text, VStack } from '@chakra-ui/react';
 import { CharacterGrid } from '../layout/CharacterGrid.tsx';
 import { useEffect, useState } from 'react';
 import { useApiClient } from '../hooks/useApiClient.ts';
@@ -109,49 +109,38 @@ export const ClassicPage: React.FC = () => {
 
   return (
     <BaseLayout>
-      <Box
-        bg="rgb(245, 221, 181)"
-        minH="100vh"
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        m={0}
-        p={0}
-        border="none"
-      >
-        <VStack>
-          <ModeNavigationBox />
-          <BaseBox>
-            <Text textAlign={'center'}> Guess today's Game of Thrones character! </Text>
-            <Text textAlign={'center'}> Type any character to begin. </Text>
-            <Text textAlign={'center'}> DEBUG: The Solution is </Text>
-            <Text textAlign={'center'}> {solutionCharacter?.name} </Text>
-          </BaseBox>
-          <BaseBox>
-            <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
-              name="character"
-              selectProps={{
-                isMulti: false,
-                placeholder: 'Type character name...',
-                loadOptions: loadCharacterOptions,
-                onChange: handleCharacterSelect,
-                value: null,
-                isDisabled: !!correctGuess,
-                components: { DropdownIndicator: () => null }
-              }}
-            />
-          </BaseBox>
-          {correctGuess && (
-            <ModeSuccessBox
-              correctGuess={correctGuess}
-              attempts={incorrectGuesses.length + 1}
-              label="Quote"
-              url="/quote"
-            />
-          )}
-          <CharacterGrid characterData={selectedCharacter} solutionCharacter={solutionCharacter} />
-        </VStack>
-      </Box>
+      <VStack>
+        <ModeNavigationBox />
+        <BaseBox>
+          <Text textAlign={'center'}> Guess today's Game of Thrones character! </Text>
+          <Text textAlign={'center'}> Type any character to begin. </Text>
+          <Text textAlign={'center'}> DEBUG: The Solution is </Text>
+          <Text textAlign={'center'}> {solutionCharacter?.name} </Text>
+        </BaseBox>
+        <BaseBox>
+          <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
+            name="character"
+            selectProps={{
+              isMulti: false,
+              placeholder: 'Type character name...',
+              loadOptions: loadCharacterOptions,
+              onChange: handleCharacterSelect,
+              value: null,
+              isDisabled: !!correctGuess,
+              components: { DropdownIndicator: () => null }
+            }}
+          />
+        </BaseBox>
+        {correctGuess && (
+          <ModeSuccessBox
+            correctGuess={correctGuess}
+            attempts={incorrectGuesses.length + 1}
+            label="Quote"
+            url="/quote"
+          />
+        )}
+        <CharacterGrid characterData={selectedCharacter} solutionCharacter={solutionCharacter} />
+      </VStack>
     </BaseLayout>
   );
 };
