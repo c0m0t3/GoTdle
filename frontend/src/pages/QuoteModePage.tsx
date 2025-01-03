@@ -1,13 +1,14 @@
 import { BaseLayout } from '../layout/BaseLayout.tsx';
 import { Box, Text, VStack } from '@chakra-ui/react';
 import { useQuoteApi } from '../hooks/useQuoteApi.ts';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { OptionBase } from 'chakra-react-select';
 import { GroupBase } from 'react-select';
 import { CharacterSelect } from '../components/CharacterSelect.tsx';
 import { useApiClient } from '../hooks/useApiClient.ts';
-import { CountdownTimer } from '../components/CountdownTimer.tsx';
-import { PulsingButton } from '../components/PulsingButton.tsx';
+import { BaseBox } from '../components/BaseBox.tsx';
+import { ModeNavigationBox } from '../components/ModeNavigationBox.tsx';
+import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
 
 interface CharacterOption extends OptionBase {
   label: string;
@@ -17,16 +18,15 @@ interface CharacterOption extends OptionBase {
 export const QuoteModePage = () => {
   const { fetchApi, apiData } = useQuoteApi();
   const [incorrectGuesses, setIncorrectGuesses] = useState<string[]>([]);
-  const [correctGuesses, setCorrectGuesses] = useState<string>('');
+  const [correctGuess, setCorrectGuess] = useState<string>('');
   const [isCorrect, setIsCorrect] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterOption | null>(null);
   const [usedOptions, setUsedOptions] = useState<string[]>([]);
-  const correctSectionRef = useRef<HTMLDivElement>(null);
   const client = useApiClient();
 
   useEffect(() => {
     setIsCorrect(false);
-    setCorrectGuesses('');
+    setCorrectGuess('');
     setSelectedCharacter(null);
     setIncorrectGuesses([]);
     setUsedOptions([]);
@@ -35,19 +35,13 @@ export const QuoteModePage = () => {
     });
   }, [fetchApi]);
 
-  useEffect(() => {
-    if (isCorrect && correctSectionRef.current) {
-      correctSectionRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [isCorrect]);
-
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
       setSelectedCharacter(selected);
       const adjustedSelected = nameExceptions(selected);
       if (adjustedSelected.value.toLowerCase() === apiData?.character.name.toLowerCase()) {
         setIsCorrect(true);
-        setCorrectGuesses(selected.value);
+        setCorrectGuess(selected.value);
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
@@ -95,22 +89,14 @@ export const QuoteModePage = () => {
       <Box p={4} display="flex" justifyContent="center" alignItems="center">
         <VStack>
 
+          <ModeNavigationBox />
 
-          <Box
-            position="relative"
-            bg="rgba(0, 0, 0, 0.6)"
-            p={5}
-            border="2px solid rgba(255, 255, 255, 0.2)"
-            backdropFilter="blur(8px)"
-            rounded="md"
-            shadow="lg"
-            maxW="sm"
-            textAlign="center"
-          >
+          <BaseBox>
             <Text fontSize={'md'}>Which characters says</Text>
-            <Text fontSize={'xl'}>"{apiData?.sentence}"</Text>
+            <Text fontSize={'xl'} py={5}>"{apiData?.sentence}"</Text>
             <Text fontSize={'sm'}> Pssst...answer is...{apiData?.character.name}</Text>
-
+          </BaseBox>
+          <BaseBox>
             <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
               name="character"
               selectProps={{
@@ -123,35 +109,31 @@ export const QuoteModePage = () => {
                 components: { DropdownIndicator: () => null }
               }}
             />
+          </BaseBox>
 
+          {isCorrect && (
+            <ModeSuccessBox
+              correctGuess={correctGuess}
+              attempts={incorrectGuesses.length + 1}
+              label="Image"
+              url="/image"
+            />
+          )}
 
-          </Box>
-          <Box maxW="sm" width="100%">
+          <Box width={'30em'}>
             {isCorrect && (
-              <Text mt={2} textAlign={'center'} bg="green.500" color="white" p={2} rounded="md">
-                {correctGuesses}
+              <Text textAlign={'center'} bg="green.500" color="white" p={2} m={1} rounded="md">
+                {correctGuess}
               </Text>
             )}
           </Box>
-          <Box maxW="sm" width="100%">
+          <Box width={'30em'}>
             {incorrectGuesses.map((guess, index) => (
-              <Text textAlign={'center'} key={index} mt={2} bg="red.500" color="white" p={2} rounded="md">
+              <Text textAlign={'center'} key={index} bg="red.500" color="white" p={2} m={1} rounded="md">
                 {guess}
               </Text>
             ))}
           </Box>
-
-          {isCorrect && (
-            <VStack ref={correctSectionRef}>
-              <Text>When You Play The Game Of Thrones, You Win Or You Die.</Text>
-              <Text>You guessed {correctGuesses}</Text>
-              <Text>Number of tries: {incorrectGuesses.length + 1}</Text>
-              <CountdownTimer />
-              {/*TODO: 1. Get Attempts from classic modes. 2. Store somehow the attempt of quote to pass it to image*/}
-              <Text mt={4}>Next mode: </Text>
-              <PulsingButton label="Image" url="/image" />
-            </VStack>
-          )}
 
         </VStack>
       </Box>
