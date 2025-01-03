@@ -39,8 +39,9 @@ export const ClassicPage: React.FC = () => {
   const navigate = useNavigate();
 
   const getCharacterOfTheDay = (characters: Character[]) => {
-    const date = new Date().toISOString().split('T')[0];
-    const hash = murmurhash.v3(date);
+    const date = new Date();
+    const berlinTime = date.toLocaleString('en-US', { timeZone: 'Europe/Berlin' });
+    const hash = murmurhash.v3(berlinTime);
     const index = hash % characters.length;
     return characters[index];
   };
