@@ -20,7 +20,12 @@ interface QuoteData {
 
 const getCharacterOfTheDay = (characters: CharacterData[]) => {
   const date = new Date();
-  const berlinTime = date.toLocaleString('en-US', { timeZone: 'Europe/Berlin' });
+  const berlinTime = date.toLocaleString('en-US', {
+    timeZone: 'Europe/Berlin',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
   const hash = murmurhash.v3(berlinTime);
   const characterIndex = hash % characters.length;
   const character = characters[characterIndex];
