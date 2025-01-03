@@ -19,8 +19,9 @@ interface QuoteData {
 }
 
 const getCharacterOfTheDay = (characters: CharacterData[]) => {
-  const date = new Date().toISOString().split('T')[0];
-  const hash = murmurhash.v3(date);
+  const date = new Date();
+  const berlinTime = date.toLocaleString('en-US', { timeZone: 'Europe/Berlin' });
+  const hash = murmurhash.v3(berlinTime);
   const characterIndex = hash % characters.length;
   const character = characters[characterIndex];
   const quoteIndex = hash % character.quotes.length;
