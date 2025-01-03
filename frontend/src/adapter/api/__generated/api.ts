@@ -229,6 +229,19 @@ export interface PostUserRegister201ResponseUser {
 /**
  * 
  * @export
+ * @interface PostUserRegister400Response
+ */
+export interface PostUserRegister400Response {
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PostUserRegister400Response
+     */
+    'errors'?: Array<string>;
+}
+/**
+ * 
+ * @export
  * @interface PostUserRegisterRequest
  */
 export interface PostUserRegisterRequest {

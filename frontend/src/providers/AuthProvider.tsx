@@ -1,6 +1,8 @@
 import React from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage.ts';
 import { useNavigate } from 'react-router-dom';
+import { useApiClient } from '../hooks/useApiClient.ts';
+import axios from 'axios';
 
 export type LoginData = {
   identifier: string;
@@ -12,7 +14,14 @@ export type RegisterData = {
   email: string;
   password: string;
 };
-export type User = {};
+export type User = {
+  id: string,
+  email: string,
+  username: string,
+  iat: number,
+  exp: number,
+  iss: string
+};
 
 type AuthContext = {
   user: User | null;
@@ -20,33 +29,32 @@ type AuthContext = {
   isLoggedIn: boolean;
   actions: {
     logout: () => void;
-    login: (loginData: LoginData) => void;
-    register: (registerData: RegisterData) => void;
+    login: (loginData: LoginData) => Promise<void>;
+    register: (registerData: RegisterData) => Promise<void>;
   };
 };
 
 const authContext = React.createContext<AuthContext | null>(null);
-//const client = useApiClient();
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
+  const client = useApiClient();
 
   const [accessToken, setAccessToken] = useLocalStorage<string | null>(
     'accessToken',
     null
   );
   const onLogin = async (loginData: LoginData) => {
-    const res = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(loginData)
-    });
-    const data = await res.json();
-    if ('accessToken' in data && data.accessToken) {
-      setAccessToken(data.accessToken);
-      navigate('/', { replace: true });
+    try {
+      const res = await client.postUserLogin(loginData);
+      if ('accessToken' in res.data && res.data.accessToken) {
+        setAccessToken(res.data.accessToken);
+        navigate('/', { replace: true });
+      }
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw new Error(error.response.data.errors[0]);
+      }
     }
   };
 
@@ -56,29 +64,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const onRegister = async (registerData: RegisterData) => {
-    const res = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(registerData)
-    });
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.errors.join(', '));
+    try {
+      const res = await client.postUserRegister(registerData);
+      if ('user' in res.data) {
+        const loginData: LoginData = {
+          identifier: registerData.email,
+          password: registerData.password,
+          type: 'email'
+        };
+        await onLogin(loginData);
+        return;
+      }
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw new Error(error.response.data.errors[0]);
+      } else {
+        throw new Error('Registration failed');
+      }
     }
-
-    if ('user' in data && res.ok) {
-      const loginData: LoginData = {
-        identifier: registerData.email,
-        password: registerData.password,
-        type: 'email'
-      };
-      await onLogin(loginData);
-      return;
-    }
-    throw new Error('Registration failed');
   };
 
   const user = accessToken ? JSON.parse(atob(accessToken.split('.')[1])) : null;

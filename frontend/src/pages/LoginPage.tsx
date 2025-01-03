@@ -1,21 +1,25 @@
 import { BaseLayout } from '../layout/BaseLayout.tsx';
 import { AuthCard } from '../components/AuthCard.tsx';
-import { Box, Button, Heading, Link, VStack } from '@chakra-ui/react';
+import { Box, Heading, Link, Radio, RadioGroup, useToast, VStack } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Form, Formik } from 'formik';
-import { InputControl } from 'formik-chakra-ui';
+import { InputControl, SubmitButton } from 'formik-chakra-ui';
 import { object, string } from 'yup';
 import { LoginData, useAuth } from '../providers/AuthProvider.tsx';
+import { gotButtonStyle } from '../styles/buttonStyles.ts';
 
 export const LoginUserSchema = object({
-  email: string().required(),
-  password: string().required()
+  type: string().oneOf(['username', 'email']).required(),
+  identifier: string().when('type', ([type], schema) =>
+    type === 'email' ? schema.email().required('Email is required') : schema.required('Username is required')
+  ),
+  password: string().required('Password is required')
 });
 
 export const LoginPage = () => {
-  const {
-    actions: { login }
-  } = useAuth();
+  const { actions: { login } } = useAuth();
+  const toast = useToast();
+
   return (
     <BaseLayout>
       <Box
@@ -30,68 +34,90 @@ export const LoginPage = () => {
       >
         <Formik<LoginData>
           initialValues={{
-            email: '',
-            password: ''
-          }}
-          onSubmit={(values) => {
-            login(values);
+            identifier: '',
+            password: '',
+            type: 'username'
           }}
           validationSchema={LoginUserSchema}
+          onSubmit={async (values) => {
+            try {
+              await login(values);
+            } catch (_error) {
+              toast({
+                title: 'Login failed',
+                description: 'Invalid credentials',
+                status: 'error',
+                duration: 4000,
+                isClosable: true
+              });
+            }
+          }}
         >
-          <Form>
-            <AuthCard>
-              <Heading my={4}>Login Page</Heading>
-              <VStack alignItems="flex-start" gap={4}>
-                <InputControl
-                  name={'email'}
-                  label={'E-Mail or Username'}
-                  inputProps={{
-                    bg: 'rgb(250, 240, 220)',
-                    border: '2px solid rgb(200, 160, 120)',
-                    borderRadius: '8px',
-                    padding: '10px',
-                    _focus: {
-                      borderColor: 'rgb(180, 90, 70)',
-                      boxShadow: 'none',
-                      bg: 'rgb(250, 240, 220)'
-                    },
-                    _hover: {
+          {({ setFieldValue, values }) => (
+            <Form>
+              <AuthCard>
+                <Heading my={4}>Login</Heading>
+                <VStack gap={4}>
+                  <Box width={'100%'}>
+                    <InputControl
+                      name={'identifier'}
+                      label={'E-Mail or Username'}
+                      inputProps={{
+                        bg: 'rgb(250, 240, 220)',
+                        border: '2px solid rgb(200, 160, 120)',
+                        borderRadius: '8px',
+                        padding: '10px',
+                        _focus: {
+                          borderColor: 'rgb(180, 90, 70)',
+                          boxShadow: 'none',
+                          bg: 'rgb(250, 240, 220)'
+                        },
+                        _hover: {
+                          bg: 'rgb(250, 240, 220)',
+                          borderColor: 'rgb(200, 160, 120)'
+                        }
+                      }}
+                    />
+                    <RadioGroup
+                      onChange={(value) => setFieldValue('type', value)}
+                      value={values.type}
+                    >
+                      <Radio value="username" mx={1}>Username</Radio>
+                      <Radio value="email" mx={1}>Email</Radio>
+                    </RadioGroup>
+                  </Box>
+                  <InputControl
+                    name={'password'}
+                    label={'Password'}
+                    inputProps={{
+                      type: 'password',
                       bg: 'rgb(250, 240, 220)',
-                      borderColor: 'rgb(200, 160, 120)'
-                    }
-                  }}
-                />
-                <InputControl
-                  name={'password'}
-                  label={'Passwort'}
-                  inputProps={{
-                    type: 'password',
-                    bg: 'rgb(250, 240, 220)',
-                    border: '2px solid rgb(200, 160, 120)',
-                    borderRadius: '8px',
-                    padding: '10px',
-                    _focus: {
-                      borderColor: 'rgb(180, 90, 70)',
-                      boxShadow: 'none',
-                      bg: 'rgb(250, 240, 220)'
-                    },
-                    _hover: {
-                      bg: 'rgb(250, 240, 220)',
-                      borderColor: 'rgb(200, 160, 120)'
-                    }
-                  }}
-                />
+                      border: '2px solid rgb(200, 160, 120)',
+                      borderRadius: '8px',
+                      padding: '10px',
+                      _focus: {
+                        borderColor: 'rgb(180, 90, 70)',
+                        boxShadow: 'none',
+                        bg: 'rgb(250, 240, 220)'
+                      },
+                      _hover: {
+                        bg: 'rgb(250, 240, 220)',
+                        borderColor: 'rgb(200, 160, 120)'
+                      }
+                    }}
+                  />
 
-                <Button type={'submit'}>Login User</Button>
-                <Box>
-                  Neu hier?{' '}
-                  <Link as={RouterLink} to={'/auth/register'}>
-                    Registrieren
-                  </Link>
-                </Box>
-              </VStack>
-            </AuthCard>
-          </Form>
+                  <SubmitButton sx={gotButtonStyle}>Login User</SubmitButton>
+                  <Box>
+                    New here?{' '}
+                    <Link as={RouterLink} to={'/auth/register'}>
+                      Register now.
+                    </Link>
+                  </Box>
+                </VStack>
+              </AuthCard>
+            </Form>
+          )}
         </Formik>
       </Box>
     </BaseLayout>

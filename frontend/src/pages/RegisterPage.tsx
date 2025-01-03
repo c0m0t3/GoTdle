@@ -15,9 +15,8 @@ export const RegisterUserSchema = object({
 });
 
 export const RegisterPage = () => {
-  const {
-    actions: { register }
-  } = useAuth();
+  const { actions: { register } } = useAuth();
+  
   return (
     <BaseLayout>
       <Box
@@ -39,7 +38,6 @@ export const RegisterPage = () => {
           validationSchema={RegisterUserSchema}
           onSubmit={async (values, formikHelpers) => {
             try {
-              console.log('values', values);
               await register(values);
               formikHelpers.setSubmitting(false);
             } catch (error: unknown) {
