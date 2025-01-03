@@ -1,17 +1,16 @@
-import { BaseLayout } from '../layout/BaseLayout.tsx';
-import { Box, Button, HStack, Text, VStack } from '@chakra-ui/react';
-import { CharacterGrid } from '../layout/CharacterGrid.tsx';
+import { BaseLayout } from '../layout/BaseLayout';
+import { Text, VStack } from '@chakra-ui/react';
+import { CharacterGrid } from '../layout/CharacterGrid';
 import { useEffect, useState } from 'react';
-import { FaImage, FaQuestionCircle, FaQuoteRight } from 'react-icons/fa';
-import { gotButtonStyle } from '../styles/buttonStyles.ts';
-import { useApiClient } from '../hooks/useApiClient.ts';
-import { CharacterSelect } from '../components/CharacterSelect.tsx';
+import { useApiClient } from '../hooks/useApiClient';
+import { CharacterSelect } from '../components/CharacterSelect';
 import { GroupBase } from 'react-select';
 import { OptionBase } from 'chakra-react-select';
-import { useNavigate } from 'react-router-dom';
-import { CountdownTimer } from '../components/CountdownTimer.tsx';
-import { PulsingButton } from '../components/PulsingButton.tsx';
 import murmurhash from 'murmurhash';
+import { ModeNavigationBox } from '../components/ModeNavigationBox';
+import { BaseBox } from '../components/BaseBox';
+import { ModeSuccessBox } from '../components/ModeSuccessBox';
+import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
 
 interface Character {
   name: string;
@@ -34,9 +33,7 @@ export const ClassicPage: React.FC = () => {
   const [allCharacters, setAllCharacters] = useState<Character[]>([]);
   const [solutionCharacter, setSolutionCharacter] = useState<Character | null>(null);
   const [correctGuess, setCorrectGuess] = useState<string>('');
-  const [usedOptions, setUsedOptions] = useState<string[]>([]);
   const client = useApiClient();
-  const navigate = useNavigate();
 
   const getCharacterOfTheDay = (characters: Character[]) => {
     const date = new Date();
@@ -90,127 +87,47 @@ export const ClassicPage: React.FC = () => {
       } else {
         setIncorrectGuesses([...incorrectGuesses, selected.value]);
       }
-      setUsedOptions((prev) => [...prev, selected.value]);
     }
   };
-  const loadCharacterOptions = async (inputValue: string) => {
-    const characters = await client.getCharacters();
-    if (characters.status === 200) {
-      return characters.data
-        .filter(
-          (character) =>
-            character?.name?.toLowerCase().startsWith(inputValue.toLowerCase()) &&
-            !usedOptions.includes(character.name)
-        )
-        .map((character) => ({
-          label: character.name ?? '',
-          value: character.name ?? ''
-        }));
-    }
-    return [];
-  };
 
-  const handleNavigateToQuote = () => {
-    navigate('/quote');
-  };
-
-  const handleNavigateToImage = () => {
-    navigate('/image');
-  };
-
-  const handleNavigateToClassic = () => {
-    navigate('/classic');
-  };
+  const loadCharacterOptions = useLoadCharacterOptions();
 
   return (
     <BaseLayout>
-      <Box
-        bg="rgb(245, 221, 181)"
-        minH="100vh"
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        m={0}
-        p={0}
-        border="none"
-      >
-        <VStack>
-          <Box
-            bgImage={'url(\'/bg_border.png\')'}
-            bgSize="100% 100%"
-            bgRepeat="no-repeat"
-            bgPosition="top"
-            p={8}
-            borderRadius="md"
-            margin={4}
-          >
-            <HStack>
-              <Button style={gotButtonStyle} width={'8em'} leftIcon={<FaQuestionCircle />}
-                      onClick={handleNavigateToClassic}> Classic </Button>
-              <Button style={gotButtonStyle} width={'8em'} leftIcon={<FaQuoteRight />}
-                      onClick={handleNavigateToQuote}> Quote </Button>
-              <Button style={gotButtonStyle} width={'8em'} leftIcon={<FaImage />}
-                      onClick={handleNavigateToImage}> Image </Button>
-            </HStack>
-          </Box>
-          <Box
-            bgImage={'url(\'/bg_border.png\')'}
-            bgSize="100% 100%"
-            bgRepeat="no-repeat"
-            bgPosition="top"
-            p={4}
-            borderRadius="md"
-            margin={0}
-            width={'30em'}
-          >
-            <Text textAlign={'center'}> Guess today's Game of Thrones character! </Text>
-            <Text textAlign={'center'}> Type any character to begin. </Text>
-            <Text textAlign={'center'}> DEBUG: The Solution is </Text>
-            <Text textAlign={'center'}> {solutionCharacter?.name} </Text>
-          </Box>
-          <Box
-            bgImage={'url(\'/bg_border.png\')'}
-            bgSize="100% 100%"
-            bgRepeat="no-repeat"
-            bgPosition="top"
-            p={4}
-            borderRadius="md"
-            minWidth={'30em'}
-          >
-            <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
-              name="character"
-              selectProps={{
-                isMulti: false,
-                placeholder: 'Type character name...',
-                loadOptions: loadCharacterOptions,
-                onChange: handleCharacterSelect,
-                value: null,
-                isDisabled: !!correctGuess,
-                components: { DropdownIndicator: () => null }
-              }}
-            />
-          </Box>
-          {correctGuess && (
-            <Box
-              bg={'rgba(32, 70, 48, 1)'}
-              textColor={'white'}
-              p={4}
-              borderRadius="lg"
-              border={'0.25em solid lightgreen'}
-
-            >
-              <VStack>
-                <Text textAlign={'center'}>Correct! The character is {correctGuess}.</Text>
-                <Text textAlign={'center'} marginBottom={'4'}>It took you {incorrectGuesses.length + 1} attempts to
-                  guess correctly.</Text>
-                <PulsingButton label={'Next'} url={'/quote'} style={gotButtonStyle} />
-                <CountdownTimer />
-              </VStack>
-            </Box>
-          )}
-          <CharacterGrid characterData={selectedCharacter} solutionCharacter={solutionCharacter} />
-        </VStack>
-      </Box>
+      <VStack>
+        <ModeNavigationBox />
+        <BaseBox>
+          <Text textAlign={'center'}> Guess today's Game of Thrones character! </Text>
+          <Text textAlign={'center'}> Type any character to begin. </Text>
+          <Text textAlign={'center'}> DEBUG: The Solution is </Text>
+          <Text textAlign={'center'}> {solutionCharacter?.name} </Text>
+        </BaseBox>
+        <BaseBox>
+          <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
+            name="character"
+            selectProps={{
+              isMulti: false,
+              placeholder: 'Type character name...',
+              loadOptions: (inputValue: string, callback: (options: CharacterOption[]) => void) => {
+                loadCharacterOptions(inputValue, []).then(callback);
+              },
+              onChange: handleCharacterSelect,
+              value: null,
+              isDisabled: !!correctGuess,
+              components: { DropdownIndicator: () => null }
+            }}
+          />
+        </BaseBox>
+        {correctGuess && (
+          <ModeSuccessBox
+            correctGuess={correctGuess}
+            attempts={incorrectGuesses.length + 1}
+            label="Quote"
+            url="/quote"
+          />
+        )}
+        <CharacterGrid characterData={selectedCharacter} solutionCharacter={solutionCharacter} />
+      </VStack>
     </BaseLayout>
   );
 };

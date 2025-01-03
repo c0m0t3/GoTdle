@@ -86,15 +86,26 @@ export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
           <ColorModeToggle />
         </Box>
       </HStack>
-      <chakra.main
-        flex={1}
+      <Box
+        bg="rgb(245, 221, 181)"
+        minH="100vh"
         display="flex"
         flexDirection="column"
-        ml="auto"
-        mr="auto"
+        alignItems="center"
+        m={0}
+        p={0}
+        border="none"
       >
-        {children}
-      </chakra.main>
+        <chakra.main
+          flex={1}
+          display="flex"
+          flexDirection="column"
+          ml="auto"
+          mr="auto"
+        >
+          {children}
+        </chakra.main>
+      </Box>
     </Box>
   );
 };
