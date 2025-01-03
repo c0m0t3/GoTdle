@@ -1,10 +1,4 @@
-import {
-  Navigate,
-  Route,
-  RouteProps,
-  Routes,
-  useLocation,
-} from 'react-router-dom';
+import { Navigate, Route, RouteProps, Routes, useLocation } from 'react-router-dom';
 import { HomePage } from './pages/HomePage.tsx';
 import { StartPage } from './pages/StartPage.tsx';
 import { ClassicPage } from './pages/ClassicPage.tsx';
@@ -15,9 +9,6 @@ import { RegisterPage } from './pages/RegisterPage.tsx';
 import { useAuth } from './providers/AuthProvider.tsx';
 
 export type RouteConfig = RouteProps & {
-  /**
-   * Required route path. E.g. /home
-   */
   path: string;
   isPrivate?: boolean;
 };
@@ -26,36 +17,39 @@ export const appRoutes: RouteConfig[] = [
   {
     path: '/',
     element: <Navigate to="/home" replace />,
-    index: true,
+    index: true
   },
   {
     path: '/home',
-    element: <HomePage />,
-  },
-  {
-    path: '/quote',
-    element: <QuoteModePage />,
-  },
-  {
-    path: '/image',
-    element: <ImageModePage />,
-  },
-  {
-    path: '/start',
-    element: <StartPage />,
+    element: <HomePage />
   },
   {
     path: '/classic',
     element: <ClassicPage />,
+    isPrivate: true
+  },
+  {
+    path: '/quote',
+    element: <QuoteModePage />,
+    isPrivate: true
+  },
+  {
+    path: '/image',
+    element: <ImageModePage />,
+    isPrivate: true
+  },
+  {
+    path: '/start',
+    element: <StartPage />
   },
   {
     path: '/auth/login',
-    element: <LoginPage />,
+    element: <LoginPage />
   },
   {
     path: '/auth/register',
-    element: <RegisterPage />,
-  },
+    element: <RegisterPage />
+  }
 ];
 
 const renderRouteMap = ({ isPrivate, element, ...restRoute }: RouteConfig) => {
