@@ -6,6 +6,7 @@ import { CharacterSelect } from '../components/CharacterSelect.tsx';
 import { useApiClient } from '../hooks/useApiClient.ts';
 import { GroupBase } from 'react-select';
 import { OptionBase } from 'chakra-react-select';
+import { BaseBox } from '../components/BaseBox.tsx';
 
 interface CharacterOption extends OptionBase {
   label: string;
@@ -101,17 +102,8 @@ export const ImageModePage = () => {
     <BaseLayout>
       <Box p={4} display="flex" justifyContent="center" alignItems="center">
         <VStack>
-          <Box
-            position="relative"
-            bg="rgba(0, 0, 0, 0.6)"
-            p={5}
-            border="2px solid rgba(255, 255, 255, 0.2)"
-            backdropFilter="blur(8px)"
-            rounded="md"
-            shadow="lg"
-            maxW="sm"
-            textAlign="center"
-          >
+          
+          <BaseBox>
             <Text fontSize={'md'}>Which character is shown in this image?</Text>
             <Image
               src={apiData?.imageUrl}
@@ -121,9 +113,11 @@ export const ImageModePage = () => {
               maxH="100%"
               style={{ filter: `blur(${calculateBlur(incorrectGuesses.length, isCorrect)}px)` }}
               mx={'auto'}
+              py={5}
             />
             <Text fontSize={'sm'}> Pssst...answer is...{apiData?.fullName}</Text>
-
+          </BaseBox>
+          <BaseBox>
             <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
               name="character"
               selectProps={{
@@ -136,18 +130,18 @@ export const ImageModePage = () => {
                 components: { DropdownIndicator: () => null }
               }}
             />
-          </Box>
+          </BaseBox>
 
-          <Box maxW="sm" width="100%">
+          <Box width={'30em'}>
             {isCorrect && (
-              <Text mt={2} textAlign={'center'} bg="green.500" color="white" p={2} rounded="md">
+              <Text textAlign={'center'} bg="green.500" color="white" p={2} m={1} rounded="md">
                 {correctGuesses}
               </Text>
             )}
           </Box>
-          <Box maxW="sm" width="100%">
+          <Box width={'30em'}>
             {incorrectGuesses.map((guess) => (
-              <Text textAlign={'center'} key={guess} mt={2} bg="red.500" color="white" p={2} rounded="md">
+              <Text textAlign={'center'} key={guess} bg="red.500" color="white" p={2} m={1} rounded="md">
                 {guess}
               </Text>
             ))}
