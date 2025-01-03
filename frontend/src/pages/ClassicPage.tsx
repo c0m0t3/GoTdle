@@ -23,6 +23,7 @@ import { ModeNavigationBox } from '../components/ModeNavigationBox';
 import { BaseBox } from '../components/BaseBox';
 import { ModeSuccessBox } from '../components/ModeSuccessBox';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions';
+import { gotButtonStyle } from '../styles/buttonStyles.ts';
 
 interface Character {
   name: string;
@@ -115,7 +116,7 @@ export const ClassicPage: React.FC = () => {
           <Text textAlign={'center'}> DEBUG: The Solution is </Text>
           <Text textAlign={'center'}> {solutionCharacter?.name} </Text>
           <HStack justifyContent={'center'}>
-            <Button onClick={onOpen} isDisabled={incorrectGuesses.length < 5}> Hint </Button>
+            <Button onClick={onOpen} isDisabled={incorrectGuesses.length < 5} sx={gotButtonStyle}> Hint </Button>
           </HStack>
         </BaseBox>
         <BaseBox>
