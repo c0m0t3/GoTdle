@@ -1,15 +1,14 @@
 import { BaseLayout } from '../layout/BaseLayout.tsx';
 import { Box, Text, VStack } from '@chakra-ui/react';
 import { useQuoteApi } from '../hooks/useQuoteApi.ts';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { OptionBase } from 'chakra-react-select';
 import { GroupBase } from 'react-select';
 import { CharacterSelect } from '../components/CharacterSelect.tsx';
 import { useApiClient } from '../hooks/useApiClient.ts';
-import { CountdownTimer } from '../components/CountdownTimer.tsx';
-import { PulsingButton } from '../components/PulsingButton.tsx';
 import { BaseBox } from '../components/BaseBox.tsx';
 import { ModeNavigationBox } from '../components/ModeNavigationBox.tsx';
+import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
 
 interface CharacterOption extends OptionBase {
   label: string;
@@ -19,16 +18,15 @@ interface CharacterOption extends OptionBase {
 export const QuoteModePage = () => {
   const { fetchApi, apiData } = useQuoteApi();
   const [incorrectGuesses, setIncorrectGuesses] = useState<string[]>([]);
-  const [correctGuesses, setCorrectGuesses] = useState<string>('');
+  const [correctGuess, setCorrectGuess] = useState<string>('');
   const [isCorrect, setIsCorrect] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterOption | null>(null);
   const [usedOptions, setUsedOptions] = useState<string[]>([]);
-  const correctSectionRef = useRef<HTMLDivElement>(null);
   const client = useApiClient();
 
   useEffect(() => {
     setIsCorrect(false);
-    setCorrectGuesses('');
+    setCorrectGuess('');
     setSelectedCharacter(null);
     setIncorrectGuesses([]);
     setUsedOptions([]);
@@ -37,19 +35,13 @@ export const QuoteModePage = () => {
     });
   }, [fetchApi]);
 
-  useEffect(() => {
-    if (isCorrect && correctSectionRef.current) {
-      correctSectionRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [isCorrect]);
-
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
       setSelectedCharacter(selected);
       const adjustedSelected = nameExceptions(selected);
       if (adjustedSelected.value.toLowerCase() === apiData?.character.name.toLowerCase()) {
         setIsCorrect(true);
-        setCorrectGuesses(selected.value);
+        setCorrectGuess(selected.value);
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
@@ -98,6 +90,7 @@ export const QuoteModePage = () => {
         <VStack>
 
           <ModeNavigationBox />
+
           <BaseBox>
             <Text fontSize={'md'}>Which characters says</Text>
             <Text fontSize={'xl'} py={5}>"{apiData?.sentence}"</Text>
@@ -118,10 +111,19 @@ export const QuoteModePage = () => {
             />
           </BaseBox>
 
+          {isCorrect && (
+            <ModeSuccessBox
+              correctGuess={correctGuess}
+              attempts={incorrectGuesses.length + 1}
+              label="Image"
+              url="/image"
+            />
+          )}
+
           <Box width={'30em'}>
             {isCorrect && (
               <Text textAlign={'center'} bg="green.500" color="white" p={2} m={1} rounded="md">
-                {correctGuesses}
+                {correctGuess}
               </Text>
             )}
           </Box>
@@ -132,18 +134,6 @@ export const QuoteModePage = () => {
               </Text>
             ))}
           </Box>
-
-          {isCorrect && (
-            <VStack ref={correctSectionRef}>
-              <Text>When You Play The Game Of Thrones, You Win Or You Die.</Text>
-              <Text>You guessed {correctGuesses}</Text>
-              <Text>Number of tries: {incorrectGuesses.length + 1}</Text>
-              <CountdownTimer />
-              {/*TODO: 1. Get Attempts from classic modes. 2. Store somehow the attempt of quote to pass it to image*/}
-              <Text mt={4}>Next mode: </Text>
-              <PulsingButton label="Image" url="/image" />
-            </VStack>
-          )}
 
         </VStack>
       </Box>

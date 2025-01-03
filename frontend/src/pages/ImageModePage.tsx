@@ -1,13 +1,14 @@
 import { BaseLayout } from '../layout/BaseLayout.tsx';
 import { Box, Button, Image, Text, VStack } from '@chakra-ui/react';
 import { useImageApi } from '../hooks/useImageApi.ts';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CharacterSelect } from '../components/CharacterSelect.tsx';
 import { useApiClient } from '../hooks/useApiClient.ts';
 import { GroupBase } from 'react-select';
 import { OptionBase } from 'chakra-react-select';
 import { BaseBox } from '../components/BaseBox.tsx';
 import { ModeNavigationBox } from '../components/ModeNavigationBox.tsx';
+import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
 
 interface CharacterOption extends OptionBase {
   label: string;
@@ -17,16 +18,15 @@ interface CharacterOption extends OptionBase {
 export const ImageModePage = () => {
   const { fetchApi, apiData } = useImageApi();
   const [incorrectGuesses, setIncorrectGuesses] = useState<string[]>([]);
-  const [correctGuesses, setCorrectGuesses] = useState<string>('');
+  const [correctGuess, setCorrectGuess] = useState<string>('');
   const [isCorrect, setIsCorrect] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterOption | null>(null);
   const [usedOptions, setUsedOptions] = useState<string[]>([]);
-  const correctSectionRef = useRef<HTMLDivElement>(null);
   const client = useApiClient();
 
   useEffect(() => {
     setIsCorrect(false);
-    setCorrectGuesses('');
+    setCorrectGuess('');
     setSelectedCharacter(null);
     setIncorrectGuesses([]);
     setUsedOptions([]);
@@ -35,19 +35,13 @@ export const ImageModePage = () => {
     });
   }, [fetchApi]);
 
-  useEffect(() => {
-    if (isCorrect && correctSectionRef.current) {
-      correctSectionRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [isCorrect]);
-
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
       setSelectedCharacter(selected);
       const adjustedSelected = nameExceptions(selected);
       if (adjustedSelected.value.toLowerCase() === apiData?.fullName.toLowerCase()) {
         setIsCorrect(true);
-        setCorrectGuesses(selected.value);
+        setCorrectGuess(selected.value);
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
@@ -99,6 +93,7 @@ export const ImageModePage = () => {
     return Math.max(maxBlur - attempts * blurStep, 0);
   };
 
+
   return (
     <BaseLayout>
       <Box p={4} display="flex" justifyContent="center" alignItems="center">
@@ -134,10 +129,19 @@ export const ImageModePage = () => {
             />
           </BaseBox>
 
+          {isCorrect && (
+            <ModeSuccessBox
+              correctGuess={correctGuess}
+              attempts={incorrectGuesses.length + 1}
+              label="Jump to Scoreboard"
+              url="/scoreboard"
+            />
+          )}
+
           <Box width={'30em'}>
             {isCorrect && (
               <Text textAlign={'center'} bg="green.500" color="white" p={2} m={1} rounded="md">
-                {correctGuesses}
+                {correctGuess}
               </Text>
             )}
           </Box>
@@ -150,7 +154,7 @@ export const ImageModePage = () => {
           </Box>
 
           {isCorrect && (
-            <VStack ref={correctSectionRef}>
+            <VStack>
               <Text>Congratulations, you finished today's GoTdle!!</Text>
               <Text>Here are your Scores!</Text>
               <Text>Classic: {localStorage.getItem('classicModeAttempts')}</Text>
