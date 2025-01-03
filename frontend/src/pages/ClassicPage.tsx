@@ -125,7 +125,7 @@ export const ClassicPage: React.FC = () => {
               isMulti: false,
               placeholder: 'Type character name...',
               loadOptions: (inputValue: string, callback: (options: CharacterOption[]) => void) => {
-                loadCharacterOptions(inputValue, []).then(callback);
+                loadCharacterOptions(inputValue, incorrectGuesses).then(callback);
               },
               onChange: handleCharacterSelect,
               value: null,
