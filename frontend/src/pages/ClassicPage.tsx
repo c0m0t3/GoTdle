@@ -1,15 +1,16 @@
-import { BaseLayout } from '../layout/BaseLayout.tsx';
+import { BaseLayout } from '../layout/BaseLayout';
 import { Text, VStack } from '@chakra-ui/react';
-import { CharacterGrid } from '../layout/CharacterGrid.tsx';
+import { CharacterGrid } from '../layout/CharacterGrid';
 import { useEffect, useState } from 'react';
-import { useApiClient } from '../hooks/useApiClient.ts';
-import { CharacterSelect } from '../components/CharacterSelect.tsx';
+import { useApiClient } from '../hooks/useApiClient';
+import { CharacterSelect } from '../components/CharacterSelect';
 import { GroupBase } from 'react-select';
 import { OptionBase } from 'chakra-react-select';
 import murmurhash from 'murmurhash';
-import { ModeNavigationBox } from '../components/ModeNavigationBox.tsx';
-import { BaseBox } from '../components/BaseBox.tsx';
-import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
+import { ModeNavigationBox } from '../components/ModeNavigationBox';
+import { BaseBox } from '../components/BaseBox';
+import { ModeSuccessBox } from '../components/ModeSuccessBox';
+import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
 
 interface Character {
   name: string;
@@ -32,7 +33,6 @@ export const ClassicPage: React.FC = () => {
   const [allCharacters, setAllCharacters] = useState<Character[]>([]);
   const [solutionCharacter, setSolutionCharacter] = useState<Character | null>(null);
   const [correctGuess, setCorrectGuess] = useState<string>('');
-  const [usedOptions, setUsedOptions] = useState<string[]>([]);
   const client = useApiClient();
 
   const getCharacterOfTheDay = (characters: Character[]) => {
@@ -87,25 +87,10 @@ export const ClassicPage: React.FC = () => {
       } else {
         setIncorrectGuesses([...incorrectGuesses, selected.value]);
       }
-      setUsedOptions((prev) => [...prev, selected.value]);
     }
   };
-  const loadCharacterOptions = async (inputValue: string) => {
-    const characters = await client.getCharacters();
-    if (characters.status === 200) {
-      return characters.data
-        .filter(
-          (character) =>
-            character?.name?.toLowerCase().startsWith(inputValue.toLowerCase()) &&
-            !usedOptions.includes(character.name)
-        )
-        .map((character) => ({
-          label: character.name ?? '',
-          value: character.name ?? ''
-        }));
-    }
-    return [];
-  };
+
+  const loadCharacterOptions = useLoadCharacterOptions();
 
   return (
     <BaseLayout>
@@ -123,7 +108,9 @@ export const ClassicPage: React.FC = () => {
             selectProps={{
               isMulti: false,
               placeholder: 'Type character name...',
-              loadOptions: loadCharacterOptions,
+              loadOptions: (inputValue: string, callback: (options: CharacterOption[]) => void) => {
+                loadCharacterOptions(inputValue, []).then(callback);
+              },
               onChange: handleCharacterSelect,
               value: null,
               isDisabled: !!correctGuess,
