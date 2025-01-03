@@ -3,12 +3,12 @@ import { Box, Button, Image, Text, VStack } from '@chakra-ui/react';
 import { useImageApi } from '../hooks/useImageApi.ts';
 import { useEffect, useState } from 'react';
 import { CharacterSelect } from '../components/CharacterSelect.tsx';
-import { useApiClient } from '../hooks/useApiClient.ts';
 import { GroupBase } from 'react-select';
 import { OptionBase } from 'chakra-react-select';
 import { BaseBox } from '../components/BaseBox.tsx';
 import { ModeNavigationBox } from '../components/ModeNavigationBox.tsx';
 import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
+import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
 
 interface CharacterOption extends OptionBase {
   label: string;
@@ -21,15 +21,12 @@ export const ImageModePage = () => {
   const [correctGuess, setCorrectGuess] = useState<string>('');
   const [isCorrect, setIsCorrect] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterOption | null>(null);
-  const [usedOptions, setUsedOptions] = useState<string[]>([]);
-  const client = useApiClient();
 
   useEffect(() => {
     setIsCorrect(false);
     setCorrectGuess('');
     setSelectedCharacter(null);
     setIncorrectGuesses([]);
-    setUsedOptions([]);
     fetchApi().catch((error) => {
       console.error('Failed to fetch image:', error);
     });
@@ -45,7 +42,6 @@ export const ImageModePage = () => {
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
-      setUsedOptions((prev) => [...prev, selected.value]);
       setSelectedCharacter(null);
     }
   };
@@ -69,21 +65,8 @@ export const ImageModePage = () => {
     return newValue ? { ...selected, value: newValue } : selected;
   };
 
-  const loadCharacterOptions = async (inputValue: string) => {
-    const characters = await client.getCharacters();
-    if (characters.status === 200) {
-      return characters.data
-        .filter((character) =>
-          character?.name?.toLowerCase().startsWith(inputValue.toLowerCase()) &&
-          !usedOptions.includes(character.name)
-        )
-        .map((character) => ({
-          label: character.name ?? '',
-          value: character.name ?? ''
-        }));
-    }
-    return [];
-  };
+  const loadCharacterOptions = useLoadCharacterOptions();
+
   const calculateBlur = (attempts: number, isCorrect: boolean) => {
     if (isCorrect) {
       return 0;
@@ -120,7 +103,9 @@ export const ImageModePage = () => {
               selectProps={{
                 isMulti: false,
                 placeholder: 'Type character name...',
-                loadOptions: loadCharacterOptions,
+                loadOptions: (inputValue: string, callback: (options: CharacterOption[]) => void) => {
+                  loadCharacterOptions(inputValue, []).then(callback);
+                },
                 onChange: handleCharacterSelect,
                 value: selectedCharacter,
                 isDisabled: isCorrect,
