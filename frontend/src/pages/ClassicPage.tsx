@@ -1,5 +1,17 @@
 import { BaseLayout } from '../layout/BaseLayout';
-import { Text, VStack } from '@chakra-ui/react';
+import {
+  Button,
+  HStack,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  useDisclosure,
+  VStack
+} from '@chakra-ui/react';
 import { CharacterGrid } from '../layout/CharacterGrid';
 import { useEffect, useState } from 'react';
 import { useApiClient } from '../hooks/useApiClient';
@@ -10,7 +22,7 @@ import murmurhash from 'murmurhash';
 import { ModeNavigationBox } from '../components/ModeNavigationBox';
 import { BaseBox } from '../components/BaseBox';
 import { ModeSuccessBox } from '../components/ModeSuccessBox';
-import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
+import { useLoadCharacterOptions } from '../utils/loadCharacterOptions';
 
 interface Character {
   name: string;
@@ -34,6 +46,7 @@ export const ClassicPage: React.FC = () => {
   const [solutionCharacter, setSolutionCharacter] = useState<Character | null>(null);
   const [correctGuess, setCorrectGuess] = useState<string>('');
   const client = useApiClient();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const getCharacterOfTheDay = (characters: Character[]) => {
     const date = new Date();
@@ -101,6 +114,9 @@ export const ClassicPage: React.FC = () => {
           <Text textAlign={'center'}> Type any character to begin. </Text>
           <Text textAlign={'center'}> DEBUG: The Solution is </Text>
           <Text textAlign={'center'}> {solutionCharacter?.name} </Text>
+          <HStack justifyContent={'center'}>
+            <Button onClick={onOpen} isDisabled={incorrectGuesses.length < 5}> Hint </Button>
+          </HStack>
         </BaseBox>
         <BaseBox>
           <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
@@ -128,6 +144,18 @@ export const ClassicPage: React.FC = () => {
         )}
         <CharacterGrid characterData={selectedCharacter} solutionCharacter={solutionCharacter} />
       </VStack>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Hint</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>Here are some hints about the solution character:</Text>
+            <Text>Titles: {solutionCharacter?.name}</Text>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </BaseLayout>
   );
 };
