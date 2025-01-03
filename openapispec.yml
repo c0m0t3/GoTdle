@@ -406,6 +406,7 @@ components:
         - religion
         - house
         - seasons
+        - titles
       properties:
         _id:
           type: integer
