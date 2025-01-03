@@ -6,9 +6,9 @@ import {
   Box,
   Button,
   Container,
+  Image,
   Text,
-  VStack,
-  Image
+  VStack
 } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +19,7 @@ export const HomePage = () => {
 
   const handlePlayNow = () => {
     navigate('/start');
-  }
+  };
   return (
     <Box
       bg="rgb(245, 221, 181)"
@@ -32,31 +32,31 @@ export const HomePage = () => {
       border="none"
     >
       <VStack>
-          <Box
-            bgImage={"url('/bg_border.png')"}
-            bgSize="100% 100%"
-            bgRepeat="no-repeat"
-            bgPosition="top"
-            p={4}
-            borderRadius="md"
-            margin={10}
-          >
-            <VStack minWidth={"35em"}>
-              <Image src="/Logo_GoTdle.webp" alt="GoTdle Logo" width="200px" height="200px" />
-              <Text>Test your Game of Thrones knowledge </Text>
-            </VStack>
-          </Box>
+        <Box
+          bgImage={'url(\'/bg_border.png\')'}
+          bgSize="100% 100%"
+          bgRepeat="no-repeat"
+          bgPosition="top"
+          p={4}
+          borderRadius="md"
+          margin={10}
+        >
+          <VStack minWidth={'35em'}>
+            <Image src="/Logo_GoTdle.webp" alt="GoTdle Logo" width="200px" height="200px" />
+            <Text>Test your Game of Thrones knowledge </Text>
+          </VStack>
+        </Box>
 
-            <Button sx={gotButtonStyle} width={"15em"} onClick={handlePlayNow}> Play Now </Button>
-            <Button sx={gotButtonStyle} width={"15em"}> Login </Button>
-            <Button sx={gotButtonStyle} width={"15em"}> Register </Button>
+        <Button sx={gotButtonStyle} width={'15em'} onClick={handlePlayNow}> Play Now </Button>
+        <Button sx={gotButtonStyle} width={'15em'} onClick={() => navigate('/auth/login')}> Login </Button>
+        <Button sx={gotButtonStyle} width={'15em'} onClick={() => navigate('/auth/register')}> Register </Button>
 
-        <Container width={"40em"}>
+        <Container width={'40em'}>
           <Accordion
             allowMultiple
             width="100%"
             rounded="lg"
-            bgImage={"url('/bg_border.png')"}
+            bgImage={'url(\'/bg_border.png\')'}
             bgSize="100% 100%"
             bgRepeat="no-repeat"
             bgPosition="top"
@@ -69,7 +69,7 @@ export const HomePage = () => {
                 justifyContent="space-between"
                 p={4}
                 borderRadius="md"
-                _hover={{ bg: "gray.200" }}
+                _hover={{ bg: 'gray.200' }}
                 width="100%"
               >
                 <Text fontSize="md" fontWeight="bold">What is GoTdle?</Text>
@@ -90,7 +90,7 @@ export const HomePage = () => {
                 justifyContent="space-between"
                 p={4}
                 borderRadius="md"
-                _hover={{ bg: "gray.200" }}
+                _hover={{ bg: 'gray.200' }}
                 width="100%"
               >
                 <Text fontSize="md" fontWeight="bold">Are there spoilers for the TV show?</Text>
@@ -112,7 +112,7 @@ export const HomePage = () => {
                 justifyContent="space-between"
                 p={4}
                 borderRadius="md"
-                _hover={{ bg: "gray.200" }}
+                _hover={{ bg: 'gray.200' }}
                 width="100%"
               >
                 <Text fontSize="md" fontWeight="bold">How can I play the games?</Text>
@@ -131,5 +131,5 @@ export const HomePage = () => {
       </VStack>
     </Box>
   );
-}
+};
 

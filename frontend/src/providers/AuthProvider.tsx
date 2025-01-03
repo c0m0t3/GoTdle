@@ -3,8 +3,9 @@ import { useLocalStorage } from '../hooks/useLocalStorage.ts';
 import { useNavigate } from 'react-router-dom';
 
 export type LoginData = {
-  email: string;
+  identifier: string;
   password: string;
+  type: string;
 };
 export type RegisterData = {
   username: string;
@@ -20,11 +21,12 @@ type AuthContext = {
   actions: {
     logout: () => void;
     login: (loginData: LoginData) => void;
-    register: (loginData: RegisterData) => void;
+    register: (registerData: RegisterData) => void;
   };
 };
 
 const authContext = React.createContext<AuthContext | null>(null);
+//const client = useApiClient();
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
@@ -37,9 +39,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(loginData),
+      body: JSON.stringify(loginData)
     });
     const data = await res.json();
     if ('accessToken' in data && data.accessToken) {
@@ -52,24 +54,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setAccessToken(null);
     navigate('/auth/login', { replace: true });
   };
+
   const onRegister = async (registerData: RegisterData) => {
     const res = await fetch('/api/auth/register', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(registerData),
+      body: JSON.stringify(registerData)
     });
     const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.errors.join(', '));
+    }
+
     if ('user' in data && res.ok) {
       const loginData: LoginData = {
-        email: registerData.email,
+        identifier: registerData.email,
         password: registerData.password,
+        type: 'email'
       };
       await onLogin(loginData);
+      return;
     }
     throw new Error('Registration failed');
   };
+
   const user = accessToken ? JSON.parse(atob(accessToken.split('.')[1])) : null;
   return (
     <authContext.Provider
@@ -80,8 +91,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         actions: {
           logout: onLogout,
           login: onLogin,
-          register: onRegister,
-        },
+          register: onRegister
+        }
       }}
     >
       {children}

@@ -9,12 +9,12 @@ import { LoginData, useAuth } from '../providers/AuthProvider.tsx';
 
 export const LoginUserSchema = object({
   email: string().required(),
-  password: string().required(),
+  password: string().required()
 });
 
 export const LoginPage = () => {
   const {
-    actions: { login },
+    actions: { login }
   } = useAuth();
   return (
     <BaseLayout>
@@ -31,7 +31,7 @@ export const LoginPage = () => {
         <Formik<LoginData>
           initialValues={{
             email: '',
-            password: '',
+            password: ''
           }}
           onSubmit={(values) => {
             login(values);
@@ -44,7 +44,7 @@ export const LoginPage = () => {
               <VStack alignItems="flex-start" gap={4}>
                 <InputControl
                   name={'email'}
-                  label={'E-Mail'}
+                  label={'E-Mail or Username'}
                   inputProps={{
                     bg: 'rgb(250, 240, 220)',
                     border: '2px solid rgb(200, 160, 120)',
@@ -53,12 +53,12 @@ export const LoginPage = () => {
                     _focus: {
                       borderColor: 'rgb(180, 90, 70)',
                       boxShadow: 'none',
-                      bg: 'rgb(250, 240, 220)',
+                      bg: 'rgb(250, 240, 220)'
                     },
                     _hover: {
                       bg: 'rgb(250, 240, 220)',
-                      borderColor: 'rgb(200, 160, 120)',
-                    },
+                      borderColor: 'rgb(200, 160, 120)'
+                    }
                   }}
                 />
                 <InputControl
@@ -73,12 +73,12 @@ export const LoginPage = () => {
                     _focus: {
                       borderColor: 'rgb(180, 90, 70)',
                       boxShadow: 'none',
-                      bg: 'rgb(250, 240, 220)',
+                      bg: 'rgb(250, 240, 220)'
                     },
                     _hover: {
                       bg: 'rgb(250, 240, 220)',
-                      borderColor: 'rgb(200, 160, 120)',
-                    },
+                      borderColor: 'rgb(200, 160, 120)'
+                    }
                   }}
                 />
 

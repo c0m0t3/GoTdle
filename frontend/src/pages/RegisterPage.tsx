@@ -1,19 +1,23 @@
 import { BaseLayout } from '../layout/BaseLayout.tsx';
 import { AuthCard } from '../components/AuthCard.tsx';
-import { Box, Button, Heading, Link, VStack } from '@chakra-ui/react';
+import { Box, Heading, Link, VStack } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Form, Formik } from 'formik';
 import { object, string } from 'yup';
-import { InputControl } from 'formik-chakra-ui';
-import { RegisterData } from '../providers/AuthProvider.tsx';
+import { InputControl, SubmitButton } from 'formik-chakra-ui';
+import { RegisterData, useAuth } from '../providers/AuthProvider.tsx';
+import { gotButtonStyle } from '../styles/buttonStyles.ts';
 
 export const RegisterUserSchema = object({
-  email: string().required(),
-  password: string().required(),
-  username: string().required().min(2, 'Mindestens 3 Zeichen'),
+  email: string().email().required('Email is required'),
+  password: string().min(8, 'Password must be at least 8 characters long').required('Password is required'),
+  username: string().min(3, 'Username must be at least 3 characters long').required('Username is required')
 });
 
 export const RegisterPage = () => {
+  const {
+    actions: { register }
+  } = useAuth();
   return (
     <BaseLayout>
       <Box
@@ -30,27 +34,41 @@ export const RegisterPage = () => {
           initialValues={{
             username: '',
             email: '',
-            password: '',
+            password: ''
           }}
           validationSchema={RegisterUserSchema}
-          onSubmit={(values, formikHelpers) => {}}
+          onSubmit={async (values, formikHelpers) => {
+            try {
+              console.log('values', values);
+              await register(values);
+              formikHelpers.setSubmitting(false);
+            } catch (error: unknown) {
+              if (error instanceof Error) {
+                formikHelpers.setErrors({
+                  email: error.message.includes('Email') ? 'Email is already in use' : '',
+                  username: error.message.includes('Username') ? 'Username is already in use' : ''
+                });
+              }
+              formikHelpers.setSubmitting(false);
+            }
+          }}
         >
           <Form>
             <AuthCard>
-              <Heading my={4}>Register Page</Heading>
-              <VStack alignItems="flex-start" gap={4}>
+              <Heading my={4}>Registration</Heading>
+              <VStack gap={4}>
                 <InputControl label={'Username'} name="username" />
                 <InputControl label={'E-Mail'} name="email" />
                 <InputControl
                   label={'Password'}
-                  inputProps={{ type: 'password' }}
                   name="password"
+                  inputProps={{ type: 'password' }}
                 />
-                <Button type={'submit'}>Registrieren</Button>
+                <SubmitButton sx={gotButtonStyle}>register</SubmitButton>
                 <Box>
-                  Bereits ein Konto?{' '}
+                  Already a user?{' '}
                   <Link as={RouterLink} to={'/auth/login'}>
-                    Anmelden
+                    Log in here!
                   </Link>
                 </Box>
               </VStack>
