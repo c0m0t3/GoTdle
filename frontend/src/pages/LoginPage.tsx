@@ -1,6 +1,6 @@
 import { BaseLayout } from '../layout/BaseLayout.tsx';
 import { AuthCard } from '../components/AuthCard.tsx';
-import { Box, Heading, Link, Radio, RadioGroup, useToast, VStack } from '@chakra-ui/react';
+import { Box, Heading, Link, Radio, RadioGroup, VStack } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Form, Formik } from 'formik';
 import { InputControl, SubmitButton } from 'formik-chakra-ui';
@@ -18,7 +18,6 @@ export const LoginUserSchema = object({
 
 export const LoginPage = () => {
   const { actions: { login } } = useAuth();
-  const toast = useToast();
 
   return (
     <BaseLayout>
@@ -43,13 +42,7 @@ export const LoginPage = () => {
             try {
               await login(values);
             } catch (_error) {
-              toast({
-                title: 'Login failed',
-                description: 'Invalid credentials',
-                status: 'error',
-                duration: 4000,
-                isClosable: true
-              });
+              return;
             }
           }}
         >

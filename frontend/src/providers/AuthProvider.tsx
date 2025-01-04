@@ -83,6 +83,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const data = await res.json();
 
     if (!res.ok) {
+      toast({
+        title: 'Login failed',
+        description: 'Invalid credentials',
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+        position: 'top'
+      });
       throw new Error(data.errors.join(', '));
     }
     if ('accessToken' in data && data.accessToken) {
