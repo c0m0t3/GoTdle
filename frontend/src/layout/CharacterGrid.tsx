@@ -64,7 +64,7 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData, sol
 
   return (
     <Box
-      bg="gray.800"
+      bg="rgba(79, 0, 0, 1)"
       p={4}
       px={'4em'}
       border="1px solid"

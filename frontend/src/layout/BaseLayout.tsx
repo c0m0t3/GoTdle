@@ -7,7 +7,7 @@ import ScoreboardButton from '../components/ScoreboardButton.tsx';
 export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <Box>
-      <HStack p={4} bg={'rgb(43, 45, 48)'} position="relative" justifyContent="space-between" alignItems="center">
+      <HStack p={4} bg={'rgb(110, 18, 11)'} position="relative" justifyContent="space-between" alignItems="center">
         <a href={'/'}>
           <Image src={'/Logo_GoTdle.webp'} alt="Home" boxSize="5em" />
         </a>
