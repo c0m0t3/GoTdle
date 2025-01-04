@@ -1,6 +1,6 @@
 import { Box, chakra, HStack, Image } from '@chakra-ui/react';
 import './BaseLayout.css';
-import ProfileMenu from '../components/ProfileMenu';
+import { ProfileMenu } from '../components/ProfileMenu';
 import ScoreboardButton from '../components/ScoreboardButton.tsx';
 
 
