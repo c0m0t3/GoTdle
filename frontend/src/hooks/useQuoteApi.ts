@@ -40,29 +40,20 @@ export const useQuoteApi = () => {
   const [apiData, setApiData] = useState<QuoteData | null>(null);
 
   const fetchApi = useCallback(async () => {
-    const storedQuote = localStorage.getItem('quote');
-    const storedDate = localStorage.getItem('quoteDate');
-    const currentDate = new Date().toISOString().split('T')[0];
+    const response = await fetch('https://api.gameofthronesquotes.xyz/v1/characters');
+    const characters: CharacterData[] = await response.json();
 
-    if (storedQuote && storedDate === currentDate) {
-      setApiData(JSON.parse(storedQuote));
-    } else {
-      const response = await fetch('https://api.gameofthronesquotes.xyz/v1/characters');
-      const characters: CharacterData[] = await response.json();
+    const { character, quote } = getCharacterOfTheDay(characters);
 
-      const { character, quote } = getCharacterOfTheDay(characters);
+    const quoteData: QuoteData = {
+      sentence: quote,
+      character: {
+        name: character.name
+      }
+    };
 
-      const quoteData: QuoteData = {
-        sentence: quote,
-        character: {
-          name: character.name
-        }
-      };
-
-      setApiData(quoteData);
-      localStorage.setItem('quote', JSON.stringify(quoteData));
-      localStorage.setItem('quoteDate', currentDate);
-    }
+    setApiData(quoteData);
+    localStorage.setItem('quote', JSON.stringify(quoteData));
   }, []);
 
   return { fetchApi, apiData };
