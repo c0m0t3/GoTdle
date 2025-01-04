@@ -69,59 +69,57 @@ export const QuoteModePage = () => {
 
   return (
     <BaseLayout>
-      <Box p={4} display="flex" justifyContent="center" alignItems="center">
-        <VStack>
+      <VStack>
 
-          <ModeNavigationBox />
+        <ModeNavigationBox />
 
-          <BaseBox>
-            <Text fontSize={'md'}>Which characters says</Text>
-            <Text fontSize={'xl'} py={5}>"{apiData?.sentence}"</Text>
-            <Text fontSize={'sm'}> Pssst...answer is...{apiData?.character.name}</Text>
-          </BaseBox>
-          <BaseBox>
-            <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
-              name="character"
-              selectProps={{
-                isMulti: false,
-                placeholder: 'Type character name...',
-                loadOptions: (inputValue: string, callback: (options: CharacterOption[]) => void) => {
-                  loadCharacterOptions(inputValue, []).then(callback);
-                },
-                onChange: handleCharacterSelect,
-                value: selectedCharacter,
-                isDisabled: isCorrect,
-                components: { DropdownIndicator: () => null }
-              }}
-            />
-          </BaseBox>
+        <BaseBox>
+          <Text fontSize={'md'}>Which characters says</Text>
+          <Text fontSize={'xl'} py={5}>"{apiData?.sentence}"</Text>
+          <Text fontSize={'sm'}> Pssst...answer is...{apiData?.character.name}</Text>
+        </BaseBox>
+        <BaseBox textAlign={'left'}>
+          <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
+            name="character"
+            selectProps={{
+              isMulti: false,
+              placeholder: 'Type character name...',
+              loadOptions: (inputValue: string, callback: (options: CharacterOption[]) => void) => {
+                loadCharacterOptions(inputValue, incorrectGuesses).then(callback);
+              },
+              onChange: handleCharacterSelect,
+              value: selectedCharacter,
+              isDisabled: isCorrect,
+              components: { DropdownIndicator: () => null }
+            }}
+          />
+        </BaseBox>
 
+        {isCorrect && (
+          <ModeSuccessBox
+            correctGuess={correctGuess}
+            attempts={incorrectGuesses.length + 1}
+            label="Image"
+            url="/image"
+          />
+        )}
+
+        <Box width={'30em'}>
           {isCorrect && (
-            <ModeSuccessBox
-              correctGuess={correctGuess}
-              attempts={incorrectGuesses.length + 1}
-              label="Image"
-              url="/image"
-            />
+            <Text textAlign={'center'} bg="green.500" color="white" p={2} m={1} rounded="md">
+              {correctGuess}
+            </Text>
           )}
+        </Box>
+        <Box width={'30em'}>
+          {incorrectGuesses.map((guess, index) => (
+            <Text textAlign={'center'} key={index} bg="red.500" color="white" p={2} m={1} rounded="md">
+              {guess}
+            </Text>
+          ))}
+        </Box>
 
-          <Box width={'30em'}>
-            {isCorrect && (
-              <Text textAlign={'center'} bg="green.500" color="white" p={2} m={1} rounded="md">
-                {correctGuess}
-              </Text>
-            )}
-          </Box>
-          <Box width={'30em'}>
-            {incorrectGuesses.map((guess, index) => (
-              <Text textAlign={'center'} key={index} bg="red.500" color="white" p={2} m={1} rounded="md">
-                {guess}
-              </Text>
-            ))}
-          </Box>
-
-        </VStack>
-      </Box>
+      </VStack>
     </BaseLayout>
   );
 };

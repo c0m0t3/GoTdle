@@ -88,7 +88,7 @@ export interface Characters {
      * @type {Array<string>}
      * @memberof Characters
      */
-    'titles'?: Array<string>;
+    'titles': Array<string>;
     /**
      * 
      * @type {string}

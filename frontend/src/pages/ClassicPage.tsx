@@ -1,5 +1,5 @@
 import { BaseLayout } from '../layout/BaseLayout';
-import { Text, VStack } from '@chakra-ui/react';
+import { Button, HStack, Text, VStack } from '@chakra-ui/react';
 import { CharacterGrid } from '../layout/CharacterGrid';
 import { useEffect, useState } from 'react';
 import { useApiClient } from '../hooks/useApiClient';
@@ -10,7 +10,8 @@ import murmurhash from 'murmurhash';
 import { ModeNavigationBox } from '../components/ModeNavigationBox';
 import { BaseBox } from '../components/BaseBox';
 import { ModeSuccessBox } from '../components/ModeSuccessBox';
-import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
+import { useLoadCharacterOptions } from '../utils/loadCharacterOptions';
+import { gotButtonStyle } from '../styles/buttonStyles.ts';
 
 interface Character {
   name: string;
@@ -20,6 +21,7 @@ interface Character {
   status: string;
   religion: string;
   seasons: number[];
+  titles: string[];
 }
 
 interface CharacterOption extends OptionBase {
@@ -33,6 +35,7 @@ export const ClassicPage: React.FC = () => {
   const [allCharacters, setAllCharacters] = useState<Character[]>([]);
   const [solutionCharacter, setSolutionCharacter] = useState<Character | null>(null);
   const [correctGuess, setCorrectGuess] = useState<string>('');
+  const [isOpen, setIsOpen] = useState(false);
   const client = useApiClient();
 
   const getCharacterOfTheDay = (characters: Character[]) => {
@@ -101,15 +104,26 @@ export const ClassicPage: React.FC = () => {
           <Text textAlign={'center'}> Type any character to begin. </Text>
           <Text textAlign={'center'}> DEBUG: The Solution is </Text>
           <Text textAlign={'center'}> {solutionCharacter?.name} </Text>
+          <HStack justifyContent={'center'}>
+            <Button onClick={() => setIsOpen(true)} isDisabled={incorrectGuesses.length < 5}
+                    sx={gotButtonStyle}> Titles </Button>
+          </HStack>
+          {isOpen && (
+            <VStack mt={4} alignItems="center">
+              {solutionCharacter?.titles.map((title, index) => (
+                <Text key={index}>{title}</Text>
+              ))}
+            </VStack>
+          )}
         </BaseBox>
-        <BaseBox>
+        <BaseBox textAlign={'left'}>
           <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
             name="character"
             selectProps={{
               isMulti: false,
               placeholder: 'Type character name...',
               loadOptions: (inputValue: string, callback: (options: CharacterOption[]) => void) => {
-                loadCharacterOptions(inputValue, []).then(callback);
+                loadCharacterOptions(inputValue, incorrectGuesses).then(callback);
               },
               onChange: handleCharacterSelect,
               value: null,

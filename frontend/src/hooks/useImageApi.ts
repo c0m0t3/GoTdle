@@ -29,22 +29,13 @@ export const useImageApi = () => {
   const [apiData, setApiData] = useState<CharacterData | null>(null);
 
   const fetchApi = useCallback(async () => {
-    const storedImage = localStorage.getItem('image');
-    const storedDate = localStorage.getItem('imageDate');
-    const currentDate = new Date().toISOString().split('T')[0];
+    const response = await fetch('https://thronesapi.com/api/v2/Characters');
+    const data: CharacterData[] = await response.json();
 
-    if (storedImage && storedDate === currentDate) {
-      setApiData(JSON.parse(storedImage));
-    } else {
-      const response = await fetch('https://thronesapi.com/api/v2/Characters');
-      const data: CharacterData[] = await response.json();
+    const characterOfTheDay = getCharacterOfTheDay(data);
 
-      const characterOfTheDay = getCharacterOfTheDay(data);
-
-      setApiData(characterOfTheDay);
-      localStorage.setItem('image', JSON.stringify(characterOfTheDay));
-      localStorage.setItem('imageDate', currentDate);
-    }
+    setApiData(characterOfTheDay);
+    localStorage.setItem('image', JSON.stringify(characterOfTheDay));
   }, []);
 
   return { fetchApi, apiData };
