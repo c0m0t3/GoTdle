@@ -21,6 +21,7 @@ import {
   useEditableControls
 } from '@chakra-ui/react';
 import { CheckIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
+import { formatDate } from '../utils/formatDate.ts';
 
 interface User {
   id: string;
@@ -98,7 +99,7 @@ export const ProfilePage = () => {
         </HStack>
         <HStack justifyContent={'space-between'} m={3}>
           <Text>Member since: </Text>
-          <Text>createdAt{user?.createdAt}</Text>
+          <Text>createdAt{formatDate(user?.createdAt)}</Text>
         </HStack>
 
         <Divider borderColor={'black'} my={'4'} />
@@ -125,7 +126,7 @@ export const ProfilePage = () => {
           </Stat>
           <Stat>
             <StatLabel>Last Played</StatLabel>
-            <StatNumber>24.12.2024{user?.score?.lastPlayed}</StatNumber>
+            <StatNumber>24.12.2024{formatDate(user?.score?.lastPlayed)}</StatNumber>
           </Stat>
         </HStack>
         <Text>Daily Score</Text>
