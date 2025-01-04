@@ -10,14 +10,15 @@ const ProfileMenu = () => {
   };
 
   const handleLogoutClick = () => {
-    // Dummy logout function
-    console.log('Logged out');
+    //TODO: Implement logout
+    navigate('/home');
   };
 
   return (
     <Menu>
       <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-        <img src="/icons/profileIcon.png" alt="Person Icon" className="static-icon" />
+        <img src="/icons/profileIcon.png" alt="Person Icon" className="static-icon"
+             style={{ width: '2em', height: '2em' }} />
       </MenuButton>
       <MenuList>
         <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
