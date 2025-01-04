@@ -1,8 +1,7 @@
 import { Box, Button, chakra, HStack, Image } from '@chakra-ui/react';
 import './BaseLayout.css';
-//import { useAuth } from '../providers/AuthProvider.tsx';
 import { useNavigate } from 'react-router-dom';
-
+import ProfileMenu from '../components/ProfileMenu';
 
 const ScoreboardButton = () => {
   const navigate = useNavigate();
@@ -15,42 +14,6 @@ const ScoreboardButton = () => {
     </Button>
   );
 };
-
-const LoginButtonDummy = () => {
-  return <Button>Login</Button>;
-};
-
-//const LoginButton = () => {
-//  const navigate = useNavigate();
-//  const navigateToLogin = () => {
-//    navigate('/auth/login');
-//  };
-//  const {
-//    isLoggedIn,
-//    actions: { logout },
-//  } = useAuth();
-//
-//  if (isLoggedIn) {
-//    return (
-//      <Button
-//        onClick={() => {
-//          logout();
-//        }}
-//      >
-//        Logout
-//      </Button>
-//    );
-//  }
-//  return (
-//    <Button
-//      onClick={() => {
-//        navigateToLogin();
-//      }}
-//    >
-//      Login
-//    </Button>
-//  );
-//};
 
 export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -70,7 +33,7 @@ export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
         </Box>
         <Box display="flex" gap={4} alignItems="center">
           <ScoreboardButton />
-          <LoginButtonDummy />
+          <ProfileMenu />
         </Box>
       </HStack>
       <Box
