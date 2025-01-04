@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage.ts';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '@chakra-ui/react';
 
 export type LoginData = {
   identifier: string;
@@ -36,11 +37,40 @@ const authContext = React.createContext<AuthContext | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
-
+  const toast = useToast();
   const [accessToken, setAccessToken] = useLocalStorage<string | null>(
     'accessToken',
     null
   );
+  const user = useMemo(
+    () =>
+      accessToken
+        ? (JSON.parse(atob(accessToken.split('.')[1])) as User)
+        : null,
+    [accessToken]
+  );
+  if (user && user.iss !== 'http://fwe.auth') {
+    setAccessToken(null);
+  }
+
+  const accessTokenIsExpired = (user?.exp && user.exp < Date.now() / 1000) ?? false;
+  useEffect(() => {
+    if (accessTokenIsExpired) {
+      setAccessToken(null);
+      toast({
+        description: 'Your session has expired. Please log in again.',
+        status: 'error',
+        duration: null,
+        isClosable: true,
+        position: 'top',
+        containerStyle: {
+          fontSize: '3xl'
+        }
+      });
+      navigate('/auth/login', { replace: true });
+    }
+  }, [accessTokenIsExpired, setAccessToken, toast, navigate]);
+
 
   const onLogin = async (loginData: LoginData) => {
     const res = await fetch('/api/auth/login', {
@@ -63,7 +93,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const onLogout = () => {
     setAccessToken(null);
-    navigate('/auth/login', { replace: true });
+    navigate('/', { replace: true });
   };
 
   const onRegister = async (registerData: RegisterData) => {
@@ -91,7 +121,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     throw new Error('Registration failed');
   };
 
-  const user = accessToken ? JSON.parse(atob(accessToken.split('.')[1])) : null;
   return (
     <authContext.Provider
       value={{
