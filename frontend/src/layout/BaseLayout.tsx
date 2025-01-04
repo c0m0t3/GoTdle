@@ -1,68 +1,8 @@
-import { Box, Button, chakra, HStack, Image, useColorMode, useColorModeValue } from '@chakra-ui/react';
-import { MouseEventHandler } from 'react';
-import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import { Box, chakra, HStack, Image } from '@chakra-ui/react';
 import './BaseLayout.css';
-//import { useAuth } from '../providers/AuthProvider.tsx';
-import { useNavigate } from 'react-router-dom';
+import ProfileMenu from '../components/ProfileMenu';
+import ScoreboardButton from '../components/ScoreboardButton.tsx';
 
-const ColorModeToggle = () => {
-  const { toggleColorMode } = useColorMode();
-
-  const icon = useColorModeValue(<MoonIcon />, <SunIcon />);
-  const onClickToggle: MouseEventHandler<HTMLButtonElement> = () => {
-    toggleColorMode();
-    console.log('Toggle Color Mode');
-  };
-  return <Button onClick={onClickToggle}>{icon}</Button>;
-};
-
-const ScoreboardButton = () => {
-  const navigate = useNavigate();
-  const navigateToScoreboard = () => {
-    navigate('/scoreboard');
-  };
-  return (
-    <Button onClick={navigateToScoreboard} className="scoreboard-button">
-      <img src="/icons/barChart_static.png" alt="Score Icon" className="static-icon" />
-    </Button>
-  );
-};
-
-const LoginButtonDummy = () => {
-  return <Button>Login</Button>;
-};
-
-//const LoginButton = () => {
-//  const navigate = useNavigate();
-//  const navigateToLogin = () => {
-//    navigate('/auth/login');
-//  };
-//  const {
-//    isLoggedIn,
-//    actions: { logout },
-//  } = useAuth();
-//
-//  if (isLoggedIn) {
-//    return (
-//      <Button
-//        onClick={() => {
-//          logout();
-//        }}
-//      >
-//        Logout
-//      </Button>
-//    );
-//  }
-//  return (
-//    <Button
-//      onClick={() => {
-//        navigateToLogin();
-//      }}
-//    >
-//      Login
-//    </Button>
-//  );
-//};
 
 export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -82,8 +22,7 @@ export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
         </Box>
         <Box display="flex" gap={4} alignItems="center">
           <ScoreboardButton />
-          <LoginButtonDummy />
-          <ColorModeToggle />
+          <ProfileMenu />
         </Box>
       </HStack>
       <Box
