@@ -1,20 +1,8 @@
-import { Box, Button, chakra, HStack, Image, useColorMode, useColorModeValue } from '@chakra-ui/react';
-import { MouseEventHandler } from 'react';
-import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import { Box, Button, chakra, HStack, Image } from '@chakra-ui/react';
 import './BaseLayout.css';
 //import { useAuth } from '../providers/AuthProvider.tsx';
 import { useNavigate } from 'react-router-dom';
 
-const ColorModeToggle = () => {
-  const { toggleColorMode } = useColorMode();
-
-  const icon = useColorModeValue(<MoonIcon />, <SunIcon />);
-  const onClickToggle: MouseEventHandler<HTMLButtonElement> = () => {
-    toggleColorMode();
-    console.log('Toggle Color Mode');
-  };
-  return <Button onClick={onClickToggle}>{icon}</Button>;
-};
 
 const ScoreboardButton = () => {
   const navigate = useNavigate();
@@ -83,7 +71,6 @@ export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
         <Box display="flex" gap={4} alignItems="center">
           <ScoreboardButton />
           <LoginButtonDummy />
-          <ColorModeToggle />
         </Box>
       </HStack>
       <Box
