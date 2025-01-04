@@ -3,25 +3,21 @@ import { useApiClient } from '../hooks/useApiClient.ts';
 import { BaseBox } from '../components/BaseBox.tsx';
 import { useCallback, useEffect, useState } from 'react';
 import {
-  ButtonGroup,
   Divider,
-  Editable,
-  EditableInput,
-  EditablePreview,
   Heading,
   HStack,
   IconButton,
-  Input,
   Stat,
   StatArrow,
   StatHelpText,
   StatLabel,
   StatNumber,
-  Text,
-  useEditableControls
+  Text
 } from '@chakra-ui/react';
-import { CheckIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
+import { EditIcon } from '@chakra-ui/icons';
 import { formatDate } from '../utils/formatDate.ts';
+import { object, string } from 'yup';
+import { Form, Formik } from 'formik';
 
 interface User {
   id: string;
@@ -35,6 +31,16 @@ interface User {
     streak: number,
   };
 }
+
+type UpdateFormValues = {
+  username: string;
+  email: string;
+}
+
+const UpdateUserSchema = object({
+  username: string().min(3, 'username has to be longer than 3 characters').required('username is required'),
+  email: string().email().required('email is required')
+});
 
 export const ProfilePage = () => {
   const client = useApiClient();
@@ -51,24 +57,6 @@ export const ProfilePage = () => {
     });
   }, [getUser]);
 
-  function EditableControls() {
-    const {
-      isEditing,
-      getSubmitButtonProps,
-      getCancelButtonProps,
-      getEditButtonProps
-    } = useEditableControls();
-
-    return isEditing ? (
-      <ButtonGroup size={'sm'}>
-        <IconButton aria-label="Submit" icon={<CheckIcon />} {...getSubmitButtonProps()} />
-        <IconButton aria-label="Cancel" icon={<CloseIcon />} {...getCancelButtonProps()} />
-      </ButtonGroup>
-    ) : (
-      <IconButton aria-label="Edit" size={'sm'} icon={<EditIcon />} {...getEditButtonProps()} />
-    );
-  }
-
   return (
     <BaseLayout>
 
@@ -77,26 +65,32 @@ export const ProfilePage = () => {
 
         <Divider borderColor={'black'} my={'4'} />
 
-        <HStack justifyContent={'space-between'} m={3}>
-          <Text>Username: </Text>
-          <Editable defaultValue={user?.username || 'username'}>
-            <HStack>
-              <EditablePreview />
-              <Input as={EditableInput} />
-              <EditableControls />
+        <Formik<UpdateFormValues>
+          initialValues={{ username: user?.username || '', email: user?.email || '' }}
+          validationSchema={UpdateUserSchema}
+          onSubmit={(values, formikHelpers) => {
+            console.log(values);
+            formikHelpers.setSubmitting(false);
+          }}>
+          <Form>
+            <HStack justifyContent={'space-between'} m={3}>
+              <Text>Username: </Text>
+              <HStack>
+                <Text>username{user?.username}</Text>
+                <IconButton aria-label="Edit" size={'sm'} icon={<EditIcon />} onClick={() => {
+                }} />
+              </HStack>
             </HStack>
-          </Editable>
-        </HStack>
-        <HStack justifyContent={'space-between'} m={3}>
-          <Text>Email: </Text>
-          <Editable defaultValue={user?.email || 'email'}>
-            <HStack>
-              <EditablePreview />
-              <Input as={EditableInput} />
-              <EditableControls />
+            <HStack justifyContent={'space-between'} m={3}>
+              <Text>Email: </Text>
+              <HStack>
+                <Text>email{user?.email}</Text>
+                <IconButton aria-label="Edit" size={'sm'} icon={<EditIcon />} onClick={() => {
+                }} />
+              </HStack>
             </HStack>
-          </Editable>
-        </HStack>
+          </Form>
+        </Formik>
         <HStack justifyContent={'space-between'} m={3}>
           <Text>Member since: </Text>
           <Text>createdAt{formatDate(user?.createdAt)}</Text>
