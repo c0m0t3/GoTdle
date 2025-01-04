@@ -1,19 +1,8 @@
-import { Box, Button, chakra, HStack, Image } from '@chakra-ui/react';
+import { Box, chakra, HStack, Image } from '@chakra-ui/react';
 import './BaseLayout.css';
-import { useNavigate } from 'react-router-dom';
 import ProfileMenu from '../components/ProfileMenu';
+import ScoreboardButton from '../components/ScoreboardButton.tsx';
 
-const ScoreboardButton = () => {
-  const navigate = useNavigate();
-  const navigateToScoreboard = () => {
-    navigate('/scoreboard');
-  };
-  return (
-    <Button onClick={navigateToScoreboard} className="scoreboard-button">
-      <img src="/icons/barChart_static.png" alt="Score Icon" className="static-icon" />
-    </Button>
-  );
-};
 
 export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
   return (
