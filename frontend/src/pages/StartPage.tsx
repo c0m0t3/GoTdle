@@ -20,7 +20,7 @@ export const StartPage: React.FC = () => {
       >
         <VStack>
           <Box
-            bgImage={"url('/bg_border.png')"}
+            bgImage={'url(\'/bg_border.png\')'}
             bgSize="100% 100%"
             bgRepeat="no-repeat"
             bgPosition="top"
@@ -28,37 +28,37 @@ export const StartPage: React.FC = () => {
             borderRadius="md"
             margin={20}
           >
-            <VStack minWidth={"30em"}>
-              <Text fontSize={"4em"} px={4}> Guess Game of Thrones characters </Text>
+            <VStack minWidth={'30em'}>
+              <Text fontSize={'4em'} px={4}> Guess Game of Thrones characters </Text>
             </VStack>
           </Box>
           <Box
-            bgImage={"url('/bg_border.png')"}
+            bgImage={'url(\'/bg_border.png\')'}
             bgSize="100% 100%"
             bgRepeat="no-repeat"
             bgPosition="top"
             p={4}
             borderRadius="md"
             margin={10}
-            width={"35em"}
+            width={'35em'}
           >
             <VStack py={6}>
-              <Button style={gotButtonStyle} width={"20em"} height={"5em"} onClick={() => navigate('/classic')}>
+              <Button sx={gotButtonStyle} width={'20em'} height={'5em'} onClick={() => navigate('/classic')}>
                 <VStack>
-                  <Text fontSize={"2em"}> Classic </Text>
+                  <Text fontSize={'2em'}> Classic </Text>
                   <Text> Guess with wordle like infos </Text>
                 </VStack>
               </Button>
-              <Button style={gotButtonStyle} width={"20em"} height={"5em"}>
+              <Button sx={gotButtonStyle} width={'20em'} height={'5em'} onClick={() => navigate('/quote')}>
                 <VStack>
-                  <Text fontSize={"2em"}> Quote </Text>
+                  <Text fontSize={'2em'}> Quote </Text>
                   <Text> Guess who said it </Text>
                 </VStack>
               </Button>
-              <Button style={gotButtonStyle} width={"20em"} height={"5em"}>
+              <Button sx={gotButtonStyle} width={'20em'} height={'5em'} onClick={() => navigate('/image')}>
                 <VStack>
-                  <Text fontSize={"2em"}> Image </Text>
-                  <Text> Guess from an image section  </Text>
+                  <Text fontSize={'2em'}> Image </Text>
+                  <Text> Guess from an blurred image </Text>
                 </VStack>
               </Button>
             </VStack>
