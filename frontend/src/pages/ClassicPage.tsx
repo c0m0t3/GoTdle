@@ -21,6 +21,7 @@ interface Character {
   status: string;
   religion: string;
   seasons: number[];
+  titles: string[];
 }
 
 interface CharacterOption extends OptionBase {
@@ -105,10 +106,14 @@ export const ClassicPage: React.FC = () => {
           <Text textAlign={'center'}> {solutionCharacter?.name} </Text>
           <HStack justifyContent={'center'}>
             <Button onClick={() => setIsOpen(true)} isDisabled={incorrectGuesses.length < 5}
-                    sx={gotButtonStyle}> Hint </Button>
+                    sx={gotButtonStyle}> Titles </Button>
           </HStack>
           {isOpen && (
-            <Text mt={4}>Here are some hints about the solution character: {solutionCharacter?.name}</Text>
+            <VStack mt={4} alignItems="center">
+              {solutionCharacter?.titles.map((title, index) => (
+                <Text key={index}>{title}</Text>
+              ))}
+            </VStack>
           )}
         </BaseBox>
         <BaseBox textAlign={'left'}>
