@@ -79,79 +79,77 @@ export const ImageModePage = () => {
 
   return (
     <BaseLayout>
-      <Box p={4} display="flex" justifyContent="center" alignItems="center">
-        <VStack>
+      <VStack>
 
-          <ModeNavigationBox />
-          <BaseBox>
-            <Text fontSize={'md'}>Which character is shown in this image?</Text>
-            <Image
-              src={apiData?.imageUrl}
-              alt={apiData?.fullName}
-              objectFit="contain"
-              maxW="100%"
-              maxH="100%"
-              style={{ filter: `blur(${calculateBlur(incorrectGuesses.length, isCorrect)}px)` }}
-              mx={'auto'}
-              py={5}
-            />
-            <Text fontSize={'sm'}> Pssst...answer is...{apiData?.fullName}</Text>
-          </BaseBox>
-          <BaseBox textAlign={'left'}>
-            <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
-              name="character"
-              selectProps={{
-                isMulti: false,
-                placeholder: 'Type character name...',
-                loadOptions: (inputValue: string, callback: (options: CharacterOption[]) => void) => {
-                  loadCharacterOptions(inputValue, incorrectGuesses).then(callback);
-                },
-                onChange: handleCharacterSelect,
-                value: selectedCharacter,
-                isDisabled: isCorrect,
-                components: { DropdownIndicator: () => null }
-              }}
-            />
-          </BaseBox>
+        <ModeNavigationBox />
+        <BaseBox>
+          <Text fontSize={'md'}>Which character is shown in this image?</Text>
+          <Image
+            src={apiData?.imageUrl}
+            alt={apiData?.fullName}
+            objectFit="contain"
+            maxW="100%"
+            maxH="100%"
+            style={{ filter: `blur(${calculateBlur(incorrectGuesses.length, isCorrect)}px)` }}
+            mx={'auto'}
+            py={5}
+          />
+          <Text fontSize={'sm'}> Pssst...answer is...{apiData?.fullName}</Text>
+        </BaseBox>
+        <BaseBox textAlign={'left'}>
+          <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
+            name="character"
+            selectProps={{
+              isMulti: false,
+              placeholder: 'Type character name...',
+              loadOptions: (inputValue: string, callback: (options: CharacterOption[]) => void) => {
+                loadCharacterOptions(inputValue, incorrectGuesses).then(callback);
+              },
+              onChange: handleCharacterSelect,
+              value: selectedCharacter,
+              isDisabled: isCorrect,
+              components: { DropdownIndicator: () => null }
+            }}
+          />
+        </BaseBox>
 
+        {isCorrect && (
+          <ModeSuccessBox
+            correctGuess={correctGuess}
+            attempts={incorrectGuesses.length + 1}
+            label="Jump to Scoreboard"
+            url="/scoreboard"
+          />
+        )}
+
+        <Box width={'30em'}>
           {isCorrect && (
-            <ModeSuccessBox
-              correctGuess={correctGuess}
-              attempts={incorrectGuesses.length + 1}
-              label="Jump to Scoreboard"
-              url="/scoreboard"
-            />
+            <Text textAlign={'center'} bg="green.500" color="white" p={2} m={1} rounded="md">
+              {correctGuess}
+            </Text>
           )}
+        </Box>
+        <Box width={'30em'}>
+          {incorrectGuesses.map((guess) => (
+            <Text textAlign={'center'} key={guess} bg="red.500" color="white" p={2} m={1} rounded="md">
+              {guess}
+            </Text>
+          ))}
+        </Box>
 
-          <Box width={'30em'}>
-            {isCorrect && (
-              <Text textAlign={'center'} bg="green.500" color="white" p={2} m={1} rounded="md">
-                {correctGuess}
-              </Text>
-            )}
-          </Box>
-          <Box width={'30em'}>
-            {incorrectGuesses.map((guess) => (
-              <Text textAlign={'center'} key={guess} bg="red.500" color="white" p={2} m={1} rounded="md">
-                {guess}
-              </Text>
-            ))}
-          </Box>
+        {isCorrect && (
+          <VStack>
+            <Text>Congratulations, you finished today's GoTdle!!</Text>
+            <Text>Here are your Scores!</Text>
+            <Text>Classic: {localStorage.getItem('classicModeAttempts')}</Text>
+            <Text>Quote: ...</Text>
+            <Text>Image: {incorrectGuesses.length + 1}</Text>
+            <Text>Actual Streak: ...</Text>
+            <Button mt={4}>Jump to Scoreboard</Button>
+          </VStack>
+        )}
 
-          {isCorrect && (
-            <VStack>
-              <Text>Congratulations, you finished today's GoTdle!!</Text>
-              <Text>Here are your Scores!</Text>
-              <Text>Classic: {localStorage.getItem('classicModeAttempts')}</Text>
-              <Text>Quote: ...</Text>
-              <Text>Image: {incorrectGuesses.length + 1}</Text>
-              <Text>Actual Streak: ...</Text>
-              <Button mt={4}>Jump to Scoreboard</Button>
-            </VStack>
-          )}
-
-        </VStack>
-      </Box>
+      </VStack>
     </BaseLayout>
   );
 };
