@@ -4,6 +4,7 @@ import { StartPage } from './pages/StartPage.tsx';
 import { ClassicPage } from './pages/ClassicPage.tsx';
 import { QuoteModePage } from './pages/QuoteModePage.tsx';
 import { ImageModePage } from './pages/ImageModePage.tsx';
+import { ScoreboardPage } from './pages/ScoreboardPage.tsx';
 
 export type RouteConfig = RouteProps & {
   /**
@@ -38,6 +39,10 @@ export const appRoutes: RouteConfig[] = [
   {
     path: '/classic',
     element: <ClassicPage />
+  },
+  {
+    path: '/scoreboard',
+    element: <ScoreboardPage />
   }
 
 
