@@ -16,6 +16,7 @@ import { object, string } from 'yup';
 import { Form, Formik } from 'formik';
 import { InputControl, SubmitButton } from 'formik-chakra-ui';
 import { useApiClient } from '../hooks/useApiClient.ts';
+import axios from 'axios';
 
 type UpdateFormValues = {
   username?: string;
@@ -40,9 +41,7 @@ const UpdateUserSchema = (editField: string | undefined) => {
   switch (editField) {
     case 'username':
       return object({
-        username: string()
-          .min(3, 'Username must be longer than 3 characters')
-          .required('Username is required')
+        username: string().min(3, 'Username must be at least 3 characters long').required('Username is required')
       });
     case 'email':
       return object({
@@ -50,7 +49,7 @@ const UpdateUserSchema = (editField: string | undefined) => {
       });
     case 'password':
       return object({
-        password: string().min(8, 'Password must be at least 8 characters').required('Password is required')
+        password: string().min(8, 'Password must be at least 8 characters long').required('Password is required')
       });
   }
 };
@@ -67,7 +66,6 @@ export const UpdateUserModal = ({ editField }: { editField?: string }) => {
       <Formik<UpdateFormValues>
         initialValues={InitialValues(editField)}
         validationSchema={UpdateUserSchema(editField)}
-        validateOnChange={false}
         onSubmit={async (values, formikHelpers) => {
           try {
             await client.putUserById(values);
@@ -79,19 +77,25 @@ export const UpdateUserModal = ({ editField }: { editField?: string }) => {
               isClosable: true,
               position: 'top'
             });
-          } catch (_error) {
-            toast({
-              title: 'Update Failed',
-              description: 'An error occurred while updating your profile. Please try again.',
-              status: 'error',
-              duration: 5000,
-              isClosable: true,
-              position: 'top'
-            });
-          } finally {
-            formikHelpers.setSubmitting(false);
             formikHelpers.resetForm();
+            formikHelpers.setSubmitting(false);
             onClose();
+          } catch (error) {
+            if (axios.isAxiosError(error)) {
+              if (error.response?.status === 500) {
+                toast({
+                  title: 'Update failed',
+                  description: error.response?.data.errors[0],
+                  status: 'error',
+                  duration: 5000,
+                  isClosable: true,
+                  position: 'top'
+                });
+              } else {
+                const errorMessage = error.response?.data.errors;
+                formikHelpers.setFieldError(editField || '', errorMessage[0]);
+              }
+            }
           }
         }}>
         {({ resetForm }) => (
