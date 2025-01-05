@@ -45,7 +45,8 @@ const UpdateUserSchema = (editField: string | undefined) => {
       });
     case 'email':
       return object({
-        email: string().email().required('Email is required')
+        email: string().matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Invalid email format')
+          .required('Email is required')
       });
     case 'password':
       return object({
