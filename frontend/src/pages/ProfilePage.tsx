@@ -2,22 +2,9 @@ import { BaseLayout } from '../layout/BaseLayout.tsx';
 import { useApiClient } from '../hooks/useApiClient.ts';
 import { BaseBox } from '../components/BaseBox.tsx';
 import { useCallback, useEffect, useState } from 'react';
-import {
-  Divider,
-  Heading,
-  HStack,
-  IconButton,
-  Stat,
-  StatArrow,
-  StatHelpText,
-  StatLabel,
-  StatNumber,
-  Text
-} from '@chakra-ui/react';
-import { EditIcon } from '@chakra-ui/icons';
+import { Divider, Heading, HStack, Stat, StatArrow, StatHelpText, StatLabel, StatNumber, Text } from '@chakra-ui/react';
 import { formatDate } from '../utils/formatDate.ts';
-import { object, string } from 'yup';
-import { Form, Formik } from 'formik';
+import { UpdateUserModal } from '../components/UpdateUserModal.tsx';
 
 interface User {
   id: string;
@@ -31,16 +18,6 @@ interface User {
     streak: number,
   };
 }
-
-type UpdateFormValues = {
-  username: string;
-  email: string;
-}
-
-const UpdateUserSchema = object({
-  username: string().min(3, 'username has to be longer than 3 characters').required('username is required'),
-  email: string().email().required('email is required')
-});
 
 export const ProfilePage = () => {
   const client = useApiClient();
@@ -65,32 +42,20 @@ export const ProfilePage = () => {
 
         <Divider borderColor={'black'} my={'4'} />
 
-        <Formik<UpdateFormValues>
-          initialValues={{ username: user?.username || '', email: user?.email || '' }}
-          validationSchema={UpdateUserSchema}
-          onSubmit={(values, formikHelpers) => {
-            console.log(values);
-            formikHelpers.setSubmitting(false);
-          }}>
-          <Form>
-            <HStack justifyContent={'space-between'} m={3}>
-              <Text>Username: </Text>
-              <HStack>
-                <Text>username{user?.username}</Text>
-                <IconButton aria-label="Edit" size={'sm'} icon={<EditIcon />} onClick={() => {
-                }} />
-              </HStack>
-            </HStack>
-            <HStack justifyContent={'space-between'} m={3}>
-              <Text>Email: </Text>
-              <HStack>
-                <Text>email{user?.email}</Text>
-                <IconButton aria-label="Edit" size={'sm'} icon={<EditIcon />} onClick={() => {
-                }} />
-              </HStack>
-            </HStack>
-          </Form>
-        </Formik>
+        <HStack justifyContent={'space-between'} m={3}>
+          <Text>Username: </Text>
+          <HStack>
+            <Text>username{user?.username}</Text>
+            <UpdateUserModal editField={'username'} />
+          </HStack>
+        </HStack>
+        <HStack justifyContent={'space-between'} m={3}>
+          <Text>Email: </Text>
+          <HStack>
+            <Text>email{user?.email}</Text>
+            <UpdateUserModal editField={'email'} />
+          </HStack>
+        </HStack>
         <HStack justifyContent={'space-between'} m={3}>
           <Text>Member since: </Text>
           <Text>createdAt{formatDate(user?.createdAt)}</Text>
@@ -102,8 +67,7 @@ export const ProfilePage = () => {
           <Text>Password: </Text>
           <HStack>
             <Text>********</Text>
-            <IconButton aria-label="Edit" size={'sm'} icon={<EditIcon />} onClick={() => {
-            }} />
+            <UpdateUserModal editField={'password'} />
           </HStack>
         </HStack>
 
