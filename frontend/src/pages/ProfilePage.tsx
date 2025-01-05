@@ -38,7 +38,7 @@ export const ProfilePage = () => {
     <BaseLayout>
 
       <BaseBox m={10}>
-        <Heading>My Profile</Heading>
+        <Heading fontFamily="MedievalSharp, serif" mt={'4'}>My Profile</Heading>
 
         <Divider borderColor={'black'} my={'4'} />
 

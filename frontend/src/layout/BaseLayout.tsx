@@ -6,7 +6,7 @@ import ScoreboardButton from '../components/ScoreboardButton.tsx';
 
 export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Box>
+    <Box bg="rgb(245, 221, 181)" minH={'100vh'} display={'flex'} flexDirection={'column'}>
       <HStack p={4} bg={'rgb(43, 45, 48)'} position="relative" justifyContent="space-between" alignItems="center">
         <a href={'/'}>
           <Image src={'/Logo_GoTdle.webp'} alt="Home" boxSize="5em" />
@@ -25,26 +25,18 @@ export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
           <ProfileMenu />
         </Box>
       </HStack>
-      <Box
-        bg="rgb(245, 221, 181)"
-        minH="100vh"
+      <chakra.main
+        flex={1}
         display="flex"
         flexDirection="column"
         alignItems="center"
-        m={0}
-        p={0}
-        border="none"
+        ml="auto"
+        mr="auto"
+        maxWidth="90rem"
+        width="100%"
       >
-        <chakra.main
-          flex={1}
-          display="flex"
-          flexDirection="column"
-          ml="auto"
-          mr="auto"
-        >
-          {children}
-        </chakra.main>
-      </Box>
+        {children}
+      </chakra.main>
     </Box>
   );
 };
