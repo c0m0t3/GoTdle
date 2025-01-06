@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { BaseLayout } from '../layout/BaseLayout';
 import { Box, Flex, Table, Tbody, Td, Text, Th, Thead, Tr, VStack } from '@chakra-ui/react';
 import { useApiClient } from '../hooks/useApiClient';
+import { BaseBox } from '../components/BaseBox.tsx';
 
 interface Score {
   streak: number;
@@ -34,7 +35,7 @@ export const ScoreboardPage = () => {
 
     fetchUsers();
   }, [client]);
-  
+
   const sortedByCurrentStreak = [...users].sort((a, b) => b.score.streak - a.score.streak);
   const sortedByLongestStreak = [...users].sort((a, b) => b.score.longestStreak - a.score.longestStreak);
 
@@ -44,7 +45,7 @@ export const ScoreboardPage = () => {
         <VStack spacing={4} align="stretch">
           <Text textAlign={'center'} fontSize={'2em'}> Leaderboards </Text>
           <Flex justify="space-around">
-            <Box>
+            <BaseBox>
               <Text textAlign={'center'} fontSize={'1.5em'}> Current Streak </Text>
               <Table variant="simple">
                 <Thead>
@@ -62,8 +63,8 @@ export const ScoreboardPage = () => {
                   ))}
                 </Tbody>
               </Table>
-            </Box>
-            <Box>
+            </BaseBox>
+            <BaseBox>
               <Text textAlign={'center'} fontSize={'1.5em'}> Longest Streak </Text>
               <Table variant="simple">
                 <Thead>
@@ -81,7 +82,7 @@ export const ScoreboardPage = () => {
                   ))}
                 </Tbody>
               </Table>
-            </Box>
+            </BaseBox>
           </Flex>
         </VStack>
       </Box>
