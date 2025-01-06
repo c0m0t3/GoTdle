@@ -9,12 +9,12 @@ const Fireworks: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowConfetti(false);
-    }, 5000); // 5 seconds
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, []);
 
-  return showConfetti ? <Confetti width={width} height={height} /> : null;
+  return showConfetti ? <Confetti width={width - 30} height={height - 30} /> : null;
 };
 
 export default Fireworks;
