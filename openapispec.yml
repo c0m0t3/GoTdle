@@ -33,8 +33,21 @@ paths:
                       createdAt:
                         type: string
                         format: date-time
-        '409':
-          description: Username/Email already exists
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    x-stoplight:
+                      id: 5brqvctlx5qyt
+                    items:
+                      x-stoplight:
+                        id: ox454bc2s2d50
+                      type: string
       requestBody:
         content:
           application/json:
@@ -337,6 +350,12 @@ components:
               - 0
               - 0
               - 0
+      required:
+        - id
+        - email
+        - username
+        - createdAt
+        - score
       properties:
         id:
           type: string
@@ -379,6 +398,11 @@ components:
           LongestStreak: 0
           dailyScore:
             - 0
+      required:
+        - streak
+        - lastPlayed
+        - longestStreak
+        - dailyScore
       properties:
         streak:
           type: integer
@@ -411,14 +435,25 @@ components:
         id: uu303wc29c4gp
       type: object
       required:
+        - _id
         - name
         - gender
+        - born
         - origin
+        - death
         - status
+        - culture
         - religion
-        - house
-        - seasons
         - titles
+        - house
+        - father
+        - mother
+        - spouse
+        - children
+        - siblings
+        - lovers
+        - seasons
+        - actor
       properties:
         _id:
           type: integer

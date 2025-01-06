@@ -149,7 +149,7 @@
     "name_quoteApi": "Aerys II Targaryen",
     "problem": "Not in database",
     "approach": "Add Character to database",
-    "status_fixed": false
+    "status_fixed": true
   },
   {
     "name_database": "Brandon Stark",
