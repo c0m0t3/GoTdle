@@ -21,6 +21,7 @@ interface User {
 
 export const ScoreboardPage = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [authError, setAuthError] = useState<boolean>(false);
   const client = useApiClient();
 
   useEffect(() => {
@@ -28,8 +29,11 @@ export const ScoreboardPage = () => {
       try {
         const response = await client.getUsers();
         setUsers(response.data);
+        setAuthError(false);
       } catch (error) {
         console.error('Error fetching users:', error);
+        setAuthError(true);
+
       }
     };
 
@@ -44,46 +48,51 @@ export const ScoreboardPage = () => {
       <Box p={4}>
         <VStack spacing={4} align="stretch">
           <Text textAlign={'center'} fontSize={'2em'}> Leaderboards </Text>
-          <Flex justify="space-around">
-            <BaseBox>
-              <Text textAlign={'center'} fontSize={'1.5em'}> Current Streak </Text>
-              <Table variant="simple">
-                <Thead>
-                  <Tr>
-                    <Th>Name</Th>
-                    <Th>Current Streak</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {sortedByCurrentStreak.map((user, index) => (
-                    <Tr key={index}>
-                      <Td>{user.username}</Td>
-                      <Td>{user.score.streak}</Td>
+          {authError ? (
+            <Text textAlign={'center'} color="red.500">Authentication failed. Please log in to view the
+              leaderboard.</Text>
+          ) : (
+            <Flex justify="space-around">
+              <BaseBox>
+                <Text textAlign={'center'} fontSize={'1.5em'}> Current Streak </Text>
+                <Table variant="simple">
+                  <Thead>
+                    <Tr>
+                      <Th>Name</Th>
+                      <Th>Current Streak</Th>
                     </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </BaseBox>
-            <BaseBox>
-              <Text textAlign={'center'} fontSize={'1.5em'}> Longest Streak </Text>
-              <Table variant="simple">
-                <Thead>
-                  <Tr>
-                    <Th>Name</Th>
-                    <Th>Longest Streak</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {sortedByLongestStreak.map((user, index) => (
-                    <Tr key={index}>
-                      <Td>{user.username}</Td>
-                      <Td>{user.score.longestStreak}</Td>
+                  </Thead>
+                  <Tbody>
+                    {sortedByCurrentStreak.map((user, index) => (
+                      <Tr key={index}>
+                        <Td>{user.username}</Td>
+                        <Td>{user.score.streak}</Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </BaseBox>
+              <BaseBox>
+                <Text textAlign={'center'} fontSize={'1.5em'}> Longest Streak </Text>
+                <Table variant="simple">
+                  <Thead>
+                    <Tr>
+                      <Th>Name</Th>
+                      <Th>Longest Streak</Th>
                     </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </BaseBox>
-          </Flex>
+                  </Thead>
+                  <Tbody>
+                    {sortedByLongestStreak.map((user, index) => (
+                      <Tr key={index}>
+                        <Td>{user.username}</Td>
+                        <Td>{user.score.longestStreak}</Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </BaseBox>
+            </Flex>
+          )}
         </VStack>
       </Box>
     </BaseLayout>
