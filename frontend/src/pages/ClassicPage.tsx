@@ -1,7 +1,7 @@
+import { useEffect, useState } from 'react';
 import { BaseLayout } from '../layout/BaseLayout';
 import { Button, HStack, Text, VStack } from '@chakra-ui/react';
 import { CharacterGrid } from '../layout/CharacterGrid';
-import { useEffect, useState } from 'react';
 import { useApiClient } from '../hooks/useApiClient';
 import { CharacterSelect } from '../components/CharacterSelect';
 import { GroupBase } from 'react-select';
@@ -12,6 +12,7 @@ import { BaseBox } from '../components/BaseBox';
 import { ModeSuccessBox } from '../components/ModeSuccessBox';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions';
 import { gotButtonStyle } from '../styles/buttonStyles.ts';
+import { format, isToday, parseISO } from 'date-fns';
 
 interface Character {
   name: string;
@@ -29,6 +30,19 @@ interface CharacterOption extends OptionBase {
   value: string;
 }
 
+interface User {
+  id: string;
+  email: string;
+  username: string;
+  createdAt: string;
+  score: {
+    streak: number;
+    lastPlayed: string | null;
+    longestStreak: number;
+    dailyScore: number[];
+  };
+}
+
 export const ClassicPage: React.FC = () => {
   const [incorrectGuesses, setIncorrectGuesses] = useState<string[]>([]);
   const [selectedCharacter, setSelectedCharacter] = useState<Character[]>([]);
@@ -36,6 +50,7 @@ export const ClassicPage: React.FC = () => {
   const [solutionCharacter, setSolutionCharacter] = useState<Character | null>(null);
   const [correctGuess, setCorrectGuess] = useState<string>('');
   const [isOpen, setIsOpen] = useState(false);
+  const [isPlayedToday, setIsPlayedToday] = useState(false);
   const client = useApiClient();
 
   const getCharacterOfTheDay = (characters: Character[]) => {
@@ -49,6 +64,22 @@ export const ClassicPage: React.FC = () => {
     const hash = murmurhash.v3(berlinTime);
     const index = hash % characters.length;
     return characters[index];
+  };
+
+  const checkIfPlayedToday = (user: User) => {
+    const lastPlayedDate = user.score.lastPlayed ? parseISO(user.score.lastPlayed) : null;
+    return lastPlayedDate && isToday(lastPlayedDate);
+  };
+
+  const updateDailyScore = (user: User) => {
+    console.log('Updating daily score');
+    const today = new Date();
+    user.score.dailyScore[0] = incorrectGuesses.length + 1;
+    user.score.lastPlayed = format(today, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSxxx');
+    client.putScoreByUserId({
+      streak: user.score.streak.toString(),
+      dailyScore: user.score.dailyScore
+    });
   };
 
   useEffect(() => {
@@ -73,7 +104,25 @@ export const ClassicPage: React.FC = () => {
       }
     };
 
+    const fetchUser = async () => {
+      console.log('Fetching user data');
+      try {
+        const response = await client.getUserById();
+        if (response.status === 200) {
+          const user: User = response.data;
+          const playedToday = checkIfPlayedToday(user);
+          setIsPlayedToday(!!playedToday);
+          if (!playedToday) {
+            updateDailyScore(user);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
     fetchCharacters();
+    fetchUser();
   }, [client]);
 
   const handleCharacterSelect = (selected: CharacterOption | null) => {
@@ -127,7 +176,7 @@ export const ClassicPage: React.FC = () => {
               },
               onChange: handleCharacterSelect,
               value: null,
-              isDisabled: !!correctGuess,
+              isDisabled: !!correctGuess || isPlayedToday,
               components: { DropdownIndicator: () => null }
             }}
           />
