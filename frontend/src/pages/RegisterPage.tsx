@@ -9,14 +9,14 @@ import { RegisterData, useAuth } from '../providers/AuthProvider.tsx';
 import { gotButtonStyle } from '../styles/buttonStyles.ts';
 
 export const RegisterUserSchema = object({
-  email: string().email().required('Email is required'),
+  email: string().matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Invalid email format').required('Email is required'),
   password: string().min(8, 'Password must be at least 8 characters long').required('Password is required'),
   username: string().min(3, 'Username must be at least 3 characters long').required('Username is required')
 });
 
 export const RegisterPage = () => {
   const { actions: { register } } = useAuth();
-  
+
   return (
     <BaseLayout>
       <Box

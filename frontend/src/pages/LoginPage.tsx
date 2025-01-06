@@ -11,8 +11,9 @@ import { gotButtonStyle } from '../styles/buttonStyles.ts';
 export const LoginUserSchema = object({
   type: string().oneOf(['username', 'email']).required(),
   identifier: string().when('type', ([type], schema) =>
-    type === 'email' ? schema.email().required('Email is required') : schema.required('Username is required')
-  ),
+    type === 'email'
+      ? schema.matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Invalid email format').required('Email is required')
+      : schema.required('Username is required')),
   password: string().required('Password is required')
 });
 
