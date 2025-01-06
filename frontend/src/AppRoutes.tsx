@@ -45,11 +45,10 @@ export const appRoutes: RouteConfig[] = [
     path: '/scoreboard',
     element: <ScoreboardPage />
   },
+  {
     path: '/profile',
     element: <ProfilePage />
   }
-
-
 ];
 
 export function renderRouteMap({ element, ...restRoute }: RouteConfig) {
