@@ -349,25 +349,25 @@ export interface Scores {
      * @type {number}
      * @memberof Scores
      */
-    'streak'?: number;
+    'streak': number;
     /**
      * Erstellungsdatum des Accounts
      * @type {string}
      * @memberof Scores
      */
-    'lastPlayed'?: string;
+    'lastPlayed': string;
     /**
      * deafult 0
      * @type {number}
      * @memberof Scores
      */
-    'longestStreak'?: number;
+    'longestStreak': number;
     /**
      * deafult 0
      * @type {Array<number>}
      * @memberof Scores
      */
-    'dailyScore'?: Array<number>;
+    'dailyScore': Array<number>;
 }
 /**
  * 
@@ -380,31 +380,31 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    'id'?: string;
+    'id': string;
     /**
      * 
      * @type {string}
      * @memberof User
      */
-    'email'?: string;
+    'email': string;
     /**
      * 
      * @type {string}
      * @memberof User
      */
-    'username'?: string;
+    'username': string;
     /**
      * The date that the user was created.
      * @type {string}
      * @memberof User
      */
-    'createdAt'?: string;
+    'createdAt': string;
     /**
      * 
      * @type {Scores}
      * @memberof User
      */
-    'score'?: Scores;
+    'score': Scores;
 }
 
 /**

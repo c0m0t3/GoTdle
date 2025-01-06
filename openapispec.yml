@@ -312,6 +312,13 @@ components:
     User:
       title: User
       type: object
+      required:
+        - username
+        - scores
+        - id
+        - email
+        - createdAt
+        - score
       x-stoplight:
         id: qkyoptgslgwt1
       examples:
@@ -361,6 +368,11 @@ components:
       x-stoplight:
         id: pulqoicjwrbyp
       type: object
+      required:
+        - streak
+        - lastPlayed
+        - longestStreak
+        - dailyScore
       examples:
         - lastPlayed: '2019-08-24'
           Streak: 0
