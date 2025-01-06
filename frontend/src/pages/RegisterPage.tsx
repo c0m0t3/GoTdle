@@ -10,8 +10,10 @@ import { gotButtonStyle } from '../styles/buttonStyles.ts';
 
 export const RegisterUserSchema = object({
   email: string().matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Invalid email format').required('Email is required'),
-  password: string().min(8, 'Password must be at least 8 characters long').required('Password is required'),
-  username: string().min(3, 'Username must be at least 3 characters long').required('Username is required')
+  password: string().min(8, 'Password must be at least 8 characters long')
+    .matches(/^[^'";<>&]*$/, 'Password contains forbidden characters').required('Password is required'),
+  username: string().min(3, 'Username must be at least 3 characters long')
+    .matches(/^[^'";<>&]*$/, 'Username contains forbidden characters').required('Username is required')
 });
 
 export const RegisterPage = () => {
@@ -55,12 +57,18 @@ export const RegisterPage = () => {
             <AuthCard>
               <Heading my={4}>Registration</Heading>
               <VStack gap={4}>
-                <InputControl label={'Username'} name="username" />
-                <InputControl label={'E-Mail'} name="email" />
+                <InputControl
+                  label={'Username'}
+                  name="username"
+                  inputProps={{ placeholder: 'min. 3 characters, without \'";<>&' }} />
+                <InputControl
+                  label={'E-Mail'}
+                  name="email"
+                />
                 <InputControl
                   label={'Password'}
                   name="password"
-                  inputProps={{ type: 'password' }}
+                  inputProps={{ type: 'password', placeholder: 'min. 8 characters, without \'";<>&' }}
                 />
                 <SubmitButton sx={gotButtonStyle}>register</SubmitButton>
                 <Box>
