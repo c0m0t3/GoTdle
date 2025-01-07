@@ -83,11 +83,11 @@ const InfoContainer = () => (
             <ChevronDownIcon />
           </AccordionButton>
           <AccordionPanel>
-            <Text>
-              Just click on the "Play Now" button at the top of the page to get
-              started. If you want to track your progress and compete with other
-              players, you can create an account and log in to access additional
-              features.
+            <Text>New here? Then register first to play the game.</Text>
+            <Text mt={2}>
+              Already logged in? Simply choose the mode between Classic, Quote,
+              and Image to start the game. It is recommended to start with
+              Classic and play through the modes in order!
             </Text>
           </AccordionPanel>
         </AccordionItem>
