@@ -23,7 +23,7 @@ interface User {
   username: string;
   createdAt: string;
   score: {
-    dailyScore: number[];
+    dailyScore: number[][];
     lastPlayed: string | null;
     longestStreak: number;
     streak: number;
@@ -96,14 +96,16 @@ export const ProfilePage = () => {
           </Stat>
           <Stat>
             <StatLabel>Last Played</StatLabel>
-            <StatNumber>{formatDate(user?.score?.lastPlayed)}</StatNumber>
+            <StatNumber>
+              {formatDate(user?.score?.lastPlayed).toString().split(',')[0]}
+            </StatNumber>
           </Stat>
         </HStack>
         <Text>Daily Score</Text>
         <HStack my={'4'}>
           <Stat>
             <StatLabel>Classic</StatLabel>
-            <StatNumber>{user?.score?.dailyScore[0]}</StatNumber>
+            <StatNumber>{user?.score?.dailyScore[0][0]}</StatNumber>
             <StatHelpText>
               <StatArrow type="decrease" />
               <StatArrow type="increase" />0
@@ -111,14 +113,14 @@ export const ProfilePage = () => {
           </Stat>
           <Stat>
             <StatLabel>Quote</StatLabel>
-            <StatNumber>{user?.score?.dailyScore[1]}</StatNumber>
+            <StatNumber>{user?.score?.dailyScore[0][1]}</StatNumber>
             <StatHelpText>
               <StatArrow type="decrease" />2
             </StatHelpText>
           </Stat>
           <Stat>
             <StatLabel>Image</StatLabel>
-            <StatNumber>{user?.score?.dailyScore[2]}</StatNumber>
+            <StatNumber>{user?.score?.dailyScore[0][2]}</StatNumber>
             <StatHelpText>
               <StatArrow type="increase" />1
             </StatHelpText>
