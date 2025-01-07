@@ -4,53 +4,40 @@ import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
 import { DI } from '../dependency-injection';
 
-export const excludeInjectionChars = (val: string) => {
-  const forbiddenChars = /['";<>&]/;
-  if (forbiddenChars.test(val)) {
-    throw new Error('Input contains forbidden characters');
-  }
-  return val;
-};
-
 export const loginZodSchema = z
   .object({
     type: z.enum(['email', 'username']),
-    identifier: z.string().refine(excludeInjectionChars),
+    identifier: z.string(),
     password: z
       .string()
-      .min(8, 'Password must be at least 8 characters long')
-      .refine(excludeInjectionChars),
+      .min(8)
+      .regex(/^[^'";<>&]*$/),
   })
-  .superRefine((data, ctx) => {
-    if (data.type === 'email') {
-      if (!z.string().email().safeParse(data.identifier).success) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Invalid email address',
-          path: ['identifier'],
-        });
+  .refine(
+    (data) => {
+      if (data.type === 'email') {
+        return z.string().email().safeParse(data.identifier).success;
+      } else if (data.type === 'username') {
+        return z
+          .string()
+          .min(3)
+          .regex(/^[^'";<>&]*$/)
+          .safeParse(data.identifier).success;
       }
-    } else if (data.type === 'username') {
-      if (data.identifier.length < 3) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Username must be at least 3 characters long',
-          path: ['identifier'],
-        });
-      }
-    }
-  });
+    },
+    { path: ['identifier'] },
+  );
 
 export const createUserZodSchema = createInsertSchema(userSchema, {
   email: z.string().email(),
   password: z
     .string()
-    .min(8, 'Password must be at least 8 characters long')
-    .refine(excludeInjectionChars),
+    .min(8)
+    .regex(/^[^'";<>&]*$/, 'Input contains forbidden characters'),
   username: z
     .string()
-    .min(3, 'Username must be at least 3 characters long')
-    .refine(excludeInjectionChars),
+    .min(3)
+    .regex(/^[^'";<>&]*$/, 'Input contains forbidden characters'),
 }).transform(async (data) => {
   try {
     const hashedPassword = await DI.utils.passwordHasher.hashPassword(
@@ -70,13 +57,13 @@ export const updateUserZodSchema = createInsertSchema(userSchema, {
   email: z.string().email().optional(),
   password: z
     .string()
-    .min(8, 'Password must be at least 8 characters long')
-    .refine(excludeInjectionChars)
+    .min(8)
+    .regex(/^[^'";<>&]*$/, 'Input contains forbidden characters')
     .optional(),
   username: z
     .string()
-    .min(3, 'Username must be at least 3 characters long')
-    .refine(excludeInjectionChars)
+    .min(3)
+    .regex(/^[^'";<>&]*$/, 'Input contains forbidden characters')
     .optional(),
 }).transform(async (data) => {
   if (data.password) {

@@ -2,6 +2,7 @@ import { BaseLayout } from '../layout/BaseLayout.tsx';
 import { Box, Button, Text, VStack } from '@chakra-ui/react';
 import { gotButtonStyle } from '../styles/buttonStyles.ts';
 import { useNavigate } from 'react-router-dom';
+import { BaseBox } from '../components/BaseBox.tsx';
 
 export const StartPage: React.FC = () => {
   const navigate = useNavigate();
@@ -18,20 +19,12 @@ export const StartPage: React.FC = () => {
         p={0}
         border="none"
       >
-        <VStack>
-          <Box
-            bgImage={'url(\'/bg_border.png\')'}
-            bgSize="100% 100%"
-            bgRepeat="no-repeat"
-            bgPosition="top"
-            p={8}
-            borderRadius="md"
-            margin={20}
-          >
-            <VStack minWidth={'30em'}>
-              <Text fontSize={'4em'} px={4}> Guess Game of Thrones characters </Text>
+        <VStack spacing={4} width="100%" maxWidth={'50em'} p={4}>
+          <BaseBox width="100%">
+            <VStack>
+              <Text fontSize="4em" px={4} textAlign="center">Guess Game of Thrones characters</Text>
             </VStack>
-          </Box>
+          </BaseBox>
           <Box
             bgImage={'url(\'/bg_border.png\')'}
             bgSize="100% 100%"
@@ -40,25 +33,25 @@ export const StartPage: React.FC = () => {
             p={4}
             borderRadius="md"
             margin={10}
-            width={'35em'}
+            width="100%"
           >
             <VStack py={6}>
-              <Button sx={gotButtonStyle} width={'20em'} height={'5em'} onClick={() => navigate('/classic')}>
+              <Button sx={gotButtonStyle} width="95%" height="5em" onClick={() => navigate('/classic')}>
                 <VStack>
-                  <Text fontSize={'2em'}> Classic </Text>
-                  <Text> Guess with wordle like infos </Text>
+                  <Text fontSize="2em">Classic</Text>
+                  <Text>Guess with wordle like infos</Text>
                 </VStack>
               </Button>
-              <Button sx={gotButtonStyle} width={'20em'} height={'5em'} onClick={() => navigate('/quote')}>
+              <Button sx={gotButtonStyle} width="95%" height="5em" onClick={() => navigate('/quote')}>
                 <VStack>
-                  <Text fontSize={'2em'}> Quote </Text>
-                  <Text> Guess who said it </Text>
+                  <Text fontSize="2em">Quote</Text>
+                  <Text>Guess who said it</Text>
                 </VStack>
               </Button>
-              <Button sx={gotButtonStyle} width={'20em'} height={'5em'} onClick={() => navigate('/image')}>
+              <Button sx={gotButtonStyle} width="95%" height="5em" onClick={() => navigate('/image')}>
                 <VStack>
-                  <Text fontSize={'2em'}> Image </Text>
-                  <Text> Guess from an blurred image </Text>
+                  <Text fontSize="2em">Image</Text>
+                  <Text>Guess from a blurred image</Text>
                 </VStack>
               </Button>
             </VStack>

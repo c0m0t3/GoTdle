@@ -1,50 +1,40 @@
 import { Box, chakra, HStack, Image } from '@chakra-ui/react';
-import './BaseLayout.css';
-import ProfileMenu from '../components/ProfileMenu';
+import '../styles/BaseLayout.css';
+import { ProfileMenu } from '../components/ProfileMenu';
 import ScoreboardButton from '../components/ScoreboardButton.tsx';
-
 
 export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Box>
-      <HStack p={4} bg={'rgb(43, 45, 48)'} position="relative" justifyContent="space-between" alignItems="center">
+    <Box bg="rgb(245, 221, 181)" minH={'100vh'} display={'flex'} flexDirection={'column'}>
+      <HStack p={4} bg={'rgb(110, 18, 11)'} position="relative" justifyContent="space-between" alignItems="center">
         <a href={'/'}>
-          <Image src={'/Logo_GoTdle.webp'} alt="Home" boxSize="5em" />
+          <Image src={'/Logo_GoTdle.webp'} alt="Home" className={'logo'} />
         </a>
         <Box position="absolute" left="50%" transform="translateX(-50%)" display="flex" justifyContent="center"
              alignItems="center">
           <Image
             src={'/GoTdle_Text.webp'}
             alt="GoTdle"
-            width="25em"
-            height="auto"
+            className={'text-logo'}
           />
         </Box>
         <Box display="flex" gap={4} alignItems="center">
-          <ScoreboardButton />
-          <ProfileMenu />
+          <ScoreboardButton className="scoreboard-button" />
+          <ProfileMenu className="profile-menu" />
         </Box>
       </HStack>
-      <Box
-        bg="rgb(245, 221, 181)"
-        minH="100vh"
+      <chakra.main
+        flex={1}
         display="flex"
         flexDirection="column"
         alignItems="center"
-        m={0}
-        p={0}
-        border="none"
+        ml="auto"
+        mr="auto"
+        maxWidth="90rem"
+        width="100%"
       >
-        <chakra.main
-          flex={1}
-          display="flex"
-          flexDirection="column"
-          ml="auto"
-          mr="auto"
-        >
-          {children}
-        </chakra.main>
-      </Box>
+        {children}
+      </chakra.main>
     </Box>
   );
 };

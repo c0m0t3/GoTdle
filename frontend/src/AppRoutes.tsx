@@ -4,6 +4,8 @@ import { StartPage } from './pages/StartPage.tsx';
 import { ClassicPage } from './pages/ClassicPage.tsx';
 import { QuoteModePage } from './pages/QuoteModePage.tsx';
 import { ImageModePage } from './pages/ImageModePage.tsx';
+import { ScoreboardPage } from './pages/ScoreboardPage.tsx';
+import { ProfilePage } from './pages/ProfilePage.tsx';
 import { LoginPage } from './pages/LoginPage.tsx';
 import { RegisterPage } from './pages/RegisterPage.tsx';
 import { useAuth } from './providers/AuthProvider.tsx';
@@ -24,6 +26,10 @@ export const appRoutes: RouteConfig[] = [
     element: <HomePage />
   },
   {
+    path: '/start',
+    element: <StartPage />
+  },
+  {
     path: '/classic',
     element: <ClassicPage />,
     isPrivate: true
@@ -39,8 +45,12 @@ export const appRoutes: RouteConfig[] = [
     isPrivate: true
   },
   {
-    path: '/start',
-    element: <StartPage />
+    path: '/scoreboard',
+    element: <ScoreboardPage />
+  },
+  {
+    path: '/profile',
+    element: <ProfilePage />
   },
   {
     path: '/auth/login',

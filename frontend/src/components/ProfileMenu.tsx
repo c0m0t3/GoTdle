@@ -1,13 +1,14 @@
-import { Button, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { Button, Image, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
+import profileIcon from '../../public/icons/profileIcon.png';
 
-const ProfileMenu = () => {
+interface ProfileMenuProps {
+  className?: string;
+}
+
+export const ProfileMenu: React.FC<ProfileMenuProps> = ({ className }) => {
   const navigate = useNavigate();
-
-  const handleProfileClick = () => {
-    navigate('/profile');
-  };
 
   const handleLogoutClick = () => {
     //TODO: Implement logout
@@ -16,16 +17,13 @@ const ProfileMenu = () => {
 
   return (
     <Menu>
-      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-        <img src="/icons/profileIcon.png" alt="Person Icon" className="static-icon"
-             style={{ width: '2em', height: '2em' }} />
+      <MenuButton as={Button} rightIcon={<ChevronDownIcon />} className={className}>
+        <Image src={profileIcon} boxSize="2em" />
       </MenuButton>
       <MenuList>
-        <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
+        <MenuItem onClick={() => navigate('/profile')}>Profile</MenuItem>
         <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
       </MenuList>
     </Menu>
   );
 };
-
-export default ProfileMenu;

@@ -193,6 +193,19 @@ paths:
       security:
         - Authorization: [ ]
       description: Delete logged user. UserId in Auth-Token.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - password
+              properties:
+                password:
+                  type: string
+                  x-stoplight:
+                    id: 91ute7mnu2kny
+        description: Confirm Deletion with password
   /users/me:
     get:
       summary: Get User By Id
@@ -343,6 +356,12 @@ components:
               - 0
               - 0
               - 0
+      required:
+        - id
+        - email
+        - username
+        - createdAt
+        - score
       properties:
         id:
           type: string
@@ -380,6 +399,11 @@ components:
           LongestStreak: 0
           dailyScore:
             - 0
+      required:
+        - streak
+        - lastPlayed
+        - longestStreak
+        - dailyScore
       properties:
         streak:
           type: integer
@@ -412,14 +436,25 @@ components:
         id: uu303wc29c4gp
       type: object
       required:
+        - _id
         - name
         - gender
+        - born
         - origin
+        - death
         - status
+        - culture
         - religion
-        - house
-        - seasons
         - titles
+        - house
+        - father
+        - mother
+        - spouse
+        - children
+        - siblings
+        - lovers
+        - seasons
+        - actor
       properties:
         _id:
           type: integer

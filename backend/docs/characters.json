@@ -56,7 +56,7 @@
     "death": "298 AC",
     "status": "deceased",
     "culture": "Valyrian",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Kings of the Andals and the First Men",
       "Lord of the Seven Kingdoms",
@@ -391,7 +391,7 @@
     "death": "300 AC",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Queen Mother"
     ],
@@ -429,7 +429,7 @@
     "death": "",
     "status": "alive",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Ser",
       "Lord of Riverrun",
@@ -463,7 +463,7 @@
     "death": "300 AC",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Lord of Riverrun",
       "Lord Paramount of the Trident"
@@ -497,7 +497,7 @@
     "death": "303 AC",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Ser",
       "Lord of Riverrun"
@@ -526,7 +526,7 @@
     "death": "301 AC",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Lady Regent of the Vale"
     ],
@@ -560,7 +560,7 @@
     "death": "",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Hand of the King",
       "Lord of the Eyrie",
@@ -595,7 +595,7 @@
     "death": "",
     "status": "alive",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Lord of the Eyrie",
       "Defender of the Vale",
@@ -626,7 +626,7 @@
     "death": "",
     "status": "alive",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Lord of Runestone"
     ],
@@ -658,7 +658,7 @@
     "death": "301 AC",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Lord of Casterly Rock",
       "Lord Paramount of the Westerlands",
@@ -701,7 +701,7 @@
     "death": "303 AC",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Ser",
       "Hand of the King",
@@ -737,7 +737,7 @@
     "death": "303 AC",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Ser"
     ],
@@ -770,7 +770,7 @@
     "death": "",
     "status": "alive",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Lord of Casterly Rock",
       "Lord Paramount of the Westerlands",
@@ -814,7 +814,7 @@
     "death": "",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Lord Commander of the Kingsguard",
       "Kingslayer"
@@ -856,7 +856,7 @@
     "death": "",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Queen of the Andals and the First Men",
       "Protector of the Seven Kingdoms",
@@ -907,7 +907,7 @@
     "death": "301 AC",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "King of the Andals and the First Men",
       "Lord of the Seven Kingdoms",
@@ -944,7 +944,7 @@
     "death": "302 AC",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Princess"
     ],
@@ -977,7 +977,7 @@
     "death": "303 AC",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "King of the Andals and the First Men",
       "Lord of the Seven Kingdoms",
@@ -1015,7 +1015,7 @@
     "death": "298 AC",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "King of the Andals and the First Men",
       "Lord of the Seven Kingdoms",
@@ -1051,7 +1051,7 @@
     "death": "299 AC",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "King of the Andals and the First Men",
       "Lord of the Seven Kingdoms",
@@ -1204,7 +1204,7 @@
     "death": "304 AC",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [],
     "house": "Tyrell",
     "father": "",
@@ -1237,7 +1237,7 @@
     "death": "303 AC",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Lord of Highgarden",
       "Lord Paramount of the Reach",
@@ -1274,7 +1274,7 @@
     "death": "303 AC",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Ser",
       "Lord Commander of the Kingsguard"
@@ -1310,7 +1310,7 @@
     "death": "303 AC",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Queen Consort"
     ],
@@ -1492,7 +1492,7 @@
     "death": "303 AC",
     "status": "deceased",
     "culture": "Dornish",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Prince of Dorne",
       "Lord of Sunspear"
@@ -1524,7 +1524,7 @@
     "death": "301 AC",
     "status": "deceased",
     "culture": "Dornish",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Prince"
     ],
@@ -1563,7 +1563,7 @@
     "death": "303 AC",
     "status": "deceased",
     "culture": "Dornish",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Prince"
     ],
@@ -1591,7 +1591,7 @@
     "death": "",
     "status": "unknown",
     "culture": "Dornish",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Prince"
     ],
@@ -1626,7 +1626,7 @@
     "death": "304 AC",
     "status": "deceased",
     "culture": "Dornish",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [],
     "house": "Martell",
     "father": "Oberyn Martell",
@@ -1659,7 +1659,7 @@
     "death": "304 AC",
     "status": "deceased",
     "culture": "Dornish",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [],
     "house": "Martell",
     "father": "Oberyn Martell",
@@ -1692,7 +1692,7 @@
     "death": "304 AC",
     "status": "deceased",
     "culture": "Dornish",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [],
     "house": "Martell",
     "father": "Oberyn Martell",
@@ -1725,7 +1725,7 @@
     "death": "304 AC",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Lord of Horn Hill"
     ],
@@ -1757,7 +1757,7 @@
     "death": "304 AC",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [],
     "house": "Tarly",
     "father": "Randyll Tarly",
@@ -1961,7 +1961,7 @@
     "death": "",
     "status": "alive",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Kingsguard"
     ],
@@ -2459,7 +2459,7 @@
     "death": "",
     "status": "alive",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [],
     "house": "",
     "father": "Robert Baratheon",
@@ -2486,7 +2486,7 @@
     "death": "303 AC",
     "status": "deceased",
     "culture": "Andal",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "High Septon"
     ],
@@ -2512,7 +2512,7 @@
     "death": "300 AC",
     "status": "deceased",
     "culture": "Volantene",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Queen Consort"
     ],
@@ -2567,7 +2567,7 @@
     "death": "281 AC",
     "status": "Deceased",
     "culture": "Valyrian",
-    "religion": "The Sevens",
+    "religion": "Faith of the Seven",
     "titles": [
       "Prince of Dragonstone"
     ],
@@ -3485,5 +3485,39 @@
       8
     ],
     "actor": "CGI"
+  },
+  {
+    "_id": 107,
+    "name": "Aerys II Targaryen",
+    "gender": "male",
+    "born": "",
+    "origin": "King's Landing",
+    "death": "281 AC",
+    "status": "deceased",
+    "culture": "Valyrian",
+    "religion": "Faith of the Seven",
+    "titles": [
+      "Prince of Dragonstone",
+      "King of the Andals and the Rhoynar and the First Men",
+      "Lord of the Seven Kingdoms",
+      "Protector of the Realm"
+    ],
+    "house": "Targaryen",
+    "father": "Aegon V Targaryen",
+    "mother": "",
+    "spouse": [
+      "Rhaella Targaryen"
+    ],
+    "children": [
+      "Rhaegar Targaryen",
+      "Viserys Targaryen",
+      "Daenerys I Targaryen"
+    ],
+    "siblings": [
+      "Duncan Targaryen"
+    ],
+    "lovers": [],
+    "seasons": [],
+    "actor": "David Rintoul"
   }
 ]
