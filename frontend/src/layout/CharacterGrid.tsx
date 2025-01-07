@@ -1,4 +1,5 @@
 import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
+import '../styles/CharacterGrid.css';
 
 interface Character {
   name: string;
@@ -71,12 +72,14 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData, sol
       borderColor="white.600"
       borderRadius="md"
       textColor={'white'}
+      className={'character-grid'}
     >
       <Grid templateColumns={`repeat(${initialColumns.length}, 1fr)`} gap={4}>
         {characters.map((row, rowIndex) =>
           row.map((char: string, colIndex: number) => (
             <GridItem
               key={`${rowIndex}-${colIndex}`}
+              className="character-card"
               p={2}
               borderRadius="md"
               textAlign="center"
