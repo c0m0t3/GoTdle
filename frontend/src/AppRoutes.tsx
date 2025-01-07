@@ -27,7 +27,8 @@ export const appRoutes: RouteConfig[] = [
   },
   {
     path: '/start',
-    element: <StartPage />
+    element: <StartPage />,
+    isPrivate: true
   },
   {
     path: '/classic',
@@ -46,11 +47,13 @@ export const appRoutes: RouteConfig[] = [
   },
   {
     path: '/scoreboard',
-    element: <ScoreboardPage />
+    element: <ScoreboardPage />,
+    isPrivate: true
   },
   {
     path: '/profile',
-    element: <ProfilePage />
+    element: <ProfilePage />,
+    isPrivate: true
   },
   {
     path: '/auth/login',
