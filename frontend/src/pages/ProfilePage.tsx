@@ -23,16 +23,82 @@ interface User {
   username: string;
   createdAt: string;
   score: {
-    dailyScore: number[];
+    dailyScore: number[][];
     lastPlayed: string | null;
     longestStreak: number;
     streak: number;
   };
 }
 
+const compareScores = (currentScore: number[], previousScore: number[]) => {
+  return currentScore.map((score, index) => {
+    const difference = score - previousScore[index];
+    let arrowType = 'increase';
+
+    if (difference < 0) {
+      arrowType = 'decrease';
+    } else if (difference === 0) {
+      arrowType = 'both';
+    }
+
+    return { difference, arrowType };
+  });
+};
+
+const StatRow = ({
+  label,
+  currentScore,
+  previousScore,
+  index,
+}: {
+  label: string;
+  currentScore: number[];
+  previousScore: number[];
+  index: number;
+}) => {
+  const { difference, arrowType } = compareScores(currentScore, previousScore)[
+    index
+  ];
+  const getArrowColor = (arrowType: string) => {
+    switch (arrowType) {
+      case 'increase':
+        return 'red.500';
+      case 'decrease':
+        return 'green.500';
+      case 'both':
+        return 'gray.500';
+    }
+  };
+
+  return (
+    <Stat>
+      <StatLabel>{label}</StatLabel>
+      <StatNumber>{currentScore[index]}</StatNumber>
+      <StatHelpText>
+        {arrowType === 'increase' && (
+          <StatArrow type="increase" color={getArrowColor(arrowType)} />
+        )}
+        {arrowType === 'decrease' && (
+          <StatArrow type="decrease" color={getArrowColor(arrowType)} />
+        )}
+        {arrowType === 'both' && (
+          <>
+            <StatArrow type="increase" color={getArrowColor(arrowType)} />
+            <StatArrow type="decrease" color={getArrowColor(arrowType)} />
+          </>
+        )}
+        {difference}
+      </StatHelpText>
+    </Stat>
+  );
+};
+
 export const ProfilePage = () => {
   const client = useApiClient();
   const [user, setUser] = useState<User | null>(null);
+  const currentScore = user?.score?.dailyScore[0] || [0, 0, 0];
+  const previousScore = user?.score?.dailyScore[1] || [0, 0, 0];
+  const labels = ['Classic', 'Quote', 'Image'];
 
   const getUser = useCallback(async () => {
     const res = await client.getUserById();
@@ -96,33 +162,22 @@ export const ProfilePage = () => {
           </Stat>
           <Stat>
             <StatLabel>Last Played</StatLabel>
-            <StatNumber>{formatDate(user?.score?.lastPlayed)}</StatNumber>
+            <StatNumber>
+              {formatDate(user?.score?.lastPlayed).toString().split(',')[0]}
+            </StatNumber>
           </Stat>
         </HStack>
         <Text>Daily Score</Text>
         <HStack my={'4'}>
-          <Stat>
-            <StatLabel>Classic</StatLabel>
-            <StatNumber>{user?.score?.dailyScore[0]}</StatNumber>
-            <StatHelpText>
-              <StatArrow type="decrease" />
-              <StatArrow type="increase" />0
-            </StatHelpText>
-          </Stat>
-          <Stat>
-            <StatLabel>Quote</StatLabel>
-            <StatNumber>{user?.score?.dailyScore[1]}</StatNumber>
-            <StatHelpText>
-              <StatArrow type="decrease" />2
-            </StatHelpText>
-          </Stat>
-          <Stat>
-            <StatLabel>Image</StatLabel>
-            <StatNumber>{user?.score?.dailyScore[2]}</StatNumber>
-            <StatHelpText>
-              <StatArrow type="increase" />1
-            </StatHelpText>
-          </Stat>
+          {labels.map((label, index) => (
+            <StatRow
+              key={label}
+              label={label}
+              currentScore={currentScore}
+              previousScore={previousScore}
+              index={index}
+            />
+          ))}
         </HStack>
 
         <Divider borderColor={'black'} my={'4'} />

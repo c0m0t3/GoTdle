@@ -15,14 +15,15 @@ export class ScoreRepository {
   }
 
   async getScoreByUserId(userId: string) {
-    return this.database
-      .select()
-      .from(scoreSchema)
-      .where(eq(scoreSchema.userId, userId))
-      .execute();
+    return this.database.query.scoreSchema.findFirst({
+      where: (score, { eq }) => eq(score.userId, userId),
+    });
   }
 
-  async updateScoreByUserId(userId: string, data: UpdateScore) {
+  async updateScoreByUserId(
+    userId: string,
+    data: Omit<UpdateScore, 'dailyScore'> & { dailyScore: number[][] },
+  ) {
     const [updatedScore] = await this.database
       .update(scoreSchema)
       .set({

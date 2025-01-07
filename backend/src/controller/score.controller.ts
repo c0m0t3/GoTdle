@@ -12,7 +12,7 @@ export class ScoreController {
 
     const score = await this.scoreRepository.getScoreByUserId(userId);
 
-    if (score.length === 0) {
+    if (!score) {
       res.status(404).json({ errors: ['Score not found'] });
       return;
     }
@@ -22,11 +22,22 @@ export class ScoreController {
   async updateScoreByUserId(req: Request, res: Response): Promise<void> {
     const validatedData = updateScoreZodSchema.parse(req.body);
 
+    const currentScore = await this.scoreRepository.getScoreByUserId(
+      req.user!.id,
+    );
+    const updatedDailyScore: number[][] = [
+      validatedData.dailyScore,
+      ...(currentScore?.dailyScore?.slice(0, 4) || []),
+    ];
+    const updatingData = {
+      ...validatedData,
+      dailyScore: updatedDailyScore,
+    };
+
     const updatedScore = await this.scoreRepository.updateScoreByUserId(
       req.user!.id,
-      validatedData,
+      updatingData,
     );
-
     res.send(updatedScore);
   }
 }

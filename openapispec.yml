@@ -260,7 +260,11 @@ paths:
                     items:
                       x-stoplight:
                         id: ij6xyakfoyhop
-                      type: integer
+                      type: array
+                      items:
+                        x-stoplight:
+                          id: tvqab8q38x1al
+                        type: integer
       operationId: putScoreByUserId
       x-stoplight:
         id: ocffdx3ewcbtw
@@ -351,11 +355,9 @@ components:
             lastPlayed: '2019-08-24'
             LongestStreak: 0
             dailyScore:
-              - 0
-              - 0
-              - 0
-              - 0
-              - 0
+              - - 0
+                - 0
+                - 0
       required:
         - id
         - email
@@ -398,7 +400,9 @@ components:
           Streak: 0
           LongestStreak: 0
           dailyScore:
-            - 0
+            - - 0
+              - 0
+              - 0
       required:
         - streak
         - lastPlayed
@@ -429,7 +433,11 @@ components:
           items:
             x-stoplight:
               id: gciy0fhxlbsez
-            type: integer
+            type: array
+            items:
+              x-stoplight:
+                id: p1y8ztn3bp803
+              type: integer
     Characters:
       title: Characters
       x-stoplight:
