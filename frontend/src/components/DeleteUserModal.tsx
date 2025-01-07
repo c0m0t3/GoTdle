@@ -8,6 +8,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Text,
   useDisclosure,
   useToast
 } from '@chakra-ui/react';
@@ -17,6 +18,7 @@ import { InputControl, SubmitButton } from 'formik-chakra-ui';
 import { useApiClient } from '../hooks/useApiClient.ts';
 import axios from 'axios';
 import { object, string } from 'yup';
+import { useAuth } from '../providers/AuthProvider.tsx';
 
 type DeleteFormValues = {
   password: string;
@@ -30,6 +32,7 @@ export const DeleteUserModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const client = useApiClient();
   const toast = useToast();
+  const { actions: { logout } } = useAuth();
 
   return (
     <>
@@ -56,6 +59,7 @@ export const DeleteUserModal = () => {
             });
             formikHelpers.resetForm();
             formikHelpers.setSubmitting(false);
+            logout();
             onClose();
           } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -69,8 +73,8 @@ export const DeleteUserModal = () => {
                   position: 'top'
                 });
               } else {
-                const errorMessage = error.response?.data.errors;
-                formikHelpers.setFieldError('password', errorMessage[0]);
+                const errorMessage = 'The provided password is incorrect. Please try again.';
+                formikHelpers.setFieldError('password', errorMessage);
               }
             }
           }
@@ -88,9 +92,10 @@ export const DeleteUserModal = () => {
               <ModalHeader textAlign="center">Delete Account</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
+                <Text textAlign="center">Are you sure?</Text>
+                <Text textAlign="center" mb={4}>All your awesome scores will also be deleted!</Text>
                 <InputControl
                   name="password"
-                  label="Password"
                   inputProps={{ placeholder: 'Enter your password to confirm deletion' }}
                 />
               </ModalBody>
