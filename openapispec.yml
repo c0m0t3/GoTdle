@@ -193,6 +193,19 @@ paths:
       security:
         - Authorization: [ ]
       description: Delete logged user. UserId in Auth-Token.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - password
+              properties:
+                password:
+                  type: string
+                  x-stoplight:
+                    id: 91ute7mnu2kny
+        description: Confirm Deletion with password
   /users/me:
     get:
       summary: Get User By Id

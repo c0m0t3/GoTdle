@@ -1,10 +1,14 @@
 import { Request, Response } from 'express';
 import { UserRepository } from '../database/repository/user.repository';
 import { z } from 'zod';
+import { PasswordHasher } from '../utils/password-hasher';
 import { updateUserZodSchema } from '../validation/validation';
 
 export class UserController {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly passwordHasher: PasswordHasher,
+  ) {}
 
   async getAllUsers(req: Request, res: Response): Promise<void> {
     const withScoreRelation = z
@@ -92,6 +96,23 @@ export class UserController {
   }
 
   async deleteUser(req: Request, res: Response): Promise<void> {
+    const validatedPassword = z
+      .string()
+      .min(8)
+      .regex(/^[^'";<>&]*$/)
+      .parse(req.body.password);
+
+    const matchingPassword = await this.passwordHasher.comparePasswordWithHash(
+      validatedPassword,
+      req.user!.password,
+    );
+    if (!matchingPassword) {
+      res.status(401).send({
+        errors: ['The provided password is incorrect. Please try again.'],
+      });
+      return;
+    }
+
     await this.userRepository.deleteUserById(req.user!.id);
     res.status(204).send({});
   }

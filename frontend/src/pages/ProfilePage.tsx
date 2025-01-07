@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Divider, Heading, HStack, Stat, StatArrow, StatHelpText, StatLabel, StatNumber, Text } from '@chakra-ui/react';
 import { formatDate } from '../utils/formatDate.ts';
 import { UpdateUserModal } from '../components/UpdateUserModal.tsx';
+import { DeleteUserModal } from '../components/DeleteUserModal.tsx';
 
 interface User {
   id: string;
@@ -116,6 +117,9 @@ export const ProfilePage = () => {
           </Stat>
         </HStack>
 
+        <Divider borderColor={'black'} my={'4'} />
+
+        <DeleteUserModal />
 
       </BaseBox>
     </BaseLayout>
