@@ -40,7 +40,7 @@ export const ModeSuccessBox: React.FC<ModeSuccessBoxProps> = ({
       <Text fontWeight={'bold'}>{correctGuess}</Text>
       <Text fontSize={'sm'}>
         Number of tries:
-        <Text display={'inline'} fontWeight={'bold'}>
+        <Text as="span" fontWeight={'bold'}>
           {' '}
           {attempts}
         </Text>
