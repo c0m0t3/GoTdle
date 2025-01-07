@@ -50,7 +50,8 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData, sol
     return 'red.200';
   };
 
-  const getArrow = (value: string, column: string) => {
+  const getArrow = (value: string, column: string, rowIndex: number) => {
+    if (rowIndex === 0) return '';
     if (solutionCharacter) {
       if (column === 'First Appearance') {
         const solutionValue = `S${solutionCharacter.seasons[0]}`;
@@ -86,7 +87,7 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData, sol
               bg={rowIndex === 0 || colIndex === 0 ? 'transparent' : getColor(char, initialColumns[colIndex])}
             >
               <Text fontWeight={rowIndex === 0 ? 'bold' : 'normal'}>
-                {char || '-'} {getArrow(char, initialColumns[colIndex])}
+                {char || '-'} {getArrow(char, initialColumns[colIndex], rowIndex)}
               </Text>
             </GridItem>
           ))
