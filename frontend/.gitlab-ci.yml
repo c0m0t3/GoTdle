@@ -1,9 +1,0 @@
-stages:
-  - build
-  - test
-  - deploy
-
-build-frontend:
-  stage: build
-  script:
-    - docker build -t frontend-image .
