@@ -1,0 +1,9 @@
+stages:
+  - build
+  - test
+  - deploy
+
+build-backend:
+  stage: build
+  script:
+    - docker build -t backend-image .
