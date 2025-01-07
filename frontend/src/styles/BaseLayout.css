@@ -8,12 +8,12 @@
 }
 
 .text-logo {
-    width: 7em;
+    width: 6em;
     height: auto;
 }
 
 .scoreboard-button, .profile-menu {
-    width: 4em;
+    width: 5em;
 }
 
 @media (min-width: 768px) {
@@ -28,6 +28,6 @@
     }
 
     .scoreboard-button, .profile-menu {
-        width: 5em;
+        width: 6em;
     }
 }
