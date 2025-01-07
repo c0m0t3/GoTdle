@@ -3,7 +3,11 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { CgProfile } from 'react-icons/cg';
 
-export const ProfileMenu = () => {
+interface ProfileMenuProps {
+  className?: string;
+}
+
+export const ProfileMenu: React.FC<ProfileMenuProps> = ({ className }) => {
   const navigate = useNavigate();
 
   const handleLogoutClick = () => {
@@ -13,7 +17,7 @@ export const ProfileMenu = () => {
 
   return (
     <Menu>
-      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+      <MenuButton as={Button} rightIcon={<ChevronDownIcon />} className={className}>
         {<CgProfile size={'2em'} />}
       </MenuButton>
       <MenuList>
