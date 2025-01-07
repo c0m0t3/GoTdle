@@ -4,22 +4,14 @@ import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
 import { DI } from '../dependency-injection';
 
-export const excludeInjectionChars = (val: string) => {
-  const forbiddenChars = /['";<>&]/;
-  if (forbiddenChars.test(val)) {
-    throw new Error('Input contains forbidden characters');
-  }
-  return val;
-};
-
 export const loginZodSchema = z
   .object({
     type: z.enum(['email', 'username']),
-    identifier: z.string().refine(excludeInjectionChars),
+    identifier: z.string().regex(/^[^'";<>&]*$/),
     password: z
       .string()
-      .min(8, 'Password must be at least 8 characters long')
-      .refine(excludeInjectionChars),
+      .min(8)
+      .regex(/^[^'";<>&]*$/),
   })
   .superRefine((data, ctx) => {
     if (data.type === 'email') {
@@ -45,12 +37,12 @@ export const createUserZodSchema = createInsertSchema(userSchema, {
   email: z.string().email(),
   password: z
     .string()
-    .min(8, 'Password must be at least 8 characters long')
-    .refine(excludeInjectionChars),
+    .min(8)
+    .regex(/^[^'";<>&]*$/, 'Input contains forbidden characters'),
   username: z
     .string()
-    .min(3, 'Username must be at least 3 characters long')
-    .refine(excludeInjectionChars),
+    .min(3)
+    .regex(/^[^'";<>&]*$/, 'Input contains forbidden characters'),
 }).transform(async (data) => {
   try {
     const hashedPassword = await DI.utils.passwordHasher.hashPassword(
@@ -70,13 +62,13 @@ export const updateUserZodSchema = createInsertSchema(userSchema, {
   email: z.string().email().optional(),
   password: z
     .string()
-    .min(8, 'Password must be at least 8 characters long')
-    .refine(excludeInjectionChars)
+    .min(8)
+    .regex(/^[^'";<>&]*$/, 'Input contains forbidden characters')
     .optional(),
   username: z
     .string()
-    .min(3, 'Username must be at least 3 characters long')
-    .refine(excludeInjectionChars)
+    .min(3)
+    .regex(/^[^'";<>&]*$/, 'Input contains forbidden characters')
     .optional(),
 }).transform(async (data) => {
   if (data.password) {
