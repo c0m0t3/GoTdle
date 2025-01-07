@@ -50,8 +50,8 @@ export const HomePage = () => {
         </Box>
 
         <Button sx={gotButtonStyle} width="100%" onClick={handlePlayNow}>Play Now</Button>
-        <Button sx={gotButtonStyle} width="100%">Login</Button>
-        <Button sx={gotButtonStyle} width="100%">Register</Button>
+        <Button sx={gotButtonStyle} width={'15em'} onClick={() => navigate('/auth/login')}> Login </Button>
+        <Button sx={gotButtonStyle} width={'15em'} onClick={() => navigate('/auth/register')}> Register </Button>
 
         <Container p={0}>
           <BaseBox width={'auto'}>

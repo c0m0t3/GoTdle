@@ -17,18 +17,18 @@ export class AuthController {
   async registerUser(req: Request, res: Response): Promise<void> {
     const validatedData = await createUserZodSchema.parseAsync(req.body);
 
-    const existingEmail = await this.userRepository.getUserByEmail(
-      validatedData.email,
-    );
-    if (existingEmail) {
-      res.status(400).send({ errors: ['Email already in use'] });
-      return;
-    }
-    const existingUsername = await this.userRepository.getUserByUsername(
-      validatedData.username,
-    );
-    if (existingUsername) {
-      res.status(400).send({ errors: ['Username already in use'] });
+    const errors = await Promise.all([
+      this.userRepository
+        .getUserByEmail(validatedData.email)
+        .then((user) => (user ? 'Email already in use' : null)),
+      this.userRepository
+        .getUserByUsername(validatedData.username)
+        .then((user) => (user ? 'Username already in use' : null)),
+    ]);
+
+    const filteredErrors = errors.filter((error) => error !== null);
+    if (filteredErrors.length > 0) {
+      res.status(400).send({ errors: filteredErrors });
       return;
     }
 
