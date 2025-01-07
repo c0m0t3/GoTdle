@@ -58,14 +58,14 @@ export const ProfilePage = () => {
           <Text>Username: </Text>
           <HStack>
             <Text>{user?.username}</Text>
-            <UpdateUserModal editField={'username'} />
+            <UpdateUserModal editField={'username'} onUpdate={getUser} />
           </HStack>
         </HStack>
         <HStack justifyContent={'space-between'} m={3}>
           <Text>Email: </Text>
           <HStack>
             <Text>{user?.email}</Text>
-            <UpdateUserModal editField={'email'} />
+            <UpdateUserModal editField={'email'} onUpdate={getUser} />
           </HStack>
         </HStack>
         <HStack justifyContent={'space-between'} m={3}>

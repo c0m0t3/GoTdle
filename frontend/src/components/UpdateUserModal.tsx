@@ -65,7 +65,13 @@ const UpdateUserSchema = (editField: string | undefined) => {
   }
 };
 
-export const UpdateUserModal = ({ editField }: { editField?: string }) => {
+export const UpdateUserModal = ({
+  editField,
+  onUpdate,
+}: {
+  editField?: string;
+  onUpdate?: () => void;
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const client = useApiClient();
   const toast = useToast();
@@ -93,6 +99,9 @@ export const UpdateUserModal = ({ editField }: { editField?: string }) => {
               isClosable: true,
               position: 'top',
             });
+            if (onUpdate) {
+              onUpdate();
+            }
             formikHelpers.resetForm();
             formikHelpers.setSubmitting(false);
             onClose();
