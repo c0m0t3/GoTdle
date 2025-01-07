@@ -1,3 +1,4 @@
+/* HomePage.css */
 body {
     margin: 0;
     padding: 0;
@@ -6,22 +7,22 @@ body {
 
 .vstack {
     width: 100%;
-    max-width: 600px;
-    padding: 16px;
+    max-width: 37.5rem;
+    padding: 1rem;
 }
 
 button {
     width: 100%;
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
 }
 
 .accordion-item {
     width: 100%;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 48rem) {
     .vstack {
-        max-width: 800px;
+        max-width: 50rem;
     }
 
     button {
