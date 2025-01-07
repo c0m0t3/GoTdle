@@ -1,0 +1,33 @@
+.scoreboard-button:hover .static-icon {
+    content: url('../../public/icons/barChart.gif');
+}
+
+.logo {
+    width: 3em;
+    height: 3em;
+}
+
+.text-logo {
+    width: 6em;
+    height: auto;
+}
+
+.scoreboard-button, .profile-menu {
+    width: 5em;
+}
+
+@media (min-width: 768px) {
+    .logo {
+        width: 5em;
+        height: 5em;
+    }
+
+    .text-logo {
+        width: 25em;
+        height: auto;
+    }
+
+    .scoreboard-button, .profile-menu {
+        width: 6em;
+    }
+}

@@ -1,4 +1,5 @@
 import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
+import '../styles/CharacterGrid.css';
 
 interface Character {
   name: string;
@@ -49,7 +50,8 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData, sol
     return 'red.200';
   };
 
-  const getArrow = (value: string, column: string) => {
+  const getArrow = (value: string, column: string, rowIndex: number) => {
+    if (rowIndex === 0) return '';
     if (solutionCharacter) {
       if (column === 'First Appearance') {
         const solutionValue = `S${solutionCharacter.seasons[0]}`;
@@ -71,19 +73,21 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData, sol
       borderColor="white.600"
       borderRadius="md"
       textColor={'white'}
+      className={'character-grid'}
     >
       <Grid templateColumns={`repeat(${initialColumns.length}, 1fr)`} gap={4}>
         {characters.map((row, rowIndex) =>
           row.map((char: string, colIndex: number) => (
             <GridItem
               key={`${rowIndex}-${colIndex}`}
+              className="character-card"
               p={2}
               borderRadius="md"
               textAlign="center"
               bg={rowIndex === 0 || colIndex === 0 ? 'transparent' : getColor(char, initialColumns[colIndex])}
             >
               <Text fontWeight={rowIndex === 0 ? 'bold' : 'normal'}>
-                {char || '-'} {getArrow(char, initialColumns[colIndex])}
+                {char || '-'} {getArrow(char, initialColumns[colIndex], rowIndex)}
               </Text>
             </GridItem>
           ))
