@@ -41,7 +41,8 @@ const UpdateUserSchema = (editField: string | undefined) => {
   switch (editField) {
     case 'username':
       return object({
-        username: string().min(3, 'Username must be at least 3 characters long').required('Username is required')
+        username: string().min(3, 'Username must be at least 3 characters long')
+          .matches(/^[^'";<>&]*$/, 'Username contains forbidden characters').required('Username is required')
       });
     case 'email':
       return object({
@@ -50,7 +51,8 @@ const UpdateUserSchema = (editField: string | undefined) => {
       });
     case 'password':
       return object({
-        password: string().min(8, 'Password must be at least 8 characters long').required('Password is required')
+        password: string().min(8, 'Password must be at least 8 characters long')
+          .matches(/^[^'";<>&]*$/, 'Password contains forbidden characters').required('Password is required')
       });
   }
 };

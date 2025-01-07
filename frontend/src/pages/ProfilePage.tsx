@@ -46,20 +46,20 @@ export const ProfilePage = () => {
         <HStack justifyContent={'space-between'} m={3}>
           <Text>Username: </Text>
           <HStack>
-            <Text>username{user?.username}</Text>
+            <Text>{user?.username}</Text>
             <UpdateUserModal editField={'username'} />
           </HStack>
         </HStack>
         <HStack justifyContent={'space-between'} m={3}>
           <Text>Email: </Text>
           <HStack>
-            <Text>email{user?.email}</Text>
+            <Text>{user?.email}</Text>
             <UpdateUserModal editField={'email'} />
           </HStack>
         </HStack>
         <HStack justifyContent={'space-between'} m={3}>
           <Text>Member since: </Text>
-          <Text>createdAt{formatDate(user?.createdAt)}</Text>
+          <Text>{formatDate(user?.createdAt)}</Text>
         </HStack>
 
         <Divider borderColor={'black'} my={'4'} />
@@ -77,22 +77,22 @@ export const ProfilePage = () => {
         <HStack my={'4'}>
           <Stat>
             <StatLabel>Streak</StatLabel>
-            <StatNumber>12{user?.score?.streak}</StatNumber>
+            <StatNumber>{user?.score?.streak}</StatNumber>
           </Stat>
           <Stat>
             <StatLabel>Longest Streak</StatLabel>
-            <StatNumber>365{user?.score?.longestStreak}</StatNumber>
+            <StatNumber>{user?.score?.longestStreak}</StatNumber>
           </Stat>
           <Stat>
             <StatLabel>Last Played</StatLabel>
-            <StatNumber>24.12.2024{formatDate(user?.score?.lastPlayed)}</StatNumber>
+            <StatNumber>{formatDate(user?.score?.lastPlayed)}</StatNumber>
           </Stat>
         </HStack>
         <Text>Daily Score</Text>
         <HStack my={'4'}>
           <Stat>
             <StatLabel>Classic</StatLabel>
-            <StatNumber>2{user?.score?.dailyScore[0]}</StatNumber>
+            <StatNumber>{user?.score?.dailyScore[0]}</StatNumber>
             <StatHelpText>
               <StatArrow type="decrease" />
               <StatArrow type="increase" />
@@ -101,7 +101,7 @@ export const ProfilePage = () => {
           </Stat>
           <Stat>
             <StatLabel>Quote</StatLabel>
-            <StatNumber>3{user?.score?.dailyScore[1]}</StatNumber>
+            <StatNumber>{user?.score?.dailyScore[1]}</StatNumber>
             <StatHelpText>
               <StatArrow type="decrease" />
               2
@@ -109,7 +109,7 @@ export const ProfilePage = () => {
           </Stat>
           <Stat>
             <StatLabel>Image</StatLabel>
-            <StatNumber>23{user?.score?.dailyScore[2]}</StatNumber>
+            <StatNumber>{user?.score?.dailyScore[2]}</StatNumber>
             <StatHelpText>
               <StatArrow type="increase" />
               1
