@@ -9,15 +9,26 @@ import { RegisterData, useAuth } from '../providers/AuthProvider.tsx';
 import { gotButtonStyle } from '../styles/buttonStyles.ts';
 
 export const RegisterUserSchema = object({
-  email: string().matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Invalid email format').required('Email is required'),
-  password: string().min(8, 'Password must be at least 8 characters long')
-    .matches(/^[^'";<>&]*$/, 'Password contains forbidden characters').required('Password is required'),
-  username: string().min(3, 'Username must be at least 3 characters long')
-    .matches(/^[^'";<>&]*$/, 'Username contains forbidden characters').required('Username is required')
+  email: string()
+    .matches(
+      /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      'Invalid email format',
+    )
+    .required('Email is required'),
+  password: string()
+    .min(8, 'Password must be at least 8 characters long')
+    .matches(/^[^'";<>&]*$/, 'Password contains forbidden characters')
+    .required('Password is required'),
+  username: string()
+    .min(3, 'Username must be at least 3 characters long')
+    .matches(/^[^'";<>&]*$/, 'Username contains forbidden characters')
+    .required('Username is required'),
 });
 
 export const RegisterPage = () => {
-  const { actions: { register } } = useAuth();
+  const {
+    actions: { register },
+  } = useAuth();
 
   return (
     <BaseLayout>
@@ -35,7 +46,7 @@ export const RegisterPage = () => {
           initialValues={{
             username: '',
             email: '',
-            password: ''
+            password: '',
           }}
           validationSchema={RegisterUserSchema}
           onSubmit={async (values, formikHelpers) => {
@@ -45,8 +56,12 @@ export const RegisterPage = () => {
             } catch (error: unknown) {
               if (error instanceof Error) {
                 formikHelpers.setErrors({
-                  email: error.message.includes('Email') ? 'Email is already in use' : '',
-                  username: error.message.includes('Username') ? 'Username is already in use' : ''
+                  email: error.message.includes('Email')
+                    ? 'Email is already in use'
+                    : '',
+                  username: error.message.includes('Username')
+                    ? 'Username is already in use'
+                    : '',
                 });
               }
               formikHelpers.setSubmitting(false);
@@ -60,15 +75,18 @@ export const RegisterPage = () => {
                 <InputControl
                   label={'Username'}
                   name="username"
-                  inputProps={{ placeholder: 'min. 3 characters, without \'";<>&' }} />
-                <InputControl
-                  label={'E-Mail'}
-                  name="email"
+                  inputProps={{
+                    placeholder: 'min. 3 characters, without \'";<>&',
+                  }}
                 />
+                <InputControl label={'E-Mail'} name="email" />
                 <InputControl
                   label={'Password'}
                   name="password"
-                  inputProps={{ type: 'password', placeholder: 'min. 8 characters, without \'";<>&' }}
+                  inputProps={{
+                    type: 'password',
+                    placeholder: 'min. 8 characters, without \'";<>&',
+                  }}
                 />
                 <SubmitButton sx={gotButtonStyle}>register</SubmitButton>
                 <Box>

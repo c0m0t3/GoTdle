@@ -16,8 +16,20 @@ interface CharacterGridProps {
   solutionCharacter: Character | null;
 }
 
-export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData, solutionCharacter }) => {
-  const initialColumns = ['Character', 'Gender', 'House', 'Origin', 'Status', 'Religion', 'First Appearance', 'Last Appearance'];
+export const CharacterGrid: React.FC<CharacterGridProps> = ({
+  characterData,
+  solutionCharacter,
+}) => {
+  const initialColumns = [
+    'Character',
+    'Gender',
+    'House',
+    'Origin',
+    'Status',
+    'Religion',
+    'First Appearance',
+    'Last Appearance',
+  ];
 
   const transformCharacterData = (data: Character[]): string[][] => {
     return data.map((character: Character) => [
@@ -28,7 +40,9 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData, sol
       character.status,
       character.religion,
       character.seasons[0] ? `S${character.seasons[0]}` : '',
-      character.seasons[character.seasons.length - 1] ? `S${character.seasons[character.seasons.length - 1]}` : ''
+      character.seasons[character.seasons.length - 1]
+        ? `S${character.seasons[character.seasons.length - 1]}`
+        : '',
     ]);
   };
 
@@ -43,7 +57,8 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData, sol
         const solutionValue = `S${solutionCharacter.seasons[solutionCharacter.seasons.length - 1]}`;
         return value === solutionValue ? 'green.500' : 'red.500';
       } else {
-        const solutionValue = solutionCharacter[column.toLowerCase() as keyof Character];
+        const solutionValue =
+          solutionCharacter[column.toLowerCase() as keyof Character];
         return value === solutionValue ? 'green.500' : 'red.500';
       }
     }
@@ -84,13 +99,18 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData, sol
               p={2}
               borderRadius="md"
               textAlign="center"
-              bg={rowIndex === 0 || colIndex === 0 ? 'transparent' : getColor(char, initialColumns[colIndex])}
+              bg={
+                rowIndex === 0 || colIndex === 0
+                  ? 'transparent'
+                  : getColor(char, initialColumns[colIndex])
+              }
             >
               <Text fontWeight={rowIndex === 0 ? 'bold' : 'normal'}>
-                {char || '-'} {getArrow(char, initialColumns[colIndex], rowIndex)}
+                {char || '-'}{' '}
+                {getArrow(char, initialColumns[colIndex], rowIndex)}
               </Text>
             </GridItem>
-          ))
+          )),
         )}
       </Grid>
     </Box>

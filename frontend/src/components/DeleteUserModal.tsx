@@ -8,8 +8,9 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Text,
   useDisclosure,
-  useToast
+  useToast,
 } from '@chakra-ui/react';
 import { AiOutlineUserDelete } from 'react-icons/ai';
 import { Form, Formik } from 'formik';
@@ -17,28 +18,36 @@ import { InputControl, SubmitButton } from 'formik-chakra-ui';
 import { useApiClient } from '../hooks/useApiClient.ts';
 import axios from 'axios';
 import { object, string } from 'yup';
+import { useAuth } from '../providers/AuthProvider.tsx';
 
 type DeleteFormValues = {
   password: string;
-}
+};
 
 const DeleteUserSchema = object({
-  password: string().required('Password is required')
+  password: string().required('Password is required'),
 });
 
 export const DeleteUserModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const client = useApiClient();
   const toast = useToast();
+  const {
+    actions: { logout },
+  } = useAuth();
 
   return (
     <>
       <Flex justifyContent={'flex-end'} mb={4} mr={2}>
-        <Button aria-label="Delete" size={'sm'} rightIcon={<AiOutlineUserDelete />} onClick={onOpen}>
+        <Button
+          aria-label="Delete"
+          size={'sm'}
+          rightIcon={<AiOutlineUserDelete />}
+          onClick={onOpen}
+        >
           Delete Account
         </Button>
       </Flex>
-
 
       <Formik<DeleteFormValues>
         initialValues={{ password: '' }}
@@ -52,10 +61,11 @@ export const DeleteUserModal = () => {
               status: 'success',
               duration: 5000,
               isClosable: true,
-              position: 'top'
+              position: 'top',
             });
             formikHelpers.resetForm();
             formikHelpers.setSubmitting(false);
+            logout();
             onClose();
           } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -66,15 +76,17 @@ export const DeleteUserModal = () => {
                   status: 'error',
                   duration: 5000,
                   isClosable: true,
-                  position: 'top'
+                  position: 'top',
                 });
               } else {
-                const errorMessage = error.response?.data.errors;
-                formikHelpers.setFieldError('password', errorMessage[0]);
+                const errorMessage =
+                  'The provided password is incorrect. Please try again.';
+                formikHelpers.setFieldError('password', errorMessage);
               }
             }
           }
-        }}>
+        }}
+      >
         {({ resetForm }) => (
           <Modal
             isOpen={isOpen}
@@ -82,24 +94,37 @@ export const DeleteUserModal = () => {
               resetForm();
               onClose();
             }}
-            isCentered={true}>
+            isCentered={true}
+          >
             <ModalOverlay />
             <ModalContent as={Form}>
               <ModalHeader textAlign="center">Delete Account</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
+                <Text textAlign="center">Are you sure?</Text>
+                <Text textAlign="center" mb={4}>
+                  All your awesome scores will also be deleted!
+                </Text>
                 <InputControl
                   name="password"
-                  label="Password"
-                  inputProps={{ placeholder: 'Enter your password to confirm deletion' }}
+                  inputProps={{
+                    placeholder: 'Enter your password to confirm deletion',
+                  }}
                 />
               </ModalBody>
               <ModalFooter>
-                <SubmitButton colorScheme="red" mr={3}>Delete</SubmitButton>
-                <Button variant="ghost" onClick={() => {
-                  resetForm();
-                  onClose();
-                }}>Cancel</Button>
+                <SubmitButton colorScheme="red" mr={3}>
+                  Delete
+                </SubmitButton>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    resetForm();
+                    onClose();
+                  }}
+                >
+                  Cancel
+                </Button>
               </ModalFooter>
             </ModalContent>
           </Modal>

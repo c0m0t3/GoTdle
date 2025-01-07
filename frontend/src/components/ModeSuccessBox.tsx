@@ -12,12 +12,12 @@ interface ModeSuccessBoxProps extends BoxProps {
 }
 
 export const ModeSuccessBox: React.FC<ModeSuccessBoxProps> = ({
-                                                                correctGuess,
-                                                                attempts,
-                                                                label,
-                                                                url,
-                                                                ...boxProps
-                                                              }) => {
+  correctGuess,
+  attempts,
+  label,
+  url,
+  ...boxProps
+}) => {
   return (
     <Box
       bg={'rgba(32, 70, 48, 1)'}
@@ -40,7 +40,10 @@ export const ModeSuccessBox: React.FC<ModeSuccessBoxProps> = ({
       <Text fontWeight={'bold'}>{correctGuess}</Text>
       <Text fontSize={'sm'}>
         Number of tries:
-        <Text display={'inline'} fontWeight={'bold'}> {attempts}</Text>
+        <Text as="span" fontWeight={'bold'}>
+          {' '}
+          {attempts}
+        </Text>
       </Text>
       <Text mt={6}>Next mode: </Text>
       <PulsingButton label={label} url={url} mb={6} />

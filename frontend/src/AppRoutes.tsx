@@ -1,4 +1,10 @@
-import { Navigate, Route, RouteProps, Routes, useLocation } from 'react-router-dom';
+import {
+  Navigate,
+  Route,
+  RouteProps,
+  Routes,
+  useLocation,
+} from 'react-router-dom';
 import { HomePage } from './pages/HomePage.tsx';
 import { StartPage } from './pages/StartPage.tsx';
 import { ClassicPage } from './pages/ClassicPage.tsx';
@@ -19,47 +25,50 @@ export const appRoutes: RouteConfig[] = [
   {
     path: '/',
     element: <Navigate to="/home" replace />,
-    index: true
+    index: true,
   },
   {
     path: '/home',
-    element: <HomePage />
+    element: <HomePage />,
   },
   {
     path: '/start',
-    element: <StartPage />
+    element: <StartPage />,
+    isPrivate: true,
   },
   {
     path: '/classic',
     element: <ClassicPage />,
-    isPrivate: true
+    isPrivate: true,
   },
   {
     path: '/quote',
     element: <QuoteModePage />,
-    isPrivate: true
+    isPrivate: true,
   },
   {
     path: '/image',
     element: <ImageModePage />,
-    isPrivate: true
+    isPrivate: true,
   },
   {
     path: '/scoreboard',
-    element: <ScoreboardPage />
+    element: <ScoreboardPage />,
+    isPrivate: true,
   },
   {
     path: '/profile',
-    element: <ProfilePage />
+    element: <ProfilePage />,
+    isPrivate: true,
   },
   {
     path: '/auth/login',
-    element: <LoginPage />
+    element: <LoginPage />,
   },
   {
     path: '/auth/register',
-    element: <RegisterPage />
-  }
+    element: <RegisterPage />,
+  },
 ];
 
 const renderRouteMap = ({ isPrivate, element, ...restRoute }: RouteConfig) => {

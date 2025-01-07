@@ -13,8 +13,12 @@ const ScoreboardButton: React.FC<ScoreboardButtonProps> = ({ className }) => {
 
   return (
     <Button onClick={navigateToScoreboard} className={className}>
-      <img src="/icons/barChart_static.png" alt="Score Icon" className="static-icon"
-           style={{ width: '2em', height: '2em' }} />
+      <img
+        src="/icons/barChart_static.png"
+        alt="Score Icon"
+        className="static-icon"
+        style={{ width: '2em', height: '2em' }}
+      />
     </Button>
   );
 };

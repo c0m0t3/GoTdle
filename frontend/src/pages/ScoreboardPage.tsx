@@ -1,6 +1,17 @@
 import { useEffect, useState } from 'react';
 import { BaseLayout } from '../layout/BaseLayout';
-import { Box, Flex, Table, Tbody, Td, Text, Th, Thead, Tr, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  VStack,
+} from '@chakra-ui/react';
 import { useApiClient } from '../hooks/useApiClient';
 import { BaseBox } from '../components/BaseBox.tsx';
 
@@ -33,28 +44,38 @@ export const ScoreboardPage = () => {
       } catch (error) {
         console.error('Error fetching users:', error);
         setAuthError(true);
-
       }
     };
 
     fetchUsers();
   }, [client]);
 
-  const sortedByCurrentStreak = [...users].sort((a, b) => b.score.streak - a.score.streak);
-  const sortedByLongestStreak = [...users].sort((a, b) => b.score.longestStreak - a.score.longestStreak);
+  const sortedByCurrentStreak = [...users].sort(
+    (a, b) => b.score.streak - a.score.streak,
+  );
+  const sortedByLongestStreak = [...users].sort(
+    (a, b) => b.score.longestStreak - a.score.longestStreak,
+  );
 
   return (
     <BaseLayout>
       <Box p={4}>
         <VStack spacing={4} align="stretch">
-          <Text textAlign={'center'} fontSize={'2em'}> Leaderboards </Text>
+          <Text textAlign={'center'} fontSize={'2em'}>
+            {' '}
+            Leaderboards{' '}
+          </Text>
           {authError ? (
-            <Text textAlign={'center'} color="red.500">Authentication failed. Please log in to view the
-              leaderboard.</Text>
+            <Text textAlign={'center'} color="red.500">
+              Authentication failed. Please log in to view the leaderboard.
+            </Text>
           ) : (
             <Flex justify="space-around">
               <BaseBox>
-                <Text textAlign={'center'} fontSize={'1.5em'}> Current Streak </Text>
+                <Text textAlign={'center'} fontSize={'1.5em'}>
+                  {' '}
+                  Current Streak{' '}
+                </Text>
                 <Table variant="simple">
                   <Thead>
                     <Tr>
@@ -73,7 +94,10 @@ export const ScoreboardPage = () => {
                 </Table>
               </BaseBox>
               <BaseBox>
-                <Text textAlign={'center'} fontSize={'1.5em'}> Longest Streak </Text>
+                <Text textAlign={'center'} fontSize={'1.5em'}>
+                  {' '}
+                  Longest Streak{' '}
+                </Text>
                 <Table variant="simple">
                   <Thead>
                     <Tr>

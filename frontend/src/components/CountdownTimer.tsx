@@ -15,7 +15,7 @@ export const CountdownTimer = () => {
   function calculateTimeLeft() {
     const now = new Date();
     const currentDate = new Intl.DateTimeFormat('en-US', {
-      timeZone: 'Europe/Berlin'
+      timeZone: 'Europe/Berlin',
     }).format(now);
 
     const nextMidnight = new Date(currentDate);
@@ -35,7 +35,9 @@ export const CountdownTimer = () => {
     <Box textAlign="center" fontSize="xl">
       <Text>Next character in</Text>
       <Text fontSize="4xl">
-        {String(timeLeft.hours).padStart(2, '0')} : {String(timeLeft.minutes).padStart(2, '0')} : {String(timeLeft.seconds).padStart(2, '0')}
+        {String(timeLeft.hours).padStart(2, '0')} :{' '}
+        {String(timeLeft.minutes).padStart(2, '0')} :{' '}
+        {String(timeLeft.seconds).padStart(2, '0')}
       </Text>
       <Text fontSize="sm">Time zone: Europe/Berlin (Midnight UTC+1)</Text>
     </Box>

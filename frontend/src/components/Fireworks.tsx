@@ -14,7 +14,9 @@ const Fireworks: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  return showConfetti ? <Confetti width={width - 30} height={height - 30} /> : null;
+  return showConfetti ? (
+    <Confetti width={width - 30} height={height - 30} />
+  ) : null;
 };
 
 export default Fireworks;

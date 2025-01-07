@@ -34,7 +34,9 @@ export const ClassicPage: React.FC = () => {
   const [incorrectGuesses, setIncorrectGuesses] = useState<string[]>([]);
   const [selectedCharacter, setSelectedCharacter] = useState<Character[]>([]);
   const [allCharacters, setAllCharacters] = useState<Character[]>([]);
-  const [solutionCharacter, setSolutionCharacter] = useState<Character | null>(null);
+  const [solutionCharacter, setSolutionCharacter] = useState<Character | null>(
+    null,
+  );
   const [correctGuess, setCorrectGuess] = useState<string>('');
   const [isOpen, setIsOpen] = useState(false);
   const client = useApiClient();
@@ -45,7 +47,7 @@ export const ClassicPage: React.FC = () => {
       timeZone: 'Europe/Berlin',
       year: 'numeric',
       month: '2-digit',
-      day: '2-digit'
+      day: '2-digit',
     });
     const hash = murmurhash.v3(berlinTime);
     const index = hash % characters.length;
@@ -62,7 +64,7 @@ export const ClassicPage: React.FC = () => {
         if (response.status === 200) {
           const characterData = response.data.map((char: Character) => ({
             ...char,
-            name: char.name || 'Unknown'
+            name: char.name || 'Unknown',
           }));
           setAllCharacters(characterData);
 
@@ -79,10 +81,14 @@ export const ClassicPage: React.FC = () => {
 
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
-      const selectedChar = allCharacters.find(char => char.name === selected.value);
+      const selectedChar = allCharacters.find(
+        (char) => char.name === selected.value,
+      );
       if (selectedChar) {
         setSelectedCharacter([selectedChar, ...selectedCharacter]);
-        setAllCharacters(allCharacters.filter(char => char.name !== selected.value));
+        setAllCharacters(
+          allCharacters.filter((char) => char.name !== selected.value),
+        );
       }
       if (solutionCharacter && selected.value === solutionCharacter.name) {
         setCorrectGuess(selected.value);
@@ -101,12 +107,18 @@ export const ClassicPage: React.FC = () => {
       <VStack spacing={4} className="classic-page">
         <ModeNavigationBox />
         <BaseBox className="classic-box">
-          <Text textAlign="center">Guess today's Game of Thrones character!</Text>
+          <Text textAlign="center">
+            Guess today's Game of Thrones character!
+          </Text>
           <Text textAlign="center">Type any character to begin.</Text>
           <Text textAlign="center">DEBUG: The Solution is</Text>
           <Text textAlign="center">{solutionCharacter?.name}</Text>
           <HStack justifyContent="center">
-            <Button onClick={() => setIsOpen(true)} isDisabled={incorrectGuesses.length < 5} sx={gotButtonStyle}>
+            <Button
+              onClick={() => setIsOpen(true)}
+              isDisabled={incorrectGuesses.length < 5}
+              sx={gotButtonStyle}
+            >
               Titles
             </Button>
           </HStack>
@@ -124,13 +136,18 @@ export const ClassicPage: React.FC = () => {
             selectProps={{
               isMulti: false,
               placeholder: 'Type character name...',
-              loadOptions: (inputValue: string, callback: (options: CharacterOption[]) => void) => {
-                loadCharacterOptions(inputValue, incorrectGuesses).then(callback);
+              loadOptions: (
+                inputValue: string,
+                callback: (options: CharacterOption[]) => void,
+              ) => {
+                loadCharacterOptions(inputValue, incorrectGuesses).then(
+                  callback,
+                );
               },
               onChange: handleCharacterSelect,
               value: null,
               isDisabled: !!correctGuess,
-              components: { DropdownIndicator: () => null }
+              components: { DropdownIndicator: () => null },
             }}
           />
         </BaseBox>
@@ -142,7 +159,10 @@ export const ClassicPage: React.FC = () => {
             url="/quote"
           />
         )}
-        <CharacterGrid characterData={selectedCharacter} solutionCharacter={solutionCharacter} />
+        <CharacterGrid
+          characterData={selectedCharacter}
+          solutionCharacter={solutionCharacter}
+        />
       </VStack>
     </BaseLayout>
   );
