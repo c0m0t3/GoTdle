@@ -20,7 +20,8 @@ export const QuoteModePage = () => {
   const [incorrectGuesses, setIncorrectGuesses] = useState<string[]>([]);
   const [correctGuess, setCorrectGuess] = useState<string>('');
   const [isCorrect, setIsCorrect] = useState(false);
-  const [selectedCharacter, setSelectedCharacter] = useState<CharacterOption | null>(null);
+  const [selectedCharacter, setSelectedCharacter] =
+    useState<CharacterOption | null>(null);
 
   useEffect(() => {
     setIsCorrect(false);
@@ -36,7 +37,10 @@ export const QuoteModePage = () => {
     if (selected) {
       setSelectedCharacter(selected);
       const adjustedSelected = nameExceptions(selected);
-      if (adjustedSelected.value.toLowerCase() === apiData?.character.name.toLowerCase()) {
+      if (
+        adjustedSelected.value.toLowerCase() ===
+        apiData?.character.name.toLowerCase()
+      ) {
         setIsCorrect(true);
         setCorrectGuess(selected.value);
       } else {
@@ -58,7 +62,7 @@ export const QuoteModePage = () => {
       'Eddard Stark': 'Eddard "Ned" Stark',
       'Brandon Stark': 'Bran Stark',
       'Jeor Mormont': 'Joer Mormont',
-      'Varys': 'Lord Varys'
+      Varys: 'Lord Varys',
     };
     const newValue = exceptions[selected.value];
     return newValue ? { ...selected, value: newValue } : selected;
@@ -66,17 +70,20 @@ export const QuoteModePage = () => {
 
   const loadCharacterOptions = useLoadCharacterOptions();
 
-
   return (
     <BaseLayout>
       <VStack>
-
         <ModeNavigationBox />
 
         <BaseBox>
           <Text fontSize={'md'}>Which characters says</Text>
-          <Text fontSize={'xl'} py={5}>"{apiData?.sentence}"</Text>
-          <Text fontSize={'sm'}> Pssst...answer is...{apiData?.character.name}</Text>
+          <Text fontSize={'xl'} py={5}>
+            "{apiData?.sentence}"
+          </Text>
+          <Text fontSize={'sm'}>
+            {' '}
+            Pssst...answer is...{apiData?.character.name}
+          </Text>
         </BaseBox>
         <BaseBox textAlign={'left'}>
           <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
@@ -84,13 +91,18 @@ export const QuoteModePage = () => {
             selectProps={{
               isMulti: false,
               placeholder: 'Type character name...',
-              loadOptions: (inputValue: string, callback: (options: CharacterOption[]) => void) => {
-                loadCharacterOptions(inputValue, incorrectGuesses).then(callback);
+              loadOptions: (
+                inputValue: string,
+                callback: (options: CharacterOption[]) => void,
+              ) => {
+                loadCharacterOptions(inputValue, incorrectGuesses).then(
+                  callback,
+                );
               },
               onChange: handleCharacterSelect,
               value: selectedCharacter,
               isDisabled: isCorrect,
-              components: { DropdownIndicator: () => null }
+              components: { DropdownIndicator: () => null },
             }}
           />
         </BaseBox>
@@ -106,19 +118,33 @@ export const QuoteModePage = () => {
 
         <Box width={'30em'}>
           {isCorrect && (
-            <Text textAlign={'center'} bg="green.500" color="white" p={2} m={1} rounded="md">
+            <Text
+              textAlign={'center'}
+              bg="green.500"
+              color="white"
+              p={2}
+              m={1}
+              rounded="md"
+            >
               {correctGuess}
             </Text>
           )}
         </Box>
         <Box width={'30em'}>
           {incorrectGuesses.map((guess, index) => (
-            <Text textAlign={'center'} key={index} bg="red.500" color="white" p={2} m={1} rounded="md">
+            <Text
+              textAlign={'center'}
+              key={index}
+              bg="red.500"
+              color="white"
+              p={2}
+              m={1}
+              rounded="md"
+            >
               {guess}
             </Text>
           ))}
         </Box>
-
       </VStack>
     </BaseLayout>
   );

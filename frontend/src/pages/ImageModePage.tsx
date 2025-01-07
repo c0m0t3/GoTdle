@@ -20,7 +20,8 @@ export const ImageModePage = () => {
   const [incorrectGuesses, setIncorrectGuesses] = useState<string[]>([]);
   const [correctGuess, setCorrectGuess] = useState<string>('');
   const [isCorrect, setIsCorrect] = useState(false);
-  const [selectedCharacter, setSelectedCharacter] = useState<CharacterOption | null>(null);
+  const [selectedCharacter, setSelectedCharacter] =
+    useState<CharacterOption | null>(null);
 
   useEffect(() => {
     setIsCorrect(false);
@@ -36,7 +37,9 @@ export const ImageModePage = () => {
     if (selected) {
       setSelectedCharacter(selected);
       const adjustedSelected = nameExceptions(selected);
-      if (adjustedSelected.value.toLowerCase() === apiData?.fullName.toLowerCase()) {
+      if (
+        adjustedSelected.value.toLowerCase() === apiData?.fullName.toLowerCase()
+      ) {
         setIsCorrect(true);
         setCorrectGuess(selected.value);
       } else {
@@ -51,15 +54,15 @@ export const ImageModePage = () => {
       'Eddard Stark': 'Ned Stark',
       'Jaime Lannister': 'Jamie Lannister',
       'Robb Stark': 'Rob Stark',
-      'Drogo': 'Khal Drogo',
+      Drogo: 'Khal Drogo',
       'Viserys Targaryen': 'Viserys Targaryn',
       'Daario Naharis': 'Daario',
-      'Gendry': 'Gendry Baratheon',
+      Gendry: 'Gendry Baratheon',
       'Ramsay Bolton': 'Ramsey Bolton',
       'High Sparrow': 'The High Sparrow',
-      'Tormund': 'Tormund Giantsbane',
-      'Bronn': 'Lord Bronn',
-      'Sandor Clegane': 'The Hound'
+      Tormund: 'Tormund Giantsbane',
+      Bronn: 'Lord Bronn',
+      'Sandor Clegane': 'The Hound',
     };
     const newValue = exceptions[selected.value];
     return newValue ? { ...selected, value: newValue } : selected;
@@ -76,11 +79,9 @@ export const ImageModePage = () => {
     return Math.max(maxBlur - attempts * blurStep, 0);
   };
 
-
   return (
     <BaseLayout>
       <VStack>
-
         <ModeNavigationBox />
         <BaseBox>
           <Text fontSize={'md'}>Which character is shown in this image?</Text>
@@ -90,7 +91,9 @@ export const ImageModePage = () => {
             objectFit="contain"
             maxW="100%"
             maxH="100%"
-            style={{ filter: `blur(${calculateBlur(incorrectGuesses.length, isCorrect)}px)` }}
+            style={{
+              filter: `blur(${calculateBlur(incorrectGuesses.length, isCorrect)}px)`,
+            }}
             mx={'auto'}
             py={5}
           />
@@ -102,13 +105,18 @@ export const ImageModePage = () => {
             selectProps={{
               isMulti: false,
               placeholder: 'Type character name...',
-              loadOptions: (inputValue: string, callback: (options: CharacterOption[]) => void) => {
-                loadCharacterOptions(inputValue, incorrectGuesses).then(callback);
+              loadOptions: (
+                inputValue: string,
+                callback: (options: CharacterOption[]) => void,
+              ) => {
+                loadCharacterOptions(inputValue, incorrectGuesses).then(
+                  callback,
+                );
               },
               onChange: handleCharacterSelect,
               value: selectedCharacter,
               isDisabled: isCorrect,
-              components: { DropdownIndicator: () => null }
+              components: { DropdownIndicator: () => null },
             }}
           />
         </BaseBox>
@@ -124,14 +132,29 @@ export const ImageModePage = () => {
 
         <Box width={'30em'}>
           {isCorrect && (
-            <Text textAlign={'center'} bg="green.500" color="white" p={2} m={1} rounded="md">
+            <Text
+              textAlign={'center'}
+              bg="green.500"
+              color="white"
+              p={2}
+              m={1}
+              rounded="md"
+            >
               {correctGuess}
             </Text>
           )}
         </Box>
         <Box width={'30em'}>
           {incorrectGuesses.map((guess) => (
-            <Text textAlign={'center'} key={guess} bg="red.500" color="white" p={2} m={1} rounded="md">
+            <Text
+              textAlign={'center'}
+              key={guess}
+              bg="red.500"
+              color="white"
+              p={2}
+              m={1}
+              rounded="md"
+            >
               {guess}
             </Text>
           ))}
@@ -148,7 +171,6 @@ export const ImageModePage = () => {
             <Button mt={4}>Jump to Scoreboard</Button>
           </VStack>
         )}
-
       </VStack>
     </BaseLayout>
   );

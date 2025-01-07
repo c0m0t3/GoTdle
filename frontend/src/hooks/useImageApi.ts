@@ -18,7 +18,7 @@ const getCharacterOfTheDay = (characters: CharacterData[]) => {
     timeZone: 'Europe/Berlin',
     year: 'numeric',
     month: '2-digit',
-    day: '2-digit'
+    day: '2-digit',
   });
   const hash = murmurhash.v3(berlinTime);
   const index = hash % characters.length;

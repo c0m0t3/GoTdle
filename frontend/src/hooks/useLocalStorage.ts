@@ -2,7 +2,7 @@ import React from 'react';
 
 export function useLocalStorage<Type extends any>(
   keyName: string,
-  defaultValue: Type
+  defaultValue: Type,
 ) {
   const [storedValue, setStoredValue] = React.useState(() => {
     try {

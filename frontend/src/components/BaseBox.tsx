@@ -4,7 +4,7 @@ import React from 'react';
 export const BaseBox: React.FC<BoxProps> = (props) => {
   return (
     <Box
-      bgImage={'url(\'/bg_border.png\')'}
+      bgImage={"url('/bg_border.png')"}
       bgSize="100% 100%"
       bgRepeat="no-repeat"
       bgPosition="top"

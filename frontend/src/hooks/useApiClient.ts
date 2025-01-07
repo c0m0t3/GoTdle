@@ -12,10 +12,9 @@ export function useApiClient() {
       ? { Authorization: `${accessToken}` }
       : {};
     const axiosInstance = axios.create({
-      headers: authHeaders
+      headers: authHeaders,
     });
     const config = new Configuration({ basePath });
     return new DefaultApi(config, basePath, axiosInstance);
   }, [accessToken]);
 }
-

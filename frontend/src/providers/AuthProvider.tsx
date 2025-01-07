@@ -14,12 +14,12 @@ export type RegisterData = {
   password: string;
 };
 export type User = {
-  id: string,
-  email: string,
-  username: string,
-  iat: number,
-  exp: number,
-  iss: string
+  id: string;
+  email: string;
+  username: string;
+  iat: number;
+  exp: number;
+  iss: string;
 };
 
 type AuthContext = {
@@ -40,20 +40,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const toast = useToast();
   const [accessToken, setAccessToken] = useLocalStorage<string | null>(
     'accessToken',
-    null
+    null,
   );
   const user = useMemo(
     () =>
       accessToken
         ? (JSON.parse(atob(accessToken.split('.')[1])) as User)
         : null,
-    [accessToken]
+    [accessToken],
   );
   if (user && user.iss !== 'http://fwe.auth') {
     setAccessToken(null);
   }
 
-  const accessTokenIsExpired = (user?.exp && user.exp < Date.now() / 1000) ?? false;
+  const accessTokenIsExpired =
+    (user?.exp && user.exp < Date.now() / 1000) ?? false;
   useEffect(() => {
     if (accessTokenIsExpired) {
       setAccessToken(null);
@@ -64,21 +65,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         isClosable: true,
         position: 'top',
         containerStyle: {
-          fontSize: '3xl'
-        }
+          fontSize: '3xl',
+        },
       });
       navigate('/auth/login', { replace: true });
     }
   }, [accessTokenIsExpired, setAccessToken, toast, navigate]);
 
-
   const onLogin = async (loginData: LoginData) => {
     const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(loginData)
+      body: JSON.stringify(loginData),
     });
     const data = await res.json();
 
@@ -89,7 +89,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         status: 'error',
         duration: 4000,
         isClosable: true,
-        position: 'top'
+        position: 'top',
       });
       throw new Error(data.errors.join(', '));
     }
@@ -108,9 +108,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const res = await fetch('/api/auth/register', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(registerData)
+      body: JSON.stringify(registerData),
     });
     const data = await res.json();
 
@@ -121,7 +121,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const loginData: LoginData = {
         identifier: registerData.email,
         password: registerData.password,
-        type: 'email'
+        type: 'email',
       };
       await onLogin(loginData);
       return;
@@ -138,8 +138,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         actions: {
           logout: onLogout,
           login: onLogin,
-          register: onRegister
-        }
+          register: onRegister,
+        },
       }}
     >
       {children}

@@ -24,7 +24,7 @@ const getCharacterOfTheDay = (characters: CharacterData[]) => {
     timeZone: 'Europe/Berlin',
     year: 'numeric',
     month: '2-digit',
-    day: '2-digit'
+    day: '2-digit',
   });
   const hash = murmurhash.v3(berlinTime);
   const characterIndex = hash % characters.length;
@@ -32,7 +32,7 @@ const getCharacterOfTheDay = (characters: CharacterData[]) => {
   const quoteIndex = hash % character.quotes.length;
   return {
     character,
-    quote: character.quotes[quoteIndex]
+    quote: character.quotes[quoteIndex],
   };
 };
 
@@ -40,7 +40,9 @@ export const useQuoteApi = () => {
   const [apiData, setApiData] = useState<QuoteData | null>(null);
 
   const fetchApi = useCallback(async () => {
-    const response = await fetch('https://api.gameofthronesquotes.xyz/v1/characters');
+    const response = await fetch(
+      'https://api.gameofthronesquotes.xyz/v1/characters',
+    );
     const characters: CharacterData[] = await response.json();
 
     const { character, quote } = getCharacterOfTheDay(characters);
@@ -48,8 +50,8 @@ export const useQuoteApi = () => {
     const quoteData: QuoteData = {
       sentence: quote,
       character: {
-        name: character.name
-      }
+        name: character.name,
+      },
     };
 
     setApiData(quoteData);

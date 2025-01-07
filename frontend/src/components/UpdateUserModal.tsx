@@ -9,7 +9,7 @@ import {
   ModalHeader,
   ModalOverlay,
   useDisclosure,
-  useToast
+  useToast,
 } from '@chakra-ui/react';
 import { EditIcon } from '@chakra-ui/icons';
 import { object, string } from 'yup';
@@ -22,7 +22,7 @@ type UpdateFormValues = {
   username?: string;
   email?: string;
   password?: string;
-}
+};
 
 const InitialValues = (editField: string | undefined) => {
   switch (editField) {
@@ -41,18 +41,26 @@ const UpdateUserSchema = (editField: string | undefined) => {
   switch (editField) {
     case 'username':
       return object({
-        username: string().min(3, 'Username must be at least 3 characters long')
-          .matches(/^[^'";<>&]*$/, 'Username contains forbidden characters').required('Username is required')
+        username: string()
+          .min(3, 'Username must be at least 3 characters long')
+          .matches(/^[^'";<>&]*$/, 'Username contains forbidden characters')
+          .required('Username is required'),
       });
     case 'email':
       return object({
-        email: string().matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Invalid email format')
-          .required('Email is required')
+        email: string()
+          .matches(
+            /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+            'Invalid email format',
+          )
+          .required('Email is required'),
       });
     case 'password':
       return object({
-        password: string().min(8, 'Password must be at least 8 characters long')
-          .matches(/^[^'";<>&]*$/, 'Password contains forbidden characters').required('Password is required')
+        password: string()
+          .min(8, 'Password must be at least 8 characters long')
+          .matches(/^[^'";<>&]*$/, 'Password contains forbidden characters')
+          .required('Password is required'),
       });
   }
 };
@@ -64,7 +72,12 @@ export const UpdateUserModal = ({ editField }: { editField?: string }) => {
 
   return (
     <>
-      <IconButton aria-label="Edit" size={'sm'} icon={<EditIcon />} onClick={onOpen} />
+      <IconButton
+        aria-label="Edit"
+        size={'sm'}
+        icon={<EditIcon />}
+        onClick={onOpen}
+      />
 
       <Formik<UpdateFormValues>
         initialValues={InitialValues(editField)}
@@ -78,7 +91,7 @@ export const UpdateUserModal = ({ editField }: { editField?: string }) => {
               status: 'success',
               duration: 5000,
               isClosable: true,
-              position: 'top'
+              position: 'top',
             });
             formikHelpers.resetForm();
             formikHelpers.setSubmitting(false);
@@ -92,7 +105,7 @@ export const UpdateUserModal = ({ editField }: { editField?: string }) => {
                   status: 'error',
                   duration: 5000,
                   isClosable: true,
-                  position: 'top'
+                  position: 'top',
                 });
               } else {
                 const errorMessage = error.response?.data.errors;
@@ -100,7 +113,8 @@ export const UpdateUserModal = ({ editField }: { editField?: string }) => {
               }
             }
           }
-        }}>
+        }}
+      >
         {({ resetForm }) => (
           <Modal
             isOpen={isOpen}
@@ -108,7 +122,8 @@ export const UpdateUserModal = ({ editField }: { editField?: string }) => {
               resetForm();
               onClose();
             }}
-            isCentered={true}>
+            isCentered={true}
+          >
             <ModalOverlay />
             <ModalContent as={Form}>
               <ModalHeader textAlign="center">Update {editField}</ModalHeader>
@@ -132,16 +147,26 @@ export const UpdateUserModal = ({ editField }: { editField?: string }) => {
                   <InputControl
                     name="password"
                     label="Password"
-                    inputProps={{ placeholder: 'Enter new password', type: 'password' }}
+                    inputProps={{
+                      placeholder: 'Enter new password',
+                      type: 'password',
+                    }}
                   />
                 )}
               </ModalBody>
               <ModalFooter>
-                <SubmitButton colorScheme="blue" mr={3}>Submit</SubmitButton>
-                <Button variant="ghost" onClick={() => {
-                  resetForm();
-                  onClose();
-                }}>Cancel</Button>
+                <SubmitButton colorScheme="blue" mr={3}>
+                  Submit
+                </SubmitButton>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    resetForm();
+                    onClose();
+                  }}
+                >
+                  Cancel
+                </Button>
               </ModalFooter>
             </ModalContent>
           </Modal>

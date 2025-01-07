@@ -2,7 +2,17 @@ import { BaseLayout } from '../layout/BaseLayout.tsx';
 import { useApiClient } from '../hooks/useApiClient.ts';
 import { BaseBox } from '../components/BaseBox.tsx';
 import { useCallback, useEffect, useState } from 'react';
-import { Divider, Heading, HStack, Stat, StatArrow, StatHelpText, StatLabel, StatNumber, Text } from '@chakra-ui/react';
+import {
+  Divider,
+  Heading,
+  HStack,
+  Stat,
+  StatArrow,
+  StatHelpText,
+  StatLabel,
+  StatNumber,
+  Text,
+} from '@chakra-ui/react';
 import { formatDate } from '../utils/formatDate.ts';
 import { UpdateUserModal } from '../components/UpdateUserModal.tsx';
 import { DeleteUserModal } from '../components/DeleteUserModal.tsx';
@@ -13,10 +23,10 @@ interface User {
   username: string;
   createdAt: string;
   score: {
-    dailyScore: number[],
-    lastPlayed: string | null,
-    longestStreak: number,
-    streak: number,
+    dailyScore: number[];
+    lastPlayed: string | null;
+    longestStreak: number;
+    streak: number;
   };
 }
 
@@ -37,9 +47,10 @@ export const ProfilePage = () => {
 
   return (
     <BaseLayout>
-
       <BaseBox m={10}>
-        <Heading fontFamily="MedievalSharp, serif" mt={'4'}>My Profile</Heading>
+        <Heading fontFamily="MedievalSharp, serif" mt={'4'}>
+          My Profile
+        </Heading>
 
         <Divider borderColor={'black'} my={'4'} />
 
@@ -95,24 +106,21 @@ export const ProfilePage = () => {
             <StatNumber>{user?.score?.dailyScore[0]}</StatNumber>
             <StatHelpText>
               <StatArrow type="decrease" />
-              <StatArrow type="increase" />
-              0
+              <StatArrow type="increase" />0
             </StatHelpText>
           </Stat>
           <Stat>
             <StatLabel>Quote</StatLabel>
             <StatNumber>{user?.score?.dailyScore[1]}</StatNumber>
             <StatHelpText>
-              <StatArrow type="decrease" />
-              2
+              <StatArrow type="decrease" />2
             </StatHelpText>
           </Stat>
           <Stat>
             <StatLabel>Image</StatLabel>
             <StatNumber>{user?.score?.dailyScore[2]}</StatNumber>
             <StatHelpText>
-              <StatArrow type="increase" />
-              1
+              <StatArrow type="increase" />1
             </StatHelpText>
           </Stat>
         </HStack>
@@ -120,7 +128,6 @@ export const ProfilePage = () => {
         <Divider borderColor={'black'} my={'4'} />
 
         <DeleteUserModal />
-
       </BaseBox>
     </BaseLayout>
   );

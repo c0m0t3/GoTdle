@@ -1,6 +1,13 @@
 import { BaseLayout } from '../layout/BaseLayout.tsx';
 import { AuthCard } from '../components/AuthCard.tsx';
-import { Box, Heading, Link, Radio, RadioGroup, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Heading,
+  Link,
+  Radio,
+  RadioGroup,
+  VStack,
+} from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Form, Formik } from 'formik';
 import { InputControl, SubmitButton } from 'formik-chakra-ui';
@@ -12,13 +19,21 @@ export const LoginUserSchema = object({
   type: string().oneOf(['username', 'email']).required(),
   identifier: string().when('type', ([type], schema) =>
     type === 'email'
-      ? schema.matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Invalid email format').required('Email is required')
-      : schema.required('Username is required')),
-  password: string().required('Password is required')
+      ? schema
+          .matches(
+            /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+            'Invalid email format',
+          )
+          .required('Email is required')
+      : schema.required('Username is required'),
+  ),
+  password: string().required('Password is required'),
 });
 
 export const LoginPage = () => {
-  const { actions: { login } } = useAuth();
+  const {
+    actions: { login },
+  } = useAuth();
 
   return (
     <BaseLayout>
@@ -36,7 +51,7 @@ export const LoginPage = () => {
           initialValues={{
             identifier: '',
             password: '',
-            type: 'username'
+            type: 'username',
           }}
           validationSchema={LoginUserSchema}
           onSubmit={async (values) => {
@@ -64,20 +79,24 @@ export const LoginPage = () => {
                         _focus: {
                           borderColor: 'rgb(180, 90, 70)',
                           boxShadow: 'none',
-                          bg: 'rgb(250, 240, 220)'
+                          bg: 'rgb(250, 240, 220)',
                         },
                         _hover: {
                           bg: 'rgb(250, 240, 220)',
-                          borderColor: 'rgb(200, 160, 120)'
-                        }
+                          borderColor: 'rgb(200, 160, 120)',
+                        },
                       }}
                     />
                     <RadioGroup
                       onChange={(value) => setFieldValue('type', value)}
                       value={values.type}
                     >
-                      <Radio value="username" mx={1}>Username</Radio>
-                      <Radio value="email" mx={1}>Email</Radio>
+                      <Radio value="username" mx={1}>
+                        Username
+                      </Radio>
+                      <Radio value="email" mx={1}>
+                        Email
+                      </Radio>
                     </RadioGroup>
                   </Box>
                   <InputControl
@@ -92,12 +111,12 @@ export const LoginPage = () => {
                       _focus: {
                         borderColor: 'rgb(180, 90, 70)',
                         boxShadow: 'none',
-                        bg: 'rgb(250, 240, 220)'
+                        bg: 'rgb(250, 240, 220)',
                       },
                       _hover: {
                         bg: 'rgb(250, 240, 220)',
-                        borderColor: 'rgb(200, 160, 120)'
-                      }
+                        borderColor: 'rgb(200, 160, 120)',
+                      },
                     }}
                   />
 
