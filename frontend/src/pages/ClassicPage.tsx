@@ -12,6 +12,7 @@ import { BaseBox } from '../components/BaseBox';
 import { ModeSuccessBox } from '../components/ModeSuccessBox';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions';
 import { gotButtonStyle } from '../styles/buttonStyles.ts';
+import '../styles/ClassicPage.css';
 
 interface Character {
   name: string;
@@ -97,16 +98,17 @@ export const ClassicPage: React.FC = () => {
 
   return (
     <BaseLayout>
-      <VStack>
+      <VStack spacing={4} className="classic-page">
         <ModeNavigationBox />
-        <BaseBox>
-          <Text textAlign={'center'}> Guess today's Game of Thrones character! </Text>
-          <Text textAlign={'center'}> Type any character to begin. </Text>
-          <Text textAlign={'center'}> DEBUG: The Solution is </Text>
-          <Text textAlign={'center'}> {solutionCharacter?.name} </Text>
-          <HStack justifyContent={'center'}>
-            <Button onClick={() => setIsOpen(true)} isDisabled={incorrectGuesses.length < 5}
-                    sx={gotButtonStyle}> Titles </Button>
+        <BaseBox className="classic-box">
+          <Text textAlign="center">Guess today's Game of Thrones character!</Text>
+          <Text textAlign="center">Type any character to begin.</Text>
+          <Text textAlign="center">DEBUG: The Solution is</Text>
+          <Text textAlign="center">{solutionCharacter?.name}</Text>
+          <HStack justifyContent="center">
+            <Button onClick={() => setIsOpen(true)} isDisabled={incorrectGuesses.length < 5} sx={gotButtonStyle}>
+              Titles
+            </Button>
           </HStack>
           {isOpen && (
             <VStack mt={4} alignItems="center">
@@ -116,7 +118,7 @@ export const ClassicPage: React.FC = () => {
             </VStack>
           )}
         </BaseBox>
-        <BaseBox textAlign={'left'}>
+        <BaseBox textAlign="left" className="character-select-box">
           <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
             name="character"
             selectProps={{
