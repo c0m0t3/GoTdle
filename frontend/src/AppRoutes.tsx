@@ -6,7 +6,6 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { HomePage } from './pages/HomePage.tsx';
-import { StartPage } from './pages/StartPage.tsx';
 import { ClassicPage } from './pages/ClassicPage.tsx';
 import { QuoteModePage } from './pages/QuoteModePage.tsx';
 import { ImageModePage } from './pages/ImageModePage.tsx';
@@ -30,11 +29,6 @@ export const appRoutes: RouteConfig[] = [
   {
     path: '/home',
     element: <HomePage />,
-  },
-  {
-    path: '/start',
-    element: <StartPage />,
-    isPrivate: true,
   },
   {
     path: '/classic',
