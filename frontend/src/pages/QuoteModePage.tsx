@@ -10,6 +10,7 @@ import { ModeNavigationBox } from '../components/ModeNavigationBox.tsx';
 import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
 import { useAuth } from '../providers/AuthProvider.tsx';
+import { UserGuessesText } from '../components/UserGuessesText.tsx';
 
 interface QuoteModeState {
   quoteAttempts?: number;
@@ -181,31 +182,14 @@ export const QuoteModePage = () => {
 
         <Box width={'30em'}>
           {!!correctGuess && (
-            <Text
-              textAlign={'center'}
-              bg="green.500"
-              color="white"
-              p={2}
-              m={1}
-              rounded="md"
-            >
-              {correctGuess}
-            </Text>
+            <UserGuessesText bg="green.500">{correctGuess}</UserGuessesText>
           )}
         </Box>
         <Box width={'30em'}>
-          {incorrectGuesses.map((guess, index) => (
-            <Text
-              textAlign={'center'}
-              key={index}
-              bg="red.500"
-              color="white"
-              p={2}
-              m={1}
-              rounded="md"
-            >
+          {incorrectGuesses.map((guess) => (
+            <UserGuessesText key={guess} bg="red.500">
               {guess}
-            </Text>
+            </UserGuessesText>
           ))}
         </Box>
       </VStack>
