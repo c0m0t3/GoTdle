@@ -12,6 +12,8 @@ interface CharacterData {
   imageUrl: string;
 }
 
+export type ImageData = CharacterData;
+
 const getCharacterOfTheDay = (characters: CharacterData[]) => {
   const date = new Date();
   const berlinTime = date.toLocaleString('en-US', {

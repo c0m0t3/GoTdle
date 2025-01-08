@@ -11,6 +11,12 @@ import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
 import { useAuth } from '../providers/AuthProvider.tsx';
 
+interface QuoteModeState {
+  quoteAttempts?: number;
+  quoteAnswers: string[];
+  quoteFinished?: boolean;
+}
+
 interface CharacterOption extends OptionBase {
   label: string;
   value: string;
@@ -42,14 +48,20 @@ export const QuoteModePage = () => {
         setCorrectGuess('');
         setSelectedCharacter(null);
 
-        localStorage.setItem(
-          userId || '',
-          JSON.stringify({
-            quoteAttempts: 0,
-            quoteAnswers: [],
-            quoteFinished: false,
-          }),
-        );
+        const storedPageStates = localStorage.getItem(userId || '');
+        let currentPageStates = storedPageStates
+          ? JSON.parse(storedPageStates)
+          : {};
+        const resetQuoteState: QuoteModeState = {
+          quoteAttempts: 0,
+          quoteAnswers: [],
+          quoteFinished: false,
+        };
+        currentPageStates = {
+          ...currentPageStates,
+          ...resetQuoteState,
+        };
+        localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
       }
       prevApiDataRef.current = apiData;
     }
@@ -72,28 +84,31 @@ export const QuoteModePage = () => {
     if (selected) {
       setSelectedCharacter(selected);
       const adjustedSelected = nameExceptions(selected);
+      let quoteModeState: QuoteModeState = {
+        quoteAnswers: [selected.value, ...incorrectGuesses],
+      };
       if (
         adjustedSelected.value.toLowerCase() ===
         apiData?.character.name.toLowerCase()
       ) {
         setCorrectGuess(selected.value);
-        localStorage.setItem(
-          userId || '',
-          JSON.stringify({
-            quoteAttempts: incorrectGuesses.length + 1,
-            quoteAnswers: [selected.value, ...incorrectGuesses],
-            quoteFinished: true,
-          }),
-        );
+        quoteModeState = {
+          ...quoteModeState,
+          quoteAttempts: incorrectGuesses.length + 1,
+          quoteFinished: true,
+        };
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
-        localStorage.setItem(
-          userId || '',
-          JSON.stringify({
-            quoteAnswers: [selected.value, ...incorrectGuesses],
-          }),
-        );
       }
+      const storedPageStates = localStorage.getItem(userId || '');
+      let currentPageStates = storedPageStates
+        ? JSON.parse(storedPageStates)
+        : {};
+      currentPageStates = {
+        ...currentPageStates,
+        ...quoteModeState,
+      };
+      localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
       setSelectedCharacter(null);
     }
   };
