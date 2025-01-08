@@ -1,4 +1,3 @@
-import { BaseLayout } from '../layout/BaseLayout.tsx';
 import { AuthCard } from '../components/AuthCard.tsx';
 import { Box, Heading, Link, VStack } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
@@ -7,6 +6,7 @@ import { object, string } from 'yup';
 import { InputControl, SubmitButton } from 'formik-chakra-ui';
 import { RegisterData, useAuth } from '../providers/AuthProvider.tsx';
 import { gotButtonStyle } from '../styles/buttonStyles.ts';
+import { BaseLayoutPublic } from '../layout/BaseLayoutPublic.tsx';
 
 export const RegisterUserSchema = object({
   email: string()
@@ -31,75 +31,66 @@ export const RegisterPage = () => {
   } = useAuth();
 
   return (
-    <BaseLayout>
-      <Box
-        bg="rgb(245, 221, 181)"
-        minH="100vh"
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        m={0}
-        p={0}
-        border="none"
-      >
-        <Formik<RegisterData>
-          initialValues={{
-            username: '',
-            email: '',
-            password: '',
-          }}
-          validationSchema={RegisterUserSchema}
-          onSubmit={async (values, formikHelpers) => {
-            try {
-              await register(values);
-              formikHelpers.setSubmitting(false);
-            } catch (error: unknown) {
-              if (error instanceof Error) {
-                formikHelpers.setErrors({
-                  email: error.message.includes('Email')
-                    ? 'Email is already in use'
-                    : '',
-                  username: error.message.includes('Username')
-                    ? 'Username is already in use'
-                    : '',
-                });
-              }
-              formikHelpers.setSubmitting(false);
+    <BaseLayoutPublic>
+      <Formik<RegisterData>
+        initialValues={{
+          username: '',
+          email: '',
+          password: '',
+        }}
+        validationSchema={RegisterUserSchema}
+        onSubmit={async (values, formikHelpers) => {
+          try {
+            await register(values);
+            formikHelpers.setSubmitting(false);
+          } catch (error: unknown) {
+            if (error instanceof Error) {
+              formikHelpers.setErrors({
+                email: error.message.includes('Email')
+                  ? 'Email is already in use'
+                  : '',
+                username: error.message.includes('Username')
+                  ? 'Username is already in use'
+                  : '',
+              });
             }
-          }}
-        >
-          <Form>
-            <AuthCard>
-              <Heading my={4}>Registration</Heading>
-              <VStack gap={4}>
-                <InputControl
-                  label={'Username'}
-                  name="username"
-                  inputProps={{
-                    placeholder: 'min. 3 characters, without \'";<>&',
-                  }}
-                />
-                <InputControl label={'E-Mail'} name="email" />
-                <InputControl
-                  label={'Password'}
-                  name="password"
-                  inputProps={{
-                    type: 'password',
-                    placeholder: 'min. 8 characters, without \'";<>&',
-                  }}
-                />
-                <SubmitButton sx={gotButtonStyle}>register</SubmitButton>
-                <Box>
-                  Already a user?{' '}
-                  <Link as={RouterLink} to={'/auth/login'}>
-                    Log in here!
-                  </Link>
-                </Box>
-              </VStack>
-            </AuthCard>
-          </Form>
-        </Formik>
-      </Box>
-    </BaseLayout>
+            formikHelpers.setSubmitting(false);
+          }
+        }}
+      >
+        <Form>
+          <AuthCard>
+            <Heading fontFamily="MedievalSharp, serif" my={4}>
+              Registration
+            </Heading>
+            <VStack gap={4}>
+              <InputControl
+                label={'Username'}
+                name="username"
+                inputProps={{
+                  placeholder: 'min. 3 characters, without \'";<>&',
+                }}
+              />
+              <InputControl label={'E-Mail'} name="email" />
+              <InputControl
+                label={'Password'}
+                name="password"
+                inputProps={{
+                  type: 'password',
+                  placeholder: 'min. 8 characters, without \'";<>&',
+                }}
+              />
+              <SubmitButton sx={gotButtonStyle}>register</SubmitButton>
+              <Box>
+                Already a user?{' '}
+                <Link as={RouterLink} to={'/auth/login'}>
+                  Log in here!
+                </Link>
+              </Box>
+            </VStack>
+          </AuthCard>
+        </Form>
+      </Formik>
+    </BaseLayoutPublic>
   );
 };
