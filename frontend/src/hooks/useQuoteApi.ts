@@ -11,7 +11,7 @@ interface CharacterData {
   quotes: string[];
 }
 
-interface QuoteData {
+export interface QuoteData {
   sentence: string;
   character: {
     name: string;
