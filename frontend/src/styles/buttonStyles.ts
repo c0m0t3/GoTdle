@@ -9,10 +9,10 @@ export const gotButtonStyle = {
   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
   _hover: {
     background: 'rgb(100, 0, 0)',
-    borderColor: '#DEB887'
+    borderColor: '#DEB887',
   },
   _active: {
     background: 'rgb(80, 0, 0)',
-    borderColor: '#8B4513'
-  }
+    borderColor: '#8B4513',
+  },
 };

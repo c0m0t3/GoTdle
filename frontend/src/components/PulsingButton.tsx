@@ -9,30 +9,29 @@ interface PulsingButtonProps extends ButtonProps {
   url: string;
 }
 
-export const PulsingButton: React.FC<PulsingButtonProps> =
-  ({
-     label,
-     url,
-     ...buttonProps
-   }) => {
-    const navigate = useNavigate();
-    const handleClick = () => {
-      navigate(url);
-    };
-
-    return (
-      <motion.div
-        animate={{ scale: [1, 1.1, 1] }}
-        transition={{
-          duration: 1,
-          repeat: Infinity,
-          repeatType: 'loop',
-          ease: 'easeInOut'
-        }}
-      >
-        <Button onClick={handleClick} sx={gotButtonStyle} {...buttonProps} >
-          {label}
-        </Button>
-      </motion.div>
-    );
+export const PulsingButton: React.FC<PulsingButtonProps> = ({
+  label,
+  url,
+  ...buttonProps
+}) => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(url);
   };
+
+  return (
+    <motion.div
+      animate={{ scale: [1, 1.1, 1] }}
+      transition={{
+        duration: 1,
+        repeat: Infinity,
+        repeatType: 'loop',
+        ease: 'easeInOut',
+      }}
+    >
+      <Button onClick={handleClick} sx={gotButtonStyle} {...buttonProps}>
+        {label}
+      </Button>
+    </motion.div>
+  );
+};

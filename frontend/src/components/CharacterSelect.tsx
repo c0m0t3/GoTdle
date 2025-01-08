@@ -10,11 +10,12 @@ export type CharacterSelectProps<
   selectProps?: AsyncProps<Option, IsMulti, Group>;
 };
 
-export const CharacterSelect = <Option,
+export const CharacterSelect = <
+  Option,
   IsMulti extends boolean,
   Group extends GroupBase<Option>,
 >(
-  props: CharacterSelectProps<Option, IsMulti, Group>
+  props: CharacterSelectProps<Option, IsMulti, Group>,
 ) => {
   const { name, selectProps } = props;
 
@@ -23,9 +24,7 @@ export const CharacterSelect = <Option,
       id={name}
       {...selectProps}
       noOptionsMessage={({ inputValue }) =>
-        inputValue && inputValue.trim() !== ''
-          ? 'Character not found'
-          : null
+        inputValue && inputValue.trim() !== '' ? 'Character not found' : null
       }
     />
   );

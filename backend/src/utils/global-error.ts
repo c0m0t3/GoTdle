@@ -36,14 +36,6 @@ export function globalErrorHandler(
     return;
   }
 
-  // Handle custom errors thrown by excludeInjectionChars
-  if (err.message === 'Input contains forbidden characters') {
-    res.status(400).json({
-      errors: [err.message],
-    });
-    return;
-  }
-
   // Handle custom errors with statusCode
   if (err.statusCode) {
     res.status(err.statusCode).json({

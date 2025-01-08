@@ -10,8 +10,8 @@ export const scoreSchema = pgTable('score', {
   streak: integer('streak').notNull().default(0),
   lastPlayed: timestamp('lastPlayed'),
   longestStreak: integer('longestStreak').notNull().default(0),
-  dailyScore: integer('dailyScore').notNull().array().default(sql`ARRAY
-  [0]::INTEGER[]`),
+  dailyScore: integer('dailyScore').notNull().array().array().default(sql`ARRAY
+  [[0, 0, 0]]::INTEGER[][]`),
 });
 
 export const scoreRelations = relations(scoreSchema, ({ one }) => ({
@@ -20,11 +20,3 @@ export const scoreRelations = relations(scoreSchema, ({ one }) => ({
     references: [userSchema.id],
   }),
 }));
-
-export type Score = {
-  userId: string;
-  streak: number;
-  lastPlayed: Date | null;
-  longestStreak: number;
-  dailyScore: number[];
-};

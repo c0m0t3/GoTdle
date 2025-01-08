@@ -147,6 +147,19 @@ export interface Characters {
 /**
  * 
  * @export
+ * @interface DeleteUserByIdRequest
+ */
+export interface DeleteUserByIdRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof DeleteUserByIdRequest
+     */
+    'password': string;
+}
+/**
+ * 
+ * @export
  * @interface PostUserLogin200Response
  */
 export interface PostUserLogin200Response {
@@ -296,10 +309,10 @@ export interface PutScoreByUserId200Response {
     'longestStreak'?: number;
     /**
      * 
-     * @type {Array<number>}
+     * @type {Array<Array<number>>}
      * @memberof PutScoreByUserId200Response
      */
-    'dailyScore'?: Array<number>;
+    'dailyScore'?: Array<Array<number>>;
 }
 /**
  * 
@@ -377,10 +390,10 @@ export interface Scores {
     'longestStreak': number;
     /**
      * deafult 0
-     * @type {Array<number>}
+     * @type {Array<Array<number>>}
      * @memberof Scores
      */
-    'dailyScore': Array<number>;
+    'dailyScore': Array<Array<number>>;
 }
 /**
  * 
@@ -429,10 +442,11 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * Delete logged user. UserId in Auth-Token.
          * @summary Delete User by User ID
+         * @param {DeleteUserByIdRequest} [deleteUserByIdRequest] Confirm Deletion with password
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteUserById: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        deleteUserById: async (deleteUserByIdRequest?: DeleteUserByIdRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/users`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -451,9 +465,12 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(deleteUserByIdRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -749,11 +766,12 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         /**
          * Delete logged user. UserId in Auth-Token.
          * @summary Delete User by User ID
+         * @param {DeleteUserByIdRequest} [deleteUserByIdRequest] Confirm Deletion with password
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteUserById(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserById(options);
+        async deleteUserById(deleteUserByIdRequest?: DeleteUserByIdRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserById(deleteUserByIdRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.deleteUserById']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -872,11 +890,12 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         /**
          * Delete logged user. UserId in Auth-Token.
          * @summary Delete User by User ID
+         * @param {DeleteUserByIdRequest} [deleteUserByIdRequest] Confirm Deletion with password
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteUserById(options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.deleteUserById(options).then((request) => request(axios, basePath));
+        deleteUserById(deleteUserByIdRequest?: DeleteUserByIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteUserById(deleteUserByIdRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Get character for classic mode
@@ -968,12 +987,13 @@ export class DefaultApi extends BaseAPI {
     /**
      * Delete logged user. UserId in Auth-Token.
      * @summary Delete User by User ID
+     * @param {DeleteUserByIdRequest} [deleteUserByIdRequest] Confirm Deletion with password
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public deleteUserById(options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).deleteUserById(options).then((request) => request(this.axios, this.basePath));
+    public deleteUserById(deleteUserByIdRequest?: DeleteUserByIdRequest, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).deleteUserById(deleteUserByIdRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

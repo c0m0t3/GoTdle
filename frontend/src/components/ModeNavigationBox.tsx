@@ -8,14 +8,41 @@ export const ModeNavigationBox = () => {
   const navigate = useNavigate();
 
   return (
-    <BaseBox width={'35em'} display="flex" flexDirection="column" alignItems="center" m={4}>
+    <BaseBox
+      width={'35em'}
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      m={4}
+    >
       <HStack>
-        <Button sx={gotButtonStyle} width={'8em'} leftIcon={<FaQuestionCircle />}
-                onClick={() => navigate('/classic')}> Classic </Button>
-        <Button sx={gotButtonStyle} width={'8em'} leftIcon={<FaQuoteRight />}
-                onClick={() => navigate('/quote')}> Quote </Button>
-        <Button sx={gotButtonStyle} width={'8em'} leftIcon={<FaImage />}
-                onClick={() => navigate('/image')}> Image </Button>
+        <Button
+          sx={gotButtonStyle}
+          width={'8em'}
+          leftIcon={<FaQuestionCircle />}
+          onClick={() => navigate('/classic')}
+        >
+          {' '}
+          Classic{' '}
+        </Button>
+        <Button
+          sx={gotButtonStyle}
+          width={'8em'}
+          leftIcon={<FaQuoteRight />}
+          onClick={() => navigate('/quote')}
+        >
+          {' '}
+          Quote{' '}
+        </Button>
+        <Button
+          sx={gotButtonStyle}
+          width={'8em'}
+          leftIcon={<FaImage />}
+          onClick={() => navigate('/image')}
+        >
+          {' '}
+          Image{' '}
+        </Button>
       </HStack>
     </BaseBox>
   );

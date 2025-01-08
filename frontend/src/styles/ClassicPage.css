@@ -1,0 +1,25 @@
+
+.classic-box {
+    width: 80%;
+}
+
+
+@media (min-width: 48rem) {
+
+    .character-select-box {
+        width: 100%;
+    }
+
+    .classic-box {
+        width: 100%;
+    }
+
+    .classic-page {
+        width: 40%;
+    }
+
+    button {
+        width: auto;
+        margin-bottom: 0;
+    }
+}

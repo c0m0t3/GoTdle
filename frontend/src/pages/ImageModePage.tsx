@@ -1,7 +1,7 @@
 import { BaseLayout } from '../layout/BaseLayout.tsx';
 import { Box, Button, Image, Text, VStack } from '@chakra-ui/react';
-import { useImageApi } from '../hooks/useImageApi.ts';
-import { useEffect, useState } from 'react';
+import { ImageData, useImageApi } from '../hooks/useImageApi.ts';
+import { useEffect, useRef, useState } from 'react';
 import { CharacterSelect } from '../components/CharacterSelect.tsx';
 import { GroupBase } from 'react-select';
 import { OptionBase } from 'chakra-react-select';
@@ -9,6 +9,20 @@ import { BaseBox } from '../components/BaseBox.tsx';
 import { ModeNavigationBox } from '../components/ModeNavigationBox.tsx';
 import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
+import { useAuth } from '../providers/AuthProvider.tsx';
+
+interface ImageModeState {
+  imageAttempts?: number;
+  imageAnswers: string[];
+  imageFinished?: boolean;
+}
+
+interface FinalStates {
+  quoteAttempts: number;
+  imageAttempts: number;
+  quoteFinished: boolean;
+  imageFinished: boolean;
+}
 
 interface CharacterOption extends OptionBase {
   label: string;
@@ -19,29 +33,98 @@ export const ImageModePage = () => {
   const { fetchApi, apiData } = useImageApi();
   const [incorrectGuesses, setIncorrectGuesses] = useState<string[]>([]);
   const [correctGuess, setCorrectGuess] = useState<string>('');
-  const [isCorrect, setIsCorrect] = useState(false);
-  const [selectedCharacter, setSelectedCharacter] = useState<CharacterOption | null>(null);
+  const [selectedCharacter, setSelectedCharacter] =
+    useState<CharacterOption | null>(null);
+  const { user } = useAuth();
+  const userId = user?.id;
+  const prevApiDataRef = useRef<ImageData | null>(null);
+  const [finalStates, setFinalStates] = useState<FinalStates | null>(null);
 
   useEffect(() => {
-    setIsCorrect(false);
-    setCorrectGuess('');
-    setSelectedCharacter(null);
-    setIncorrectGuesses([]);
     fetchApi().catch((error) => {
       console.error('Failed to fetch image:', error);
     });
   }, [fetchApi]);
 
+  useEffect(() => {
+    if (apiData) {
+      if (
+        prevApiDataRef.current &&
+        JSON.stringify(prevApiDataRef.current) !== JSON.stringify(apiData)
+      ) {
+        setIncorrectGuesses([]);
+        setCorrectGuess('');
+        setSelectedCharacter(null);
+
+        const storedPageStates = localStorage.getItem(userId || '');
+        let currentPageStates = storedPageStates
+          ? JSON.parse(storedPageStates)
+          : {};
+        const resetImageState: ImageModeState = {
+          imageAttempts: 0,
+          imageAnswers: [],
+          imageFinished: false,
+        };
+        currentPageStates = {
+          ...currentPageStates,
+          ...resetImageState,
+        };
+        localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
+      }
+      prevApiDataRef.current = apiData;
+    }
+  }, [userId, apiData]);
+
+  useEffect(() => {
+    const pageState = localStorage.getItem(userId || '');
+    if (pageState) {
+      const { imageAnswers, imageFinished } = JSON.parse(pageState);
+      if (imageFinished) {
+        setCorrectGuess(imageAnswers[0]);
+        setIncorrectGuesses(imageAnswers.slice(1));
+      } else {
+        setIncorrectGuesses(imageAnswers || []);
+      }
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (correctGuess) {
+      const storedPageStates = localStorage.getItem(userId || '');
+      if (storedPageStates) {
+        setFinalStates(JSON.parse(storedPageStates));
+      }
+    }
+  }, [correctGuess, userId]);
+
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
       setSelectedCharacter(selected);
       const adjustedSelected = nameExceptions(selected);
-      if (adjustedSelected.value.toLowerCase() === apiData?.fullName.toLowerCase()) {
-        setIsCorrect(true);
+      let imageModeState: ImageModeState = {
+        imageAnswers: [selected.value, ...incorrectGuesses],
+      };
+      if (
+        adjustedSelected.value.toLowerCase() === apiData?.fullName.toLowerCase()
+      ) {
         setCorrectGuess(selected.value);
+        imageModeState = {
+          ...imageModeState,
+          imageAttempts: incorrectGuesses.length + 1,
+          imageFinished: true,
+        };
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
+      const storedPageStates = localStorage.getItem(userId || '');
+      let currentPageStates = storedPageStates
+        ? JSON.parse(storedPageStates)
+        : {};
+      currentPageStates = {
+        ...currentPageStates,
+        ...imageModeState,
+      };
+      localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
       setSelectedCharacter(null);
     }
   };
@@ -59,7 +142,7 @@ export const ImageModePage = () => {
       'High Sparrow': 'The High Sparrow',
       'Tormund': 'Tormund Giantsbane',
       'Bronn': 'Lord Bronn',
-      'Sandor Clegane': 'The Hound'
+      'Sandor Clegane': 'The Hound',
     };
     const newValue = exceptions[selected.value];
     return newValue ? { ...selected, value: newValue } : selected;
@@ -67,8 +150,8 @@ export const ImageModePage = () => {
 
   const loadCharacterOptions = useLoadCharacterOptions();
 
-  const calculateBlur = (attempts: number, isCorrect: boolean) => {
-    if (isCorrect) {
+  const calculateBlur = (attempts: number, correctGuess: string) => {
+    if (correctGuess) {
       return 0;
     }
     const maxBlur = 20;
@@ -76,11 +159,9 @@ export const ImageModePage = () => {
     return Math.max(maxBlur - attempts * blurStep, 0);
   };
 
-
   return (
     <BaseLayout>
       <VStack>
-
         <ModeNavigationBox />
         <BaseBox>
           <Text fontSize={'md'}>Which character is shown in this image?</Text>
@@ -90,7 +171,9 @@ export const ImageModePage = () => {
             objectFit="contain"
             maxW="100%"
             maxH="100%"
-            style={{ filter: `blur(${calculateBlur(incorrectGuesses.length, isCorrect)}px)` }}
+            style={{
+              filter: `blur(${calculateBlur(incorrectGuesses.length, correctGuess)}px)`,
+            }}
             mx={'auto'}
             py={5}
           />
@@ -102,18 +185,23 @@ export const ImageModePage = () => {
             selectProps={{
               isMulti: false,
               placeholder: 'Type character name...',
-              loadOptions: (inputValue: string, callback: (options: CharacterOption[]) => void) => {
-                loadCharacterOptions(inputValue, incorrectGuesses).then(callback);
+              loadOptions: (
+                inputValue: string,
+                callback: (options: CharacterOption[]) => void,
+              ) => {
+                loadCharacterOptions(inputValue, incorrectGuesses).then(
+                  callback,
+                );
               },
               onChange: handleCharacterSelect,
               value: selectedCharacter,
-              isDisabled: isCorrect,
-              components: { DropdownIndicator: () => null }
+              isDisabled: !!correctGuess,
+              components: { DropdownIndicator: () => null },
             }}
           />
         </BaseBox>
 
-        {isCorrect && (
+        {!!correctGuess && (
           <ModeSuccessBox
             correctGuess={correctGuess}
             attempts={incorrectGuesses.length + 1}
@@ -123,32 +211,46 @@ export const ImageModePage = () => {
         )}
 
         <Box width={'30em'}>
-          {isCorrect && (
-            <Text textAlign={'center'} bg="green.500" color="white" p={2} m={1} rounded="md">
+          {!!correctGuess && (
+            <Text
+              textAlign={'center'}
+              bg="green.500"
+              color="white"
+              p={2}
+              m={1}
+              rounded="md"
+            >
               {correctGuess}
             </Text>
           )}
         </Box>
         <Box width={'30em'}>
           {incorrectGuesses.map((guess) => (
-            <Text textAlign={'center'} key={guess} bg="red.500" color="white" p={2} m={1} rounded="md">
+            <Text
+              textAlign={'center'}
+              key={guess}
+              bg="red.500"
+              color="white"
+              p={2}
+              m={1}
+              rounded="md"
+            >
               {guess}
             </Text>
           ))}
         </Box>
 
-        {isCorrect && (
+        {finalStates?.imageFinished && finalStates?.quoteFinished && (
           <VStack>
             <Text>Congratulations, you finished today's GoTdle!!</Text>
             <Text>Here are your Scores!</Text>
             <Text>Classic: {localStorage.getItem('classicModeAttempts')}</Text>
-            <Text>Quote: ...</Text>
-            <Text>Image: {incorrectGuesses.length + 1}</Text>
+            <Text>Quote: {finalStates?.quoteAttempts}</Text>
+            <Text>Image: {finalStates?.imageAttempts}</Text>
             <Text>Actual Streak: ...</Text>
             <Button mt={4}>Jump to Scoreboard</Button>
           </VStack>
         )}
-
       </VStack>
     </BaseLayout>
   );

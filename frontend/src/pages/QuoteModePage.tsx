@@ -1,7 +1,7 @@
 import { BaseLayout } from '../layout/BaseLayout.tsx';
 import { Box, Text, VStack } from '@chakra-ui/react';
-import { useQuoteApi } from '../hooks/useQuoteApi.ts';
-import { useEffect, useState } from 'react';
+import { QuoteData, useQuoteApi } from '../hooks/useQuoteApi.ts';
+import { useEffect, useRef, useState } from 'react';
 import { OptionBase } from 'chakra-react-select';
 import { GroupBase } from 'react-select';
 import { CharacterSelect } from '../components/CharacterSelect.tsx';
@@ -9,6 +9,13 @@ import { BaseBox } from '../components/BaseBox.tsx';
 import { ModeNavigationBox } from '../components/ModeNavigationBox.tsx';
 import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
+import { useAuth } from '../providers/AuthProvider.tsx';
+
+interface QuoteModeState {
+  quoteAttempts?: number;
+  quoteAnswers: string[];
+  quoteFinished?: boolean;
+}
 
 interface CharacterOption extends OptionBase {
   label: string;
@@ -19,29 +26,89 @@ export const QuoteModePage = () => {
   const { fetchApi, apiData } = useQuoteApi();
   const [incorrectGuesses, setIncorrectGuesses] = useState<string[]>([]);
   const [correctGuess, setCorrectGuess] = useState<string>('');
-  const [isCorrect, setIsCorrect] = useState(false);
-  const [selectedCharacter, setSelectedCharacter] = useState<CharacterOption | null>(null);
+  const [selectedCharacter, setSelectedCharacter] =
+    useState<CharacterOption | null>(null);
+  const prevApiDataRef = useRef<QuoteData | null>(null);
+  const { user } = useAuth();
+  const userId = user?.id;
 
   useEffect(() => {
-    setIsCorrect(false);
-    setCorrectGuess('');
-    setSelectedCharacter(null);
-    setIncorrectGuesses([]);
     fetchApi().catch((error) => {
       console.error('Failed to fetch quote:', error);
     });
   }, [fetchApi]);
 
+  useEffect(() => {
+    if (apiData) {
+      if (
+        prevApiDataRef.current &&
+        JSON.stringify(prevApiDataRef.current) !== JSON.stringify(apiData)
+      ) {
+        setIncorrectGuesses([]);
+        setCorrectGuess('');
+        setSelectedCharacter(null);
+
+        const storedPageStates = localStorage.getItem(userId || '');
+        let currentPageStates = storedPageStates
+          ? JSON.parse(storedPageStates)
+          : {};
+        const resetQuoteState: QuoteModeState = {
+          quoteAttempts: 0,
+          quoteAnswers: [],
+          quoteFinished: false,
+        };
+        currentPageStates = {
+          ...currentPageStates,
+          ...resetQuoteState,
+        };
+        localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
+      }
+      prevApiDataRef.current = apiData;
+    }
+  }, [userId, apiData]);
+
+  useEffect(() => {
+    const pageState = localStorage.getItem(userId || '');
+    if (pageState) {
+      const { quoteAnswers, quoteFinished } = JSON.parse(pageState);
+      if (quoteFinished) {
+        setCorrectGuess(quoteAnswers[0]);
+        setIncorrectGuesses(quoteAnswers.slice(1));
+      } else {
+        setIncorrectGuesses(quoteAnswers || []);
+      }
+    }
+  }, [userId]);
+
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
       setSelectedCharacter(selected);
       const adjustedSelected = nameExceptions(selected);
-      if (adjustedSelected.value.toLowerCase() === apiData?.character.name.toLowerCase()) {
-        setIsCorrect(true);
+      let quoteModeState: QuoteModeState = {
+        quoteAnswers: [selected.value, ...incorrectGuesses],
+      };
+      if (
+        adjustedSelected.value.toLowerCase() ===
+        apiData?.character.name.toLowerCase()
+      ) {
         setCorrectGuess(selected.value);
+        quoteModeState = {
+          ...quoteModeState,
+          quoteAttempts: incorrectGuesses.length + 1,
+          quoteFinished: true,
+        };
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
+      const storedPageStates = localStorage.getItem(userId || '');
+      let currentPageStates = storedPageStates
+        ? JSON.parse(storedPageStates)
+        : {};
+      currentPageStates = {
+        ...currentPageStates,
+        ...quoteModeState,
+      };
+      localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
       setSelectedCharacter(null);
     }
   };
@@ -58,7 +125,7 @@ export const QuoteModePage = () => {
       'Eddard Stark': 'Eddard "Ned" Stark',
       'Brandon Stark': 'Bran Stark',
       'Jeor Mormont': 'Joer Mormont',
-      'Varys': 'Lord Varys'
+      'Varys': 'Lord Varys',
     };
     const newValue = exceptions[selected.value];
     return newValue ? { ...selected, value: newValue } : selected;
@@ -66,17 +133,20 @@ export const QuoteModePage = () => {
 
   const loadCharacterOptions = useLoadCharacterOptions();
 
-
   return (
     <BaseLayout>
       <VStack>
-
         <ModeNavigationBox />
 
         <BaseBox>
           <Text fontSize={'md'}>Which characters says</Text>
-          <Text fontSize={'xl'} py={5}>"{apiData?.sentence}"</Text>
-          <Text fontSize={'sm'}> Pssst...answer is...{apiData?.character.name}</Text>
+          <Text fontSize={'xl'} py={5}>
+            "{apiData?.sentence}"
+          </Text>
+          <Text fontSize={'sm'}>
+            {' '}
+            Pssst...answer is...{apiData?.character.name}
+          </Text>
         </BaseBox>
         <BaseBox textAlign={'left'}>
           <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
@@ -84,18 +154,23 @@ export const QuoteModePage = () => {
             selectProps={{
               isMulti: false,
               placeholder: 'Type character name...',
-              loadOptions: (inputValue: string, callback: (options: CharacterOption[]) => void) => {
-                loadCharacterOptions(inputValue, incorrectGuesses).then(callback);
+              loadOptions: (
+                inputValue: string,
+                callback: (options: CharacterOption[]) => void,
+              ) => {
+                loadCharacterOptions(inputValue, incorrectGuesses).then(
+                  callback,
+                );
               },
               onChange: handleCharacterSelect,
               value: selectedCharacter,
-              isDisabled: isCorrect,
-              components: { DropdownIndicator: () => null }
+              isDisabled: !!correctGuess,
+              components: { DropdownIndicator: () => null },
             }}
           />
         </BaseBox>
 
-        {isCorrect && (
+        {!!correctGuess && (
           <ModeSuccessBox
             correctGuess={correctGuess}
             attempts={incorrectGuesses.length + 1}
@@ -105,20 +180,34 @@ export const QuoteModePage = () => {
         )}
 
         <Box width={'30em'}>
-          {isCorrect && (
-            <Text textAlign={'center'} bg="green.500" color="white" p={2} m={1} rounded="md">
+          {!!correctGuess && (
+            <Text
+              textAlign={'center'}
+              bg="green.500"
+              color="white"
+              p={2}
+              m={1}
+              rounded="md"
+            >
               {correctGuess}
             </Text>
           )}
         </Box>
         <Box width={'30em'}>
           {incorrectGuesses.map((guess, index) => (
-            <Text textAlign={'center'} key={index} bg="red.500" color="white" p={2} m={1} rounded="md">
+            <Text
+              textAlign={'center'}
+              key={index}
+              bg="red.500"
+              color="white"
+              p={2}
+              m={1}
+              rounded="md"
+            >
               {guess}
             </Text>
           ))}
         </Box>
-
       </VStack>
     </BaseLayout>
   );

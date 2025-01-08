@@ -1,4 +1,5 @@
 import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
+import '../styles/CharacterGrid.css';
 
 interface Character {
   name: string;
@@ -15,8 +16,20 @@ interface CharacterGridProps {
   solutionCharacter: Character | null;
 }
 
-export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData, solutionCharacter }) => {
-  const initialColumns = ['Character', 'Gender', 'House', 'Origin', 'Status', 'Religion', 'First Appearance', 'Last Appearance'];
+export const CharacterGrid: React.FC<CharacterGridProps> = ({
+  characterData,
+  solutionCharacter,
+}) => {
+  const initialColumns = [
+    'Character',
+    'Gender',
+    'House',
+    'Origin',
+    'Status',
+    'Religion',
+    'First Appearance',
+    'Last Appearance',
+  ];
 
   const transformCharacterData = (data: Character[]): string[][] => {
     return data.map((character: Character) => [
@@ -27,7 +40,9 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData, sol
       character.status,
       character.religion,
       character.seasons[0] ? `S${character.seasons[0]}` : '',
-      character.seasons[character.seasons.length - 1] ? `S${character.seasons[character.seasons.length - 1]}` : ''
+      character.seasons[character.seasons.length - 1]
+        ? `S${character.seasons[character.seasons.length - 1]}`
+        : '',
     ]);
   };
 
@@ -42,14 +57,16 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData, sol
         const solutionValue = `S${solutionCharacter.seasons[solutionCharacter.seasons.length - 1]}`;
         return value === solutionValue ? 'green.500' : 'red.500';
       } else {
-        const solutionValue = solutionCharacter[column.toLowerCase() as keyof Character];
+        const solutionValue =
+          solutionCharacter[column.toLowerCase() as keyof Character];
         return value === solutionValue ? 'green.500' : 'red.500';
       }
     }
     return 'red.200';
   };
 
-  const getArrow = (value: string, column: string) => {
+  const getArrow = (value: string, column: string, rowIndex: number) => {
+    if (rowIndex === 0) return '';
     if (solutionCharacter) {
       if (column === 'First Appearance') {
         const solutionValue = `S${solutionCharacter.seasons[0]}`;
@@ -71,22 +88,29 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({ characterData, sol
       borderColor="white.600"
       borderRadius="md"
       textColor={'white'}
+      className={'character-grid'}
     >
       <Grid templateColumns={`repeat(${initialColumns.length}, 1fr)`} gap={4}>
         {characters.map((row, rowIndex) =>
           row.map((char: string, colIndex: number) => (
             <GridItem
               key={`${rowIndex}-${colIndex}`}
+              className="character-card"
               p={2}
               borderRadius="md"
               textAlign="center"
-              bg={rowIndex === 0 || colIndex === 0 ? 'transparent' : getColor(char, initialColumns[colIndex])}
+              bg={
+                rowIndex === 0 || colIndex === 0
+                  ? 'transparent'
+                  : getColor(char, initialColumns[colIndex])
+              }
             >
               <Text fontWeight={rowIndex === 0 ? 'bold' : 'normal'}>
-                {char || '-'} {getArrow(char, initialColumns[colIndex])}
+                {char || '-'}{' '}
+                {getArrow(char, initialColumns[colIndex], rowIndex)}
               </Text>
             </GridItem>
-          ))
+          )),
         )}
       </Grid>
     </Box>

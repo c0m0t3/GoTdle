@@ -13,6 +13,7 @@ import { ModeSuccessBox } from '../components/ModeSuccessBox';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions';
 import { gotButtonStyle } from '../styles/buttonStyles.ts';
 import { format, isToday, parseISO } from 'date-fns';
+import '../styles/ClassicPage.css';
 
 interface Character {
   name: string;
@@ -47,7 +48,9 @@ export const ClassicPage: React.FC = () => {
   const [incorrectGuesses, setIncorrectGuesses] = useState<string[]>([]);
   const [selectedCharacter, setSelectedCharacter] = useState<Character[]>([]);
   const [allCharacters, setAllCharacters] = useState<Character[]>([]);
-  const [solutionCharacter, setSolutionCharacter] = useState<Character | null>(null);
+  const [solutionCharacter, setSolutionCharacter] = useState<Character | null>(
+    null,
+  );
   const [correctGuess, setCorrectGuess] = useState<string>('');
   const [isOpen, setIsOpen] = useState(false);
   const [isPlayedToday, setIsPlayedToday] = useState(false);
@@ -59,7 +62,7 @@ export const ClassicPage: React.FC = () => {
       timeZone: 'Europe/Berlin',
       year: 'numeric',
       month: '2-digit',
-      day: '2-digit'
+      day: '2-digit',
     });
     const hash = murmurhash.v3(berlinTime);
     const index = hash % characters.length;
@@ -92,7 +95,7 @@ export const ClassicPage: React.FC = () => {
         if (response.status === 200) {
           const characterData = response.data.map((char: Character) => ({
             ...char,
-            name: char.name || 'Unknown'
+            name: char.name || 'Unknown',
           }));
           setAllCharacters(characterData);
 
@@ -127,10 +130,14 @@ export const ClassicPage: React.FC = () => {
 
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
-      const selectedChar = allCharacters.find(char => char.name === selected.value);
+      const selectedChar = allCharacters.find(
+        (char) => char.name === selected.value,
+      );
       if (selectedChar) {
         setSelectedCharacter([selectedChar, ...selectedCharacter]);
-        setAllCharacters(allCharacters.filter(char => char.name !== selected.value));
+        setAllCharacters(
+          allCharacters.filter((char) => char.name !== selected.value),
+        );
       }
       if (solutionCharacter && selected.value === solutionCharacter.name) {
         setCorrectGuess(selected.value);
@@ -146,16 +153,23 @@ export const ClassicPage: React.FC = () => {
 
   return (
     <BaseLayout>
-      <VStack>
+      <VStack spacing={4} className="classic-page">
         <ModeNavigationBox />
-        <BaseBox>
-          <Text textAlign={'center'}> Guess today's Game of Thrones character! </Text>
-          <Text textAlign={'center'}> Type any character to begin. </Text>
-          <Text textAlign={'center'}> DEBUG: The Solution is </Text>
-          <Text textAlign={'center'}> {solutionCharacter?.name} </Text>
-          <HStack justifyContent={'center'}>
-            <Button onClick={() => setIsOpen(true)} isDisabled={incorrectGuesses.length < 5}
-                    sx={gotButtonStyle}> Titles </Button>
+        <BaseBox className="classic-box">
+          <Text textAlign="center">
+            Guess today's Game of Thrones character!
+          </Text>
+          <Text textAlign="center">Type any character to begin.</Text>
+          <Text textAlign="center">DEBUG: The Solution is</Text>
+          <Text textAlign="center">{solutionCharacter?.name}</Text>
+          <HStack justifyContent="center">
+            <Button
+              onClick={() => setIsOpen(true)}
+              isDisabled={incorrectGuesses.length < 5}
+              sx={gotButtonStyle}
+            >
+              Titles
+            </Button>
           </HStack>
           {isOpen && (
             <VStack mt={4} alignItems="center">
@@ -165,14 +179,19 @@ export const ClassicPage: React.FC = () => {
             </VStack>
           )}
         </BaseBox>
-        <BaseBox textAlign={'left'}>
+        <BaseBox textAlign="left" className="character-select-box">
           <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
             name="character"
             selectProps={{
               isMulti: false,
               placeholder: 'Type character name...',
-              loadOptions: (inputValue: string, callback: (options: CharacterOption[]) => void) => {
-                loadCharacterOptions(inputValue, incorrectGuesses).then(callback);
+              loadOptions: (
+                inputValue: string,
+                callback: (options: CharacterOption[]) => void,
+              ) => {
+                loadCharacterOptions(inputValue, incorrectGuesses).then(
+                  callback,
+                );
               },
               onChange: handleCharacterSelect,
               value: null,
@@ -189,7 +208,10 @@ export const ClassicPage: React.FC = () => {
             url="/quote"
           />
         )}
-        <CharacterGrid characterData={selectedCharacter} solutionCharacter={solutionCharacter} />
+        <CharacterGrid
+          characterData={selectedCharacter}
+          solutionCharacter={solutionCharacter}
+        />
       </VStack>
     </BaseLayout>
   );
