@@ -10,6 +10,7 @@ import { ModeNavigationBox } from '../components/ModeNavigationBox.tsx';
 import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
 import { useAuth } from '../providers/AuthProvider.tsx';
+import { UserGuessesText } from '../components/UserGuessesText.tsx';
 
 interface ImageModeState {
   imageAttempts?: number;
@@ -183,8 +184,6 @@ export const ImageModePage = () => {
           <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
             name="character"
             selectProps={{
-              isMulti: false,
-              placeholder: 'Type character name...',
               loadOptions: (
                 inputValue: string,
                 callback: (options: CharacterOption[]) => void,
@@ -196,7 +195,6 @@ export const ImageModePage = () => {
               onChange: handleCharacterSelect,
               value: selectedCharacter,
               isDisabled: !!correctGuess,
-              components: { DropdownIndicator: () => null },
             }}
           />
         </BaseBox>
@@ -212,31 +210,14 @@ export const ImageModePage = () => {
 
         <Box width={'30em'}>
           {!!correctGuess && (
-            <Text
-              textAlign={'center'}
-              bg="green.500"
-              color="white"
-              p={2}
-              m={1}
-              rounded="md"
-            >
-              {correctGuess}
-            </Text>
+            <UserGuessesText bg="green.500">{correctGuess}</UserGuessesText>
           )}
         </Box>
         <Box width={'30em'}>
           {incorrectGuesses.map((guess) => (
-            <Text
-              textAlign={'center'}
-              key={guess}
-              bg="red.500"
-              color="white"
-              p={2}
-              m={1}
-              rounded="md"
-            >
+            <UserGuessesText key={guess} bg="red.500">
               {guess}
-            </Text>
+            </UserGuessesText>
           ))}
         </Box>
 

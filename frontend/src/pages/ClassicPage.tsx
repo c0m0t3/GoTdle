@@ -134,8 +134,6 @@ export const ClassicPage: React.FC = () => {
           <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
             name="character"
             selectProps={{
-              isMulti: false,
-              placeholder: 'Type character name...',
               loadOptions: (
                 inputValue: string,
                 callback: (options: CharacterOption[]) => void,
@@ -147,7 +145,6 @@ export const ClassicPage: React.FC = () => {
               onChange: handleCharacterSelect,
               value: null,
               isDisabled: !!correctGuess,
-              components: { DropdownIndicator: () => null },
             }}
           />
         </BaseBox>

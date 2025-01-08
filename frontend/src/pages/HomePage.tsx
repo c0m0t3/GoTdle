@@ -16,6 +16,7 @@ import { gotButtonStyle } from '../styles/buttonStyles.ts';
 import { BaseBox } from '../components/BaseBox.tsx';
 import { useAuth } from '../providers/AuthProvider.tsx';
 import { BaseLayout } from '../layout/BaseLayout.tsx';
+import { BaseLayoutPublic } from '../layout/BaseLayoutPublic.tsx';
 
 const LogoBox = () => (
   <Box
@@ -143,16 +144,7 @@ export const HomePage = () => {
           </VStack>
         </BaseLayout>
       ) : (
-        <Box
-          bg="rgb(245, 221, 181)"
-          minH="100vh"
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          m={0}
-          p={0}
-          border="none"
-        >
+        <BaseLayoutPublic>
           <VStack spacing={4} width="100%" maxWidth="600px" p={4}>
             <LogoBox />
 
@@ -175,7 +167,7 @@ export const HomePage = () => {
 
             <InfoContainer />
           </VStack>
-        </Box>
+        </BaseLayoutPublic>
       )}
     </>
   );
