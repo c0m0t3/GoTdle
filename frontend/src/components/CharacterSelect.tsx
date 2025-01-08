@@ -26,6 +26,8 @@ export const CharacterSelect = <
       noOptionsMessage={({ inputValue }) =>
         inputValue && inputValue.trim() !== '' ? 'Character not found' : null
       }
+      placeholder={'Type character name...'}
+      components={{ DropdownIndicator: () => null }}
     />
   );
 };

@@ -184,8 +184,6 @@ export const ImageModePage = () => {
           <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
             name="character"
             selectProps={{
-              isMulti: false,
-              placeholder: 'Type character name...',
               loadOptions: (
                 inputValue: string,
                 callback: (options: CharacterOption[]) => void,
@@ -197,7 +195,6 @@ export const ImageModePage = () => {
               onChange: handleCharacterSelect,
               value: selectedCharacter,
               isDisabled: !!correctGuess,
-              components: { DropdownIndicator: () => null },
             }}
           />
         </BaseBox>
