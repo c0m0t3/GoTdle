@@ -1,7 +1,7 @@
 import { BaseLayout } from '../layout/BaseLayout.tsx';
 import { Box, Text, VStack } from '@chakra-ui/react';
-import { useQuoteApi } from '../hooks/useQuoteApi.ts';
-import { useEffect, useState } from 'react';
+import { QuoteData, useQuoteApi } from '../hooks/useQuoteApi.ts';
+import { useEffect, useRef, useState } from 'react';
 import { OptionBase } from 'chakra-react-select';
 import { GroupBase } from 'react-select';
 import { CharacterSelect } from '../components/CharacterSelect.tsx';
@@ -9,6 +9,7 @@ import { BaseBox } from '../components/BaseBox.tsx';
 import { ModeNavigationBox } from '../components/ModeNavigationBox.tsx';
 import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
+import { useAuth } from '../providers/AuthProvider.tsx';
 
 interface CharacterOption extends OptionBase {
   label: string;
@@ -19,19 +20,53 @@ export const QuoteModePage = () => {
   const { fetchApi, apiData } = useQuoteApi();
   const [incorrectGuesses, setIncorrectGuesses] = useState<string[]>([]);
   const [correctGuess, setCorrectGuess] = useState<string>('');
-  const [isCorrect, setIsCorrect] = useState(false);
   const [selectedCharacter, setSelectedCharacter] =
     useState<CharacterOption | null>(null);
+  const prevApiDataRef = useRef<QuoteData | null>(null);
+  const { user } = useAuth();
+  const userId = user?.id;
 
   useEffect(() => {
-    setIsCorrect(false);
-    setCorrectGuess('');
-    setSelectedCharacter(null);
-    setIncorrectGuesses([]);
     fetchApi().catch((error) => {
       console.error('Failed to fetch quote:', error);
     });
   }, [fetchApi]);
+
+  useEffect(() => {
+    if (apiData) {
+      if (
+        prevApiDataRef.current &&
+        JSON.stringify(prevApiDataRef.current) !== JSON.stringify(apiData)
+      ) {
+        setIncorrectGuesses([]);
+        setCorrectGuess('');
+        setSelectedCharacter(null);
+
+        localStorage.setItem(
+          userId || '',
+          JSON.stringify({
+            quoteAttempts: 0,
+            quoteAnswers: [],
+            quoteFinished: false,
+          }),
+        );
+      }
+      prevApiDataRef.current = apiData;
+    }
+  }, [userId, apiData]);
+
+  useEffect(() => {
+    const pageState = localStorage.getItem(userId || '');
+    if (pageState) {
+      const { quoteAnswers, quoteFinished } = JSON.parse(pageState);
+      if (quoteFinished) {
+        setCorrectGuess(quoteAnswers[0]);
+        setIncorrectGuesses(quoteAnswers.slice(1));
+      } else {
+        setIncorrectGuesses(quoteAnswers || []);
+      }
+    }
+  }, [userId]);
 
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
@@ -41,10 +76,23 @@ export const QuoteModePage = () => {
         adjustedSelected.value.toLowerCase() ===
         apiData?.character.name.toLowerCase()
       ) {
-        setIsCorrect(true);
         setCorrectGuess(selected.value);
+        localStorage.setItem(
+          userId || '',
+          JSON.stringify({
+            quoteAttempts: incorrectGuesses.length + 1,
+            quoteAnswers: [selected.value, ...incorrectGuesses],
+            quoteFinished: true,
+          }),
+        );
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
+        localStorage.setItem(
+          userId || '',
+          JSON.stringify({
+            quoteAnswers: [selected.value, ...incorrectGuesses],
+          }),
+        );
       }
       setSelectedCharacter(null);
     }
@@ -101,13 +149,13 @@ export const QuoteModePage = () => {
               },
               onChange: handleCharacterSelect,
               value: selectedCharacter,
-              isDisabled: isCorrect,
+              isDisabled: !!correctGuess,
               components: { DropdownIndicator: () => null },
             }}
           />
         </BaseBox>
 
-        {isCorrect && (
+        {!!correctGuess && (
           <ModeSuccessBox
             correctGuess={correctGuess}
             attempts={incorrectGuesses.length + 1}
@@ -117,7 +165,7 @@ export const QuoteModePage = () => {
         )}
 
         <Box width={'30em'}>
-          {isCorrect && (
+          {!!correctGuess && (
             <Text
               textAlign={'center'}
               bg="green.500"
