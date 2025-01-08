@@ -6,6 +6,7 @@ import { object, string } from 'yup';
 import { InputControl, SubmitButton } from 'formik-chakra-ui';
 import { RegisterData, useAuth } from '../providers/AuthProvider.tsx';
 import { gotButtonStyle } from '../styles/buttonStyles.ts';
+import { inputFieldStyles } from '../styles/inputFieldStyles.ts';
 import { BaseLayoutPublic } from '../layout/BaseLayoutPublic.tsx';
 
 export const RegisterUserSchema = object({
@@ -69,15 +70,23 @@ export const RegisterPage = () => {
                 name="username"
                 inputProps={{
                   placeholder: 'min. 3 characters, without \'";<>&',
+                  sx: inputFieldStyles,
                 }}
               />
-              <InputControl label={'E-Mail'} name="email" />
+              <InputControl
+                label={'E-Mail'}
+                name="email"
+                inputProps={{
+                  sx: inputFieldStyles,
+                }}
+              />
               <InputControl
                 label={'Password'}
                 name="password"
                 inputProps={{
                   type: 'password',
                   placeholder: 'min. 8 characters, without \'";<>&',
+                  sx: inputFieldStyles,
                 }}
               />
               <SubmitButton sx={gotButtonStyle}>register</SubmitButton>

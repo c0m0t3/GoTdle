@@ -13,6 +13,7 @@ import { InputControl, SubmitButton } from 'formik-chakra-ui';
 import { object, string } from 'yup';
 import { LoginData, useAuth } from '../providers/AuthProvider.tsx';
 import { gotButtonStyle } from '../styles/buttonStyles.ts';
+import { inputFieldStyles } from '../styles/inputFieldStyles.ts';
 import { BaseLayoutPublic } from '../layout/BaseLayoutPublic.tsx';
 
 export const LoginUserSchema = object({
@@ -64,19 +65,7 @@ export const LoginPage = () => {
                     name={'identifier'}
                     label={'E-Mail or Username'}
                     inputProps={{
-                      bg: 'rgb(250, 240, 220)',
-                      border: '2px solid rgb(200, 160, 120)',
-                      borderRadius: '8px',
-                      padding: '10px',
-                      _focus: {
-                        borderColor: 'rgb(180, 90, 70)',
-                        boxShadow: 'none',
-                        bg: 'rgb(250, 240, 220)',
-                      },
-                      _hover: {
-                        bg: 'rgb(250, 240, 220)',
-                        borderColor: 'rgb(200, 160, 120)',
-                      },
+                      sx: inputFieldStyles,
                     }}
                   />
                   <RadioGroup
@@ -95,20 +84,7 @@ export const LoginPage = () => {
                   name={'password'}
                   label={'Password'}
                   inputProps={{
-                    type: 'password',
-                    bg: 'rgb(250, 240, 220)',
-                    border: '2px solid rgb(200, 160, 120)',
-                    borderRadius: '8px',
-                    padding: '10px',
-                    _focus: {
-                      borderColor: 'rgb(180, 90, 70)',
-                      boxShadow: 'none',
-                      bg: 'rgb(250, 240, 220)',
-                    },
-                    _hover: {
-                      bg: 'rgb(250, 240, 220)',
-                      borderColor: 'rgb(200, 160, 120)',
-                    },
+                    sx: inputFieldStyles,
                   }}
                 />
 
