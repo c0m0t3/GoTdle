@@ -110,7 +110,7 @@ export const QuoteModePage = () => {
       'Eddard Stark': 'Eddard "Ned" Stark',
       'Brandon Stark': 'Bran Stark',
       'Jeor Mormont': 'Joer Mormont',
-      Varys: 'Lord Varys',
+      'Varys': 'Lord Varys',
     };
     const newValue = exceptions[selected.value];
     return newValue ? { ...selected, value: newValue } : selected;

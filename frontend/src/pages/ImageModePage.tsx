@@ -54,14 +54,14 @@ export const ImageModePage = () => {
       'Eddard Stark': 'Ned Stark',
       'Jaime Lannister': 'Jamie Lannister',
       'Robb Stark': 'Rob Stark',
-      Drogo: 'Khal Drogo',
+      'Drogo': 'Khal Drogo',
       'Viserys Targaryen': 'Viserys Targaryn',
       'Daario Naharis': 'Daario',
-      Gendry: 'Gendry Baratheon',
+      'Gendry': 'Gendry Baratheon',
       'Ramsay Bolton': 'Ramsey Bolton',
       'High Sparrow': 'The High Sparrow',
-      Tormund: 'Tormund Giantsbane',
-      Bronn: 'Lord Bronn',
+      'Tormund': 'Tormund Giantsbane',
+      'Bronn': 'Lord Bronn',
       'Sandor Clegane': 'The Hound',
     };
     const newValue = exceptions[selected.value];
