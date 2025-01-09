@@ -12,7 +12,7 @@ import { BaseBox } from '../components/BaseBox';
 import { ModeSuccessBox } from '../components/ModeSuccessBox';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions';
 import { gotButtonStyle } from '../styles/buttonStyles.ts';
-import { format, isToday, parseISO } from 'date-fns';
+import { isToday, parseISO } from 'date-fns';
 import '../styles/ClassicPage.css';
 import { useAuth } from '../providers/AuthProvider.tsx';
 
@@ -93,18 +93,14 @@ export const ClassicPage: React.FC = () => {
   };
 
   const updateModeScore = (user: User, modeIndex: number) => {
-    const today = new Date();
     user.score.dailyScore[modeIndex] = incorrectGuesses.length + 1;
-    user.score.lastPlayed = format(today, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
     client.putDailyScore({
       dailyScore: user.score.dailyScore,
     });
   };
 
   const initializeDailyScore = (user: User) => {
-    const today = new Date();
     user.score.dailyScore = [0, 0, 0];
-    user.score.lastPlayed = format(today, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
     client.putDailyScore({
       dailyScore: user.score.dailyScore,
     });
