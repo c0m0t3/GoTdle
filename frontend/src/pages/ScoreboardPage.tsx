@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { BaseLayout } from '../layout/BaseLayout';
 import {
   Box,
-  Flex,
   Table,
   Tbody,
   Td,
@@ -14,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { useApiClient } from '../hooks/useApiClient';
 import { BaseBox } from '../components/BaseBox.tsx';
+import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
 
 interface Score {
   streak: number;
@@ -34,7 +34,13 @@ interface User {
 export const ScoreboardPage = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [authError, setAuthError] = useState<boolean>(false);
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof User | keyof Score;
+    direction: 'ascending' | 'descending';
+  }>({ key: 'streak', direction: 'descending' });
+  const [loggedInUserId, setLoggedInUserId] = useState<string | null>(null);
   const client = useApiClient();
+  const highlightTextColor = 'red';
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -48,75 +54,162 @@ export const ScoreboardPage = () => {
       }
     };
 
+    const fetchLoggedInUser = async () => {
+      try {
+        const response = await client.getUserById();
+        setLoggedInUserId(response.data.id);
+      } catch (error) {
+        console.error('Error fetching logged-in user:', error);
+      }
+    };
+
     fetchUsers();
+    fetchLoggedInUser();
   }, [client]);
 
-  const sortedByCurrentStreak = [...users].sort(
-    (a, b) => b.score.streak - a.score.streak,
-  );
-  const sortedByLongestStreak = [...users].sort(
-    (a, b) => b.score.longestStreak - a.score.longestStreak,
-  );
+  const sortedUsers = [...users].sort((a, b) => {
+    if (sortConfig !== null) {
+      const { key, direction } = sortConfig;
+      const aValue =
+        key in a ? a[key as keyof User] : (a.score[key as keyof Score] ?? null);
+      const bValue =
+        key in b ? b[key as keyof User] : (b.score[key as keyof Score] ?? null);
+      if (aValue !== null && bValue !== null) {
+        if (aValue < bValue) {
+          return direction === 'ascending' ? -1 : 1;
+        }
+        if (aValue > bValue) {
+          return direction === 'ascending' ? 1 : -1;
+        }
+      }
+      return 0;
+    }
+    return 0;
+  });
+
+  const requestSort = (key: keyof User | keyof Score) => {
+    let direction: 'ascending' | 'descending' = 'ascending';
+    if (
+      sortConfig &&
+      sortConfig.key === key &&
+      sortConfig.direction === 'ascending'
+    ) {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getSortIcon = (key: keyof User | keyof Score) => {
+    if (sortConfig?.key === key) {
+      return sortConfig.direction === 'ascending' ? (
+        <span style={{ marginLeft: '0.5em' }}>
+          <FaArrowUp />
+        </span>
+      ) : (
+        <span style={{ marginLeft: '0.5em' }}>
+          <FaArrowDown />
+        </span>
+      );
+    }
+    return null;
+  };
 
   return (
     <BaseLayout>
       <Box p={4}>
         <VStack spacing={4} align="stretch">
           <Text textAlign={'center'} fontSize={'2em'}>
-            {' '}
-            Leaderboards{' '}
+            Leaderboard
           </Text>
           {authError ? (
             <Text textAlign={'center'} color="red.500">
               Authentication failed. Please log in to view the leaderboard.
             </Text>
           ) : (
-            <Flex justify="space-around">
-              <BaseBox>
-                <Text textAlign={'center'} fontSize={'1.5em'}>
-                  {' '}
-                  Current Streak{' '}
-                </Text>
-                <Table variant="simple">
-                  <Thead>
-                    <Tr>
-                      <Th>Name</Th>
-                      <Th>Current Streak</Th>
+            <BaseBox width="auto">
+              <Table variant="simple">
+                <Thead>
+                  <Tr>
+                    <Th onClick={() => requestSort('username')}>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        Name {getSortIcon('username')}
+                      </div>
+                    </Th>
+                    <Th onClick={() => requestSort('createdAt')}>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        Created At {getSortIcon('createdAt')}
+                      </div>
+                    </Th>
+                    <Th onClick={() => requestSort('streak')}>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        Current Streak {getSortIcon('streak')}
+                      </div>
+                    </Th>
+                    <Th onClick={() => requestSort('longestStreak')}>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        Longest Streak {getSortIcon('longestStreak')}
+                      </div>
+                    </Th>
+                    <Th onClick={() => requestSort('dailyScore')}>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        Latest Daily Score {getSortIcon('dailyScore')}
+                      </div>
+                    </Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {sortedUsers.map((user, index) => (
+                    <Tr key={index}>
+                      <Td
+                        color={
+                          user.id === loggedInUserId
+                            ? highlightTextColor
+                            : 'inherit'
+                        }
+                      >
+                        {user.username}
+                      </Td>
+                      <Td
+                        color={
+                          user.id === loggedInUserId
+                            ? highlightTextColor
+                            : 'inherit'
+                        }
+                      >
+                        {new Date(user.createdAt).toLocaleDateString('de-DE')}
+                      </Td>
+                      <Td
+                        color={
+                          user.id === loggedInUserId
+                            ? highlightTextColor
+                            : 'inherit'
+                        }
+                      >
+                        {user.score.streak}
+                      </Td>
+                      <Td
+                        color={
+                          user.id === loggedInUserId
+                            ? highlightTextColor
+                            : 'inherit'
+                        }
+                      >
+                        {user.score.longestStreak}
+                      </Td>
+                      <Td
+                        color={
+                          user.id === loggedInUserId
+                            ? highlightTextColor
+                            : 'inherit'
+                        }
+                      >
+                        {user.score.dailyScore[0]?.[0] || '-'}
+                      </Td>
                     </Tr>
-                  </Thead>
-                  <Tbody>
-                    {sortedByCurrentStreak.map((user, index) => (
-                      <Tr key={index}>
-                        <Td>{user.username}</Td>
-                        <Td>{user.score.streak}</Td>
-                      </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
-              </BaseBox>
-              <BaseBox>
-                <Text textAlign={'center'} fontSize={'1.5em'}>
-                  {' '}
-                  Longest Streak{' '}
-                </Text>
-                <Table variant="simple">
-                  <Thead>
-                    <Tr>
-                      <Th>Name</Th>
-                      <Th>Longest Streak</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {sortedByLongestStreak.map((user, index) => (
-                      <Tr key={index}>
-                        <Td>{user.username}</Td>
-                        <Td>{user.score.longestStreak}</Td>
-                      </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
-              </BaseBox>
-            </Flex>
+                  ))}
+                </Tbody>
+              </Table>
+            </BaseBox>
           )}
         </VStack>
       </Box>
