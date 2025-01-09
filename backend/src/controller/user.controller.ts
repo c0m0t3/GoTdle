@@ -39,6 +39,23 @@ export class UserController {
     res.send(user);
   }
 
+  async getUsersByNameSearch(req: Request, res: Response): Promise<void> {
+    const validatedUsername = z.string().parse(req.query.username);
+    const withScoreRelation = z
+      .boolean()
+      .default(true)
+      .parse(
+        req.query.withScoreRelation === 'true' ||
+          req.query.withScoreRelation === undefined,
+      );
+
+    const users = await this.userRepository.getUsersByNameSearch(
+      validatedUsername,
+      withScoreRelation,
+    );
+    res.send(users);
+  }
+
   async getUserByUsername(req: Request, res: Response): Promise<void> {
     const usernameSchema = z.string().min(3);
     const username = usernameSchema.parse(req.params.username);
