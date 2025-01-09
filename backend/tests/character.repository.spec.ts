@@ -49,7 +49,7 @@ describe('CharacterRepository', () => {
 
   describe('createCharacter', () => {
     it('should create a character', async () => {
-      const character = await characterRepository.createCharacter([
+      const character = await characterRepository.createCharacters([
         TEST_CHARACTER,
       ]);
       expect(character).toBeDefined();
@@ -59,7 +59,7 @@ describe('CharacterRepository', () => {
 
   describe('getCharacters', () => {
     it('should return all characters', async () => {
-      await characterRepository.createCharacter([TEST_CHARACTER]);
+      await characterRepository.createCharacters([TEST_CHARACTER]);
       const characters = await characterRepository.getCharacters();
       expect(characters.length).toBe(1);
       expect(characters[0].name).toBe(TEST_CHARACTER.name);
@@ -68,7 +68,7 @@ describe('CharacterRepository', () => {
 
   describe('getCharacterById', () => {
     it('should return a character by ID', async () => {
-      const createdCharacter = await characterRepository.createCharacter([
+      const createdCharacter = await characterRepository.createCharacters([
         TEST_CHARACTER,
       ]);
       const character = await characterRepository.getCharacterById(
@@ -81,7 +81,7 @@ describe('CharacterRepository', () => {
 
   describe('getCharacterByName', () => {
     it('should return a character by name', async () => {
-      await characterRepository.createCharacter([TEST_CHARACTER]);
+      await characterRepository.createCharacters([TEST_CHARACTER]);
       const character = await characterRepository.getCharacterByName(
         TEST_CHARACTER.name,
       );
@@ -92,7 +92,7 @@ describe('CharacterRepository', () => {
 
   describe('deleteAllCharacters', () => {
     it('should delete all characters', async () => {
-      await characterRepository.createCharacter([TEST_CHARACTER]);
+      await characterRepository.createCharacters([TEST_CHARACTER]);
       await characterRepository.deleteAllCharacters();
       const characters = await characterRepository.getCharacters();
       expect(characters.length).toBe(0);

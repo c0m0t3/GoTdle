@@ -66,7 +66,7 @@ describe('CharacterController', () => {
     it('should create a character', async () => {
       req.body = [TEST_CHARACTER];
 
-      await characterController.createCharacter(
+      await characterController.createCharacters(
         req as Request,
         res as Response,
       );
@@ -83,12 +83,12 @@ describe('CharacterController', () => {
 
     it('should return 409 if character name already exists', async () => {
       req.body = [TEST_CHARACTER];
-      await characterController.createCharacter(
+      await characterController.createCharacters(
         req as Request,
         res as Response,
       );
 
-      await characterController.createCharacter(
+      await characterController.createCharacters(
         req as Request,
         res as Response,
       );
@@ -102,7 +102,7 @@ describe('CharacterController', () => {
 
   describe('getCharacters', () => {
     it('should return all characters', async () => {
-      await characterRepository.createCharacter([TEST_CHARACTER]);
+      await characterRepository.createCharacters([TEST_CHARACTER]);
 
       await characterController.getCharacters(req as Request, res as Response);
 
@@ -119,7 +119,7 @@ describe('CharacterController', () => {
 
   describe('getCharacterById', () => {
     it('should return a character by ID', async () => {
-      const createdCharacter = await characterRepository.createCharacter([
+      const createdCharacter = await characterRepository.createCharacters([
         TEST_CHARACTER,
       ]);
       req.params = { _id: createdCharacter[0]._id.toString() };
@@ -154,7 +154,7 @@ describe('CharacterController', () => {
 
   describe('deleteAllCharacters', () => {
     it('should delete all characters', async () => {
-      await characterRepository.createCharacter([TEST_CHARACTER]);
+      await characterRepository.createCharacters([TEST_CHARACTER]);
 
       await characterController.deleteAllCharacters(
         req as Request,
