@@ -118,7 +118,7 @@ export const ScoreboardPage = () => {
       <Box p={4}>
         <VStack spacing={4} align="stretch">
           <Text textAlign={'center'} fontSize={'2em'}>
-            Leaderboards
+            Leaderboard
           </Text>
           {authError ? (
             <Text textAlign={'center'} color="red.500">
