@@ -24,11 +24,13 @@ export class ScoreRepository {
     userId: string,
     data: Omit<UpdateScore, 'recentScores'> & { recentScores: number[][] },
   ) {
+    const berlinTime = new Date();
+    berlinTime.setHours(berlinTime.getHours() + 1);
     const [updatedScore] = await this.database
       .update(scoreSchema)
       .set({
         ...data,
-        lastPlayed: new Date(),
+        lastPlayed: berlinTime,
       })
       .where(eq(scoreSchema.userId, userId))
       .returning();
@@ -36,11 +38,13 @@ export class ScoreRepository {
   }
 
   async updateDailyScoreByUserId(userId: string, data: UpdateDailyScore) {
+    const berlinTime = new Date();
+    berlinTime.setHours(berlinTime.getHours() + 1);
     const [updatedScore] = await this.database
       .update(scoreSchema)
       .set({
         ...data,
-        lastPlayed: new Date(),
+        lastPlayed: berlinTime,
       })
       .where(eq(scoreSchema.userId, userId))
       .returning();
