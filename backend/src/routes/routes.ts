@@ -82,15 +82,11 @@ export class Routes {
     // Character routes
     this.router.post(
       '/characters',
-      this.characterController.createCharacter.bind(this.characterController),
+      this.characterController.createCharacters.bind(this.characterController),
     );
     this.router.get(
       '/characters',
       this.characterController.getCharacters.bind(this.characterController),
-    );
-    this.router.get(
-      '/characters/:_id',
-      this.characterController.getCharacterById.bind(this.characterController),
     );
     this.router.delete(
       '/characters',

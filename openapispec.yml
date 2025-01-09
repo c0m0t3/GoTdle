@@ -401,27 +401,6 @@ paths:
                     type: integer
       security:
         - Authorization: [ ]
-  '/characters/{_id}':
-    parameters:
-      - schema:
-          type: integer
-        name: _id
-        in: path
-        required: true
-    get:
-      summary: Get Character Info by Id
-      tags: [ ]
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Characters'
-      operationId: getCharacterById
-      x-stoplight:
-        id: 2ibel5gzrue0g
-      description: Get character for classic mode
   /characters:
     get:
       summary: Get All Characters
