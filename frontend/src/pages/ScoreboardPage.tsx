@@ -36,7 +36,7 @@ export const ScoreboardPage = () => {
   const [sortConfig, setSortConfig] = useState<{
     key: keyof User | keyof Score;
     direction: 'ascending' | 'descending';
-  } | null>(null);
+  }>({ key: 'streak', direction: 'descending' });
   const [loggedInUserId, setLoggedInUserId] = useState<string | null>(null);
   const client = useApiClient();
   const highlightTextColor = 'red';
