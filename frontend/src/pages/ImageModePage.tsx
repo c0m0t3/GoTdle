@@ -11,8 +11,11 @@ import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
 import { useAuth } from '../providers/AuthProvider.tsx';
 import { UserGuessesText } from '../components/UserGuessesText.tsx';
-import { isToday, parseISO } from 'date-fns';
 import { useApiClient } from '../hooks/useApiClient.ts';
+import {
+  checkIfModePlayedToday,
+  updateModeScore,
+} from '../utils/stataManager.tsx';
 
 interface ImageModeState {
   imageAttempts?: number;
@@ -122,7 +125,7 @@ export const ImageModePage = () => {
         const response = await client.getUserById();
         if (response.status === 200) {
           const user: User = response.data;
-          const playedToday = checkIfModePlayedToday(user, 2);
+          const playedToday = checkIfModePlayedToday(user, 2, client);
           setIsPlayedToday(playedToday);
         }
       } catch (error) {
@@ -152,7 +155,7 @@ export const ImageModePage = () => {
         client.getUserById().then((response) => {
           if (response.status === 200) {
             const user: User = response.data;
-            updateModeScore(user, 2);
+            updateModeScore(user, 2, incorrectGuesses.length, client);
           }
         });
       } else {
@@ -169,33 +172,6 @@ export const ImageModePage = () => {
       localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
       setSelectedCharacter(null);
     }
-  };
-
-  const checkIfModePlayedToday = (user: User, modeIndex: number): boolean => {
-    const lastPlayedDate = user.score.lastPlayed
-      ? parseISO(user.score.lastPlayed)
-      : null;
-
-    if (lastPlayedDate && isToday(lastPlayedDate)) {
-      return user.score.dailyScore[modeIndex] > 0;
-    } else {
-      initializeDailyScore(user);
-      return false;
-    }
-  };
-
-  const initializeDailyScore = (user: User) => {
-    user.score.dailyScore = [0, 0, 0];
-    client.putDailyScore({
-      dailyScore: user.score.dailyScore,
-    });
-  };
-
-  const updateModeScore = (user: User, modeIndex: number) => {
-    user.score.dailyScore[modeIndex] = incorrectGuesses.length + 1;
-    client.putDailyScore({
-      dailyScore: user.score.dailyScore,
-    });
   };
 
   const nameExceptions = (selected: CharacterOption): CharacterOption => {
