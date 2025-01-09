@@ -14,6 +14,7 @@ import { useLoadCharacterOptions } from '../utils/loadCharacterOptions';
 import { gotButtonStyle } from '../styles/buttonStyles.ts';
 import { format, isToday, parseISO } from 'date-fns';
 import '../styles/ClassicPage.css';
+import { useAuth } from '../providers/AuthProvider.tsx';
 
 interface Character {
   name: string;
@@ -44,6 +45,13 @@ interface User {
   };
 }
 
+interface ClassicModeState {
+  classicAttempts?: number;
+  classicAnswers: string[];
+  classicFinished?: boolean;
+  selectedCharacter: Character[];
+}
+
 export const ClassicPage: React.FC = () => {
   const [incorrectGuesses, setIncorrectGuesses] = useState<string[]>([]);
   const [selectedCharacter, setSelectedCharacter] = useState<Character[]>([]);
@@ -55,6 +63,8 @@ export const ClassicPage: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isPlayedToday, setIsPlayedToday] = useState(false);
   const client = useApiClient();
+  const { user } = useAuth();
+  const userId = user?.id;
 
   const getCharacterOfTheDay = (characters: Character[]) => {
     const date = new Date();
@@ -98,12 +108,25 @@ export const ClassicPage: React.FC = () => {
     client.putDailyScore({
       dailyScore: user.score.dailyScore,
     });
+    initializeClassicModeState(user.id);
+  };
+
+  const initializeClassicModeState = (userId: string | undefined) => {
+    const pageState = localStorage.getItem(userId || '');
+    if (pageState) {
+      const { classicAnswers, classicFinished, selectedCharacter } =
+        JSON.parse(pageState);
+      if (classicFinished) {
+        setCorrectGuess(classicAnswers[0]);
+        setIncorrectGuesses(classicAnswers.slice(1));
+      } else {
+        setIncorrectGuesses(classicAnswers || []);
+      }
+      setSelectedCharacter(selectedCharacter || []);
+    }
   };
 
   useEffect(() => {
-    setIncorrectGuesses([]);
-    setSelectedCharacter([]);
-
     const fetchCharacters = async () => {
       try {
         const response = await client.getCharacters();
@@ -140,11 +163,21 @@ export const ClassicPage: React.FC = () => {
     fetchUser();
   }, [client]);
 
+  useEffect(() => {
+    initializeClassicModeState(userId);
+  }, [userId]);
+
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
       const selectedChar = allCharacters.find(
         (char) => char.name === selected.value,
       );
+      let classicModeStates: ClassicModeState = {
+        classicAnswers: [selected.value, ...incorrectGuesses],
+        selectedCharacter: selectedChar
+          ? [selectedChar, ...selectedCharacter]
+          : selectedCharacter,
+      };
       if (selectedChar) {
         setSelectedCharacter([selectedChar, ...selectedCharacter]);
         setAllCharacters(
@@ -155,6 +188,10 @@ export const ClassicPage: React.FC = () => {
         setCorrectGuess(selected.value);
         const attempts = incorrectGuesses.length + 1;
         localStorage.setItem('classicModeAttempts', attempts.toString());
+        classicModeStates = {
+          ...classicModeStates,
+          classicFinished: true,
+        };
         client.getUserById().then((response) => {
           if (response.status === 200) {
             updateModeScore(response.data, 0);
@@ -163,6 +200,15 @@ export const ClassicPage: React.FC = () => {
       } else {
         setIncorrectGuesses([...incorrectGuesses, selected.value]);
       }
+      const storedPageStates = localStorage.getItem(userId || '');
+      let currentPageStates = storedPageStates
+        ? JSON.parse(storedPageStates)
+        : {};
+      currentPageStates = {
+        ...currentPageStates,
+        ...classicModeStates,
+      };
+      localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
     }
   };
 
