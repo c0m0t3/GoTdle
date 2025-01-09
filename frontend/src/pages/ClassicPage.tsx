@@ -69,19 +69,34 @@ export const ClassicPage: React.FC = () => {
     return characters[index];
   };
 
-  const checkIfPlayedToday = (user: User) => {
-    const lastPlayedDate = user.score.lastPlayed ? parseISO(user.score.lastPlayed) : null;
-    return lastPlayedDate && isToday(lastPlayedDate);
+  const checkIfModePlayedToday = (user: User, modeIndex: number): boolean => {
+    const lastPlayedDate = user.score.lastPlayed
+      ? parseISO(user.score.lastPlayed)
+      : null;
+
+    if (lastPlayedDate && isToday(lastPlayedDate)) {
+      return user.score.dailyScore[modeIndex] > 0;
+    } else {
+      initializeDailyScore(user);
+      return false;
+    }
   };
 
-  const updateDailyScore = (user: User) => {
-    console.log('Updating daily score');
+  const updateModeScore = (user: User, modeIndex: number) => {
     const today = new Date();
-    user.score.dailyScore[0] = incorrectGuesses.length + 1;
-    user.score.lastPlayed = format(today, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSxxx');
-    client.putScoreByUserId({
-      streak: user.score.streak.toString(),
-      dailyScore: user.score.dailyScore
+    user.score.dailyScore[modeIndex] = incorrectGuesses.length + 1;
+    user.score.lastPlayed = format(today, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
+    client.putDailyScore({
+      dailyScore: user.score.dailyScore,
+    });
+  };
+
+  const initializeDailyScore = (user: User) => {
+    const today = new Date();
+    user.score.dailyScore = [0, 0, 0];
+    user.score.lastPlayed = format(today, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
+    client.putDailyScore({
+      dailyScore: user.score.dailyScore,
     });
   };
 
@@ -113,11 +128,8 @@ export const ClassicPage: React.FC = () => {
         const response = await client.getUserById();
         if (response.status === 200) {
           const user: User = response.data;
-          const playedToday = checkIfPlayedToday(user);
-          setIsPlayedToday(!!playedToday);
-          if (!playedToday) {
-            updateDailyScore(user);
-          }
+          const playedToday = checkIfModePlayedToday(user, 0); // Index für ClassicMode
+          setIsPlayedToday(playedToday);
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -143,6 +155,11 @@ export const ClassicPage: React.FC = () => {
         setCorrectGuess(selected.value);
         const attempts = incorrectGuesses.length + 1;
         localStorage.setItem('classicModeAttempts', attempts.toString());
+        client.getUserById().then((response) => {
+          if (response.status === 200) {
+            updateModeScore(response.data, 0);
+          }
+        });
       } else {
         setIncorrectGuesses([...incorrectGuesses, selected.value]);
       }
@@ -194,7 +211,7 @@ export const ClassicPage: React.FC = () => {
               onChange: handleCharacterSelect,
               value: null,
               isDisabled: !!correctGuess || isPlayedToday,
-              components: { DropdownIndicator: () => null }
+              components: { DropdownIndicator: () => null },
             }}
           />
         </BaseBox>
