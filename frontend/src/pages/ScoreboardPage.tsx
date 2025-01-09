@@ -14,7 +14,6 @@ import {
 import { useApiClient } from '../hooks/useApiClient';
 import { BaseBox } from '../components/BaseBox.tsx';
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
-import '../styles/ScoreboardPage.css';
 
 interface Score {
   streak: number;
@@ -40,6 +39,7 @@ export const ScoreboardPage = () => {
   } | null>(null);
   const [loggedInUserId, setLoggedInUserId] = useState<string | null>(null);
   const client = useApiClient();
+  const highlightTextColor = 'red';
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -158,19 +158,52 @@ export const ScoreboardPage = () => {
                 </Thead>
                 <Tbody>
                   {sortedUsers.map((user, index) => (
-                    <Tr
-                      key={index}
-                      className={
-                        user.id === loggedInUserId ? 'highlighted-row' : ''
-                      }
-                    >
-                      <Td>{user.username}</Td>
-                      <Td>
+                    <Tr key={index}>
+                      <Td
+                        color={
+                          user.id === loggedInUserId
+                            ? highlightTextColor
+                            : 'inherit'
+                        }
+                      >
+                        {user.username}
+                      </Td>
+                      <Td
+                        color={
+                          user.id === loggedInUserId
+                            ? highlightTextColor
+                            : 'inherit'
+                        }
+                      >
                         {new Date(user.createdAt).toLocaleDateString('de-DE')}
                       </Td>
-                      <Td>{user.score.streak}</Td>
-                      <Td>{user.score.longestStreak}</Td>
-                      <Td>{user.score.dailyScore[0]?.[0] || '-'}</Td>
+                      <Td
+                        color={
+                          user.id === loggedInUserId
+                            ? highlightTextColor
+                            : 'inherit'
+                        }
+                      >
+                        {user.score.streak}
+                      </Td>
+                      <Td
+                        color={
+                          user.id === loggedInUserId
+                            ? highlightTextColor
+                            : 'inherit'
+                        }
+                      >
+                        {user.score.longestStreak}
+                      </Td>
+                      <Td
+                        color={
+                          user.id === loggedInUserId
+                            ? highlightTextColor
+                            : 'inherit'
+                        }
+                      >
+                        {user.score.dailyScore[0]?.[0] || '-'}
+                      </Td>
                     </Tr>
                   ))}
                 </Tbody>
