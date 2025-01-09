@@ -11,6 +11,8 @@ import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
 import { useAuth } from '../providers/AuthProvider.tsx';
 import { UserGuessesText } from '../components/UserGuessesText.tsx';
+import { isToday, parseISO } from 'date-fns';
+import { useApiClient } from '../hooks/useApiClient.ts';
 
 interface ImageModeState {
   imageAttempts?: number;
@@ -30,6 +32,19 @@ interface CharacterOption extends OptionBase {
   value: string;
 }
 
+interface User {
+  id: string;
+  email: string;
+  username: string;
+  createdAt: string;
+  score: {
+    streak: number;
+    lastPlayed: string | null;
+    longestStreak: number;
+    dailyScore: number[];
+  };
+}
+
 export const ImageModePage = () => {
   const { fetchApi, apiData } = useImageApi();
   const [incorrectGuesses, setIncorrectGuesses] = useState<string[]>([]);
@@ -40,6 +55,8 @@ export const ImageModePage = () => {
   const userId = user?.id;
   const prevApiDataRef = useRef<ImageData | null>(null);
   const [finalStates, setFinalStates] = useState<FinalStates | null>(null);
+  const client = useApiClient();
+  const [isPlayedToday, setIsPlayedToday] = useState<boolean>(false);
 
   useEffect(() => {
     fetchApi().catch((error) => {
@@ -98,6 +115,24 @@ export const ImageModePage = () => {
     }
   }, [correctGuess, userId]);
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      console.log('Fetching user data');
+      try {
+        const response = await client.getUserById();
+        if (response.status === 200) {
+          const user: User = response.data;
+          const playedToday = checkIfModePlayedToday(user, 2);
+          setIsPlayedToday(playedToday);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
       setSelectedCharacter(selected);
@@ -114,6 +149,12 @@ export const ImageModePage = () => {
           imageAttempts: incorrectGuesses.length + 1,
           imageFinished: true,
         };
+        client.getUserById().then((response) => {
+          if (response.status === 200) {
+            const user: User = response.data;
+            updateModeScore(user, 2);
+          }
+        });
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
@@ -128,6 +169,33 @@ export const ImageModePage = () => {
       localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
       setSelectedCharacter(null);
     }
+  };
+
+  const checkIfModePlayedToday = (user: User, modeIndex: number): boolean => {
+    const lastPlayedDate = user.score.lastPlayed
+      ? parseISO(user.score.lastPlayed)
+      : null;
+
+    if (lastPlayedDate && isToday(lastPlayedDate)) {
+      return user.score.dailyScore[modeIndex] > 0;
+    } else {
+      initializeDailyScore(user);
+      return false;
+    }
+  };
+
+  const initializeDailyScore = (user: User) => {
+    user.score.dailyScore = [0, 0, 0];
+    client.putDailyScore({
+      dailyScore: user.score.dailyScore,
+    });
+  };
+
+  const updateModeScore = (user: User, modeIndex: number) => {
+    user.score.dailyScore[modeIndex] = incorrectGuesses.length + 1;
+    client.putDailyScore({
+      dailyScore: user.score.dailyScore,
+    });
   };
 
   const nameExceptions = (selected: CharacterOption): CharacterOption => {
@@ -194,7 +262,7 @@ export const ImageModePage = () => {
               },
               onChange: handleCharacterSelect,
               value: selectedCharacter,
-              isDisabled: !!correctGuess,
+              isDisabled: !!correctGuess || isPlayedToday,
             }}
           />
         </BaseBox>
