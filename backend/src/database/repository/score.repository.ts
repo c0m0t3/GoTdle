@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import type { Database } from '..';
 import { scoreSchema } from '../schema/score.schema';
-import { UpdateScore } from '../../validation/validation';
+import { UpdateDailyScore, UpdateScore } from '../../validation/validation';
 
 export class ScoreRepository {
   constructor(private readonly database: Database) {}
@@ -22,8 +22,20 @@ export class ScoreRepository {
 
   async updateScoreByUserId(
     userId: string,
-    data: Omit<UpdateScore, 'dailyScore'> & { dailyScore: number[][] },
+    data: Omit<UpdateScore, 'recentScores'> & { recentScores: number[][] },
   ) {
+    const [updatedScore] = await this.database
+      .update(scoreSchema)
+      .set({
+        ...data,
+        lastPlayed: new Date(),
+      })
+      .where(eq(scoreSchema.userId, userId))
+      .returning();
+    return updatedScore;
+  }
+
+  async updateDailyScoreByUserId(userId: string, data: UpdateDailyScore) {
     const [updatedScore] = await this.database
       .update(scoreSchema)
       .set({

@@ -70,6 +70,10 @@ export class Routes {
       '/scores',
       this.scoreController.updateScoreByUserId.bind(this.scoreController),
     );
+    this.router.put(
+      '/scores/daily',
+      this.scoreController.updateDailyScoreByUserId.bind(this.scoreController),
+    );
 
     // Character routes
     this.router.post(

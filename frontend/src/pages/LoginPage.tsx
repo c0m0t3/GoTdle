@@ -84,6 +84,7 @@ export const LoginPage = () => {
                   name={'password'}
                   label={'Password'}
                   inputProps={{
+                    type: 'password',
                     sx: inputFieldStyles,
                   }}
                 />
