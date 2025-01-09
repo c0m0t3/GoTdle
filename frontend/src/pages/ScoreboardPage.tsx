@@ -19,7 +19,8 @@ interface Score {
   streak: number;
   lastPlayed: string | null;
   longestStreak: number;
-  dailyScore: number[][];
+  dailyScore: number[];
+  recentScores: number[][];
 }
 
 interface User {

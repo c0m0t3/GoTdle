@@ -23,7 +23,8 @@ interface User {
   username: string;
   createdAt: string;
   score: {
-    dailyScore: number[][];
+    recentScores: number[][];
+    dailyScore: number[];
     lastPlayed: string | null;
     longestStreak: number;
     streak: number;
@@ -96,8 +97,8 @@ const StatRow = ({
 export const ProfilePage = () => {
   const client = useApiClient();
   const [user, setUser] = useState<User | null>(null);
-  const currentScore = user?.score?.dailyScore[0] || [0, 0, 0];
-  const previousScore = user?.score?.dailyScore[1] || [0, 0, 0];
+  const currentScore = user?.score?.recentScores[0] || [0, 0, 0];
+  const previousScore = user?.score?.recentScores[1] || [0, 0, 0];
   const labels = ['Classic', 'Quote', 'Image'];
 
   const getUser = useCallback(async () => {
