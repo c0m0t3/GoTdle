@@ -14,7 +14,6 @@ import {
 import { useApiClient } from '../hooks/useApiClient';
 import { BaseBox } from '../components/BaseBox.tsx';
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
-import '../styles/ScoreboardPage.css';
 
 interface Score {
   streak: number;
