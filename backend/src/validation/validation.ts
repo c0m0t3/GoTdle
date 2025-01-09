@@ -87,6 +87,10 @@ export const updateUserZodSchema = createInsertSchema(userSchema, {
 export const updateScoreZodSchema = z.object({
   streak: z.number(),
   longestStreak: z.number().optional(),
+  recentScores: z.array(z.number()),
+});
+
+export const updateDailyScoreZodSchema = z.object({
   dailyScore: z.array(z.number()),
 });
 
@@ -116,5 +120,6 @@ export const createCharacterZodSchema = z.array(
 
 export type CreateUser = z.infer<typeof createUserZodSchema>;
 export type UpdateScore = z.infer<typeof updateScoreZodSchema>;
+export type UpdateDailyScore = z.infer<typeof updateDailyScoreZodSchema>;
 export type UpdateUser = z.infer<typeof updateUserZodSchema>;
 export type CreateCharacter = z.infer<typeof createCharacterZodSchema>;

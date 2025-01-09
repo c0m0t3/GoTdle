@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
 import { ScoreRepository } from '../database/repository/score.repository';
 import { z } from 'zod';
-import { updateScoreZodSchema } from '../validation/validation';
+import {
+  updateDailyScoreZodSchema,
+  updateScoreZodSchema,
+} from '../validation/validation';
 
 export class ScoreController {
   constructor(private readonly scoreRepository: ScoreRepository) {}
@@ -26,17 +29,27 @@ export class ScoreController {
       req.user!.id,
     );
     const updatedDailyScore: number[][] = [
-      validatedData.dailyScore,
-      ...(currentScore?.dailyScore?.slice(0, 4) || []),
+      validatedData.recentScores,
+      ...(currentScore?.recentScores?.slice(0, 4) || []),
     ];
     const updatingData = {
       ...validatedData,
-      dailyScore: updatedDailyScore,
+      recentScores: updatedDailyScore,
     };
 
     const updatedScore = await this.scoreRepository.updateScoreByUserId(
       req.user!.id,
       updatingData,
+    );
+    res.send(updatedScore);
+  }
+
+  async updateDailyScoreByUserId(req: Request, res: Response): Promise<void> {
+    const validatedData = updateDailyScoreZodSchema.parse(req.body);
+
+    const updatedScore = await this.scoreRepository.updateDailyScoreByUserId(
+      req.user!.id,
+      validatedData,
     );
     res.send(updatedScore);
   }

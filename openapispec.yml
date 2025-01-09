@@ -253,7 +253,7 @@ paths:
                     type: integer
                     x-stoplight:
                       id: fwiafpnj162gd
-                  dailyScore:
+                  recentScores:
                     type: array
                     x-stoplight:
                       id: yxiwqt3c1hsif
@@ -265,6 +265,14 @@ paths:
                         x-stoplight:
                           id: tvqab8q38x1al
                         type: integer
+                  dailyScore:
+                    type: array
+                    x-stoplight:
+                      id: o17jcq8i8dhvz
+                    items:
+                      x-stoplight:
+                        id: 8daghswxqhgaa
+                      type: integer
       operationId: putScoreByUserId
       x-stoplight:
         id: ocffdx3ewcbtw
@@ -275,7 +283,7 @@ paths:
               type: object
               required:
                 - streak
-                - dailyScore
+                - recentScores
               properties:
                 streak:
                   type: string
@@ -285,7 +293,7 @@ paths:
                   type: string
                   x-stoplight:
                     id: ilsy4y927hm5y
-                dailyScore:
+                recentScores:
                   type: array
                   x-stoplight:
                     id: lx1z28cauee31
@@ -297,6 +305,77 @@ paths:
         - Authorization: [ ]
       description: Update score of logged user. UserId in Auth-Token.
     parameters: [ ]
+  /scores/daily:
+    put:
+      summary: Update DailyScore of User
+      tags: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    x-stoplight:
+                      id: 06kc7a5hucmmn
+                    format: uuid
+                  streak:
+                    type: integer
+                    x-stoplight:
+                      id: ox8ovfwvn8veg
+                  lastPlayed:
+                    type: string
+                    x-stoplight:
+                      id: dkfcckwbkj9jg
+                    format: date-time
+                  longestStreak:
+                    type: integer
+                    x-stoplight:
+                      id: vrnzez0yv51se
+                  recentScores:
+                    type: array
+                    x-stoplight:
+                      id: 2ic10z48fhzei
+                    items:
+                      x-stoplight:
+                        id: tusgtpgr1w8dk
+                      type: array
+                      items:
+                        x-stoplight:
+                          id: xei571s0cnkrv
+                        type: integer
+                  dailyScore:
+                    type: array
+                    x-stoplight:
+                      id: hbzjf5ki2qlng
+                    items:
+                      x-stoplight:
+                        id: htxjjhz0r426u
+                      type: integer
+      operationId: putDailyScore
+      x-stoplight:
+        id: m8xi5dm97pmfu
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - dailyScore
+              properties:
+                dailyScore:
+                  type: array
+                  x-stoplight:
+                    id: rtp81cawprncp
+                  items:
+                    x-stoplight:
+                      id: upn550p4iko5q
+                    type: integer
+      security:
+        - Authorization: [ ]
   '/characters/{_id}':
     parameters:
       - schema:
@@ -399,14 +478,19 @@ components:
         - lastPlayed: '2019-08-24'
           Streak: 0
           LongestStreak: 0
-          dailyScore:
+          recentScores:
             - - 0
               - 0
               - 0
+          dailyScore:
+            - 0
+            - 0
+            - 0
       required:
         - streak
         - lastPlayed
         - longestStreak
+        - recentScores
         - dailyScore
       properties:
         streak:
@@ -425,7 +509,7 @@ components:
           x-stoplight:
             id: 942pon3y9061b
           description: deafult 0
-        dailyScore:
+        recentScores:
           type: array
           x-stoplight:
             id: ltp8ngi9niqt7
@@ -438,6 +522,14 @@ components:
               x-stoplight:
                 id: p1y8ztn3bp803
               type: integer
+        dailyScore:
+          type: array
+          x-stoplight:
+            id: jzfmdx387l504
+          items:
+            x-stoplight:
+              id: ebekc911h2gm2
+            type: integer
     Characters:
       title: Characters
       x-stoplight:

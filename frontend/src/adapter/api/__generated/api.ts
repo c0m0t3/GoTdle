@@ -280,6 +280,62 @@ export interface PostUserRegisterRequest {
 /**
  * 
  * @export
+ * @interface PutDailyScore200Response
+ */
+export interface PutDailyScore200Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof PutDailyScore200Response
+     */
+    'userId'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PutDailyScore200Response
+     */
+    'streak'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PutDailyScore200Response
+     */
+    'lastPlayed'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PutDailyScore200Response
+     */
+    'longestStreak'?: number;
+    /**
+     * 
+     * @type {Array<Array<number>>}
+     * @memberof PutDailyScore200Response
+     */
+    'recentScores'?: Array<Array<number>>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof PutDailyScore200Response
+     */
+    'dailyScore'?: Array<number>;
+}
+/**
+ * 
+ * @export
+ * @interface PutDailyScoreRequest
+ */
+export interface PutDailyScoreRequest {
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof PutDailyScoreRequest
+     */
+    'dailyScore': Array<number>;
+}
+/**
+ * 
+ * @export
  * @interface PutScoreByUserId200Response
  */
 export interface PutScoreByUserId200Response {
@@ -312,7 +368,13 @@ export interface PutScoreByUserId200Response {
      * @type {Array<Array<number>>}
      * @memberof PutScoreByUserId200Response
      */
-    'dailyScore'?: Array<Array<number>>;
+    'recentScores'?: Array<Array<number>>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof PutScoreByUserId200Response
+     */
+    'dailyScore'?: Array<number>;
 }
 /**
  * 
@@ -337,7 +399,7 @@ export interface PutScoreByUserIdRequest {
      * @type {Array<number>}
      * @memberof PutScoreByUserIdRequest
      */
-    'dailyScore': Array<number>;
+    'recentScores': Array<number>;
 }
 /**
  * 
@@ -393,7 +455,13 @@ export interface Scores {
      * @type {Array<Array<number>>}
      * @memberof Scores
      */
-    'dailyScore': Array<Array<number>>;
+    'recentScores': Array<Array<number>>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof Scores
+     */
+    'dailyScore': Array<number>;
 }
 /**
  * 
@@ -678,6 +746,44 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
+         * 
+         * @summary Update DailyScore of User
+         * @param {PutDailyScoreRequest} [putDailyScoreRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putDailyScore: async (putDailyScoreRequest?: PutDailyScoreRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/scores/daily`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Authorization required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(putDailyScoreRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Update score of logged user. UserId in Auth-Token.
          * @summary Update Score by User ID
          * @param {PutScoreByUserIdRequest} [putScoreByUserIdRequest] 
@@ -852,6 +958,19 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * 
+         * @summary Update DailyScore of User
+         * @param {PutDailyScoreRequest} [putDailyScoreRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async putDailyScore(putDailyScoreRequest?: PutDailyScoreRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PutDailyScore200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.putDailyScore(putDailyScoreRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.putDailyScore']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * Update score of logged user. UserId in Auth-Token.
          * @summary Update Score by User ID
          * @param {PutScoreByUserIdRequest} [putScoreByUserIdRequest] 
@@ -953,6 +1072,16 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          */
         postUserRegister(postUserRegisterRequest?: PostUserRegisterRequest, options?: RawAxiosRequestConfig): AxiosPromise<PostUserRegister201Response> {
             return localVarFp.postUserRegister(postUserRegisterRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Update DailyScore of User
+         * @param {PutDailyScoreRequest} [putDailyScoreRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putDailyScore(putDailyScoreRequest?: PutDailyScoreRequest, options?: RawAxiosRequestConfig): AxiosPromise<PutDailyScore200Response> {
+            return localVarFp.putDailyScore(putDailyScoreRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Update score of logged user. UserId in Auth-Token.
@@ -1063,6 +1192,18 @@ export class DefaultApi extends BaseAPI {
      */
     public postUserRegister(postUserRegisterRequest?: PostUserRegisterRequest, options?: RawAxiosRequestConfig) {
         return DefaultApiFp(this.configuration).postUserRegister(postUserRegisterRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Update DailyScore of User
+     * @param {PutDailyScoreRequest} [putDailyScoreRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public putDailyScore(putDailyScoreRequest?: PutDailyScoreRequest, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).putDailyScore(putDailyScoreRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
