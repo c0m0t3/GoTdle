@@ -14,6 +14,7 @@ import {
 import { useApiClient } from '../hooks/useApiClient';
 import { BaseBox } from '../components/BaseBox.tsx';
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
+import '../styles/ScoreboardPage.css';
 
 interface Score {
   streak: number;
@@ -37,6 +38,7 @@ export const ScoreboardPage = () => {
     key: keyof User | keyof Score;
     direction: 'ascending' | 'descending';
   } | null>(null);
+  const [loggedInUserId, setLoggedInUserId] = useState<string | null>(null);
   const client = useApiClient();
 
   useEffect(() => {
@@ -51,7 +53,17 @@ export const ScoreboardPage = () => {
       }
     };
 
+    const fetchLoggedInUser = async () => {
+      try {
+        const response = await client.getUserById();
+        setLoggedInUserId(response.data.id);
+      } catch (error) {
+        console.error('Error fetching logged-in user:', error);
+      }
+    };
+
     fetchUsers();
+    fetchLoggedInUser();
   }, [client]);
 
   const sortedUsers = [...users].sort((a, b) => {
@@ -146,7 +158,12 @@ export const ScoreboardPage = () => {
                 </Thead>
                 <Tbody>
                   {sortedUsers.map((user, index) => (
-                    <Tr key={index}>
+                    <Tr
+                      key={index}
+                      className={
+                        user.id === loggedInUserId ? 'highlighted-row' : ''
+                      }
+                    >
                       <Td>{user.username}</Td>
                       <Td>
                         {new Date(user.createdAt).toLocaleDateString('de-DE')}
