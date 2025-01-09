@@ -13,6 +13,8 @@ import {
 } from '@chakra-ui/react';
 import { useApiClient } from '../hooks/useApiClient';
 import { BaseBox } from '../components/BaseBox.tsx';
+import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
+import '../styles/ScoreboardPage.css';
 
 interface Score {
   streak: number;
@@ -85,6 +87,21 @@ export const ScoreboardPage = () => {
     setSortConfig({ key, direction });
   };
 
+  const getSortIcon = (key: keyof User | keyof Score) => {
+    if (sortConfig?.key === key) {
+      return sortConfig.direction === 'ascending' ? (
+        <span style={{ marginLeft: '0.5em' }}>
+          <FaArrowUp />
+        </span>
+      ) : (
+        <span style={{ marginLeft: '0.5em' }}>
+          <FaArrowDown />
+        </span>
+      );
+    }
+    return null;
+  };
+
   return (
     <BaseLayout>
       <Box p={4}>
@@ -101,16 +118,30 @@ export const ScoreboardPage = () => {
               <Table variant="simple">
                 <Thead>
                   <Tr>
-                    <Th onClick={() => requestSort('username')}>Name</Th>
-                    <Th onClick={() => requestSort('createdAt')}>Created At</Th>
+                    <Th onClick={() => requestSort('username')}>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        Name {getSortIcon('username')}
+                      </div>
+                    </Th>
+                    <Th onClick={() => requestSort('createdAt')}>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        Created At {getSortIcon('createdAt')}
+                      </div>
+                    </Th>
                     <Th onClick={() => requestSort('streak')}>
-                      Current Streak
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        Current Streak {getSortIcon('streak')}
+                      </div>
                     </Th>
                     <Th onClick={() => requestSort('longestStreak')}>
-                      Longest Streak
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        Longest Streak {getSortIcon('longestStreak')}
+                      </div>
                     </Th>
                     <Th onClick={() => requestSort('dailyScore')}>
-                      First Daily Score
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        First Daily Score {getSortIcon('dailyScore')}
+                      </div>
                     </Th>
                   </Tr>
                 </Thead>
