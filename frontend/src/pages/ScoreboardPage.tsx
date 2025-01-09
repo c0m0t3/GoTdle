@@ -139,7 +139,7 @@ export const ScoreboardPage = () => {
                     </Th>
                     <Th onClick={() => requestSort('dailyScore')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
-                        First Daily Score {getSortIcon('dailyScore')}
+                        Latest Daily Score {getSortIcon('dailyScore')}
                       </div>
                     </Th>
                   </Tr>
@@ -148,7 +148,9 @@ export const ScoreboardPage = () => {
                   {sortedUsers.map((user, index) => (
                     <Tr key={index}>
                       <Td>{user.username}</Td>
-                      <Td>{new Date(user.createdAt).toLocaleDateString()}</Td>
+                      <Td>
+                        {new Date(user.createdAt).toLocaleDateString('de-DE')}
+                      </Td>
                       <Td>{user.score.streak}</Td>
                       <Td>{user.score.longestStreak}</Td>
                       <Td>{user.score.dailyScore[0]?.[0] || '-'}</Td>
