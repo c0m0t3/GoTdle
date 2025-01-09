@@ -44,6 +44,10 @@ export class Routes {
       this.userController.getUserById.bind(this.userController),
     );
     this.router.get(
+      '/users/search',
+      this.userController.getUsersByNameSearch.bind(this.userController),
+    );
+    this.router.get(
       '/users/username/:username',
       this.userController.getUserByUsername.bind(this.userController),
     );
