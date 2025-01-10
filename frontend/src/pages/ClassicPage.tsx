@@ -15,6 +15,7 @@ import { gotButtonStyle } from '../styles/buttonStyles.ts';
 import { isToday, parseISO } from 'date-fns';
 import '../styles/ClassicPage.css';
 import { useAuth } from '../providers/AuthProvider.tsx';
+import { updateModeScore } from '../utils/stataManager.tsx';
 
 interface Character {
   name: string;
@@ -92,13 +93,6 @@ export const ClassicPage: React.FC = () => {
     }
   };
 
-  const updateModeScore = (user: User, modeIndex: number) => {
-    user.score.dailyScore[modeIndex] = incorrectGuesses.length + 1;
-    client.putDailyScore({
-      dailyScore: user.score.dailyScore,
-    });
-  };
-
   const initializeDailyScore = (user: User) => {
     user.score.dailyScore = [0, 0, 0];
     client.putDailyScore({
@@ -147,7 +141,7 @@ export const ClassicPage: React.FC = () => {
         const response = await client.getUserById();
         if (response.status === 200) {
           const user: User = response.data;
-          const playedToday = checkIfModePlayedToday(user, 0); // Index für ClassicMode
+          const playedToday = checkIfModePlayedToday(user, 0);
           setIsPlayedToday(playedToday);
         }
       } catch (error) {
@@ -190,7 +184,7 @@ export const ClassicPage: React.FC = () => {
         };
         client.getUserById().then((response) => {
           if (response.status === 200) {
-            updateModeScore(response.data, 0);
+            updateModeScore(response.data, 0, incorrectGuesses.length, client);
           }
         });
       } else {
