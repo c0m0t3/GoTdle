@@ -55,6 +55,8 @@ export const initializeDailyScore = (user: User, client: Client) => {
   client.putDailyScore({
     dailyScore: user.score.dailyScore,
   });
+
+  localStorage.removeItem(user.id || '');
 };
 
 export const updateModeScore = (
