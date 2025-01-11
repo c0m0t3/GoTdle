@@ -546,17 +546,13 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * Get character for classic mode
-         * @summary Get Character Info by Id
-         * @param {number} id 
+         * Get all characters to use its name for the Answer-SelectControl-Options
+         * @summary Get All Characters
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getCharacterById: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('getCharacterById', 'id', id)
-            const localVarPath = `/characters/{_id}`
-                .replace(`{${"_id"}}`, encodeURIComponent(String(id)));
+        getCharacters: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/characters`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -580,13 +576,14 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * Get all characters to use its name for the Answer-SelectControl-Options
-         * @summary Get All Characters
+         * 
+         * @summary Search User By Username
+         * @param {string} [username] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getCharacters: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/characters`;
+        getSearchUserByUsername: async (username?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/users/search`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -597,6 +594,14 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication Authorization required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (username !== undefined) {
+                localVarQueryParameter['username'] = username;
+            }
 
 
     
@@ -883,19 +888,6 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Get character for classic mode
-         * @summary Get Character Info by Id
-         * @param {number} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getCharacterById(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Characters>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getCharacterById(id, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DefaultApi.getCharacterById']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
          * Get all characters to use its name for the Answer-SelectControl-Options
          * @summary Get All Characters
          * @param {*} [options] Override http request option.
@@ -905,6 +897,19 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getCharacters(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.getCharacters']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Search User By Username
+         * @param {string} [username] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getSearchUserByUsername(username?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getSearchUserByUsername(username, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.getSearchUserByUsername']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1017,16 +1022,6 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.deleteUserById(deleteUserByIdRequest, options).then((request) => request(axios, basePath));
         },
         /**
-         * Get character for classic mode
-         * @summary Get Character Info by Id
-         * @param {number} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharacterById(id: number, options?: RawAxiosRequestConfig): AxiosPromise<Characters> {
-            return localVarFp.getCharacterById(id, options).then((request) => request(axios, basePath));
-        },
-        /**
          * Get all characters to use its name for the Answer-SelectControl-Options
          * @summary Get All Characters
          * @param {*} [options] Override http request option.
@@ -1034,6 +1029,16 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          */
         getCharacters(options?: RawAxiosRequestConfig): AxiosPromise<Array<Characters>> {
             return localVarFp.getCharacters(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Search User By Username
+         * @param {string} [username] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSearchUserByUsername(username?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<User>> {
+            return localVarFp.getSearchUserByUsername(username, options).then((request) => request(axios, basePath));
         },
         /**
          * Get logged user. UserId in Auth-Token.
@@ -1126,18 +1131,6 @@ export class DefaultApi extends BaseAPI {
     }
 
     /**
-     * Get character for classic mode
-     * @summary Get Character Info by Id
-     * @param {number} id 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public getCharacterById(id: number, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).getCharacterById(id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
      * Get all characters to use its name for the Answer-SelectControl-Options
      * @summary Get All Characters
      * @param {*} [options] Override http request option.
@@ -1146,6 +1139,18 @@ export class DefaultApi extends BaseAPI {
      */
     public getCharacters(options?: RawAxiosRequestConfig) {
         return DefaultApiFp(this.configuration).getCharacters(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Search User By Username
+     * @param {string} [username] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public getSearchUserByUsername(username?: string, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getSearchUserByUsername(username, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -41,7 +41,7 @@ export class ScoreController {
       req.user!.id,
       updatingData,
     );
-    res.send(updatedScore);
+    res.status(200).send(updatedScore);
   }
 
   async updateDailyScoreByUserId(req: Request, res: Response): Promise<void> {
@@ -51,6 +51,6 @@ export class ScoreController {
       req.user!.id,
       validatedData,
     );
-    res.send(updatedScore);
+    res.status(200).send(updatedScore);
   }
 }

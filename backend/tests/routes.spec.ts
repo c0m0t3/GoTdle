@@ -37,12 +37,6 @@ describe('Routes', () => {
       getUserById: jest.fn((_req, res) =>
         res.status(200).json({ id: TEST_IDS.USER_ID }),
       ),
-      getUserByUsername: jest.fn((_req, res) =>
-        res.status(200).json({ id: TEST_IDS.USER_ID }),
-      ),
-      getUserByEmail: jest.fn((_req, res) =>
-        res.status(200).json({ id: TEST_IDS.USER_ID }),
-      ),
       updateUser: jest.fn((_req, res) =>
         res.status(200).json({ id: TEST_IDS.USER_ID }),
       ),
@@ -52,25 +46,25 @@ describe('Routes', () => {
       getAllUsers: jest.fn((_req, res) =>
         res.status(200).json([{ id: TEST_IDS.USER_ID }]),
       ),
+      getUsersByNameSearch: jest.fn((_req, res) =>
+        res.status(200).json([{ id: TEST_IDS.USER_ID }]),
+      ),
     } as unknown as UserController;
 
     scoreController = {
-      getScoreByUserId: jest.fn((_req, res) =>
+      updateScoreByUserId: jest.fn((_req, res) =>
         res.status(200).json({ userId: TEST_IDS.USER_ID }),
       ),
-      updateScoreByUserId: jest.fn((_req, res) =>
+      updateDailyScoreByUserId: jest.fn((_req, res) =>
         res.status(200).json({ userId: TEST_IDS.USER_ID }),
       ),
     } as unknown as ScoreController;
 
     characterController = {
-      getCharacterById: jest.fn((_req, res) =>
-        res.status(200).json({ userId: TEST_IDS.USER_ID }),
-      ),
       getCharacters: jest.fn((_req, res) =>
         res.status(200).json({ userId: TEST_IDS.USER_ID }),
       ),
-      createCharacter: jest.fn((_req, res) =>
+      createCharacters: jest.fn((_req, res) =>
         res.status(200).json({ userId: TEST_IDS.USER_ID }),
       ),
       deleteAllCharacters: jest.fn((_req, res) => res.status(204).json({})),
@@ -87,44 +81,73 @@ describe('Routes', () => {
     app.use(routes.getRouter());
   }, 100000);
 
+  //Auth Routes
+  it('should call registerUser', async () => {
+    await request(app).post('/auth/register').expect(201);
+    expect(authController.registerUser).toHaveBeenCalled();
+  }, 10000);
+
+  it('should call loginUser', async () => {
+    await request(app).post(`/auth/login`).expect(200);
+    expect(authController.loginUser).toHaveBeenCalled();
+  }, 10000);
+
+  //User Routes
+  it('should call getAllUsers', async () => {
+    await request(app).get(`/users`).expect(200);
+    expect(userController.getAllUsers).toHaveBeenCalled();
+  }, 10000);
+
   it('should call getUserById', async () => {
-    await request(app).get(`/users/${TEST_IDS.USER_ID}`).expect(200);
+    await request(app).get(`/users/me`).expect(200);
     expect(userController.getUserById).toHaveBeenCalled();
-  }, 10000);
-
-  it('should call getUserByUsername', async () => {
-    await request(app).get('/users/username/testuser').expect(200);
-    expect(userController.getUserByUsername).toHaveBeenCalled();
-  }, 10000);
-
-  it('should call getUserByEmail', async () => {
-    await request(app).get('/users/email/test@example.com').expect(200);
-    expect(userController.getUserByEmail).toHaveBeenCalled();
   }, 10000);
 
   it('should call updateUser', async () => {
     await request(app)
-      .put(`/users/${TEST_IDS.USER_ID}`)
+      .put(`/users`)
       .send({ email: 'updated@example.com' })
       .expect(200);
     expect(userController.updateUser).toHaveBeenCalled();
   }, 10000);
 
   it('should call deleteUser', async () => {
-    await request(app).delete(`/users/${TEST_IDS.USER_ID}`).expect(200);
+    await request(app).delete(`/users`).expect(200);
     expect(userController.deleteUser).toHaveBeenCalled();
   }, 10000);
 
-  it('should call getScoreByUserId', async () => {
-    await request(app).get(`/scores/${TEST_IDS.USER_ID}`).expect(200);
-    expect(scoreController.getScoreByUserId).toHaveBeenCalled();
-  }, 10000);
-
+  
+  //Score Routes
   it('should call updateScoreByUserId', async () => {
     await request(app)
-      .put(`/scores/${TEST_IDS.USER_ID}`)
+      .put(`/scores`)
       .send({ streak: 5 })
       .expect(200);
     expect(scoreController.updateScoreByUserId).toHaveBeenCalled();
+  }, 10000);
+  
+  it('should call updateDailyScoreByUserId', async () => {
+    await request(app)
+      .put(`/scores/daily`)
+      .send({ dailyScore: [1, 2, 3] })
+      .expect(200);
+    expect(scoreController.updateDailyScoreByUserId).toHaveBeenCalled();
+  }, 10000);
+
+
+  //Character Routes
+  it('should call getCharacters', async () => {
+    await request(app).get(`/characters`).expect(200);
+    expect(characterController.getCharacters).toHaveBeenCalled();
+  }, 10000);
+
+  it('should call createCharacters', async () => {
+    await request(app).post(`/characters`).send([{ name: 'Jon Snow' }]).expect(200);
+    expect(characterController.createCharacters).toHaveBeenCalled();
+  }, 10000);
+
+  it('should call deleteAllCharacters', async () => {
+    await request(app).delete(`/characters`).expect(204);
+    expect(characterController.deleteAllCharacters).toHaveBeenCalled();
   }, 10000);
 });

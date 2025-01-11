@@ -68,6 +68,32 @@ export class UserRepository {
     });
   }
 
+  async getUsersByNameSearch(username: string, includeScoreRelation = true) {
+    return this.database.query.userSchema.findMany({
+      where: (user, { like }) =>
+        username ? like(user.username, `%${username}%`) : undefined,
+      columns: {
+        id: true,
+        email: true,
+        username: true,
+        createdAt: true,
+      },
+      with: includeScoreRelation
+        ? {
+            score: {
+              columns: {
+                streak: true,
+                lastPlayed: true,
+                longestStreak: true,
+                recentScores: true,
+                dailyScore: true,
+              },
+            },
+          }
+        : undefined,
+    });
+  }
+
   async getUserById(id: string) {
     return this.database.query.userSchema.findFirst({
       where: (user, { eq }) => eq(user.id, id),

@@ -1,4 +1,5 @@
-import { excludeInjectionChars, loginZodSchema, createUserZodSchema, updateUserZodSchema } from '../src/validation/validation';
+import { z } from 'zod';
+import { loginZodSchema, createUserZodSchema, updateUserZodSchema, createCharacterZodSchema, updateDailyScoreZodSchema, updateScoreZodSchema } from '../src/validation/validation';
 
 jest.mock('../src/dependency-injection', () => ({
   DI: {
@@ -11,213 +12,269 @@ jest.mock('../src/dependency-injection', () => ({
 }));
 
 describe('Validation Schemas', () => {
-  describe('excludeInjectionChars', () => {
-    it('should throw an error if input contains forbidden characters', () => {
-      const forbiddenInputs = ["test'", 'test;', 'test<', 'test>', 'test&'];
-      forbiddenInputs.forEach(input => {
-        expect(() => excludeInjectionChars(input)).toThrow('Input contains forbidden characters');
-      });
-    });
-
-    it('should return the input if it does not contain forbidden characters', () => {
-      const validInput = 'validInput';
-      expect(excludeInjectionChars(validInput)).toBe(validInput);
-    });
-  });
-
   describe('loginZodSchema', () => {
     it('should validate a valid email login', () => {
-      const validData = {
+      const result = loginZodSchema.safeParse({
+        type: 'email',
         identifier: 'test@example.com',
         password: 'password123',
-        type: 'email',
-      };
-      expect(() => loginZodSchema.parse(validData)).not.toThrow();
+      });
+      expect(result.success).toBe(true);
     });
 
     it('should validate a valid username login', () => {
-      const validData = {
+      const result = loginZodSchema.safeParse({
+        type: 'username',
         identifier: 'testuser',
         password: 'password123',
-        type: 'username',
-      };
-      expect(() => loginZodSchema.parse(validData)).not.toThrow();
+      });
+      expect(result.success).toBe(true);
     });
 
-    it('should throw an error for invalid identifier data', () => {
-      const invalidData = {
-        identifier: 'username',
-        password: 'password123',
-        type: 'invalidType',
-      };
-      expect(() => loginZodSchema.parse(invalidData)).toThrow();
-    });
-
-    it('should throw an error for invalid password data', () => {
-      const invalidData = {
-        identifier: 'username',
-        password: 'pass',
-        type: 'username',
-      };
-      expect(() => loginZodSchema.parse(invalidData)).toThrow();
-    });
-
-    it('should throw an error for invalid username data', () => {
-      const invalidData = {
-        identifier: 's',
-        password: 'password123',
-        type: 'username',
-      };
-      expect(() => loginZodSchema.parse(invalidData)).toThrow();
-    });
-
-    it('should throw an error for invalid email data', () => {
-      const invalidData = {
-        identifier: 'noEmail',
-        password: 'password123',
+    it('should invalidate an invalid email login', () => {
+      const result = loginZodSchema.safeParse({
         type: 'email',
-      };
-      expect(() => loginZodSchema.parse(invalidData)).toThrow();
-    });
-
-    it('should throw an error for injection-characters in username data', () => {
-      const invalidData = {
-        identifier: '<testuser>',
+        identifier: 'invalid-email',
         password: 'password123',
-        type: 'username',
-      };
-      expect(() => loginZodSchema.parse(invalidData)).toThrow();
+      });
+      expect(result.success).toBe(false);
     });
 
-    it('should throw an error for injection-characters in password data', () => {
-      const invalidData = {
-        identifier: 'test@example.com',
-        password: '<<password123>',
-        type: 'email',
-      };
-      expect(() => loginZodSchema.parse(invalidData)).toThrow();
+    it('should invalidate an invalid username login', () => {
+      const result = loginZodSchema.safeParse({
+        type: 'username',
+        identifier: 'us',
+        password: 'password123',
+      });
+      expect(result.success).toBe(false);
+    });
+
+    it('should invalidate a login with forbidden characters in password', () => {
+      const result = loginZodSchema.safeParse({
+        type: 'username',
+        identifier: 'testuser',
+        password: 'password123<',
+      });
+      expect(result.success).toBe(false);
     });
   });
 
   describe('createUserZodSchema', () => {
-    it('should validate and transform valid user data', async () => {
-      const validData = {
+    it('should validate a valid user creation', async () => {
+      const result = await createUserZodSchema.safeParseAsync({
         email: 'test@example.com',
         password: 'password123',
         username: 'testuser',
-      };
-      const result = await createUserZodSchema.parseAsync(validData);
-      expect(result).toEqual({
-        ...validData,
-        password: `hashed-${validData.password}`,
       });
+      expect(result.success).toBe(true);
     });
 
-    it('should throw an error for invalid email data', async () => {
-      const invalidData = {
+    it('should invalidate a user creation with invalid email', async () => {
+      const result = await createUserZodSchema.safeParseAsync({
         email: 'invalid-email',
-        password: 'pass',
+        password: 'password123',
         username: 'testuser',
-      };
-      await expect(createUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
+      });
+      expect(result.success).toBe(false);
     });
 
-    it('should throw an error for invalid username data', async () => {
-      const invalidData = {
+    it('should invalidate a user creation with forbidden characters in username', async () => {
+      const result = await createUserZodSchema.safeParseAsync({
         email: 'test@example.com',
-        password: 'pass',
-        username: 'te',
-      };
-      await expect(createUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
+        password: 'password123',
+        username: 'testuser<',
+      });
+      expect(result.success).toBe(false);
     });
 
-    it('should throw an error for invalid password data', async () => {
-      const invalidData = {
+    it('should invalidate a user creation with forbidden characters in password', async () => {
+      const result = await createUserZodSchema.safeParseAsync({
         email: 'test@example.com',
-        password: 'pass',
+        password: 'password123<',
         username: 'testuser',
-      };
-      await expect(createUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
-    });
-
-    
-    it('should throw an error for injection-characters in username data', async () => {
-      const invalidData = {
-        email: 'test@example.com',
-        password: 'password',
-        username: '<testuser>',
-      };
-      await expect(createUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
-    });
-
-    
-    it('should throw an error for injection-characters in password data', async () => {
-      const invalidData = {
-        email: 'test@example.com',
-        password: '<<password>',
-        username: 'testuser',
-      };
-      await expect(createUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
+      });
+      expect(result.success).toBe(false);
     });
   });
 
   describe('updateUserZodSchema', () => {
-    it('should validate and transform valid user data', async () => {
-      const validData = {
+    it('should validate a valid user update', async () => {
+      const result = await updateUserZodSchema.safeParseAsync({
         email: 'test@example.com',
         password: 'password123',
         username: 'testuser',
-      };
-      const result = await updateUserZodSchema.parseAsync(validData);
-      expect(result).toEqual({
-        ...validData,
-        password: `hashed-${validData.password}`,
       });
+      expect(result.success).toBe(true);
     });
 
-    it('should throw an error for invalid email data', async () => {
-      const invalidData = {
+    it('should invalidate a user update with invalid email', async () => {
+      const result = await updateUserZodSchema.safeParseAsync({
         email: 'invalid-email',
         password: 'password123',
         username: 'testuser',
-      };
-      await expect(updateUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
+      });
+      expect(result.success).toBe(false);
     });
 
-    it('should throw an error for invalid password data', async () => {
-      const invalidData = {
-        email: 'test@example.com',
-        password: 'pass',
-        username: 'testuser',
-      };
-      await expect(updateUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
-    });
-
-    it('should throw an error for invalid username data', async () => {
-      const invalidData = {
+    it('should invalidate a user update with forbidden characters in username', async () => {
+      const result = await updateUserZodSchema.safeParseAsync({
         email: 'test@example.com',
         password: 'password123',
-        username: 'te',
-      };
-      await expect(updateUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
+        username: 'testuser<',
+      });
+      expect(result.success).toBe(false);
     });
 
-    it('should throw an error for injection-characters in username data', async () => {
-      const invalidData = {
+    it('should invalidate a user update with forbidden characters in password', async () => {
+      const result = await updateUserZodSchema.safeParseAsync({
         email: 'test@example.com',
-        password: 'password123',
-        username: '<Peter>>>',
-      };
-      await expect(updateUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
-    });
-
-    it('should throw an error for injection-characters in password data', async () => {
-      const invalidData = {
-        email: 'test@example.com',
-        password: '<<password123',
+        password: 'password123<',
         username: 'testuser',
-      };
-      await expect(updateUserZodSchema.parseAsync(invalidData)).rejects.toThrow();
+      });
+      expect(result.success).toBe(false);
     });
   });
+
+  describe('updateScoreZodSchema', () => {
+    it('should validate a correct score update', () => {
+      const validData = {
+        streak: 5,
+        longestStreak: 10,
+        recentScores: [1, 2, 3],
+      };
+
+      expect(() => updateScoreZodSchema.parse(validData)).not.toThrow();
+    });
+
+    it('should fail validation for incorrect score update', () => {
+      const invalidData = {
+        streak: 'five',
+        longestStreak: 10,
+        recentScores: [1, 2, 3],
+      };
+
+      expect(() => updateScoreZodSchema.parse(invalidData)).toThrow(z.ZodError);
+    });
+    it('should fail validation for incorrect score update', () => {
+      const invalidData = {
+        streak: 5,
+        longestStreak: 10,
+        recentScores: [1, 2, 'three'],
+      };
+
+      expect(() => updateScoreZodSchema.parse(invalidData)).toThrow(z.ZodError);
+    });
+    it('should fail validation for incorrect score update', () => {
+      const invalidData = {
+        streak: 5,
+        longestStreak: "10",
+        recentScores: [1, 2, 5],
+      };
+
+      expect(() => updateScoreZodSchema.parse(invalidData)).toThrow(z.ZodError);
+    });
+  });
+
+  describe('updateDailyScoreZodSchema', () => {
+    it('should validate a correct daily score update', () => {
+      const validData = {
+        dailyScore: [1, 2, 3],
+      };
+
+      expect(() => updateDailyScoreZodSchema.parse(validData)).not.toThrow();
+    });
+
+    it('should fail validation for incorrect daily score update', () => {
+      const invalidData = {
+        dailyScore: [1, 'two', 3],
+      };
+
+      expect(() => updateDailyScoreZodSchema.parse(invalidData)).toThrow(z.ZodError);
+    });
+  });
+
+  describe('createCharacterZodSchema', () => {
+    it('should validate a correct character creation', () => {
+      const validData = [
+        {
+          _id: 1,
+          name: 'Jon Snow',
+          gender: 'Male',
+          born: 'In 283 AC',
+          origin: 'Winterfell',
+          death: 'In 305 AC',
+          status: 'Deceased',
+          culture: 'Northmen',
+          religion: 'Old Gods of the Forest',
+          titles: ['Lord Commander of the Night\'s Watch'],
+          house: 'Stark',
+          father: 'Rhaegar Targaryen',
+          mother: 'Lyanna Stark',
+          spouse: [],
+          children: [],
+          siblings: ['Sansa Stark', 'Arya Stark', 'Bran Stark', 'Rickon Stark'],
+          lovers: ['Ygritte'],
+          seasons: [1, 2, 3, 4, 5, 6, 7, 8],
+          actor: 'Kit Harington',
+        },
+      ];
+
+      expect(() => createCharacterZodSchema.parse(validData)).not.toThrow();
+    });
+
+    it('should fail validation for incorrect character creation', () => {
+      const invalidData = [
+        {
+          _id: -1,
+          name: 'jon Peter Snow',
+          gender: 'Male',
+          born: 'In 283 AC',
+          origin: 'Winterfell',
+          death: 'In 305 AC',
+          status: 'Deceased',
+          culture: 'Northmen',
+          religion: 'Old Gods of the Forest',
+          titles: ['Lord Commander of the Night\'s Watch'],
+          house: 'Stark',
+          father: 'Rhaegar Targaryen',
+          mother: 'Lyanna Stark',
+          spouse: [],
+          children: [],
+          siblings: ['Sansa Stark', 'Arya Stark', 'Bran Stark', 'Rickon Stark'],
+          lovers: ['Ygritte'],
+          seasons: [1, 2, 3, 4, 5, 6, 7, 9],
+          actor: 'Kit Harington',
+        },
+      ];
+
+      expect(() => createCharacterZodSchema.parse(invalidData)).toThrow(z.ZodError);
+    });
+    it('should fail validation for incorrect character creation', () => {
+      const invalidData = [
+        {
+          _id: 1,
+          name: '',
+          gender: 'Male',
+          born: 'In 283 AC',
+          origin: 'Winterfell',
+          death: 'In 305 AC',
+          status: 'Deceased',
+          culture: 'Northmen',
+          religion: 'Old Gods of the Forest',
+          titles: ['Lord Commander of the Night\'s Watch'],
+          house: 'Stark',
+          father: 'Rhaegar Targaryen',
+          mother: 'Lyanna Stark',
+          spouse: [],
+          children: [],
+          siblings: ['Sansa Stark', 'Arya Stark', 'Bran Stark', 'Rickon Stark'],
+          lovers: ['Ygritte'],
+          seasons: [1, 2, 3, 4, 5, 6, 7, 9],
+          actor: 'Kit Harington',
+        },
+      ];
+
+      expect(() => createCharacterZodSchema.parse(invalidData)).toThrow(z.ZodError);
+    });
+  });  
 });

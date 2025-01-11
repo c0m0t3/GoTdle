@@ -44,12 +44,8 @@ export class Routes {
       this.userController.getUserById.bind(this.userController),
     );
     this.router.get(
-      '/users/username/:username',
-      this.userController.getUserByUsername.bind(this.userController),
-    );
-    this.router.get(
-      '/users/email/:email',
-      this.userController.getUserByEmail.bind(this.userController),
+      '/users/search',
+      this.userController.getUsersByNameSearch.bind(this.userController),
     );
     this.router.put(
       '/users',
@@ -62,10 +58,6 @@ export class Routes {
 
     // Score routes
     this.router.use('/scores', verifyAccess);
-    this.router.get(
-      '/scores/:userId',
-      this.scoreController.getScoreByUserId.bind(this.scoreController),
-    );
     this.router.put(
       '/scores',
       this.scoreController.updateScoreByUserId.bind(this.scoreController),
@@ -78,15 +70,11 @@ export class Routes {
     // Character routes
     this.router.post(
       '/characters',
-      this.characterController.createCharacter.bind(this.characterController),
+      this.characterController.createCharacters.bind(this.characterController),
     );
     this.router.get(
       '/characters',
       this.characterController.getCharacters.bind(this.characterController),
-    );
-    this.router.get(
-      '/characters/:_id',
-      this.characterController.getCharacterById.bind(this.characterController),
     );
     this.router.delete(
       '/characters',

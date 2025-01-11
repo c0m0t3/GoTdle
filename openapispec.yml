@@ -223,6 +223,31 @@ paths:
       description: Get logged user. UserId in Auth-Token.
       security:
         - Authorization: [ ]
+  /users/search:
+    get:
+      summary: Search User By Username
+      tags: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+                  x-stoplight:
+                    id: z9dz0jihkemvn
+      operationId: getSearchUserByUsername
+      x-stoplight:
+        id: 0rsnd2ljw3oc5
+      security:
+        - Authorization: [ ]
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: username
   /scores:
     put:
       summary: Update Score by User ID
@@ -376,27 +401,6 @@ paths:
                     type: integer
       security:
         - Authorization: [ ]
-  '/characters/{_id}':
-    parameters:
-      - schema:
-          type: integer
-        name: _id
-        in: path
-        required: true
-    get:
-      summary: Get Character Info by Id
-      tags: [ ]
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Characters'
-      operationId: getCharacterById
-      x-stoplight:
-        id: 2ibel5gzrue0g
-      description: Get character for classic mode
   /characters:
     get:
       summary: Get All Characters

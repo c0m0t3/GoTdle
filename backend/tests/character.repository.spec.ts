@@ -49,39 +49,26 @@ describe('CharacterRepository', () => {
 
   describe('createCharacter', () => {
     it('should create a character', async () => {
-      const character = await characterRepository.createCharacter([
+      const characters = await characterRepository.createCharacters([
         TEST_CHARACTER,
       ]);
-      expect(character).toBeDefined();
-      expect(character[0].name).toBe(TEST_CHARACTER.name);
+      expect(characters).toBeDefined();
+      expect(characters[0].name).toBe(TEST_CHARACTER.name);
     });
   });
 
   describe('getCharacters', () => {
     it('should return all characters', async () => {
-      await characterRepository.createCharacter([TEST_CHARACTER]);
+      await characterRepository.createCharacters([TEST_CHARACTER]);
       const characters = await characterRepository.getCharacters();
       expect(characters.length).toBe(1);
       expect(characters[0].name).toBe(TEST_CHARACTER.name);
     });
   });
 
-  describe('getCharacterById', () => {
-    it('should return a character by ID', async () => {
-      const createdCharacter = await characterRepository.createCharacter([
-        TEST_CHARACTER,
-      ]);
-      const character = await characterRepository.getCharacterById(
-        createdCharacter[0]._id,
-      );
-      expect(character).toBeDefined();
-      expect(character!.name).toBe(TEST_CHARACTER.name);
-    });
-  });
-
   describe('getCharacterByName', () => {
     it('should return a character by name', async () => {
-      await characterRepository.createCharacter([TEST_CHARACTER]);
+      await characterRepository.createCharacters([TEST_CHARACTER]);
       const character = await characterRepository.getCharacterByName(
         TEST_CHARACTER.name,
       );
@@ -92,7 +79,7 @@ describe('CharacterRepository', () => {
 
   describe('deleteAllCharacters', () => {
     it('should delete all characters', async () => {
-      await characterRepository.createCharacter([TEST_CHARACTER]);
+      await characterRepository.createCharacters([TEST_CHARACTER]);
       await characterRepository.deleteAllCharacters();
       const characters = await characterRepository.getCharacters();
       expect(characters.length).toBe(0);
