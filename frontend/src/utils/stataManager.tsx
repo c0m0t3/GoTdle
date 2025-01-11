@@ -10,6 +10,7 @@ interface User {
     lastPlayed: string | null;
     longestStreak: number;
     dailyScore: number[];
+    recentScores: number[][];
   };
 }
 
@@ -48,6 +49,7 @@ export const updateModeScore = (
   if (user.score.dailyScore.every((score) => score !== 0)) {
     client.putScoreByUserId({
       recentScores: user.score.dailyScore,
+      streak: user.score.streak + 1,
     });
   }
 
