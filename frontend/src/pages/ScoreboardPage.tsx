@@ -203,7 +203,7 @@ export const ScoreboardPage = () => {
                             : 'inherit'
                         }
                       >
-                        {user.score.dailyScore[0]?.[0] || '-'}
+                        {user.score.recentScores?.[0]?.[0] || '-'}
                       </Td>
                     </Tr>
                   ))}
