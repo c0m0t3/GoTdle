@@ -82,4 +82,23 @@ describe('ScoreRepository', () => {
     });
   });
 
+  describe('updateDailyScoreByUserId', () => {
+    it('should update the daily score by user ID', async () => {
+      const user = await userRepository.createUser(TEST_USER);
+      await scoreRepository.createScore(user.id);
+
+      const updatedDailyScoreData = {
+        dailyScore: [4, 5, 6],
+      };
+
+      const updatedScore = await scoreRepository.updateDailyScoreByUserId(
+        user.id,
+        updatedDailyScoreData,
+      );
+
+      expect(updatedScore).toBeDefined();
+      expect(updatedScore.dailyScore).toEqual([4, 5, 6]);
+      expect(updatedScore.lastPlayed).toBeInstanceOf(Date);
+    });
+  });
 });

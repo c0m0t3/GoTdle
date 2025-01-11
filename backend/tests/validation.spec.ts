@@ -1,4 +1,5 @@
-import { loginZodSchema, createUserZodSchema, updateUserZodSchema } from '../src/validation/validation';
+import { z } from 'zod';
+import { loginZodSchema, createUserZodSchema, updateUserZodSchema, createCharacterZodSchema, updateDailyScoreZodSchema, updateScoreZodSchema } from '../src/validation/validation';
 
 jest.mock('../src/dependency-injection', () => ({
   DI: {
@@ -133,4 +134,147 @@ describe('Validation Schemas', () => {
       expect(result.success).toBe(false);
     });
   });
+
+  describe('updateScoreZodSchema', () => {
+    it('should validate a correct score update', () => {
+      const validData = {
+        streak: 5,
+        longestStreak: 10,
+        recentScores: [1, 2, 3],
+      };
+
+      expect(() => updateScoreZodSchema.parse(validData)).not.toThrow();
+    });
+
+    it('should fail validation for incorrect score update', () => {
+      const invalidData = {
+        streak: 'five',
+        longestStreak: 10,
+        recentScores: [1, 2, 3],
+      };
+
+      expect(() => updateScoreZodSchema.parse(invalidData)).toThrow(z.ZodError);
+    });
+    it('should fail validation for incorrect score update', () => {
+      const invalidData = {
+        streak: 5,
+        longestStreak: 10,
+        recentScores: [1, 2, 'three'],
+      };
+
+      expect(() => updateScoreZodSchema.parse(invalidData)).toThrow(z.ZodError);
+    });
+    it('should fail validation for incorrect score update', () => {
+      const invalidData = {
+        streak: 5,
+        longestStreak: "10",
+        recentScores: [1, 2, 5],
+      };
+
+      expect(() => updateScoreZodSchema.parse(invalidData)).toThrow(z.ZodError);
+    });
+  });
+
+  describe('updateDailyScoreZodSchema', () => {
+    it('should validate a correct daily score update', () => {
+      const validData = {
+        dailyScore: [1, 2, 3],
+      };
+
+      expect(() => updateDailyScoreZodSchema.parse(validData)).not.toThrow();
+    });
+
+    it('should fail validation for incorrect daily score update', () => {
+      const invalidData = {
+        dailyScore: [1, 'two', 3],
+      };
+
+      expect(() => updateDailyScoreZodSchema.parse(invalidData)).toThrow(z.ZodError);
+    });
+  });
+
+  describe('createCharacterZodSchema', () => {
+    it('should validate a correct character creation', () => {
+      const validData = [
+        {
+          _id: 1,
+          name: 'Jon Snow',
+          gender: 'Male',
+          born: 'In 283 AC',
+          origin: 'Winterfell',
+          death: 'In 305 AC',
+          status: 'Deceased',
+          culture: 'Northmen',
+          religion: 'Old Gods of the Forest',
+          titles: ['Lord Commander of the Night\'s Watch'],
+          house: 'Stark',
+          father: 'Rhaegar Targaryen',
+          mother: 'Lyanna Stark',
+          spouse: [],
+          children: [],
+          siblings: ['Sansa Stark', 'Arya Stark', 'Bran Stark', 'Rickon Stark'],
+          lovers: ['Ygritte'],
+          seasons: [1, 2, 3, 4, 5, 6, 7, 8],
+          actor: 'Kit Harington',
+        },
+      ];
+
+      expect(() => createCharacterZodSchema.parse(validData)).not.toThrow();
+    });
+
+    it('should fail validation for incorrect character creation', () => {
+      const invalidData = [
+        {
+          _id: -1,
+          name: 'jon Peter Snow',
+          gender: 'Male',
+          born: 'In 283 AC',
+          origin: 'Winterfell',
+          death: 'In 305 AC',
+          status: 'Deceased',
+          culture: 'Northmen',
+          religion: 'Old Gods of the Forest',
+          titles: ['Lord Commander of the Night\'s Watch'],
+          house: 'Stark',
+          father: 'Rhaegar Targaryen',
+          mother: 'Lyanna Stark',
+          spouse: [],
+          children: [],
+          siblings: ['Sansa Stark', 'Arya Stark', 'Bran Stark', 'Rickon Stark'],
+          lovers: ['Ygritte'],
+          seasons: [1, 2, 3, 4, 5, 6, 7, 9],
+          actor: 'Kit Harington',
+        },
+      ];
+
+      expect(() => createCharacterZodSchema.parse(invalidData)).toThrow(z.ZodError);
+    });
+    it('should fail validation for incorrect character creation', () => {
+      const invalidData = [
+        {
+          _id: 1,
+          name: '',
+          gender: 'Male',
+          born: 'In 283 AC',
+          origin: 'Winterfell',
+          death: 'In 305 AC',
+          status: 'Deceased',
+          culture: 'Northmen',
+          religion: 'Old Gods of the Forest',
+          titles: ['Lord Commander of the Night\'s Watch'],
+          house: 'Stark',
+          father: 'Rhaegar Targaryen',
+          mother: 'Lyanna Stark',
+          spouse: [],
+          children: [],
+          siblings: ['Sansa Stark', 'Arya Stark', 'Bran Stark', 'Rickon Stark'],
+          lovers: ['Ygritte'],
+          seasons: [1, 2, 3, 4, 5, 6, 7, 9],
+          actor: 'Kit Harington',
+        },
+      ];
+
+      expect(() => createCharacterZodSchema.parse(invalidData)).toThrow(z.ZodError);
+    });
+  });  
 });

@@ -14,9 +14,9 @@ const TEST_USER = {
 };
 
 const TEST_USER2 = {
-  email: 'test@example.com',
+  email: 'test@example2.com',
   password: 'password123',
-  username: 'testuser',
+  username: 'testuser2',
 };
 
 describe('UserController', () => {
@@ -142,6 +142,62 @@ describe('UserController', () => {
 
       expect(res.status).toHaveBeenCalledWith(204);
       expect(res.send).toHaveBeenCalled();
+    });
+  });
+
+  describe('getUsersByNameSearch', () => {
+    it('should return users by name search', async () => {
+      await userRepository.createUser(TEST_USER);
+      await userRepository.createUser(TEST_USER2);
+
+      req.query = { username: 'testuser' };
+
+      await userController.getUsersByNameSearch(req as Request, res as Response);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.send).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({
+            username: 'testuser',
+          }),
+        ]),
+      );
+    });
+
+    it('should return users by name search with score relation', async () => {
+      await userRepository.createUser(TEST_USER);
+      await userRepository.createUser(TEST_USER2);
+
+      req.query = { username: 'testuser', withScoreRelation: 'true' };
+
+      await userController.getUsersByNameSearch(req as Request, res as Response);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.send).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({
+            username: 'testuser',
+          }),
+        ]),
+      );
+    });
+
+    it('should return users by name search without score relation', async () => {
+      await userRepository.createUser(TEST_USER);
+      await userRepository.createUser(TEST_USER2);
+
+      req.query = { username: 'testuser', withScoreRelation: 'false' };
+
+      await userController.getUsersByNameSearch(req as Request, res as Response);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.send).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({
+            username: 'testuser',
+          }),
+        ]),
+      );
     });
   });
 });
