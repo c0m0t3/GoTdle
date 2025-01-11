@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { ZodError } from 'zod';
 
-interface CustomError extends Error {
+export interface CustomError extends Error {
   statusCode?: number;
 }
 
@@ -32,14 +32,6 @@ export function globalErrorHandler(
   if (err instanceof JsonWebTokenError) {
     res.status(401).json({
       errors: ['Invalid token'],
-    });
-    return;
-  }
-
-  // Handle custom errors with statusCode
-  if (err.statusCode) {
-    res.status(err.statusCode).json({
-      errors: [err.message],
     });
     return;
   }

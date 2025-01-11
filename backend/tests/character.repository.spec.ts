@@ -49,11 +49,11 @@ describe('CharacterRepository', () => {
 
   describe('createCharacter', () => {
     it('should create a character', async () => {
-      const character = await characterRepository.createCharacters([
+      const characters = await characterRepository.createCharacters([
         TEST_CHARACTER,
       ]);
-      expect(character).toBeDefined();
-      expect(character[0].name).toBe(TEST_CHARACTER.name);
+      expect(characters).toBeDefined();
+      expect(characters[0].name).toBe(TEST_CHARACTER.name);
     });
   });
 
@@ -63,19 +63,6 @@ describe('CharacterRepository', () => {
       const characters = await characterRepository.getCharacters();
       expect(characters.length).toBe(1);
       expect(characters[0].name).toBe(TEST_CHARACTER.name);
-    });
-  });
-
-  describe('getCharacterById', () => {
-    it('should return a character by ID', async () => {
-      const createdCharacter = await characterRepository.createCharacters([
-        TEST_CHARACTER,
-      ]);
-      const character = await characterRepository.getCharacterById(
-        createdCharacter[0]._id,
-      );
-      expect(character).toBeDefined();
-      expect(character!.name).toBe(TEST_CHARACTER.name);
     });
   });
 

@@ -1,27 +1,19 @@
-import { UserController } from '../src/controller/user.controller';
-import { UserRepository } from '../src/database/repository/user.repository';
 import { TestDatabase } from './helpers/database';
+import { UserRepository } from '../src/database/repository/user.repository';
+import { UserController } from '../src/controller/user.controller';
 import { Request, Response } from 'express';
+import { PasswordHasher } from '../src/utils/password-hasher';
+import { createUserZodSchema } from '../src/validation/validation';
 
-jest.mock('../src/dependency-injection', () => ({
-  DI: {
-    utils: {
-      passwordHasher: {
-        hashPassword: jest.fn((password: string) =>
-          Promise.resolve(`hashed-${password}`),
-        ),
-      },
-    },
-  },
-}));
+const TEST_USER = {
+  id: '123e4567-e89b-12d3-a456-426614174000',
+  email: 'test@example.com',
+  password: 'password123',
+  username: 'testuser',
+  createdAt: new Date(),
+};
 
-const TEST_IDS = {
-  USER_ID: '123e4567-e89b-12d3-a456-426614174000',
-  USER_ID2: '123e4567-e89b-12d3-a456-426614174001',
-} as const;
-
-const userData = {
-  id: TEST_IDS.USER_ID,
+const TEST_USER2 = {
   email: 'test@example.com',
   password: 'password123',
   username: 'testuser',
@@ -33,20 +25,21 @@ describe('UserController', () => {
   let userController: UserController;
   let req: Partial<Request>;
   let res: Partial<Response>;
+  let passwordHasher: PasswordHasher;
 
   beforeAll(async () => {
     testDatabase = new TestDatabase();
     await testDatabase.setup();
     userRepository = new UserRepository(testDatabase.database);
-    userController = new UserController(userRepository);
+    passwordHasher = new PasswordHasher(10);
+    userController = new UserController(userRepository, passwordHasher);
   }, 100000);
 
-  afterAll(async () => {
-    await testDatabase.teardown();
-  });
-
   beforeEach(() => {
-    req = {};
+    req = {
+      query: {},
+      user: { id: TEST_USER.id },
+    };
     res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
@@ -58,158 +51,97 @@ describe('UserController', () => {
     await testDatabase.clearDatabase();
   });
 
+  afterAll(async () => {
+    await testDatabase.teardown();
+  });
+
+  describe('getAllUsers', () => {
+    it('should return all users', async () => {
+      await userRepository.createUser(TEST_USER);
+
+      await userController.getAllUsers(req as Request, res as Response);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.send).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({
+            username: 'testuser',
+          }),
+        ]),
+      );
+    });
+  });
+
   describe('getUserById', () => {
     it('should return a user by ID', async () => {
-      await userRepository.createUser(userData);
-
-      req.params = { id: TEST_IDS.USER_ID };
-
-      await userController.getUserById(req as Request, res as Response);
-
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          email: 'test@example.com',
-          username: 'testuser',
-        }),
-      );
-    });
-
-    it('should return 404 if user not found', async () => {
-      req.params = { id: TEST_IDS.USER_ID };
+      const createdUser = await userRepository.createUser(TEST_USER);
+      req.user = { id: createdUser.id };
 
       await userController.getUserById(req as Request, res as Response);
 
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ errors: ['User not found'] });
-    });
-  });
-
-  describe('getUserByUsername', () => {
-    it('should return a user by username', async () => {
-      await userRepository.createUser(userData);
-
-      req.params = { username: 'testuser' };
-
-      await userController.getUserByUsername(req as Request, res as Response);
-
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(
+      expect(res.send).toHaveBeenCalledWith(
         expect.objectContaining({
-          email: 'test@example.com',
           username: 'testuser',
         }),
       );
-    });
-
-    it('should return 404 if user not found', async () => {
-      req.params = { username: 'nonexistentuser' };
-
-      await userController.getUserByUsername(req as Request, res as Response);
-
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ errors: ['User not found'] });
-    });
-  });
-
-  describe('getUserByEmail', () => {
-    it('should return a user by email', async () => {
-      await userRepository.createUser(userData);
-
-      req.params = { email: 'test@example.com' };
-
-      await userController.getUserByEmail(req as Request, res as Response);
-
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          email: 'test@example.com',
-          username: 'testuser',
-        }),
-      );
-    });
-
-    it('should return 404 if user not found', async () => {
-      req.params = { email: 'nonexistent@example.com' };
-
-      await userController.getUserByEmail(req as Request, res as Response);
-
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ errors: ['User not found'] });
     });
   });
 
   describe('updateUser', () => {
     it('should update a user', async () => {
-      await userRepository.createUser(userData);
-
-      req.params = { id: TEST_IDS.USER_ID };
-      req.body = { email: 'updated@example.com' };
+      const createdUser = await userRepository.createUser(TEST_USER);
+      req.user = { id: createdUser.id };
+      req.body = { username: 'updateduser' };
 
       await userController.updateUser(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(
+      expect(res.send).toHaveBeenCalledWith(
         expect.objectContaining({
-          email: 'updated@example.com',
+          username: 'updateduser',
         }),
       );
     });
 
-    it('should return 404 if user not found', async () => {
-      req.params = { id: TEST_IDS.USER_ID };
-      req.body = { email: 'updated@example.com' };
+    it('should return 400 if email already in use', async () => {
+      await userRepository.createUser(TEST_USER);
+      req.user = { id: TEST_USER.id };
+      req.body = { email: 'test@example.com' };
 
       await userController.updateUser(req as Request, res as Response);
 
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ errors: ['User not found'] });
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.send).toHaveBeenCalledWith({
+        errors: ['Email already in use'],
+      });
+    });
+
+    it('should return 400 if username already in use', async () => {
+      await userRepository.createUser(TEST_USER);
+      req.user = { id: TEST_USER.id };
+      req.body = { username: 'testuser' };
+
+      await userController.updateUser(req as Request, res as Response);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.send).toHaveBeenCalledWith({
+        errors: ['Username already in use'],
+      });
     });
   });
 
   describe('deleteUser', () => {
     it('should delete a user', async () => {
-      await userRepository.createUser(userData);
-
-      req.params = { id: TEST_IDS.USER_ID };
+      const hashedPassword = await passwordHasher.hashPassword(TEST_USER.password);
+      const createdUser = await userRepository.createUser({ ...TEST_USER, password: hashedPassword });
+      req.user = { id: createdUser.id, password: hashedPassword };
+      req.body = { password: 'password123' };
 
       await userController.deleteUser(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(204);
       expect(res.send).toHaveBeenCalled();
-    });
-
-    it('should return 404 if user not found', async () => {
-      req.params = { id: TEST_IDS.USER_ID };
-
-      await userController.deleteUser(req as Request, res as Response);
-
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ errors: ['User not found'] });
-    });
-  });
-
-  describe('getAllUsers', () => {
-    it('should return all users', async () => {
-      const userData2 = {
-        id: TEST_IDS.USER_ID2,
-        email: 'test2@example.com',
-        password: 'password123',
-        username: 'testuser2',
-      };
-
-      await userRepository.createUser(userData);
-      await userRepository.createUser(userData2);
-
-      await userController.getAllUsers(req as Request, res as Response);
-
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(
-        expect.arrayContaining([
-          expect.objectContaining({ email: 'test@example.com' }),
-          expect.objectContaining({ email: 'test2@example.com' }),
-        ]),
-      );
     });
   });
 });

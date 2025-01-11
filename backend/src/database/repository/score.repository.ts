@@ -47,7 +47,4 @@ export class ScoreRepository {
     return updatedScore;
   }
 
-  async deleteScore(id: string) {
-    return this.database.delete(scoreSchema).where(eq(scoreSchema.userId, id));
-  }
 }

@@ -2,7 +2,6 @@ import { TestDatabase } from './helpers/database';
 import { UserRepository } from '../src/database/repository/user.repository';
 import { ScoreRepository } from '../src/database/repository/score.repository';
 import { ScoreController } from '../src/controller/score.controller';
-import { CreateUser } from '../src/validation/validation';
 import { Request, Response } from 'express';
 import { AuthController } from '../src/controller/auth.controller';
 import { DI } from '../src/dependency-injection';
@@ -10,15 +9,12 @@ import { PasswordHasher } from '../src/utils/password-hasher';
 import { Jwt } from '../src/utils/jwt';
 import { ENV } from '../src/config/env.config';
 
-const TEST_IDS = {
-  USER_ID: '123e4567-e89b-12d3-a456-426614174000',
-};
-
-const TEST_USER: CreateUser = {
+const TEST_USER = {
+  id: '123e4567-e89b-12d3-a456-426614174000',
   email: 'test@example.com',
   password: 'password123',
   username: 'testuser',
-  id: TEST_IDS.USER_ID,
+  createdAt: new Date(),
 };
 
 describe('ScoreController', () => {
@@ -51,18 +47,17 @@ describe('ScoreController', () => {
   }, 100000);
 
   beforeEach(() => {
-    req = {};
+    req = {
+      query: {},
+      user: { id: TEST_USER.id },
+      body: {},
+    };
     res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
       send: jest.fn(),
     };
   });
-
-  afterEach(async () => {
-    await testDatabase.clearDatabase();
-  });
-
   afterAll(async () => {
     await testDatabase.teardown();
   });
@@ -70,54 +65,65 @@ describe('ScoreController', () => {
   describe('getScoreByUserId', () => {
     it('should return a score by user ID', async () => {
       req.body = TEST_USER;
-
+  
       await authController.registerUser(req as Request, res as Response);
-
-      req.params = { userId: TEST_IDS.USER_ID };
-
+  
+      req.params = { userId: TEST_USER.id };
+  
       await scoreController.getScoreByUserId(req as Request, res as Response);
-
+  
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledTimes(1);
       expect(res.json).toHaveBeenCalledWith(
-        expect.arrayContaining([
-          expect.objectContaining({
-            userId: expect.any(String),
-            streak: 0,
-            longestStreak: 0,
-            dailyScore: [0],
-          }),
-        ]),
+        expect.objectContaining({
+          userId: expect.any(String),
+          streak: 0,
+          longestStreak: 0,
+          dailyScore: [0, 0, 0],
+          lastPlayed: null,
+          recentScores: [[0, 0, 0]],
+        }),
       );
     });
   });
 
   describe('updateScoreByUserId', () => {
     it('should update a score by user ID', async () => {
-      req.body = TEST_USER;
 
-      await authController.registerUser(req as Request, res as Response);
+      req.body = { streak: 1, longestStreak: 1, recentScores: [2, 2, 2], dailyScore: [2, 2, 2] };
+      req.user = { id: TEST_USER.id };
 
-      req.params = { userId: TEST_IDS.USER_ID };
-      req.body = { streak: 5, longestStreak: 10, dailyScore: [1, 2, 3] };
-
-      await scoreController.updateScoreByUserId(
-        req as Request,
-        res as Response,
-      );
+      await scoreController.updateScoreByUserId(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledTimes(1);
-      expect(res.json).toHaveBeenCalledWith(
-        expect.arrayContaining([
-          expect.objectContaining({
-            userId: TEST_IDS.USER_ID,
-            streak: 5,
-            longestStreak: 10,
-            dailyScore: [1, 2, 3],
-          }),
-        ]),
-      );
+      expect(res.send).toHaveBeenCalledTimes(1);
+      expect(res.send).toHaveBeenCalledWith({
+        userId: TEST_USER.id,
+        streak: 1,
+        longestStreak: 1,
+        recentScores: [[2, 2, 2], [0, 0, 0]],
+        dailyScore: [0, 0, 0],
+        lastPlayed: expect.any(Date),
+      });
+    });
+  });
+  describe('updateDailyScoreByUserId', () => {
+    it('should update the daily score by user ID', async () => {
+      req.body = { dailyScore: [1, 2, 3] };
+      req.user = { id: TEST_USER.id };
+    
+      await scoreController.updateDailyScoreByUserId(req as Request, res as Response);
+  
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.send).toHaveBeenCalledTimes(1);
+      expect(res.send).toHaveBeenCalledWith({
+        userId: TEST_USER.id,
+        streak: 1,
+        longestStreak: 1,
+        recentScores: [[2, 2, 2], [0, 0, 0]],
+        dailyScore: [1, 2, 3],
+        lastPlayed: expect.any(Date),
+      });
     });
   });
 });
