@@ -2,7 +2,6 @@ import { eq } from 'drizzle-orm';
 import type { Database } from '..';
 import { scoreSchema } from '../schema/score.schema';
 import { UpdateDailyScore, UpdateScore } from '../../validation/validation';
-import { format, parseISO } from 'date-fns';
 
 export class ScoreRepository {
   constructor(private readonly database: Database) {}
@@ -25,19 +24,11 @@ export class ScoreRepository {
     userId: string,
     data: Omit<UpdateScore, 'recentScores'> & { recentScores: number[][] },
   ) {
-    const berlinTime = parseISO(
-      format(
-        new Date().toLocaleString('en-US', {
-          timeZone: 'Europe/Berlin',
-        }),
-        "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-      ),
-    );
     const [updatedScore] = await this.database
       .update(scoreSchema)
       .set({
         ...data,
-        lastPlayed: berlinTime,
+        lastPlayed: new Date(),
       })
       .where(eq(scoreSchema.userId, userId))
       .returning();
@@ -45,19 +36,11 @@ export class ScoreRepository {
   }
 
   async updateDailyScoreByUserId(userId: string, data: UpdateDailyScore) {
-    const berlinTime = parseISO(
-      format(
-        new Date().toLocaleString('en-US', {
-          timeZone: 'Europe/Berlin',
-        }),
-        "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-      ),
-    );
     const [updatedScore] = await this.database
       .update(scoreSchema)
       .set({
         ...data,
-        lastPlayed: berlinTime,
+        lastPlayed: new Date(),
       })
       .where(eq(scoreSchema.userId, userId))
       .returning();
