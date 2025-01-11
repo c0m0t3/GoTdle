@@ -15,7 +15,7 @@ import { useApiClient } from '../hooks/useApiClient.ts';
 import {
   checkIfModePlayedToday,
   updateModeScore,
-} from '../utils/stataManager.tsx';
+} from '../utils/stateManager.tsx';
 
 interface QuoteModeState {
   quoteAttempts?: number;

@@ -14,7 +14,10 @@ import { useLoadCharacterOptions } from '../utils/loadCharacterOptions';
 import { gotButtonStyle } from '../styles/buttonStyles.ts';
 import '../styles/ClassicPage.css';
 import { useAuth } from '../providers/AuthProvider.tsx';
-import { checkIfModePlayedToday, updateModeScore } from '../utils/stataManager';
+import {
+  checkIfModePlayedToday,
+  updateModeScore,
+} from '../utils/stateManager.tsx';
 import { isToday, parseISO } from 'date-fns';
 
 interface Character {
