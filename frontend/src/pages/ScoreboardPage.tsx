@@ -153,6 +153,7 @@ export const ScoreboardPage = () => {
               <Table variant="simple">
                 <Thead>
                   <Tr>
+                    <Th>Rank</Th>
                     <Th onClick={() => requestSort('username')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Name {getSortIcon('username')}
@@ -193,6 +194,7 @@ export const ScoreboardPage = () => {
                 <Tbody>
                   {sortedUsers.map((user, index) => (
                     <Tr key={index}>
+                      <Td>{index + 1}</Td>
                       <Td
                         color={
                           user.id === loggedInUserId
