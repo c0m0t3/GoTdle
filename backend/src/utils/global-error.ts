@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { ZodError } from 'zod';
 
-export interface CustomError extends Error {
+interface CustomError extends Error {
   statusCode?: number;
 }
 

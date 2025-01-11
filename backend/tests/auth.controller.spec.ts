@@ -6,7 +6,11 @@ import { PasswordHasher } from '../src/utils/password-hasher';
 import { Jwt } from '../src/utils/jwt';
 import { DI } from '../src/dependency-injection';
 import { ScoreRepository } from '../src/database/repository/score.repository';
-import { globalErrorHandler, CustomError } from '../src/utils/global-error';
+import { globalErrorHandler } from '../src/utils/global-error';
+
+interface CustomError extends Error {
+  statusCode?: number;
+}
 
 const TEST_IDS = {
   USER_ID: '123e4567-e89b-12d3-a456-426614174000',
