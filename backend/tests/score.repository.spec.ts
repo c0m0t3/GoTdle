@@ -47,7 +47,7 @@ describe('ScoreRepository', () => {
   describe('getScoreByUserId', () => {
     it('should return a score by user ID', async () => {
       const user = await userRepository.createUser(TEST_USER);
-      const score = await scoreRepository.createScore(user.id);
+      await scoreRepository.createScore(user.id);
 
       const scoreGet = await scoreRepository.getScoreByUserId(user.id);
       expect(scoreGet).toBeDefined();

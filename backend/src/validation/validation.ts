@@ -87,7 +87,7 @@ export const updateUserZodSchema = createInsertSchema(userSchema, {
 export const updateScoreZodSchema = z.object({
   streak: z.number().int(),
   longestStreak: z.number().int().optional(),
-  recentScores: z.array(z.number().int())
+  recentScores: z.array(z.number().int()),
 });
 
 export const updateDailyScoreZodSchema = z.object({

@@ -3,7 +3,6 @@ import { UserRepository } from '../src/database/repository/user.repository';
 import { UserController } from '../src/controller/user.controller';
 import { Request, Response } from 'express';
 import { PasswordHasher } from '../src/utils/password-hasher';
-import { createUserZodSchema } from '../src/validation/validation';
 
 const TEST_USER = {
   id: '123e4567-e89b-12d3-a456-426614174000',

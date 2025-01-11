@@ -46,5 +46,4 @@ export class ScoreRepository {
       .returning();
     return updatedScore;
   }
-
 }
