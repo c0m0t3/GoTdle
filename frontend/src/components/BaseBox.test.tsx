@@ -4,12 +4,23 @@ import { BaseBox } from './BaseBox';
 
 describe('BaseBox Component', () => {
   it('renders with default props and content', () => {
-    const { getByText, getByTestId } = render(
-      <BaseBox data-testid="base-box"></BaseBox>,
+    const { getByTestId } = render(
+      <BaseBox data-testid="base-box">Default Content</BaseBox>,
     );
 
     const box = getByTestId('base-box');
+    const computedStyles = window.getComputedStyle(box);
+
     expect(box).toBeInTheDocument();
+    expect(box).toHaveTextContent('Default Content');
+    expect(computedStyles.backgroundImage).toBe('url(/bg_border.png)');
+    expect(computedStyles.backgroundPosition).toBe('top');
+    expect(computedStyles.backgroundRepeat).toBe('no-repeat');
+    expect(computedStyles.backgroundSize).toBe('100% 100%');
+
+    expect(computedStyles.borderRadius).toBe('var(--chakra-radii-md)');
+    expect(computedStyles.padding).toBe('var(--chakra-space-4)');
+    expect(computedStyles.textAlign).toBe('center');
   });
 
   it('applies additional props correctly', () => {
