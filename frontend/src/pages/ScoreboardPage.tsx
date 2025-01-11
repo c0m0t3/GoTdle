@@ -35,7 +35,7 @@ export const ScoreboardPage = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [authError, setAuthError] = useState<boolean>(false);
   const [sortConfig, setSortConfig] = useState<{
-    key: keyof User | keyof Score;
+    key: keyof User | keyof Score | 'classicMode' | 'quoteMode' | 'imageMode';
     direction: 'ascending' | 'descending';
   }>({ key: 'streak', direction: 'descending' });
   const [loggedInUserId, setLoggedInUserId] = useState<string | null>(null);
@@ -70,10 +70,29 @@ export const ScoreboardPage = () => {
   const sortedUsers = [...users].sort((a, b) => {
     if (sortConfig !== null) {
       const { key, direction } = sortConfig;
-      const aValue =
-        key in a ? a[key as keyof User] : (a.score[key as keyof Score] ?? null);
-      const bValue =
-        key in b ? b[key as keyof User] : (b.score[key as keyof Score] ?? null);
+      let aValue: any;
+      let bValue: any;
+
+      if (key === 'classicMode') {
+        aValue = a.score.dailyScore[0];
+        bValue = b.score.dailyScore[0];
+      } else if (key === 'quoteMode') {
+        aValue = a.score.dailyScore[1];
+        bValue = b.score.dailyScore[1];
+      } else if (key === 'imageMode') {
+        aValue = a.score.dailyScore[2];
+        bValue = b.score.dailyScore[2];
+      } else {
+        aValue =
+          key in a
+            ? a[key as keyof User]
+            : (a.score[key as keyof Score] ?? null);
+        bValue =
+          key in b
+            ? b[key as keyof User]
+            : (b.score[key as keyof Score] ?? null);
+      }
+
       if (aValue !== null && bValue !== null) {
         if (aValue < bValue) {
           return direction === 'ascending' ? -1 : 1;
@@ -87,7 +106,9 @@ export const ScoreboardPage = () => {
     return 0;
   });
 
-  const requestSort = (key: keyof User | keyof Score) => {
+  const requestSort = (
+    key: keyof User | keyof Score | 'classicMode' | 'quoteMode' | 'imageMode',
+  ) => {
     let direction: 'ascending' | 'descending' = 'ascending';
     if (
       sortConfig &&
@@ -99,7 +120,9 @@ export const ScoreboardPage = () => {
     setSortConfig({ key, direction });
   };
 
-  const getSortIcon = (key: keyof User | keyof Score) => {
+  const getSortIcon = (
+    key: keyof User | keyof Score | 'classicMode' | 'quoteMode' | 'imageMode',
+  ) => {
     if (sortConfig?.key === key) {
       return sortConfig.direction === 'ascending' ? (
         <span style={{ marginLeft: '0.5em' }}>
@@ -150,9 +173,19 @@ export const ScoreboardPage = () => {
                         Longest Streak {getSortIcon('longestStreak')}
                       </div>
                     </Th>
-                    <Th onClick={() => requestSort('dailyScore')}>
+                    <Th onClick={() => requestSort('classicMode')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
-                        Latest Daily Score {getSortIcon('dailyScore')}
+                        Classic Mode {getSortIcon('classicMode')}
+                      </div>
+                    </Th>
+                    <Th onClick={() => requestSort('quoteMode')}>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        Quote Mode {getSortIcon('quoteMode')}
+                      </div>
+                    </Th>
+                    <Th onClick={() => requestSort('imageMode')}>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        Image Mode {getSortIcon('imageMode')}
                       </div>
                     </Th>
                   </Tr>
@@ -203,7 +236,25 @@ export const ScoreboardPage = () => {
                             : 'inherit'
                         }
                       >
-                        {user.score.recentScores?.[0]?.[0] || '-'}
+                        {user.score.dailyScore[0] || '-'}
+                      </Td>
+                      <Td
+                        color={
+                          user.id === loggedInUserId
+                            ? highlightTextColor
+                            : 'inherit'
+                        }
+                      >
+                        {user.score.dailyScore[1] || '-'}
+                      </Td>
+                      <Td
+                        color={
+                          user.id === loggedInUserId
+                            ? highlightTextColor
+                            : 'inherit'
+                        }
+                      >
+                        {user.score.dailyScore[2] || '-'}
                       </Td>
                     </Tr>
                   ))}
