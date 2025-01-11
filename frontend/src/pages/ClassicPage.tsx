@@ -12,10 +12,10 @@ import { BaseBox } from '../components/BaseBox';
 import { ModeSuccessBox } from '../components/ModeSuccessBox';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions';
 import { gotButtonStyle } from '../styles/buttonStyles.ts';
-import { isToday, parseISO } from 'date-fns';
 import '../styles/ClassicPage.css';
 import { useAuth } from '../providers/AuthProvider.tsx';
-import { updateModeScore } from '../utils/stataManager.tsx';
+import { checkIfModePlayedToday, updateModeScore } from '../utils/stataManager';
+import { isToday, parseISO } from 'date-fns';
 
 interface Character {
   name: string;
@@ -81,25 +81,18 @@ export const ClassicPage: React.FC = () => {
     return characters[index];
   };
 
-  const checkIfModePlayedToday = (user: User, modeIndex: number): boolean => {
+  const checkIfModePlayedTodayWrapper = (
+    user: User,
+    modeIndex: number,
+  ): boolean => {
     const lastPlayedDate = user.score.lastPlayed
       ? parseISO(user.score.lastPlayed)
       : null;
 
-    if (lastPlayedDate && isToday(lastPlayedDate)) {
-      return user.score.dailyScore[modeIndex] > 0;
-    } else {
-      initializeDailyScore(user);
-      return false;
+    if (!(lastPlayedDate && isToday(lastPlayedDate))) {
+      initializeClassicModeState(user.id);
     }
-  };
-
-  const initializeDailyScore = (user: User) => {
-    user.score.dailyScore = [0, 0, 0];
-    client.putDailyScore({
-      dailyScore: user.score.dailyScore,
-    });
-    initializeClassicModeState(user.id);
+    return checkIfModePlayedToday(user, modeIndex, client);
   };
 
   const initializeClassicModeState = (userId: string | undefined) => {
@@ -142,7 +135,7 @@ export const ClassicPage: React.FC = () => {
         const response = await client.getUserById();
         if (response.status === 200) {
           const user: User = response.data;
-          const playedToday = checkIfModePlayedToday(user, 0);
+          const playedToday = checkIfModePlayedTodayWrapper(user, 0);
           setIsPlayedToday(playedToday);
         }
       } catch (error) {
