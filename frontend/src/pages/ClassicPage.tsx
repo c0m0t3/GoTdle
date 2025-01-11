@@ -222,7 +222,16 @@ export const ClassicPage: React.FC = () => {
             </Button>
           </HStack>
           {isOpen && (
-            <VStack mt={4} alignItems="center">
+            <VStack
+              mt={4}
+              alignItems="center"
+              border="1px solid"
+              borderColor="gray.300"
+              borderRadius="md"
+              p={4}
+              bg="rgb(120, 0, 0)"
+              textColor={'white'}
+            >
               {solutionCharacter?.titles.map((title, index) => (
                 <Text key={index}>{title}</Text>
               ))}
