@@ -384,16 +384,16 @@ export interface PutScoreByUserId200Response {
 export interface PutScoreByUserIdRequest {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PutScoreByUserIdRequest
      */
-    'streak': string;
+    'streak': number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PutScoreByUserIdRequest
      */
-    'longestStreak'?: string;
+    'longestStreak'?: number;
     /**
      * 
      * @type {Array<number>}
