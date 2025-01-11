@@ -36,14 +36,6 @@ export function globalErrorHandler(
     return;
   }
 
-  // Handle custom errors with statusCode
-  if (err.statusCode) {
-    res.status(err.statusCode).json({
-      errors: [err.message],
-    });
-    return;
-  }
-
   console.error('Unhandled error:', err);
 
   // Default error response

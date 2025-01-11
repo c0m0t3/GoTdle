@@ -20,7 +20,7 @@ export class UserController {
       );
 
     const users = await this.userRepository.getAllUsers(withScoreRelation);
-    res.send(users);
+    res.status(200).send(users);
   }
 
   async getUserById(req: Request, res: Response): Promise<void> {
@@ -36,7 +36,7 @@ export class UserController {
       req.user!.id,
       withScoreRelation,
     );
-    res.send(user);
+    res.status(200).send(user);
   }
 
   async getUsersByNameSearch(req: Request, res: Response): Promise<void> {
@@ -53,33 +53,7 @@ export class UserController {
       validatedUsername,
       withScoreRelation,
     );
-    res.send(users);
-  }
-
-  async getUserByUsername(req: Request, res: Response): Promise<void> {
-    const usernameSchema = z.string().min(3);
-    const username = usernameSchema.parse(req.params.username);
-
-    const user = await this.userRepository.getUserByUsername(username);
-
-    if (!user) {
-      res.status(404).json({ errors: ['User not found'] });
-      return;
-    }
-    res.status(200).json(user);
-  }
-
-  async getUserByEmail(req: Request, res: Response): Promise<void> {
-    const emailSchema = z.string().email();
-    const email = emailSchema.parse(req.params.email);
-
-    const user = await this.userRepository.getUserByEmail(email);
-
-    if (!user) {
-      res.status(404).json({ errors: ['User not found'] });
-      return;
-    }
-    res.status(200).json(user);
+    res.status(200).send(users);
   }
 
   async updateUser(req: Request, res: Response): Promise<void> {
@@ -109,7 +83,7 @@ export class UserController {
       validatedData,
     );
 
-    res.send(updatedUser);
+    res.status(200).send(updatedUser);
   }
 
   async deleteUser(req: Request, res: Response): Promise<void> {

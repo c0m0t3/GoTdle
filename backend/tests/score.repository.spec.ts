@@ -31,43 +31,46 @@ describe('ScoreRepository', () => {
 
   describe('createScore', () => {
     it('should create a score for a user', async () => {
-      const [user] = await userRepository.createUser(TEST_USER);
-      const scoreData = { userId: user.id };
-      const [score] = await scoreRepository.createScore(scoreData);
+      const user = await userRepository.createUser(TEST_USER);
+      const score = await scoreRepository.createScore(user.id);
 
       expect(score).toBeDefined();
       expect(score.userId).toBe(user.id);
       expect(score.streak).toBe(0);
       expect(score.lastPlayed).toBeNull();
       expect(score.longestStreak).toBe(0);
-      expect(score.dailyScore).toEqual([0]);
+      expect(score.dailyScore).toEqual([0, 0, 0]);
+      expect(score.recentScores).toEqual([[0, 0, 0]]);
     });
   });
 
   describe('getScoreByUserId', () => {
     it('should return a score by user ID', async () => {
-      const [user] = await userRepository.createUser(TEST_USER);
-      await scoreRepository.createScore({ userId: user.id });
+      const user = await userRepository.createUser(TEST_USER);
+      await scoreRepository.createScore(user.id);
 
-      const [score] = await scoreRepository.getScoreByUserId(user.id);
-      expect(score).toBeDefined();
-      expect(score.userId).toBe(user.id);
+      const scoreGet = await scoreRepository.getScoreByUserId(user.id);
+      expect(scoreGet).toBeDefined();
+      if (scoreGet) {
+        expect(scoreGet.userId).toBe(user.id);
+      }
     });
   });
 
   describe('updateScoreByUserId', () => {
     it('should update a score by user ID', async () => {
-      const [user] = await userRepository.createUser(TEST_USER);
-      await scoreRepository.createScore({ userId: user.id });
+      const user = await userRepository.createUser(TEST_USER);
+      await scoreRepository.createScore(user.id);
 
       const updatedScoreData = {
         streak: 5,
         lastPlayed: new Date(),
         longestStreak: 10,
         dailyScore: [1, 2, 3],
+        recentScores: [[1, 2, 3]],
       };
 
-      const [updatedScore] = await scoreRepository.updateScoreByUserId(
+      const updatedScore = await scoreRepository.updateScoreByUserId(
         user.id,
         updatedScoreData,
       );
@@ -75,17 +78,27 @@ describe('ScoreRepository', () => {
       expect(updatedScore.streak).toBe(5);
       expect(updatedScore.longestStreak).toBe(10);
       expect(updatedScore.dailyScore).toEqual([1, 2, 3]);
+      expect(updatedScore.recentScores).toEqual([[1, 2, 3]]);
     });
   });
 
-  describe('deleteScore', () => {
-    it('should delete a score by user ID', async () => {
-      const [user] = await userRepository.createUser(TEST_USER);
-      await scoreRepository.createScore({ userId: user.id });
+  describe('updateDailyScoreByUserId', () => {
+    it('should update the daily score by user ID', async () => {
+      const user = await userRepository.createUser(TEST_USER);
+      await scoreRepository.createScore(user.id);
 
-      await scoreRepository.deleteScore(user.id);
-      const score = await scoreRepository.getScoreByUserId(user.id);
-      expect(score).toEqual([]);
+      const updatedDailyScoreData = {
+        dailyScore: [4, 5, 6],
+      };
+
+      const updatedScore = await scoreRepository.updateDailyScoreByUserId(
+        user.id,
+        updatedDailyScoreData,
+      );
+
+      expect(updatedScore).toBeDefined();
+      expect(updatedScore.dailyScore).toEqual([4, 5, 6]);
+      expect(updatedScore.lastPlayed).toBeInstanceOf(Date);
     });
   });
 });

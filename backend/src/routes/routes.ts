@@ -47,14 +47,6 @@ export class Routes {
       '/users/search',
       this.userController.getUsersByNameSearch.bind(this.userController),
     );
-    this.router.get(
-      '/users/username/:username',
-      this.userController.getUserByUsername.bind(this.userController),
-    );
-    this.router.get(
-      '/users/email/:email',
-      this.userController.getUserByEmail.bind(this.userController),
-    );
     this.router.put(
       '/users',
       this.userController.updateUser.bind(this.userController),
@@ -66,10 +58,6 @@ export class Routes {
 
     // Score routes
     this.router.use('/scores', verifyAccess);
-    this.router.get(
-      '/scores/:userId',
-      this.scoreController.getScoreByUserId.bind(this.scoreController),
-    );
     this.router.put(
       '/scores',
       this.scoreController.updateScoreByUserId.bind(this.scoreController),
