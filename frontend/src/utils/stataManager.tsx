@@ -17,7 +17,11 @@ interface User {
 
 interface Client {
   putDailyScore: (data: { dailyScore: number[] }) => void;
-  putScoreByUserId: (data: { recentScores: number[]; streak: number }) => void;
+  putScoreByUserId: (data: {
+    recentScores: number[];
+    streak: number;
+    longestStreak: number;
+  }) => void;
 }
 
 export const checkIfModePlayedToday = (
@@ -74,12 +78,17 @@ export const updateModeScore = (
     user.score.streak = 1;
   }
 
+  if (user.score.streak > user.score.longestStreak) {
+    user.score.longestStreak = user.score.streak;
+  }
+
   user.score.dailyScore[modeIndex] = incorrectGuesses + 1;
 
   if (user.score.dailyScore.every((score) => score !== 0)) {
     client.putScoreByUserId({
       recentScores: user.score.dailyScore,
       streak: user.score.streak,
+      longestStreak: user.score.longestStreak,
     });
   }
 
