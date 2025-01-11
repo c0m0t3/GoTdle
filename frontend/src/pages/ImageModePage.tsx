@@ -11,6 +11,11 @@ import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
 import { useAuth } from '../providers/AuthProvider.tsx';
 import { UserGuessesText } from '../components/UserGuessesText.tsx';
+import { useApiClient } from '../hooks/useApiClient.ts';
+import {
+  checkIfModePlayedToday,
+  updateModeScore,
+} from '../utils/stateManager.tsx';
 
 interface ImageModeState {
   imageAttempts?: number;
@@ -30,6 +35,20 @@ interface CharacterOption extends OptionBase {
   value: string;
 }
 
+interface User {
+  id: string;
+  email: string;
+  username: string;
+  createdAt: string;
+  score: {
+    streak: number;
+    lastPlayed: string | null;
+    longestStreak: number;
+    dailyScore: number[];
+    recentScores: number[][];
+  };
+}
+
 export const ImageModePage = () => {
   const { fetchApi, apiData } = useImageApi();
   const [incorrectGuesses, setIncorrectGuesses] = useState<string[]>([]);
@@ -40,6 +59,8 @@ export const ImageModePage = () => {
   const userId = user?.id;
   const prevApiDataRef = useRef<ImageData | null>(null);
   const [finalStates, setFinalStates] = useState<FinalStates | null>(null);
+  const client = useApiClient();
+  const [isPlayedToday, setIsPlayedToday] = useState<boolean>(false);
 
   useEffect(() => {
     fetchApi().catch((error) => {
@@ -98,6 +119,24 @@ export const ImageModePage = () => {
     }
   }, [correctGuess, userId]);
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      console.log('Fetching user data');
+      try {
+        const response = await client.getUserById();
+        if (response.status === 200) {
+          const user: User = response.data;
+          const playedToday = checkIfModePlayedToday(user, 2, client);
+          setIsPlayedToday(playedToday);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
       setSelectedCharacter(selected);
@@ -114,6 +153,12 @@ export const ImageModePage = () => {
           imageAttempts: incorrectGuesses.length + 1,
           imageFinished: true,
         };
+        client.getUserById().then((response) => {
+          if (response.status === 200) {
+            const user: User = response.data;
+            updateModeScore(user, 2, incorrectGuesses.length, client);
+          }
+        });
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
@@ -194,7 +239,7 @@ export const ImageModePage = () => {
               },
               onChange: handleCharacterSelect,
               value: selectedCharacter,
-              isDisabled: !!correctGuess,
+              isDisabled: !!correctGuess || isPlayedToday,
             }}
           />
         </BaseBox>

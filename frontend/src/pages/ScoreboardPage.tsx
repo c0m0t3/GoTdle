@@ -12,7 +12,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useApiClient } from '../hooks/useApiClient';
-import { BaseBox } from '../components/BaseBox.tsx';
+import { BaseBox } from '../components/BaseBox';
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
 
 interface Score {
@@ -70,8 +70,8 @@ export const ScoreboardPage = () => {
   const sortedUsers = [...users].sort((a, b) => {
     if (sortConfig !== null) {
       const { key, direction } = sortConfig;
-      let aValue: any;
-      let bValue: any;
+      let aValue: number | string | null;
+      let bValue: number | string | null;
 
       if (key === 'classicMode') {
         aValue = a.score.dailyScore[0];
@@ -85,12 +85,12 @@ export const ScoreboardPage = () => {
       } else {
         aValue =
           key in a
-            ? a[key as keyof User]
-            : (a.score[key as keyof Score] ?? null);
+            ? (a[key as keyof User] as string | number | null)
+            : (a.score[key as keyof Score] as string | number | null);
         bValue =
           key in b
-            ? b[key as keyof User]
-            : (b.score[key as keyof Score] ?? null);
+            ? (b[key as keyof User] as string | number | null)
+            : (b.score[key as keyof Score] as string | number | null);
       }
 
       if (aValue !== null && bValue !== null) {

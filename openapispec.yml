@@ -311,11 +311,11 @@ paths:
                 - recentScores
               properties:
                 streak:
-                  type: string
+                  type: integer
                   x-stoplight:
                     id: tdsy0hkpvo2v3
                 longestStreak:
-                  type: string
+                  type: integer
                   x-stoplight:
                     id: ilsy4y927hm5y
                 recentScores:
