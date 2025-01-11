@@ -43,6 +43,7 @@ interface User {
     lastPlayed: string | null;
     longestStreak: number;
     dailyScore: number[];
+    recentScores: number[][];
   };
 }
 
