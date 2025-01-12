@@ -86,6 +86,10 @@ export const updateModeScore = (
 
   user.score.dailyScore[modeIndex] = incorrectGuesses + 1;
 
+  client.putDailyScore({
+    dailyScore: user.score.dailyScore,
+  });
+
   if (user.score.dailyScore.every((score) => score !== 0)) {
     client.putScoreByUserId({
       recentScores: user.score.dailyScore,
@@ -94,10 +98,6 @@ export const updateModeScore = (
     });
     return true;
   }
-
-  client.putDailyScore({
-    dailyScore: user.score.dailyScore,
-  });
 
   return false;
 };
