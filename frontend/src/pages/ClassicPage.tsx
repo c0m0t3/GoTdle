@@ -13,12 +13,13 @@ import { ModeSuccessBox } from '../components/ModeSuccessBox';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions';
 import { gotButtonStyle } from '../styles/buttonStyles.ts';
 import '../styles/ClassicPage.css';
-import { useAuth } from '../providers/AuthProvider.tsx';
 import {
   checkIfModePlayedToday,
   updateModeScore,
 } from '../utils/stateManager.tsx';
 import { isToday, parseISO } from 'date-fns';
+import { ScoreModal } from '../components/ScoreModal';
+import { useAuth } from '../providers/AuthProvider.tsx';
 
 interface Character {
   name: string;
@@ -67,6 +68,8 @@ export const ClassicPage: React.FC = () => {
   const [correctGuess, setCorrectGuess] = useState<string>('');
   const [isOpen, setIsOpen] = useState(false);
   const [isPlayedToday, setIsPlayedToday] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userWithScore, setUserWithScore] = useState<User | null>(null);
   const client = useApiClient();
   const { user } = useAuth();
   const userId = user?.id;
@@ -138,6 +141,7 @@ export const ClassicPage: React.FC = () => {
         const response = await client.getUserById();
         if (response.status === 200) {
           const user: User = response.data;
+          setUserWithScore(user);
           const playedToday = checkIfModePlayedTodayWrapper(user, 0);
           setIsPlayedToday(playedToday);
         }
@@ -181,7 +185,11 @@ export const ClassicPage: React.FC = () => {
         };
         client.getUserById().then((response) => {
           if (response.status === 200) {
-            updateModeScore(response.data, 0, incorrectGuesses.length, client);
+            if (
+              updateModeScore(response.data, 0, incorrectGuesses.length, client)
+            ) {
+              setIsModalOpen(true);
+            }
           }
         });
       } else {
@@ -269,6 +277,13 @@ export const ClassicPage: React.FC = () => {
           characterData={selectedCharacter}
           solutionCharacter={solutionCharacter}
         />
+        {user && isModalOpen && userWithScore?.score && (
+          <ScoreModal
+            user={userWithScore}
+            show={isModalOpen}
+            handleClose={() => setIsModalOpen(false)}
+          />
+        )}
       </VStack>
     </BaseLayout>
   );

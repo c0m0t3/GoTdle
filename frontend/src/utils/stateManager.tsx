@@ -64,7 +64,7 @@ export const updateModeScore = (
   modeIndex: number,
   incorrectGuesses: number,
   client: Client,
-) => {
+): boolean => {
   const storedHash = localStorage.getItem('userHash');
   const yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd');
 
@@ -92,9 +92,12 @@ export const updateModeScore = (
       streak: user.score.streak,
       longestStreak: user.score.longestStreak,
     });
+    return true;
   }
 
   client.putDailyScore({
     dailyScore: user.score.dailyScore,
   });
+
+  return false;
 };
