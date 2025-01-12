@@ -47,7 +47,7 @@ export const ScoreModal: React.FC<ScoreModalProps> = ({
   return (
     <Modal isOpen={show} onClose={handleClose} isCentered>
       <ModalOverlay />
-      <ModalContent bg="rgb(120, 0, 0)" color="white" borderRadius="md" p={4}>
+      <ModalContent bg="rgb(110, 18, 11)" color="white" borderRadius="md" p={4}>
         <ModalHeader textAlign="center">🎉 Congratulations! 🎉</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -57,7 +57,6 @@ export const ScoreModal: React.FC<ScoreModalProps> = ({
             </Text>
             <BaseBox
               width={{ base: '90%', md: '70%' }}
-              bg="white"
               borderRadius="md"
               p={4}
               color="black"
@@ -92,7 +91,7 @@ export const ScoreModal: React.FC<ScoreModalProps> = ({
             </BaseBox>
             <Text fontSize="md" textAlign="center">
               {' '}
-              <Text as="a" href="https://gotdle.net" color="teal.300">
+              <Text as="a" href="https://gotdle.net">
                 https://gotdle.net
               </Text>
             </Text>
