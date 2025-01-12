@@ -16,6 +16,7 @@ import {
   checkIfModePlayedToday,
   updateModeScore,
 } from '../utils/stateManager.tsx';
+import { ScoreModal } from '../components/ScoreModal.tsx';
 
 interface ImageModeState {
   imageAttempts?: number;
@@ -61,6 +62,7 @@ export const ImageModePage = () => {
   const [finalStates, setFinalStates] = useState<FinalStates | null>(null);
   const client = useApiClient();
   const [isPlayedToday, setIsPlayedToday] = useState<boolean>(false);
+  const [userWithScore, setUserWithScore] = useState<User | null>(null);
 
   useEffect(() => {
     fetchApi().catch((error) => {
@@ -126,6 +128,7 @@ export const ImageModePage = () => {
         const response = await client.getUserById();
         if (response.status === 200) {
           const user: User = response.data;
+          setUserWithScore(user);
           const playedToday = checkIfModePlayedToday(user, 2, client);
           setIsPlayedToday(playedToday);
         }
@@ -156,7 +159,9 @@ export const ImageModePage = () => {
         client.getUserById().then((response) => {
           if (response.status === 200) {
             const user: User = response.data;
-            updateModeScore(user, 2, incorrectGuesses.length, client);
+            if (updateModeScore(user, 2, incorrectGuesses.length, client)) {
+              setIsPlayedToday(true);
+            }
           }
         });
       } else {
@@ -276,6 +281,13 @@ export const ImageModePage = () => {
             <Text>Actual Streak: ...</Text>
             <Button mt={4}>Jump to Scoreboard</Button>
           </VStack>
+        )}
+        {userWithScore && (
+          <ScoreModal
+            user={userWithScore}
+            show={isPlayedToday}
+            handleClose={() => setIsPlayedToday(false)}
+          />
         )}
       </VStack>
     </BaseLayout>
