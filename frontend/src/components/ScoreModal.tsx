@@ -41,6 +41,9 @@ export const ScoreModal: React.FC<ScoreModalProps> = ({
   const scoreText = `I've completed all the modes of #GoTdle today:\n❓ Classic: ${user.score.dailyScore[0]}\n💬 Quote: ${user.score.dailyScore[1]}\n🎨 Image: ${user.score.dailyScore[2]}\n🟰Total: ${totalScore}\n🔥Streak: ${user.score.streak}\nhttps://gotdle.net`;
   const { hasCopied, onCopy } = useClipboard(scoreText);
 
+  const tweetText = encodeURIComponent(scoreText);
+  const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText}`;
+
   return (
     <Modal isOpen={show} onClose={handleClose} isCentered>
       <ModalOverlay />
@@ -97,14 +100,8 @@ export const ScoreModal: React.FC<ScoreModalProps> = ({
               <Button onClick={onCopy} colorScheme="blue">
                 {hasCopied ? 'Copied' : 'Copy Scores'}
               </Button>
-              <Button
-                as="a"
-                href={`https://example.com/share?score=${encodeURIComponent(
-                  scoreText,
-                )}`}
-                colorScheme="teal"
-              >
-                Share Scores
+              <Button as="a" href={tweetUrl} target="_blank" colorScheme="teal">
+                Share on X
               </Button>
             </HStack>
           </VStack>
