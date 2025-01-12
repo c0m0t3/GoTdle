@@ -16,6 +16,7 @@ import {
   checkIfModePlayedToday,
   updateModeScore,
 } from '../utils/stateManager.tsx';
+import { ScoreModal } from '../components/ScoreModal.tsx';
 
 interface QuoteModeState {
   quoteAttempts?: number;
@@ -50,6 +51,7 @@ export const QuoteModePage = () => {
     useState<CharacterOption | null>(null);
   const prevApiDataRef = useRef<QuoteData | null>(null);
   const [isPlayedToday, setIsPlayedToday] = useState<boolean>(false);
+  const [userWithScore, setUserWithScore] = useState<User | null>(null);
   const { user } = useAuth();
   const userId = user?.id;
   const client = useApiClient();
@@ -67,6 +69,7 @@ export const QuoteModePage = () => {
         const response = await client.getUserById();
         if (response.status === 200) {
           const user: User = response.data;
+          setUserWithScore(user);
           const playedToday = checkIfModePlayedToday(user, 1, client);
           setIsPlayedToday(playedToday);
         }
@@ -140,7 +143,9 @@ export const QuoteModePage = () => {
         client.getUserById().then((response) => {
           if (response.status === 200) {
             const user: User = response.data;
-            updateModeScore(user, 1, incorrectGuesses.length, client);
+            if (updateModeScore(user, 1, incorrectGuesses.length, client)) {
+              setIsPlayedToday(true);
+            }
           }
         });
       } else {
@@ -234,6 +239,13 @@ export const QuoteModePage = () => {
             </UserGuessesText>
           ))}
         </Box>
+        {userWithScore && (
+          <ScoreModal
+            user={userWithScore}
+            show={isPlayedToday}
+            handleClose={() => setIsPlayedToday(false)}
+          />
+        )}
       </VStack>
     </BaseLayout>
   );
