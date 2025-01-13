@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useApiClient } from './useApiClient';
 import { checkIfModePlayedToday } from '../utils/stateManager';
 
-interface User {
+export interface UserData {
   id: string;
   email: string;
   username: string;
@@ -18,7 +18,7 @@ interface User {
 
 export const useFetchUser = (modeIndex: number) => {
   const client = useApiClient();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserData | null>(null);
   const [isPlayedToday, setIsPlayedToday] = useState<boolean>(false);
 
   const fetchUser = useCallback(async () => {
@@ -26,7 +26,7 @@ export const useFetchUser = (modeIndex: number) => {
     try {
       const response = await client.getUserById();
       if (response.status === 200) {
-        const user: User = response.data;
+        const user: UserData = response.data;
         setUser(user);
         const playedToday = checkIfModePlayedToday(user, modeIndex, client);
         setIsPlayedToday(playedToday);

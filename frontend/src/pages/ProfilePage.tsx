@@ -16,20 +16,7 @@ import {
 import { formatDate, formatDateShort } from '../utils/formatDate.ts';
 import { UpdateUserModal } from '../components/UpdateUserModal.tsx';
 import { DeleteUserModal } from '../components/DeleteUserModal.tsx';
-
-interface User {
-  id: string;
-  email: string;
-  username: string;
-  createdAt: string;
-  score: {
-    recentScores: number[][];
-    dailyScore: number[];
-    lastPlayed: string | null;
-    longestStreak: number;
-    streak: number;
-  };
-}
+import { UserData } from '../hooks/useFetchUser.tsx';
 
 const compareScores = (currentScore: number[], previousScore: number[]) => {
   return currentScore.map((score, index) => {
@@ -96,7 +83,7 @@ const StatRow = ({
 
 export const ProfilePage = () => {
   const client = useApiClient();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserData | null>(null);
   const currentScore = user?.score?.recentScores[0] || [0, 0, 0];
   const previousScore = user?.score?.recentScores[1] || [0, 0, 0];
   const labels = ['Classic', 'Quote', 'Image'];

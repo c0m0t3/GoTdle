@@ -19,7 +19,7 @@ import {
 } from '../utils/stateManager.tsx';
 import { isToday, parseISO } from 'date-fns';
 import { ScoreModal } from '../components/ScoreModal';
-import { useFetchUser } from '../hooks/useFetchUser.tsx';
+import { useFetchUser, UserData } from '../hooks/useFetchUser.tsx';
 import { getBerlinDateString } from '../utils/formatDate.ts';
 
 interface Character {
@@ -36,20 +36,6 @@ interface Character {
 interface CharacterOption extends OptionBase {
   label: string;
   value: string;
-}
-
-interface User {
-  id: string;
-  email: string;
-  username: string;
-  createdAt: string;
-  score: {
-    streak: number;
-    lastPlayed: string | null;
-    longestStreak: number;
-    dailyScore: number[];
-    recentScores: number[][];
-  };
 }
 
 interface ClassicModeState {
@@ -79,7 +65,7 @@ export const ClassicPage: React.FC = () => {
   };
 
   const checkIfModePlayedTodayWrapper = (
-    user: User,
+    user: UserData,
     modeIndex: number,
   ): boolean => {
     const lastPlayedDate = user.score.lastPlayed
