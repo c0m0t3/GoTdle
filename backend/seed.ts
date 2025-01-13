@@ -25,7 +25,6 @@ async function seed() {
         [user.email, user.password, user.username],
       );
       const userId = res.rows[0].id;
-      console.log('userId', userId);
 
       if (user.score) {
         await client.query(
