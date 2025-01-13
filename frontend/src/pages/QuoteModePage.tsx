@@ -11,10 +11,9 @@ import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
 import { UserGuessesText } from '../components/UserGuessesText.tsx';
 import { useApiClient } from '../hooks/useApiClient.ts';
-import {
-  checkIfModePlayedToday,
-  updateModeScore,
-} from '../utils/stateManager.tsx';
+import { updateModeScore } from '../utils/stateManager.tsx';
+import { ScoreModal } from '../components/ScoreModal.tsx';
+import { useFetchUser } from '../hooks/useFetchUser.tsx';
 
 interface QuoteModeState {
   quoteAttempts?: number;
@@ -27,20 +26,6 @@ interface CharacterOption extends OptionBase {
   value: string;
 }
 
-interface User {
-  id: string;
-  email: string;
-  username: string;
-  createdAt: string;
-  score: {
-    streak: number;
-    lastPlayed: string | null;
-    longestStreak: number;
-    dailyScore: number[];
-    recentScores: number[][];
-  };
-}
-
 export const QuoteModePage = () => {
   const { fetchApi, apiData } = useQuoteApi();
   const [incorrectGuesses, setIncorrectGuesses] = useState<string[]>([]);
@@ -48,34 +33,15 @@ export const QuoteModePage = () => {
   const [selectedCharacter, setSelectedCharacter] =
     useState<CharacterOption | null>(null);
   const prevApiDataRef = useRef<QuoteData | null>(null);
-  const [isPlayedToday, setIsPlayedToday] = useState<boolean>(false);
+  const [isScoreModalOpen, setIsScoreModalOpen] = useState<boolean>(false);
   const client = useApiClient();
-  const [user, setUser] = useState<User | null>(null);
+  const { user, isPlayedToday } = useFetchUser(1);
 
   useEffect(() => {
     fetchApi().catch((error) => {
       console.error('Failed to fetch quote:', error);
     });
   }, [fetchApi]);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await client.getUserById();
-        if (response.status === 200) {
-          setUser(response.data);
-          if (user) {
-            const playedToday = checkIfModePlayedToday(user, 1, client);
-            setIsPlayedToday(playedToday);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
-    fetchUser();
-  }, [client, user]);
 
   useEffect(() => {
     if (apiData) {
@@ -102,7 +68,13 @@ export const QuoteModePage = () => {
         setIncorrectGuesses(quoteAnswers || []);
       }
     }
-  }, [user]);
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (isScoreModalOpen) {
+      console.log('isScoreModalOpen:', isScoreModalOpen);
+    }
+  }, [isScoreModalOpen]);
 
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
@@ -122,7 +94,9 @@ export const QuoteModePage = () => {
           quoteFinished: true,
         };
         if (user) {
-          updateModeScore(user, 1, incorrectGuesses.length, client);
+          if (updateModeScore(user, 1, incorrectGuesses.length, client)) {
+            setIsScoreModalOpen(true);
+          }
         }
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
@@ -215,6 +189,13 @@ export const QuoteModePage = () => {
             </UserGuessesText>
           ))}
         </Box>
+        {user && isScoreModalOpen && (
+          <ScoreModal
+            user={user}
+            show={isScoreModalOpen}
+            handleClose={() => setIsScoreModalOpen(false)}
+          />
+        )}
       </VStack>
     </BaseLayout>
   );

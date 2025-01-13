@@ -64,7 +64,7 @@ export const updateModeScore = (
   modeIndex: number,
   incorrectGuesses: number,
   client: Client,
-) => {
+): boolean => {
   const storedHash = localStorage.getItem('userHash');
   const yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd');
 
@@ -86,15 +86,18 @@ export const updateModeScore = (
 
   user.score.dailyScore[modeIndex] = incorrectGuesses + 1;
 
+  client.putDailyScore({
+    dailyScore: user.score.dailyScore,
+  });
+
   if (user.score.dailyScore.every((score) => score !== 0)) {
     client.putScoreByUserId({
       recentScores: user.score.dailyScore,
       streak: user.score.streak,
       longestStreak: user.score.longestStreak,
     });
+    return true;
   }
 
-  client.putDailyScore({
-    dailyScore: user.score.dailyScore,
-  });
+  return false;
 };

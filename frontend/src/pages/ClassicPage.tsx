@@ -18,6 +18,8 @@ import {
   updateModeScore,
 } from '../utils/stateManager.tsx';
 import { isToday, parseISO } from 'date-fns';
+import { ScoreModal } from '../components/ScoreModal';
+import { useFetchUser } from '../hooks/useFetchUser.tsx';
 
 interface Character {
   name: string;
@@ -65,9 +67,9 @@ export const ClassicPage: React.FC = () => {
   );
   const [correctGuess, setCorrectGuess] = useState<string>('');
   const [isOpen, setIsOpen] = useState(false);
-  const [isPlayedToday, setIsPlayedToday] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const client = useApiClient();
-  const [user, setUser] = useState<User | null>(null);
+  const { user, isPlayedToday, setIsPlayedToday } = useFetchUser(0);
 
   const getCharacterOfTheDay = (characters: Character[]) => {
     const date = new Date();
@@ -130,28 +132,16 @@ export const ClassicPage: React.FC = () => {
       }
     };
 
-    const fetchUser = async () => {
-      try {
-        const response = await client.getUserById();
-        if (response.status === 200) {
-          setUser(response.data);
-          if (user) {
-            const playedToday = checkIfModePlayedTodayWrapper(user, 0);
-            setIsPlayedToday(playedToday);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
     fetchCharacters();
-    fetchUser();
-  }, [client, user]);
+  }, [client]);
 
   useEffect(() => {
-    initializeClassicModeState(user?.id);
-  }, [user]);
+    if (user) {
+      const playedToday = checkIfModePlayedTodayWrapper(user, 0);
+      setIsPlayedToday(playedToday);
+      initializeClassicModeState(user.id);
+    }
+  }, [user, setIsPlayedToday]);
 
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
@@ -177,8 +167,11 @@ export const ClassicPage: React.FC = () => {
           classicAttempts: incorrectGuesses.length + 1,
           classicFinished: true,
         };
+
         if (user) {
-          updateModeScore(user, 0, incorrectGuesses.length, client);
+          if (updateModeScore(user, 0, incorrectGuesses.length, client)) {
+            setIsModalOpen(true);
+          }
         }
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
@@ -218,7 +211,16 @@ export const ClassicPage: React.FC = () => {
             </Button>
           </HStack>
           {isOpen && (
-            <VStack mt={4} alignItems="center">
+            <VStack
+              mt={4}
+              alignItems="center"
+              border="1px solid"
+              borderColor="gray.300"
+              borderRadius="md"
+              p={4}
+              bg="rgb(120, 0, 0)"
+              textColor={'white'}
+            >
               {solutionCharacter?.titles.map((title, index) => (
                 <Text key={index}>{title}</Text>
               ))}
@@ -256,6 +258,13 @@ export const ClassicPage: React.FC = () => {
           characterData={selectedCharacter}
           solutionCharacter={solutionCharacter}
         />
+        {user && isModalOpen && (
+          <ScoreModal
+            user={user}
+            show={isModalOpen}
+            handleClose={() => setIsModalOpen(false)}
+          />
+        )}
       </VStack>
     </BaseLayout>
   );
