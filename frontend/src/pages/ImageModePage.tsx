@@ -70,12 +70,6 @@ export const ImageModePage = () => {
     }
   }, [user?.id]);
 
-  useEffect(() => {
-    if (isScoreModalOpen) {
-      console.log('isScoreModalOpen:', isScoreModalOpen);
-    }
-  }, [isScoreModalOpen]);
-
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
       setSelectedCharacter(selected);
