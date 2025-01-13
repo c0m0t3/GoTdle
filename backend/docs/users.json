@@ -1,0 +1,22 @@
+[
+  {
+    "email": "colin@moissl.de",
+    "password": "$2b$10$iY8/c9AmowANNdEheEd2C.OswcYcLaNcGMjIWR1nBYsuCoB./1cW2",
+    "username": "Colin"
+  },
+  {
+    "email": "hiroyuki@Ohno.jp",
+    "password": "$2b$10$yH5/c2AmqweANNdEheEd2C.KlM3LaNcGMjIYR3nBYsoPaD./2vF3",
+    "username": "Hiro"
+  },
+  {
+    "email": "benjamin@Piwon.nz",
+    "password": "$2b$10$aJ8/c9AmowBNNdEheEd2C.PswcTLbNcFMjIWR3nXYsoCoB./1cW2",
+    "username": "Benjamin"
+  },
+  {
+    "email": "daniel@bunte.bunterunte",
+    "password": "$2b$10$eY8/c9ZmowANNdEheRd2C.MswcALaNcGMjKWR1nXYsoCoB./3xF5",
+    "username": "Bunte Runte"
+  }
+]
