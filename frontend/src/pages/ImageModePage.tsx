@@ -23,10 +23,12 @@ interface ImageModeState {
 }
 
 interface FinalStates {
+  classicAttempts: number;
   quoteAttempts: number;
   imageAttempts: number;
   quoteFinished: boolean;
   imageFinished: boolean;
+  classicFinished: boolean;
 }
 
 interface CharacterOption extends OptionBase {
@@ -266,7 +268,7 @@ export const ImageModePage = () => {
           <VStack>
             <Text>Congratulations, you finished today's GoTdle!!</Text>
             <Text>Here are your Scores!</Text>
-            <Text>Classic: {localStorage.getItem('classicModeAttempts')}</Text>
+            <Text>Classic: {finalStates?.classicAttempts}</Text>
             <Text>Quote: {finalStates?.quoteAttempts}</Text>
             <Text>Image: {finalStates?.imageAttempts}</Text>
             <Text>Actual Streak: ...</Text>

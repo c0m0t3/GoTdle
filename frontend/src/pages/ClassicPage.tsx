@@ -172,17 +172,16 @@ export const ClassicPage: React.FC = () => {
       }
       if (solutionCharacter && selected.value === solutionCharacter.name) {
         setCorrectGuess(selected.value);
-        const attempts = incorrectGuesses.length + 1;
-        localStorage.setItem('classicModeAttempts', attempts.toString());
         classicModeStates = {
           ...classicModeStates,
+          classicAttempts: incorrectGuesses.length + 1,
           classicFinished: true,
         };
         if (user) {
           updateModeScore(user, 0, incorrectGuesses.length, client);
         }
       } else {
-        setIncorrectGuesses([...incorrectGuesses, selected.value]);
+        setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
       const storedPageStates = localStorage.getItem(user?.id || '');
       let currentPageStates = storedPageStates
