@@ -9,7 +9,6 @@ import { BaseBox } from '../components/BaseBox.tsx';
 import { ModeNavigationBox } from '../components/ModeNavigationBox.tsx';
 import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
-import { useAuth } from '../providers/AuthProvider.tsx';
 import { UserGuessesText } from '../components/UserGuessesText.tsx';
 import { useApiClient } from '../hooks/useApiClient.ts';
 import {
@@ -52,8 +51,7 @@ export const QuoteModePage = () => {
   const prevApiDataRef = useRef<QuoteData | null>(null);
   const [isPlayedToday, setIsPlayedToday] = useState<boolean>(false);
   const [userWithScore, setUserWithScore] = useState<User | null>(null);
-  const { user } = useAuth();
-  const userId = user?.id;
+  const [isScoreModalOpen, setIsScoreModalOpen] = useState<boolean>(false);
   const client = useApiClient();
 
   useEffect(() => {
@@ -69,7 +67,7 @@ export const QuoteModePage = () => {
         const response = await client.getUserById();
         if (response.status === 200) {
           const user: User = response.data;
-          setUserWithScore(user);
+          setUserWithScore(response.data);
           const playedToday = checkIfModePlayedToday(user, 1, client);
           setIsPlayedToday(playedToday);
         }
@@ -91,7 +89,7 @@ export const QuoteModePage = () => {
         setCorrectGuess('');
         setSelectedCharacter(null);
 
-        const storedPageStates = localStorage.getItem(userId || '');
+        const storedPageStates = localStorage.getItem(userWithScore?.id || '');
         let currentPageStates = storedPageStates
           ? JSON.parse(storedPageStates)
           : {};
@@ -104,14 +102,17 @@ export const QuoteModePage = () => {
           ...currentPageStates,
           ...resetQuoteState,
         };
-        localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
+        localStorage.setItem(
+          userWithScore?.id || '',
+          JSON.stringify(currentPageStates),
+        );
       }
       prevApiDataRef.current = apiData;
     }
-  }, [userId, apiData]);
+  }, [userWithScore?.id, apiData]);
 
   useEffect(() => {
-    const pageState = localStorage.getItem(userId || '');
+    const pageState = localStorage.getItem(userWithScore?.id || '');
     if (pageState) {
       const { quoteAnswers, quoteFinished } = JSON.parse(pageState);
       if (quoteFinished) {
@@ -121,7 +122,13 @@ export const QuoteModePage = () => {
         setIncorrectGuesses(quoteAnswers || []);
       }
     }
-  }, [userId]);
+  }, [userWithScore?.id]);
+
+  useEffect(() => {
+    if (isScoreModalOpen) {
+      console.log('isScoreModalOpen:', isScoreModalOpen);
+    }
+  }, [isScoreModalOpen]);
 
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
@@ -141,17 +148,21 @@ export const QuoteModePage = () => {
           quoteFinished: true,
         };
         client.getUserById().then((response) => {
-          if (response.status === 200) {
-            const user: User = response.data;
-            if (updateModeScore(user, 1, incorrectGuesses.length, client)) {
-              setIsPlayedToday(true);
+          if (response.status === 200 && userWithScore) {
+            if (
+              updateModeScore(userWithScore, 1, incorrectGuesses.length, client)
+            ) {
+              console.log('Score modal open in Quote');
+              console.log('userWithScore:' + userWithScore);
+              setIsScoreModalOpen(true);
+              console.log('isScoreModalOpen:' + isScoreModalOpen);
             }
           }
         });
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
-      const storedPageStates = localStorage.getItem(userId || '');
+      const storedPageStates = localStorage.getItem(userWithScore?.id || '');
       let currentPageStates = storedPageStates
         ? JSON.parse(storedPageStates)
         : {};
@@ -159,7 +170,10 @@ export const QuoteModePage = () => {
         ...currentPageStates,
         ...quoteModeState,
       };
-      localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
+      localStorage.setItem(
+        userWithScore?.id || '',
+        JSON.stringify(currentPageStates),
+      );
       setSelectedCharacter(null);
     }
   };
@@ -239,11 +253,11 @@ export const QuoteModePage = () => {
             </UserGuessesText>
           ))}
         </Box>
-        {userWithScore && (
+        {userWithScore && isScoreModalOpen && (
           <ScoreModal
             user={userWithScore}
-            show={isPlayedToday}
-            handleClose={() => setIsPlayedToday(false)}
+            show={isScoreModalOpen}
+            handleClose={() => setIsScoreModalOpen(false)}
           />
         )}
       </VStack>
