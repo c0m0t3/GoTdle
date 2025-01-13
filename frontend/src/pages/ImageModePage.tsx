@@ -51,7 +51,7 @@ export const ImageModePage = () => {
   const prevApiDataRef = useRef<ImageData | null>(null);
   const client = useApiClient();
   const [isPlayedToday, setIsPlayedToday] = useState<boolean>(false);
-  const [userWithScore, setUserWithScore] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isScoreModalOpen, setIsScoreModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ export const ImageModePage = () => {
         setCorrectGuess('');
         setSelectedCharacter(null);
 
-        const storedPageStates = localStorage.getItem(userWithScore?.id || '');
+        const storedPageStates = localStorage.getItem(user?.id || '');
         let currentPageStates = storedPageStates
           ? JSON.parse(storedPageStates)
           : {};
@@ -83,17 +83,14 @@ export const ImageModePage = () => {
           ...currentPageStates,
           ...resetImageState,
         };
-        localStorage.setItem(
-          userWithScore?.id || '',
-          JSON.stringify(currentPageStates),
-        );
+        localStorage.setItem(user?.id || '', JSON.stringify(currentPageStates));
       }
       prevApiDataRef.current = apiData;
     }
-  }, [userWithScore?.id, apiData]);
+  }, [user?.id, apiData]);
 
   useEffect(() => {
-    const pageState = localStorage.getItem(userWithScore?.id || '');
+    const pageState = localStorage.getItem(user?.id || '');
     if (pageState) {
       const { imageAnswers, imageFinished } = JSON.parse(pageState);
       if (imageFinished) {
@@ -103,7 +100,7 @@ export const ImageModePage = () => {
         setIncorrectGuesses(imageAnswers || []);
       }
     }
-  }, [userWithScore?.id]);
+  }, [user?.id]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -112,7 +109,7 @@ export const ImageModePage = () => {
         const response = await client.getUserById();
         if (response.status === 200) {
           const user: User = response.data;
-          setUserWithScore(response.data);
+          setUser(response.data);
           const playedToday = checkIfModePlayedToday(user, 2, client);
           setIsPlayedToday(playedToday);
         }
@@ -146,19 +143,15 @@ export const ImageModePage = () => {
           imageAttempts: incorrectGuesses.length + 1,
           imageFinished: true,
         };
-        client.getUserById().then((response) => {
-          if (response.status === 200 && userWithScore) {
-            if (
-              updateModeScore(userWithScore, 2, incorrectGuesses.length, client)
-            ) {
-              setIsScoreModalOpen(true);
-            }
+        if (user) {
+          if (updateModeScore(user, 2, incorrectGuesses.length, client)) {
+            setIsScoreModalOpen(true);
           }
-        });
+        }
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
-      const storedPageStates = localStorage.getItem(userWithScore?.id || '');
+      const storedPageStates = localStorage.getItem(user?.id || '');
       let currentPageStates = storedPageStates
         ? JSON.parse(storedPageStates)
         : {};
@@ -166,10 +159,7 @@ export const ImageModePage = () => {
         ...currentPageStates,
         ...imageModeState,
       };
-      localStorage.setItem(
-        userWithScore?.id || '',
-        JSON.stringify(currentPageStates),
-      );
+      localStorage.setItem(user?.id || '', JSON.stringify(currentPageStates));
       setSelectedCharacter(null);
     }
   };
@@ -264,9 +254,9 @@ export const ImageModePage = () => {
             </UserGuessesText>
           ))}
         </Box>
-        {userWithScore && isScoreModalOpen && (
+        {user && (
           <ScoreModal
-            user={userWithScore}
+            user={user}
             show={isScoreModalOpen}
             handleClose={() => setIsScoreModalOpen(false)}
           />
