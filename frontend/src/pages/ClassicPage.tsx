@@ -19,6 +19,7 @@ import {
 } from '../utils/stateManager.tsx';
 import { isToday, parseISO } from 'date-fns';
 import { ScoreModal } from '../components/ScoreModal';
+import { useFetchUser } from '../hooks/useFetchUser.tsx';
 
 interface Character {
   name: string;
@@ -66,10 +67,9 @@ export const ClassicPage: React.FC = () => {
   );
   const [correctGuess, setCorrectGuess] = useState<string>('');
   const [isOpen, setIsOpen] = useState(false);
-  const [isPlayedToday, setIsPlayedToday] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
   const client = useApiClient();
+  const { user, isPlayedToday, setIsPlayedToday } = useFetchUser(0);
 
   const getCharacterOfTheDay = (characters: Character[]) => {
     const date = new Date();
@@ -132,28 +132,16 @@ export const ClassicPage: React.FC = () => {
       }
     };
 
-    const fetchUser = async () => {
-      console.log('Fetching user data');
-      try {
-        const response = await client.getUserById();
-        if (response.status === 200) {
-          const user: User = response.data;
-          setUser(response.data);
-          const playedToday = checkIfModePlayedTodayWrapper(user, 0);
-          setIsPlayedToday(playedToday);
-        }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
     fetchCharacters();
-    fetchUser();
   }, [client]);
 
   useEffect(() => {
-    initializeClassicModeState(user?.id);
-  }, [user?.id]);
+    if (user) {
+      const playedToday = checkIfModePlayedTodayWrapper(user, 0);
+      setIsPlayedToday(playedToday);
+      initializeClassicModeState(user.id);
+    }
+  }, [user, setIsPlayedToday]);
 
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
