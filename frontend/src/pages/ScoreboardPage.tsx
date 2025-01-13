@@ -14,6 +14,7 @@ import {
 import { useApiClient } from '../hooks/useApiClient';
 import { BaseBox } from '../components/BaseBox';
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
+import { formatDateShort } from '../utils/formatDate.ts';
 
 interface Score {
   streak: number;
@@ -211,7 +212,7 @@ export const ScoreboardPage = () => {
                             : 'inherit'
                         }
                       >
-                        {new Date(user.createdAt).toLocaleDateString('de-DE')}
+                        {formatDateShort(user.createdAt)}
                       </Td>
                       <Td
                         color={

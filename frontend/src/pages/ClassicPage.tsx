@@ -19,7 +19,8 @@ import {
 } from '../utils/stateManager.tsx';
 import { isToday, parseISO } from 'date-fns';
 import { ScoreModal } from '../components/ScoreModal';
-import { useFetchUser } from '../hooks/useFetchUser.tsx';
+import { useFetchUser, UserData } from '../hooks/useFetchUser.tsx';
+import { getBerlinDateString } from '../utils/formatDate.ts';
 
 interface Character {
   name: string;
@@ -35,20 +36,6 @@ interface Character {
 interface CharacterOption extends OptionBase {
   label: string;
   value: string;
-}
-
-interface User {
-  id: string;
-  email: string;
-  username: string;
-  createdAt: string;
-  score: {
-    streak: number;
-    lastPlayed: string | null;
-    longestStreak: number;
-    dailyScore: number[];
-    recentScores: number[][];
-  };
 }
 
 interface ClassicModeState {
@@ -72,20 +59,13 @@ export const ClassicPage: React.FC = () => {
   const { user, isPlayedToday, setIsPlayedToday } = useFetchUser(0);
 
   const getCharacterOfTheDay = (characters: Character[]) => {
-    const date = new Date();
-    const berlinTime = date.toLocaleString('en-US', {
-      timeZone: 'Europe/Berlin',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
-    const hash = murmurhash.v3(berlinTime);
+    const hash = murmurhash.v3(getBerlinDateString());
     const index = hash % characters.length;
     return characters[index];
   };
 
   const checkIfModePlayedTodayWrapper = (
-    user: User,
+    user: UserData,
     modeIndex: number,
   ): boolean => {
     const lastPlayedDate = user.score.lastPlayed
