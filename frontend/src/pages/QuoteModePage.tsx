@@ -9,7 +9,6 @@ import { BaseBox } from '../components/BaseBox.tsx';
 import { ModeNavigationBox } from '../components/ModeNavigationBox.tsx';
 import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
-import { useAuth } from '../providers/AuthProvider.tsx';
 import { UserGuessesText } from '../components/UserGuessesText.tsx';
 import { useApiClient } from '../hooks/useApiClient.ts';
 import {
@@ -50,9 +49,8 @@ export const QuoteModePage = () => {
     useState<CharacterOption | null>(null);
   const prevApiDataRef = useRef<QuoteData | null>(null);
   const [isPlayedToday, setIsPlayedToday] = useState<boolean>(false);
-  const { user } = useAuth();
-  const userId = user?.id;
   const client = useApiClient();
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     fetchApi().catch((error) => {
@@ -62,13 +60,14 @@ export const QuoteModePage = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      console.log('Fetching user data');
       try {
         const response = await client.getUserById();
         if (response.status === 200) {
-          const user: User = response.data;
-          const playedToday = checkIfModePlayedToday(user, 1, client);
-          setIsPlayedToday(playedToday);
+          setUser(response.data);
+          if (user) {
+            const playedToday = checkIfModePlayedToday(user, 1, client);
+            setIsPlayedToday(playedToday);
+          }
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -76,7 +75,7 @@ export const QuoteModePage = () => {
     };
 
     fetchUser();
-  }, [client]);
+  }, [client, user]);
 
   useEffect(() => {
     if (apiData) {
@@ -88,7 +87,7 @@ export const QuoteModePage = () => {
         setCorrectGuess('');
         setSelectedCharacter(null);
 
-        const storedPageStates = localStorage.getItem(userId || '');
+        const storedPageStates = localStorage.getItem(user?.id || '');
         let currentPageStates = storedPageStates
           ? JSON.parse(storedPageStates)
           : {};
@@ -101,14 +100,14 @@ export const QuoteModePage = () => {
           ...currentPageStates,
           ...resetQuoteState,
         };
-        localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
+        localStorage.setItem(user?.id || '', JSON.stringify(currentPageStates));
       }
       prevApiDataRef.current = apiData;
     }
-  }, [userId, apiData]);
+  }, [user, apiData]);
 
   useEffect(() => {
-    const pageState = localStorage.getItem(userId || '');
+    const pageState = localStorage.getItem(user?.id || '');
     if (pageState) {
       const { quoteAnswers, quoteFinished } = JSON.parse(pageState);
       if (quoteFinished) {
@@ -118,7 +117,7 @@ export const QuoteModePage = () => {
         setIncorrectGuesses(quoteAnswers || []);
       }
     }
-  }, [userId]);
+  }, [user]);
 
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
@@ -137,16 +136,13 @@ export const QuoteModePage = () => {
           quoteAttempts: incorrectGuesses.length + 1,
           quoteFinished: true,
         };
-        client.getUserById().then((response) => {
-          if (response.status === 200) {
-            const user: User = response.data;
-            updateModeScore(user, 1, incorrectGuesses.length, client);
-          }
-        });
+        if (user) {
+          updateModeScore(user, 1, incorrectGuesses.length, client);
+        }
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
-      const storedPageStates = localStorage.getItem(userId || '');
+      const storedPageStates = localStorage.getItem(user?.id || '');
       let currentPageStates = storedPageStates
         ? JSON.parse(storedPageStates)
         : {};
@@ -154,7 +150,7 @@ export const QuoteModePage = () => {
         ...currentPageStates,
         ...quoteModeState,
       };
-      localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
+      localStorage.setItem(user?.id || '', JSON.stringify(currentPageStates));
       setSelectedCharacter(null);
     }
   };
