@@ -50,7 +50,7 @@ export const QuoteModePage = () => {
     useState<CharacterOption | null>(null);
   const prevApiDataRef = useRef<QuoteData | null>(null);
   const [isPlayedToday, setIsPlayedToday] = useState<boolean>(false);
-  const [userWithScore, setUserWithScore] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isScoreModalOpen, setIsScoreModalOpen] = useState<boolean>(false);
   const client = useApiClient();
 
@@ -67,7 +67,7 @@ export const QuoteModePage = () => {
         const response = await client.getUserById();
         if (response.status === 200) {
           const user: User = response.data;
-          setUserWithScore(response.data);
+          setUser(response.data);
           const playedToday = checkIfModePlayedToday(user, 1, client);
           setIsPlayedToday(playedToday);
         }
@@ -89,7 +89,7 @@ export const QuoteModePage = () => {
         setCorrectGuess('');
         setSelectedCharacter(null);
 
-        const storedPageStates = localStorage.getItem(userWithScore?.id || '');
+        const storedPageStates = localStorage.getItem(user?.id || '');
         let currentPageStates = storedPageStates
           ? JSON.parse(storedPageStates)
           : {};
@@ -102,17 +102,14 @@ export const QuoteModePage = () => {
           ...currentPageStates,
           ...resetQuoteState,
         };
-        localStorage.setItem(
-          userWithScore?.id || '',
-          JSON.stringify(currentPageStates),
-        );
+        localStorage.setItem(user?.id || '', JSON.stringify(currentPageStates));
       }
       prevApiDataRef.current = apiData;
     }
-  }, [userWithScore?.id, apiData]);
+  }, [user?.id, apiData]);
 
   useEffect(() => {
-    const pageState = localStorage.getItem(userWithScore?.id || '');
+    const pageState = localStorage.getItem(user?.id || '');
     if (pageState) {
       const { quoteAnswers, quoteFinished } = JSON.parse(pageState);
       if (quoteFinished) {
@@ -122,7 +119,7 @@ export const QuoteModePage = () => {
         setIncorrectGuesses(quoteAnswers || []);
       }
     }
-  }, [userWithScore?.id]);
+  }, [user?.id]);
 
   useEffect(() => {
     if (isScoreModalOpen) {
@@ -147,22 +144,15 @@ export const QuoteModePage = () => {
           quoteAttempts: incorrectGuesses.length + 1,
           quoteFinished: true,
         };
-        client.getUserById().then((response) => {
-          if (response.status === 200 && userWithScore) {
-            if (
-              updateModeScore(userWithScore, 1, incorrectGuesses.length, client)
-            ) {
-              console.log('Score modal open in Quote');
-              console.log('userWithScore:' + userWithScore);
-              setIsScoreModalOpen(true);
-              console.log('isScoreModalOpen:' + isScoreModalOpen);
-            }
+        if (user) {
+          if (updateModeScore(user, 1, incorrectGuesses.length, client)) {
+            setIsScoreModalOpen(true);
           }
-        });
+        }
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
-      const storedPageStates = localStorage.getItem(userWithScore?.id || '');
+      const storedPageStates = localStorage.getItem(user?.id || '');
       let currentPageStates = storedPageStates
         ? JSON.parse(storedPageStates)
         : {};
@@ -170,10 +160,7 @@ export const QuoteModePage = () => {
         ...currentPageStates,
         ...quoteModeState,
       };
-      localStorage.setItem(
-        userWithScore?.id || '',
-        JSON.stringify(currentPageStates),
-      );
+      localStorage.setItem(user?.id || '', JSON.stringify(currentPageStates));
       setSelectedCharacter(null);
     }
   };
@@ -253,9 +240,9 @@ export const QuoteModePage = () => {
             </UserGuessesText>
           ))}
         </Box>
-        {userWithScore && isScoreModalOpen && (
+        {user && isScoreModalOpen && (
           <ScoreModal
-            user={userWithScore}
+            user={user}
             show={isScoreModalOpen}
             handleClose={() => setIsScoreModalOpen(false)}
           />
