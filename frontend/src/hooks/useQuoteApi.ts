@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import murmurhash from 'murmurhash';
+import { getBerlinDateString } from '../utils/formatDate.ts';
 
 interface CharacterData {
   name: string;
@@ -19,14 +20,7 @@ export interface QuoteData {
 }
 
 const getCharacterOfTheDay = (characters: CharacterData[]) => {
-  const date = new Date();
-  const berlinTime = date.toLocaleString('en-US', {
-    timeZone: 'Europe/Berlin',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  });
-  const hash = murmurhash.v3(berlinTime);
+  const hash = murmurhash.v3(getBerlinDateString());
   const characterIndex = hash % characters.length;
   const character = characters[characterIndex];
   const quoteIndex = hash % character.quotes.length;

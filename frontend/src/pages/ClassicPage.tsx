@@ -20,6 +20,7 @@ import {
 import { isToday, parseISO } from 'date-fns';
 import { ScoreModal } from '../components/ScoreModal';
 import { useFetchUser } from '../hooks/useFetchUser.tsx';
+import { getBerlinDateString } from '../utils/formatDate.ts';
 
 interface Character {
   name: string;
@@ -72,14 +73,7 @@ export const ClassicPage: React.FC = () => {
   const { user, isPlayedToday, setIsPlayedToday } = useFetchUser(0);
 
   const getCharacterOfTheDay = (characters: Character[]) => {
-    const date = new Date();
-    const berlinTime = date.toLocaleString('en-US', {
-      timeZone: 'Europe/Berlin',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
-    const hash = murmurhash.v3(berlinTime);
+    const hash = murmurhash.v3(getBerlinDateString());
     const index = hash % characters.length;
     return characters[index];
   };
