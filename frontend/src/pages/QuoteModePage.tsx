@@ -86,21 +86,6 @@ export const QuoteModePage = () => {
         setIncorrectGuesses([]);
         setCorrectGuess('');
         setSelectedCharacter(null);
-
-        const storedPageStates = localStorage.getItem(user?.id || '');
-        let currentPageStates = storedPageStates
-          ? JSON.parse(storedPageStates)
-          : {};
-        const resetQuoteState: QuoteModeState = {
-          quoteAttempts: 0,
-          quoteAnswers: [],
-          quoteFinished: false,
-        };
-        currentPageStates = {
-          ...currentPageStates,
-          ...resetQuoteState,
-        };
-        localStorage.setItem(user?.id || '', JSON.stringify(currentPageStates));
       }
       prevApiDataRef.current = apiData;
     }
