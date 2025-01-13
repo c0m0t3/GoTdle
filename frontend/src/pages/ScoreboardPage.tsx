@@ -29,7 +29,7 @@ interface User {
   email: string;
   username: string;
   createdAt: string;
-  score: Score;
+  score?: Score;
 }
 
 export const ScoreboardPage = () => {
@@ -75,23 +75,23 @@ export const ScoreboardPage = () => {
       let bValue: number | string | null;
 
       if (key === 'classicMode') {
-        aValue = a.score.dailyScore[0];
-        bValue = b.score.dailyScore[0];
+        aValue = a.score?.dailyScore[0] ?? null;
+        bValue = b.score?.dailyScore[0] ?? null;
       } else if (key === 'quoteMode') {
-        aValue = a.score.dailyScore[1];
-        bValue = b.score.dailyScore[1];
+        aValue = a.score?.dailyScore[1] ?? null;
+        bValue = b.score?.dailyScore[1] ?? null;
       } else if (key === 'imageMode') {
-        aValue = a.score.dailyScore[2];
-        bValue = b.score.dailyScore[2];
+        aValue = a.score?.dailyScore[2] ?? null;
+        bValue = b.score?.dailyScore[2] ?? null;
       } else {
         aValue =
           key in a
             ? (a[key as keyof User] as string | number | null)
-            : (a.score[key as keyof Score] as string | number | null);
+            : (a.score?.[key as keyof Score] as string | number | null);
         bValue =
           key in b
             ? (b[key as keyof User] as string | number | null)
-            : (b.score[key as keyof Score] as string | number | null);
+            : (b.score?.[key as keyof Score] as string | number | null);
       }
 
       if (aValue !== null && bValue !== null) {
@@ -221,7 +221,7 @@ export const ScoreboardPage = () => {
                             : 'inherit'
                         }
                       >
-                        {user.score.streak}
+                        {user.score?.streak ?? '-'}
                       </Td>
                       <Td
                         color={
@@ -230,7 +230,7 @@ export const ScoreboardPage = () => {
                             : 'inherit'
                         }
                       >
-                        {user.score.longestStreak}
+                        {user.score?.longestStreak ?? '-'}
                       </Td>
                       <Td
                         color={
@@ -239,7 +239,7 @@ export const ScoreboardPage = () => {
                             : 'inherit'
                         }
                       >
-                        {user.score.dailyScore[0] || '-'}
+                        {user.score?.dailyScore[0] ?? '-'}
                       </Td>
                       <Td
                         color={
@@ -248,7 +248,7 @@ export const ScoreboardPage = () => {
                             : 'inherit'
                         }
                       >
-                        {user.score.dailyScore[1] || '-'}
+                        {user.score?.dailyScore[1] ?? '-'}
                       </Td>
                       <Td
                         color={
@@ -257,7 +257,7 @@ export const ScoreboardPage = () => {
                             : 'inherit'
                         }
                       >
-                        {user.score.dailyScore[2] || '-'}
+                        {user.score?.dailyScore[2] ?? '-'}
                       </Td>
                     </Tr>
                   ))}

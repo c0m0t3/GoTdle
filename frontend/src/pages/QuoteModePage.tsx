@@ -69,7 +69,7 @@ export const QuoteModePage = () => {
       }
     }
   }, [user?.id]);
-
+  
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
       setSelectedCharacter(selected);
