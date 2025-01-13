@@ -13,7 +13,7 @@ import {
   StatNumber,
   Text,
 } from '@chakra-ui/react';
-import { formatDate } from '../utils/formatDate.ts';
+import { formatDate, formatDateShort } from '../utils/formatDate.ts';
 import { UpdateUserModal } from '../components/UpdateUserModal.tsx';
 import { DeleteUserModal } from '../components/DeleteUserModal.tsx';
 
@@ -163,9 +163,7 @@ export const ProfilePage = () => {
           </Stat>
           <Stat>
             <StatLabel>Last Played</StatLabel>
-            <StatNumber>
-              {formatDate(user?.score?.lastPlayed).toString().split(',')[0]}
-            </StatNumber>
+            <StatNumber>{formatDateShort(user?.score?.lastPlayed)}</StatNumber>
           </Stat>
         </HStack>
         <Text>Daily Score</Text>
