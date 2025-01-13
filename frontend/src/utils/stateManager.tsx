@@ -48,7 +48,6 @@ export const initializeDailyScore = (user: User, client: Client) => {
 
   const hash = CryptoJS.SHA256(user.id + formattedLastPlayed).toString();
 
-  console.log('hash', hash);
   localStorage.setItem('userHash', hash);
 
   user.score.dailyScore = [0, 0, 0];

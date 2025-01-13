@@ -22,7 +22,6 @@ export const useFetchUser = (modeIndex: number) => {
   const [isPlayedToday, setIsPlayedToday] = useState<boolean>(false);
 
   const fetchUser = useCallback(async () => {
-    console.log('Fetching user data');
     try {
       const response = await client.getUserById();
       if (response.status === 200) {
