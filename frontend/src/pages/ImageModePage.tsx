@@ -52,21 +52,6 @@ export const ImageModePage = () => {
         setIncorrectGuesses([]);
         setCorrectGuess('');
         setSelectedCharacter(null);
-
-        const storedPageStates = localStorage.getItem(user?.id || '');
-        let currentPageStates = storedPageStates
-          ? JSON.parse(storedPageStates)
-          : {};
-        const resetImageState: ImageModeState = {
-          imageAttempts: 0,
-          imageAnswers: [],
-          imageFinished: false,
-        };
-        currentPageStates = {
-          ...currentPageStates,
-          ...resetImageState,
-        };
-        localStorage.setItem(user?.id || '', JSON.stringify(currentPageStates));
       }
       prevApiDataRef.current = apiData;
     }

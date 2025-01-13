@@ -34,7 +34,9 @@ export const DeleteUserModal = () => {
   const toast = useToast();
   const {
     actions: { logout },
+    user,
   } = useAuth();
+  const userId = user?.id;
 
   return (
     <>
@@ -65,6 +67,7 @@ export const DeleteUserModal = () => {
             });
             formikHelpers.resetForm();
             formikHelpers.setSubmitting(false);
+            localStorage.removeItem(userId || '');
             logout();
             onClose();
           } catch (error) {
