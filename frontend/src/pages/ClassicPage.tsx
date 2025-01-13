@@ -184,9 +184,9 @@ export const ClassicPage: React.FC = () => {
           classicFinished: true,
         };
         client.getUserById().then((response) => {
-          if (response.status === 200) {
+          if (response.status === 200 && userWithScore) {
             if (
-              updateModeScore(response.data, 0, incorrectGuesses.length, client)
+              updateModeScore(userWithScore, 0, incorrectGuesses.length, client)
             ) {
               setIsModalOpen(true);
             }
