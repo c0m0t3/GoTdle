@@ -20,10 +20,26 @@ async function seed() {
     await client.connect();
 
     for (const user of users) {
-      await client.query(
-        'INSERT INTO "user" (email, password, username) VALUES ($1, $2, $3)',
+      const res = await client.query(
+        'INSERT INTO "user" (email, password, username) VALUES ($1, $2, $3) RETURNING id',
         [user.email, user.password, user.username],
       );
+      const userId = res.rows[0].id;
+      console.log('userId', userId);
+
+      if (user.score) {
+        await client.query(
+          'INSERT INTO "score" ("userId", streak, "lastPlayed", "longestStreak", "dailyScore", "recentScores") VALUES ($1, $2, $3, $4, $5, $6)',
+          [
+            userId,
+            user.score.streak,
+            user.score.lastPlayed,
+            user.score.longestStreak,
+            `{${user.score.dailyScore.join(',')}}`,
+            `{${user.score.recentScores.map((scores: number[]) => `{${scores.join(',')}}`).join(',')}}`,
+          ],
+        );
+      }
     }
 
     for (const character of characters) {
