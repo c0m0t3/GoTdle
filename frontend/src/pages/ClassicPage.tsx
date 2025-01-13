@@ -13,7 +13,6 @@ import { ModeSuccessBox } from '../components/ModeSuccessBox';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions';
 import { gotButtonStyle } from '../styles/buttonStyles.ts';
 import '../styles/ClassicPage.css';
-import { useAuth } from '../providers/AuthProvider.tsx';
 import {
   checkIfModePlayedToday,
   updateModeScore,
@@ -68,8 +67,7 @@ export const ClassicPage: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isPlayedToday, setIsPlayedToday] = useState(false);
   const client = useApiClient();
-  const { user } = useAuth();
-  const userId = user?.id;
+  const [user, setUser] = useState<User | null>(null);
 
   const getCharacterOfTheDay = (characters: Character[]) => {
     const date = new Date();
@@ -133,13 +131,14 @@ export const ClassicPage: React.FC = () => {
     };
 
     const fetchUser = async () => {
-      console.log('Fetching user data');
       try {
         const response = await client.getUserById();
         if (response.status === 200) {
-          const user: User = response.data;
-          const playedToday = checkIfModePlayedTodayWrapper(user, 0);
-          setIsPlayedToday(playedToday);
+          setUser(response.data);
+          if (user) {
+            const playedToday = checkIfModePlayedTodayWrapper(user, 0);
+            setIsPlayedToday(playedToday);
+          }
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -148,11 +147,11 @@ export const ClassicPage: React.FC = () => {
 
     fetchCharacters();
     fetchUser();
-  }, [client]);
+  }, [client, user]);
 
   useEffect(() => {
-    initializeClassicModeState(userId);
-  }, [userId]);
+    initializeClassicModeState(user?.id);
+  }, [user]);
 
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
@@ -173,21 +172,18 @@ export const ClassicPage: React.FC = () => {
       }
       if (solutionCharacter && selected.value === solutionCharacter.name) {
         setCorrectGuess(selected.value);
-        const attempts = incorrectGuesses.length + 1;
-        localStorage.setItem('classicModeAttempts', attempts.toString());
         classicModeStates = {
           ...classicModeStates,
+          classicAttempts: incorrectGuesses.length + 1,
           classicFinished: true,
         };
-        client.getUserById().then((response) => {
-          if (response.status === 200) {
-            updateModeScore(response.data, 0, incorrectGuesses.length, client);
-          }
-        });
+        if (user) {
+          updateModeScore(user, 0, incorrectGuesses.length, client);
+        }
       } else {
-        setIncorrectGuesses([...incorrectGuesses, selected.value]);
+        setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
-      const storedPageStates = localStorage.getItem(userId || '');
+      const storedPageStates = localStorage.getItem(user?.id || '');
       let currentPageStates = storedPageStates
         ? JSON.parse(storedPageStates)
         : {};
@@ -195,7 +191,7 @@ export const ClassicPage: React.FC = () => {
         ...currentPageStates,
         ...classicModeStates,
       };
-      localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
+      localStorage.setItem(user?.id || '', JSON.stringify(currentPageStates));
     }
   };
 

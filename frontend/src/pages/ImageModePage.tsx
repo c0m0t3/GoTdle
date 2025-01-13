@@ -9,7 +9,6 @@ import { BaseBox } from '../components/BaseBox.tsx';
 import { ModeNavigationBox } from '../components/ModeNavigationBox.tsx';
 import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
-import { useAuth } from '../providers/AuthProvider.tsx';
 import { UserGuessesText } from '../components/UserGuessesText.tsx';
 import { useApiClient } from '../hooks/useApiClient.ts';
 import {
@@ -24,10 +23,12 @@ interface ImageModeState {
 }
 
 interface FinalStates {
+  classicAttempts: number;
   quoteAttempts: number;
   imageAttempts: number;
   quoteFinished: boolean;
   imageFinished: boolean;
+  classicFinished: boolean;
 }
 
 interface CharacterOption extends OptionBase {
@@ -55,8 +56,7 @@ export const ImageModePage = () => {
   const [correctGuess, setCorrectGuess] = useState<string>('');
   const [selectedCharacter, setSelectedCharacter] =
     useState<CharacterOption | null>(null);
-  const { user } = useAuth();
-  const userId = user?.id;
+  const [user, setUser] = useState<User | null>(null);
   const prevApiDataRef = useRef<ImageData | null>(null);
   const [finalStates, setFinalStates] = useState<FinalStates | null>(null);
   const client = useApiClient();
@@ -77,28 +77,13 @@ export const ImageModePage = () => {
         setIncorrectGuesses([]);
         setCorrectGuess('');
         setSelectedCharacter(null);
-
-        const storedPageStates = localStorage.getItem(userId || '');
-        let currentPageStates = storedPageStates
-          ? JSON.parse(storedPageStates)
-          : {};
-        const resetImageState: ImageModeState = {
-          imageAttempts: 0,
-          imageAnswers: [],
-          imageFinished: false,
-        };
-        currentPageStates = {
-          ...currentPageStates,
-          ...resetImageState,
-        };
-        localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
       }
       prevApiDataRef.current = apiData;
     }
-  }, [userId, apiData]);
+  }, [user?.id, apiData]);
 
   useEffect(() => {
-    const pageState = localStorage.getItem(userId || '');
+    const pageState = localStorage.getItem(user?.id || '');
     if (pageState) {
       const { imageAnswers, imageFinished } = JSON.parse(pageState);
       if (imageFinished) {
@@ -108,26 +93,27 @@ export const ImageModePage = () => {
         setIncorrectGuesses(imageAnswers || []);
       }
     }
-  }, [userId]);
+  }, [user]);
 
   useEffect(() => {
     if (correctGuess) {
-      const storedPageStates = localStorage.getItem(userId || '');
+      const storedPageStates = localStorage.getItem(user?.id || '');
       if (storedPageStates) {
         setFinalStates(JSON.parse(storedPageStates));
       }
     }
-  }, [correctGuess, userId]);
+  }, [correctGuess, user]);
 
   useEffect(() => {
     const fetchUser = async () => {
-      console.log('Fetching user data');
       try {
         const response = await client.getUserById();
         if (response.status === 200) {
-          const user: User = response.data;
-          const playedToday = checkIfModePlayedToday(user, 2, client);
-          setIsPlayedToday(playedToday);
+          setUser(response.data);
+          if (user) {
+            const playedToday = checkIfModePlayedToday(user, 2, client);
+            setIsPlayedToday(playedToday);
+          }
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -135,7 +121,7 @@ export const ImageModePage = () => {
     };
 
     fetchUser();
-  }, []);
+  }, [client, user]);
 
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
@@ -153,16 +139,13 @@ export const ImageModePage = () => {
           imageAttempts: incorrectGuesses.length + 1,
           imageFinished: true,
         };
-        client.getUserById().then((response) => {
-          if (response.status === 200) {
-            const user: User = response.data;
-            updateModeScore(user, 2, incorrectGuesses.length, client);
-          }
-        });
+        if (user) {
+          updateModeScore(user, 2, incorrectGuesses.length, client);
+        }
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
-      const storedPageStates = localStorage.getItem(userId || '');
+      const storedPageStates = localStorage.getItem(user?.id || '');
       let currentPageStates = storedPageStates
         ? JSON.parse(storedPageStates)
         : {};
@@ -170,7 +153,7 @@ export const ImageModePage = () => {
         ...currentPageStates,
         ...imageModeState,
       };
-      localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
+      localStorage.setItem(user?.id || '', JSON.stringify(currentPageStates));
       setSelectedCharacter(null);
     }
   };
@@ -270,7 +253,7 @@ export const ImageModePage = () => {
           <VStack>
             <Text>Congratulations, you finished today's GoTdle!!</Text>
             <Text>Here are your Scores!</Text>
-            <Text>Classic: {localStorage.getItem('classicModeAttempts')}</Text>
+            <Text>Classic: {finalStates?.classicAttempts}</Text>
             <Text>Quote: {finalStates?.quoteAttempts}</Text>
             <Text>Image: {finalStates?.imageAttempts}</Text>
             <Text>Actual Streak: ...</Text>
