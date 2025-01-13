@@ -1,5 +1,5 @@
 import { BaseLayout } from '../layout/BaseLayout.tsx';
-import { Box, Button, Image, Text, VStack } from '@chakra-ui/react';
+import { Box, Image, Text, VStack } from '@chakra-ui/react';
 import { ImageData, useImageApi } from '../hooks/useImageApi.ts';
 import { useEffect, useRef, useState } from 'react';
 import { CharacterSelect } from '../components/CharacterSelect.tsx';
@@ -9,7 +9,6 @@ import { BaseBox } from '../components/BaseBox.tsx';
 import { ModeNavigationBox } from '../components/ModeNavigationBox.tsx';
 import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
-import { useAuth } from '../providers/AuthProvider.tsx';
 import { UserGuessesText } from '../components/UserGuessesText.tsx';
 import { useApiClient } from '../hooks/useApiClient.ts';
 import {
@@ -22,13 +21,6 @@ interface ImageModeState {
   imageAttempts?: number;
   imageAnswers: string[];
   imageFinished?: boolean;
-}
-
-interface FinalStates {
-  quoteAttempts: number;
-  imageAttempts: number;
-  quoteFinished: boolean;
-  imageFinished: boolean;
 }
 
 interface CharacterOption extends OptionBase {
@@ -56,13 +48,11 @@ export const ImageModePage = () => {
   const [correctGuess, setCorrectGuess] = useState<string>('');
   const [selectedCharacter, setSelectedCharacter] =
     useState<CharacterOption | null>(null);
-  const { user } = useAuth();
-  const userId = user?.id;
   const prevApiDataRef = useRef<ImageData | null>(null);
-  const [finalStates, setFinalStates] = useState<FinalStates | null>(null);
   const client = useApiClient();
   const [isPlayedToday, setIsPlayedToday] = useState<boolean>(false);
   const [userWithScore, setUserWithScore] = useState<User | null>(null);
+  const [isScoreModalOpen, setIsScoreModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     fetchApi().catch((error) => {
@@ -80,7 +70,7 @@ export const ImageModePage = () => {
         setCorrectGuess('');
         setSelectedCharacter(null);
 
-        const storedPageStates = localStorage.getItem(userId || '');
+        const storedPageStates = localStorage.getItem(userWithScore?.id || '');
         let currentPageStates = storedPageStates
           ? JSON.parse(storedPageStates)
           : {};
@@ -93,14 +83,17 @@ export const ImageModePage = () => {
           ...currentPageStates,
           ...resetImageState,
         };
-        localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
+        localStorage.setItem(
+          userWithScore?.id || '',
+          JSON.stringify(currentPageStates),
+        );
       }
       prevApiDataRef.current = apiData;
     }
-  }, [userId, apiData]);
+  }, [userWithScore?.id, apiData]);
 
   useEffect(() => {
-    const pageState = localStorage.getItem(userId || '');
+    const pageState = localStorage.getItem(userWithScore?.id || '');
     if (pageState) {
       const { imageAnswers, imageFinished } = JSON.parse(pageState);
       if (imageFinished) {
@@ -110,16 +103,7 @@ export const ImageModePage = () => {
         setIncorrectGuesses(imageAnswers || []);
       }
     }
-  }, [userId]);
-
-  useEffect(() => {
-    if (correctGuess) {
-      const storedPageStates = localStorage.getItem(userId || '');
-      if (storedPageStates) {
-        setFinalStates(JSON.parse(storedPageStates));
-      }
-    }
-  }, [correctGuess, userId]);
+  }, [userWithScore?.id]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -128,7 +112,7 @@ export const ImageModePage = () => {
         const response = await client.getUserById();
         if (response.status === 200) {
           const user: User = response.data;
-          setUserWithScore(user);
+          setUserWithScore(response.data);
           const playedToday = checkIfModePlayedToday(user, 2, client);
           setIsPlayedToday(playedToday);
         }
@@ -138,7 +122,13 @@ export const ImageModePage = () => {
     };
 
     fetchUser();
-  }, []);
+  }, [client]);
+
+  useEffect(() => {
+    if (isScoreModalOpen) {
+      console.log('isScoreModalOpen:', isScoreModalOpen);
+    }
+  }, [isScoreModalOpen]);
 
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
@@ -157,17 +147,18 @@ export const ImageModePage = () => {
           imageFinished: true,
         };
         client.getUserById().then((response) => {
-          if (response.status === 200) {
-            const user: User = response.data;
-            if (updateModeScore(user, 2, incorrectGuesses.length, client)) {
-              setIsPlayedToday(true);
+          if (response.status === 200 && userWithScore) {
+            if (
+              updateModeScore(userWithScore, 2, incorrectGuesses.length, client)
+            ) {
+              setIsScoreModalOpen(true);
             }
           }
         });
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
-      const storedPageStates = localStorage.getItem(userId || '');
+      const storedPageStates = localStorage.getItem(userWithScore?.id || '');
       let currentPageStates = storedPageStates
         ? JSON.parse(storedPageStates)
         : {};
@@ -175,7 +166,10 @@ export const ImageModePage = () => {
         ...currentPageStates,
         ...imageModeState,
       };
-      localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
+      localStorage.setItem(
+        userWithScore?.id || '',
+        JSON.stringify(currentPageStates),
+      );
       setSelectedCharacter(null);
     }
   };
@@ -270,23 +264,11 @@ export const ImageModePage = () => {
             </UserGuessesText>
           ))}
         </Box>
-
-        {finalStates?.imageFinished && finalStates?.quoteFinished && (
-          <VStack>
-            <Text>Congratulations, you finished today's GoTdle!!</Text>
-            <Text>Here are your Scores!</Text>
-            <Text>Classic: {localStorage.getItem('classicModeAttempts')}</Text>
-            <Text>Quote: {finalStates?.quoteAttempts}</Text>
-            <Text>Image: {finalStates?.imageAttempts}</Text>
-            <Text>Actual Streak: ...</Text>
-            <Button mt={4}>Jump to Scoreboard</Button>
-          </VStack>
-        )}
-        {userWithScore && (
+        {userWithScore && isScoreModalOpen && (
           <ScoreModal
             user={userWithScore}
-            show={isPlayedToday}
-            handleClose={() => setIsPlayedToday(false)}
+            show={isScoreModalOpen}
+            handleClose={() => setIsScoreModalOpen(false)}
           />
         )}
       </VStack>
