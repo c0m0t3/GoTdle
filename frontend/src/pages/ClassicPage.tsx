@@ -19,7 +19,6 @@ import {
 } from '../utils/stateManager.tsx';
 import { isToday, parseISO } from 'date-fns';
 import { ScoreModal } from '../components/ScoreModal';
-import { useAuth } from '../providers/AuthProvider.tsx';
 
 interface Character {
   name: string;
@@ -69,10 +68,8 @@ export const ClassicPage: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isPlayedToday, setIsPlayedToday] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userWithScore, setUserWithScore] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const client = useApiClient();
-  const { user } = useAuth();
-  const userId = user?.id;
 
   const getCharacterOfTheDay = (characters: Character[]) => {
     const date = new Date();
@@ -141,7 +138,7 @@ export const ClassicPage: React.FC = () => {
         const response = await client.getUserById();
         if (response.status === 200) {
           const user: User = response.data;
-          setUserWithScore(user);
+          setUser(response.data);
           const playedToday = checkIfModePlayedTodayWrapper(user, 0);
           setIsPlayedToday(playedToday);
         }
@@ -155,8 +152,8 @@ export const ClassicPage: React.FC = () => {
   }, [client]);
 
   useEffect(() => {
-    initializeClassicModeState(userId);
-  }, [userId]);
+    initializeClassicModeState(user?.id);
+  }, [user?.id]);
 
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
@@ -183,19 +180,16 @@ export const ClassicPage: React.FC = () => {
           ...classicModeStates,
           classicFinished: true,
         };
-        client.getUserById().then((response) => {
-          if (response.status === 200 && userWithScore) {
-            if (
-              updateModeScore(userWithScore, 0, incorrectGuesses.length, client)
-            ) {
-              setIsModalOpen(true);
-            }
+
+        if (user) {
+          if (updateModeScore(user, 0, incorrectGuesses.length, client)) {
+            setIsModalOpen(true);
           }
-        });
+        }
       } else {
         setIncorrectGuesses([...incorrectGuesses, selected.value]);
       }
-      const storedPageStates = localStorage.getItem(userId || '');
+      const storedPageStates = localStorage.getItem(user?.id || '');
       let currentPageStates = storedPageStates
         ? JSON.parse(storedPageStates)
         : {};
@@ -203,7 +197,7 @@ export const ClassicPage: React.FC = () => {
         ...currentPageStates,
         ...classicModeStates,
       };
-      localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
+      localStorage.setItem(user?.id || '', JSON.stringify(currentPageStates));
     }
   };
 
@@ -277,9 +271,9 @@ export const ClassicPage: React.FC = () => {
           characterData={selectedCharacter}
           solutionCharacter={solutionCharacter}
         />
-        {user && isModalOpen && userWithScore?.score && (
+        {user && isModalOpen && (
           <ScoreModal
-            user={userWithScore}
+            user={user}
             show={isModalOpen}
             handleClose={() => setIsModalOpen(false)}
           />
