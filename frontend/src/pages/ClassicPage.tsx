@@ -31,6 +31,7 @@ interface Character {
   religion: string;
   seasons: number[];
   titles: string[];
+  actor: string;
 }
 
 interface CharacterOption extends OptionBase {
@@ -53,7 +54,8 @@ export const ClassicPage: React.FC = () => {
     null,
   );
   const [correctGuess, setCorrectGuess] = useState<string>('');
-  const [isOpen, setIsOpen] = useState(false);
+  const [isTitleOpen, setIsTitleOpen] = useState(false);
+  const [isActorOpen, setIsActorOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const client = useApiClient();
   const { user, isPlayedToday, setIsPlayedToday } = useFetchUser(0);
@@ -183,14 +185,21 @@ export const ClassicPage: React.FC = () => {
           <Text textAlign="center">{solutionCharacter?.name}</Text>
           <HStack justifyContent="center">
             <Button
-              onClick={() => setIsOpen(true)}
-              isDisabled={incorrectGuesses.length < 5}
+              onClick={() => setIsTitleOpen(!isTitleOpen)}
+              isDisabled={incorrectGuesses.length < 3}
               sx={gotButtonStyle}
             >
               Titles
             </Button>
+            <Button
+              onClick={() => setIsActorOpen(!isActorOpen)}
+              isDisabled={incorrectGuesses.length < 6}
+              sx={gotButtonStyle}
+            >
+              Actor
+            </Button>
           </HStack>
-          {isOpen && (
+          {isTitleOpen && (
             <VStack
               mt={4}
               alignItems="center"
@@ -204,6 +213,20 @@ export const ClassicPage: React.FC = () => {
               {solutionCharacter?.titles.map((title, index) => (
                 <Text key={index}>{title}</Text>
               ))}
+            </VStack>
+          )}
+          {isActorOpen && (
+            <VStack
+              mt={4}
+              alignItems="center"
+              border="1px solid"
+              borderColor="gray.300"
+              borderRadius="md"
+              p={4}
+              bg="rgb(120, 0, 0)"
+              textColor={'white'}
+            >
+              <Text>{solutionCharacter?.actor}</Text>
             </VStack>
           )}
         </BaseBox>
