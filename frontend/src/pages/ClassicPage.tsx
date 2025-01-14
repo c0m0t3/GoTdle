@@ -21,6 +21,7 @@ import { isToday, parseISO } from 'date-fns';
 import { ScoreModal } from '../components/ScoreModal';
 import { useFetchUser, UserData } from '../hooks/useFetchUser.tsx';
 import { getBerlinDateString } from '../utils/formatDate.ts';
+import { useNavigationData } from '../hooks/useNavigationData.ts';
 
 interface Character {
   name: string;
@@ -57,6 +58,7 @@ export const ClassicPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const client = useApiClient();
   const { user, isPlayedToday, setIsPlayedToday } = useFetchUser(0);
+  const { label, navigationUrl } = useNavigationData(user?.id);
 
   const getCharacterOfTheDay = (characters: Character[]) => {
     const hash = murmurhash.v3(getBerlinDateString());
@@ -230,8 +232,8 @@ export const ClassicPage: React.FC = () => {
           <ModeSuccessBox
             correctGuess={correctGuess}
             attempts={incorrectGuesses.length + 1}
-            label="Quote"
-            url="/quote"
+            label={label}
+            url={navigationUrl}
           />
         )}
         <CharacterGrid
