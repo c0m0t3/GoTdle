@@ -145,6 +145,42 @@ npm run preview
 
 Open a browser and navigate to `http://localhost:4173/` or click the link in the terminal.
 
+## Application Functionalities
+
+- [ ] __Manage Users:__ Create, read, update, and delete users.
+- [ ] __Manage Scores:__ Playing the game will update the user's score and can be seen in the leaderboard.
+- [ ] __Manage Streaks:__ Playing all Modes will increase the user's streak and can be seen in the leaderboard.
+- [ ] __Play Game:__ Play the 3 Modes with daily updated questions with internal and external APIs.
+
+## Classic Mode
+
+- [ ] **Guess Characters:**  
+  Try to guess a character, and your guess will be added to a grid.  
+  The grid reveals whether the attributes match the correct character:
+    - **Green:** The attribute matches.
+    - **Red:** The attribute does not match.  
+      For **First Appearance** and **Last Appearance**, incorrect guesses will display an arrow indicating if the
+      correct value is higher or lower.
+
+### Character Attributes
+
+| **Attribute**        | **Examples**                     | **Description**                               |
+|----------------------|----------------------------------|-----------------------------------------------|
+| **Gender**           | Female, Male                     | Specifies the character's gender.             |
+| **House**            | Targaryen, Stark, etc.           | Indicates the house the character belongs to. |
+| **Origin**           | Winterfell, King's Landing, etc. | Defines the character's place of origin.      |
+| **Status**           | Alive, Deceased, Unknown         | Shows the character's current status.         |
+| **Religion**         | Old Gods, Many-Faced God, etc.   | The religion the character follows.           |
+| **First Appearance** | S1 - S8                          | The season when the character first appeared. |
+| **Last Appearance**  | S1 - S8                          | The season when the character last appeared.  |
+
+### Hints
+
+- [ ] **Titles:** Shows the character's titles.
+    - enabled after 3 incorrect guesses
+- [ ] **Actor:** Shows the actor who played the character.
+    - enabled after 6 incorrect guesses
+
 ## Test and Deploy
 
 Use the built-in continuous integration in GitLab.
