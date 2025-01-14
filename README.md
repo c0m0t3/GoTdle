@@ -154,6 +154,8 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 
 ## Classic Mode
 
+![Classic Mode](frontend/src/assets/classic-mode.png)
+
 - [ ] **Guess Characters:**  
   Try to guess a character, and your guess will be added to a grid.  
   The grid reveals whether the attributes match the correct character:
@@ -202,6 +204,16 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 - The color of the box of the character will reveal the guess:
     - **Green:** The image matches the character.
     - **Red:** The image does not match the character.
+
+## Success Box
+
+![Success Box](frontend/src/assets/success-box.png)
+
+- [ ] **Displayed everytime a mode is completed:**
+- Shows the correct answer and the user's score.
+- The user can choose to play the next mode
+    - when all modes are completed, it directs the user to the leaderboard.
+- The time until the next character is revealed
 
 ## Test and Deploy
 
