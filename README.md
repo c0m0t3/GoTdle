@@ -215,6 +215,16 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
     - when all modes are completed, it directs the user to the leaderboard.
 - The time until the next character is revealed
 
+## Score Box
+
+![Score Box](frontend/src/assets/score-box.png)
+
+- [ ] **Displayed when all modes are completed:**
+- Shows the user's score in each mode and the total score.
+- Shows the streak of the user (length of daily made completions of the game without missing a day).
+- The user can copy the score to the clipboard and share it with friends.
+- The user can share directly to Twitter.
+
 ## Test and Deploy
 
 Use the built-in continuous integration in GitLab.
