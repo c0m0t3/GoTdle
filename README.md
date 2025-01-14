@@ -181,6 +181,25 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 - [ ] **Actor:** Shows the actor who played the character.
     - enabled after 6 incorrect guesses
 
+## Quotes Mode
+
+- [ ] **Guess Quotes:**
+- Try to guess the character who said the quote.
+- The color of the box of the character will reveal the guess:
+    - **Green:** The quote matches the character.
+    - **Red:** The quote does not match the character.
+
+## Image Mode
+
+- [ ] **Guess Characters by a blurred image:**
+- Try to guess the character from the image.
+- The image will be blurred, and you have to guess the character.
+- Every wrong guess will unblur the image a bit more.
+    - Up to 20 times
+- The color of the box of the character will reveal the guess:
+    - **Green:** The image matches the character.
+    - **Red:** The image does not match the character.
+
 ## Test and Deploy
 
 Use the built-in continuous integration in GitLab.
