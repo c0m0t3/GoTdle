@@ -6,7 +6,7 @@ export const useNavigationData = (userId: string | undefined) => {
 
   const getNavigationUrl = () => {
     if (classicFinished && quoteFinished && imageFinished) {
-      return '/scoreboards';
+      return '/scoreboard';
     } else if (!classicFinished) {
       return '/classic';
     } else if (!quoteFinished) {

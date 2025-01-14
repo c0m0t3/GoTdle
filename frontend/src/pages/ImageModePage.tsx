@@ -14,6 +14,7 @@ import { useApiClient } from '../hooks/useApiClient.ts';
 import { updateModeScore } from '../utils/stateManager.tsx';
 import { ScoreModal } from '../components/ScoreModal.tsx';
 import { useFetchUser } from '../hooks/useFetchUser.tsx';
+import { useNavigationData } from '../hooks/useNavigationData.ts';
 
 interface ImageModeState {
   imageAttempts?: number;
@@ -36,6 +37,7 @@ export const ImageModePage = () => {
   const client = useApiClient();
   const [isScoreModalOpen, setIsScoreModalOpen] = useState<boolean>(false);
   const { user, isPlayedToday } = useFetchUser(2);
+  const { label, navigationUrl } = useNavigationData(user?.id);
 
   useEffect(() => {
     fetchApi().catch((error) => {
@@ -180,8 +182,8 @@ export const ImageModePage = () => {
           <ModeSuccessBox
             correctGuess={correctGuess}
             attempts={incorrectGuesses.length + 1}
-            label="Jump to Scoreboard"
-            url="/scoreboard"
+            label={label}
+            url={navigationUrl}
           />
         )}
 

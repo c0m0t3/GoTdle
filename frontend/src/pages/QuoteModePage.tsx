@@ -14,6 +14,7 @@ import { useApiClient } from '../hooks/useApiClient.ts';
 import { updateModeScore } from '../utils/stateManager.tsx';
 import { ScoreModal } from '../components/ScoreModal.tsx';
 import { useFetchUser } from '../hooks/useFetchUser.tsx';
+import { useNavigationData } from '../hooks/useNavigationData.ts';
 
 interface QuoteModeState {
   quoteAttempts?: number;
@@ -36,6 +37,7 @@ export const QuoteModePage = () => {
   const [isScoreModalOpen, setIsScoreModalOpen] = useState<boolean>(false);
   const client = useApiClient();
   const { user, isPlayedToday } = useFetchUser(1);
+  const { label, navigationUrl } = useNavigationData(user?.id);
 
   useEffect(() => {
     fetchApi().catch((error) => {
@@ -166,8 +168,8 @@ export const QuoteModePage = () => {
           <ModeSuccessBox
             correctGuess={correctGuess}
             attempts={incorrectGuesses.length + 1}
-            label="Image"
-            url="/image"
+            label={label}
+            url={navigationUrl}
           />
         )}
 
