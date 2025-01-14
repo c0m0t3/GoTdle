@@ -183,6 +183,8 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 
 ## Quotes Mode
 
+![Quotes Mode](frontend/src/assets/quote-mode.png)
+
 - [ ] **Guess Quotes:**
 - Try to guess the character who said the quote.
 - The color of the box of the character will reveal the guess:
@@ -191,10 +193,11 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 
 ## Image Mode
 
+![Image Mode](frontend/src/assets/image-mode.png)
+
 - [ ] **Guess Characters by a blurred image:**
 - Try to guess the character from the image.
-- The image will be blurred, and you have to guess the character.
-- Every wrong guess will unblur the image a bit more.
+- The image will be blurred initially, and every incorrect guess will make the image slightly less blurred.
     - Up to 20 times
 - The color of the box of the character will reveal the guess:
     - **Green:** The image matches the character.
