@@ -147,6 +147,18 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 
 ## Application Functionalities
 
+- [Classic Mode](#classic-mode)
+- [Quotes Mode](#quotes-mode)
+- [Image Mode](#image-mode)
+- [Success Box](#success-box)
+- [Score Box](#score-box)
+- [Scoreboard](#scoreboard)
+- [Profile](#profile)
+- [Login](#login)
+- [Register](#register)
+
+## Base
+
 - [ ] __Manage Users:__ Create, read, update, and delete users.
 - [ ] __Manage Scores:__ Playing the game will update the user's score and can be seen in the leaderboard.
 - [ ] __Manage Streaks:__ Playing all Modes will increase the user's streak and can be seen in the leaderboard.
