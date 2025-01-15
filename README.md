@@ -245,6 +245,25 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 - The user can change the username and email and passwort.
 - The user can delete the account after entering the password.
 
+## Login
+
+![Login](frontend/src/assets/login.png)
+
+- [ ] **Displayed when the user is not logged in or clicks on the login button:**
+- The user can log in with the username or email and password.
+- The user can swap between login with username or email.
+- The user can click on the register button to register a new account.
+
+## Register
+
+![Register](frontend/src/assets/register.png)
+
+- [ ] **Displayed when the user clicks on the register button:**
+- The user can register with a username, email and password.
+- If the user is already registered, the user can click on the "Log in here!" text to change to the login page.
+- The username needs to be unique and the email needs to be a valid email address.
+- The password needs to be at least 8 characters long.
+
 ## Test and Deploy
 
 Use the built-in continuous integration in GitLab.
