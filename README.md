@@ -225,6 +225,26 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 - The user can copy the score to the clipboard and share it with friends.
 - The user can share directly to Twitter.
 
+## Scoreboard
+
+![Scoreboard](frontend/src/assets/scoreboard.png)
+
+- [ ] **Displayed when the user clicks on the leaderboard button:**
+- Shows a table of all users
+- contains the user's name, rank, created at, current streak, longest streak and scores in each mode.
+- can be sorted by all columns by clicking on the column name and will be indicated by an arrow.
+
+## Profile
+
+![Profile](frontend/src/assets/profile.png)
+
+- [ ] **Displayed when the user clicks on the profile button:**
+- Shows the username, email, member since, current streak, longest streak, last played and scores in each mode.
+- For every mode the user can see the improvement or decrease in the score compared to the last time the mode was
+  played.
+- The user can change the username and email and passwort.
+- The user can delete the account after entering the password.
+
 ## Test and Deploy
 
 Use the built-in continuous integration in GitLab.
