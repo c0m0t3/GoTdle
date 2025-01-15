@@ -22,6 +22,7 @@ import { ScoreModal } from '../components/ScoreModal';
 import { useFetchUser, UserData } from '../hooks/useFetchUser.tsx';
 import { getBerlinDateString } from '../utils/formatDate.ts';
 import { useNavigationData } from '../hooks/useNavigationData.ts';
+import { ToolBar } from '../components/ToolBar.tsx';
 
 interface Character {
   name: string;
@@ -179,6 +180,7 @@ export const ClassicPage: React.FC = () => {
       <VStack spacing={4} className="classic-page">
         <ModeNavigationBox />
         <BaseBox className="classic-box">
+          <ToolBar />
           <Text textAlign="center">
             Guess today's Game of Thrones character!
           </Text>
