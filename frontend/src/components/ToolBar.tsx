@@ -1,7 +1,17 @@
-import { Divider, HStack, IconButton, Tooltip, VStack } from '@chakra-ui/react';
+import {
+  Divider,
+  HStack,
+  IconButton,
+  Tooltip,
+  useDisclosure,
+  VStack,
+} from '@chakra-ui/react';
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
+import { HelpModal } from './HelpModal.tsx';
 
 export const ToolBar = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <VStack spacing={0}>
       <HStack>
@@ -19,6 +29,7 @@ export const ToolBar = () => {
             _hover={{
               bg: 'transparent',
             }}
+            onClick={() => onOpen()}
           >
             <QuestionOutlineIcon
               fontSize={'2xl'}
@@ -29,6 +40,7 @@ export const ToolBar = () => {
         </Tooltip>
       </HStack>
       <Divider borderColor={'gray'} my={'4'} mt={2} />
+      <HelpModal isOpen={isOpen} onClose={onClose} />
     </VStack>
   );
 };
