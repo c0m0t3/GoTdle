@@ -276,6 +276,67 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 - The username needs to be unique and the email needs to be a valid email address.
 - The password needs to be at least 8 characters long.
 
+## Routes
+
+__User Routes:__
+
+- [ ] GET /users
+    - Description: Get all users
+    - Response: 200 Array of user objects
+- [ ] GET /users/me
+    - Description: Get the current user
+    - Response: 200 User object
+- [ ] GET /users/search
+    - Description: Search for users by username
+    - Response: 200 Array of user objects
+- [ ] PUT /users
+    - Description: Update the current user
+    - Request: User object
+    - Response: 200 User object
+    - Error: 409 Email/Username already exists
+- [ ] DELETE /users
+    - Description: Delete the current user
+    - Response: 204 No Content
+    - Error: 401 Password incorrect
+
+__Score Routes:__
+
+- [ ] PUT /scores
+    - Description: Update the current user's scores
+    - Request: Score object
+    - Response: 200 Score object
+- [ ] PUT /scores/daily
+    - Description: Update the current user's daily streak
+    - Request: Score object
+    - Response: 200 Score object
+
+__Character Routes:__
+
+- [ ] POST /characters
+    - Description: Create a new character
+    - Request: Character object
+    - Response: 201 Character object
+    - Error: 409 Characters Name already exists
+- [ ] GET /characters
+    - Description: Get all characters
+    - Response: 200 Array of character objects
+- [ ] DELETE /characters
+    - Description: Delete all characters
+    - Response: 204 No Content
+
+__Auth Routes:__
+
+- [ ] POST /auth/register
+    - Description: Register a new user
+    - Request: User object
+    - Response: 201 User object
+    - Error: 400 Bad Request
+- [ ] POST /auth/login
+    - Description: Log in the user
+    - Request: User object
+    - Response: 200 access token
+    - Error: 401 Invalid credentials
+
 ## Test and Deploy
 
 Use the built-in continuous integration in GitLab.
