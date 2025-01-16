@@ -31,7 +31,7 @@ export const HelpModal = ({
   const ClassicHelp = ({ properties }: { properties: Property[] }) => (
     <>
       <Text my={3}>
-        In classic mode, simply type the name of a character, and the game will
+        In Classic Mode, simply type the name of a character, and the game will
         reveal its properties. The color of the tiles will change to indicate
         how close your guess is to the character you're trying to find.
       </Text>
@@ -104,7 +104,7 @@ export const HelpModal = ({
   const QuoteHelp = () => (
     <>
       <Text my={3}>
-        In quote mode, you are given a famous quote from a character in HBO's
+        In Quote Mode, you are given a famous quote from a character in HBO's
         Game of Thrones. Your goal is to guess which character said it in the
         least number of tries.
       </Text>
@@ -132,6 +132,38 @@ export const HelpModal = ({
     </>
   );
 
+  const ImageHelp = () => (
+    <>
+      <Text my={3}>
+        In Image Mode, you are shown an image of a character from HBO's Game of
+        Thrones that you need to guess. The image starts off heavily blurred,
+        making it difficult to identify the character.
+      </Text>
+      <Text mb={2}>
+        With every incorrect guess, a small portion of the blur is removed,
+        gradually revealing more and more of the image.
+      </Text>
+      <Text>
+        <Text as="span" color={'green.500'} fontWeight="bold">
+          Green Box
+        </Text>{' '}
+        : If your guess is correct, a green box will appear with the name of the
+        character you guessed. This means you’ve correctly identified the
+        character, and the image will be completely revealed without any blur.{' '}
+      </Text>
+      <Text>
+        <Text as="span" color={'red.500'} fontWeight="bold">
+          Red Box
+        </Text>{' '}
+        : If your guess is incorrect, a red box will appear with the name of the
+        character you guessed. This means your guess was wrong, and the blur on
+        the image will be reduced, allowing you to make a more informed guess
+        next time.
+      </Text>
+      <Text mt={2}>keep guessing until you find the correct character!</Text>
+    </>
+  );
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={'inside'}>
       <ModalOverlay />
@@ -153,6 +185,7 @@ export const HelpModal = ({
           <CountdownTimer />
           {mode === 'classic' && <ClassicHelp properties={properties} />}
           {mode === 'quote' && <QuoteHelp />}
+          {mode === 'image' && <ImageHelp />}
         </ModalBody>
         <ModalFooter justifyContent="center">
           <Button colorScheme="blackAlpha" onClick={onClose}>
