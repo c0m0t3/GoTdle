@@ -56,13 +56,34 @@ export const HelpModal = ({
       </Text>
       <Divider borderColor="rgb(120, 0, 0)" mt={3} mb={5} />
       <Text>Here are the details of each of the properties columns:</Text>
-      {properties.map((property, index) => (
-        <Box key={index} my={2}>
+      {properties.map((property) => (
+        <Box key={property.title} my={2}>
           <Text fontWeight={'bold'}>{property.title}:</Text>
           <Text>{property.description}</Text>
           <Text>Possible values: {property.possibleValues}</Text>
         </Box>
       ))}
+      <Text fontSize={'xl'} fontWeight={'semibold'} textAlign={'center'} mt={7}>
+        Clues
+      </Text>
+      <Divider borderColor="rgb(120, 0, 0)" mt={3} mb={5} />
+      <Text mb={2}>
+        To help you find the character, you'll unlock clues after making several
+        guesses.
+      </Text>
+      <Text>
+        <Text as="span" fontWeight="bold">
+          Title:
+        </Text>{' '}
+        Provides a random title of the character.
+      </Text>
+      <Text>
+        <Text as="span" fontWeight="bold">
+          Actor:
+        </Text>{' '}
+        Reveals the name of the actor who portrayed the character in the TV
+        series.
+      </Text>
     </>
   );
   const properties: Property[] = [
