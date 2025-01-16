@@ -40,7 +40,7 @@ export const ToolBar = () => {
         </Tooltip>
       </HStack>
       <Divider borderColor={'gray'} my={'4'} mt={2} />
-      <HelpModal isOpen={isOpen} onClose={onClose} />
+      <HelpModal isOpen={isOpen} onClose={onClose} mode={'classic'} />
     </VStack>
   );
 };
