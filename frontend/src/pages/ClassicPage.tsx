@@ -180,7 +180,7 @@ export const ClassicPage: React.FC = () => {
       <VStack spacing={4} className="classic-page">
         <ModeNavigationBox />
         <BaseBox className="classic-box">
-          <ToolBar />
+          <ToolBar mode={'classic'} />
           <Text textAlign="center">
             Guess today's Game of Thrones character!
           </Text>

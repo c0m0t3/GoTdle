@@ -9,7 +9,7 @@ import {
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import { HelpModal } from './HelpModal.tsx';
 
-export const ToolBar = () => {
+export const ToolBar = ({ mode }: { mode: string }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -40,7 +40,7 @@ export const ToolBar = () => {
         </Tooltip>
       </HStack>
       <Divider borderColor={'gray'} my={'4'} mt={2} />
-      <HelpModal isOpen={isOpen} onClose={onClose} mode={'image'} />
+      <HelpModal isOpen={isOpen} onClose={onClose} mode={mode} />
     </VStack>
   );
 };

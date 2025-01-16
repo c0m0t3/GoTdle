@@ -15,6 +15,7 @@ import { updateModeScore } from '../utils/stateManager.tsx';
 import { ScoreModal } from '../components/ScoreModal.tsx';
 import { useFetchUser } from '../hooks/useFetchUser.tsx';
 import { useNavigationData } from '../hooks/useNavigationData.ts';
+import { ToolBar } from '../components/ToolBar.tsx';
 
 interface QuoteModeState {
   quoteAttempts?: number;
@@ -71,7 +72,7 @@ export const QuoteModePage = () => {
       }
     }
   }, [user?.id]);
-  
+
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
       setSelectedCharacter(selected);
@@ -136,6 +137,7 @@ export const QuoteModePage = () => {
         <ModeNavigationBox />
 
         <BaseBox>
+          <ToolBar mode={'quote'} />
           <Text fontSize={'md'}>Which characters says</Text>
           <Text fontSize={'xl'} py={5}>
             "{apiData?.sentence}"

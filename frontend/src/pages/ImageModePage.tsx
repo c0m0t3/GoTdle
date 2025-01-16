@@ -15,6 +15,7 @@ import { updateModeScore } from '../utils/stateManager.tsx';
 import { ScoreModal } from '../components/ScoreModal.tsx';
 import { useFetchUser } from '../hooks/useFetchUser.tsx';
 import { useNavigationData } from '../hooks/useNavigationData.ts';
+import { ToolBar } from '../components/ToolBar.tsx';
 
 interface ImageModeState {
   imageAttempts?: number;
@@ -144,6 +145,7 @@ export const ImageModePage = () => {
       <VStack>
         <ModeNavigationBox />
         <BaseBox>
+          <ToolBar mode={'image'} />
           <Text fontSize={'md'}>Which character is shown in this image?</Text>
           <Image
             src={apiData?.imageUrl}
