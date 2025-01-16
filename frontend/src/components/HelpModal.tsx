@@ -101,6 +101,37 @@ export const HelpModal = ({
     },
   ];
 
+  const QuoteHelp = () => (
+    <>
+      <Text my={3}>
+        In quote mode, you are given a famous quote from a character in HBO's
+        Game of Thrones. Your goal is to guess which character said it in the
+        least number of tries.
+      </Text>
+      <Text mb={2}>
+        For every guess you make, a colored box will appear to give you
+        feedback:
+      </Text>
+      <Text>
+        <Text as="span" color={'green.500'} fontWeight="bold">
+          Green Box
+        </Text>{' '}
+        : If your guess is correct, a green box will appear with the name of the
+        character you guessed. This means you’ve correctly identified the
+        character who said the quote.{' '}
+      </Text>
+      <Text>
+        <Text as="span" color={'red.500'} fontWeight="bold">
+          Red Box
+        </Text>{' '}
+        : If your guess is incorrect, a red box will appear with the name of the
+        character you guessed. This indicates that your guess was wrong, and you
+        can try again with a different character.
+      </Text>
+      <Text mt={2}>keep guessing until you find the correct character!</Text>
+    </>
+  );
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={'inside'}>
       <ModalOverlay />
@@ -121,6 +152,7 @@ export const HelpModal = ({
           </Text>
           <CountdownTimer />
           {mode === 'classic' && <ClassicHelp properties={properties} />}
+          {mode === 'quote' && <QuoteHelp />}
         </ModalBody>
         <ModalFooter justifyContent="center">
           <Button colorScheme="blackAlpha" onClick={onClose}>
