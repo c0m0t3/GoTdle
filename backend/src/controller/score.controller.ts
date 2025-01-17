@@ -4,6 +4,7 @@ import { z } from 'zod';
 import {
   updateDailyScoreZodSchema,
   updateScoreZodSchema,
+  updateStreakZodSchema,
 } from '../validation/validation';
 
 export class ScoreController {
@@ -48,6 +49,16 @@ export class ScoreController {
     const validatedData = updateDailyScoreZodSchema.parse(req.body);
 
     const updatedScore = await this.scoreRepository.updateDailyScoreByUserId(
+      req.user!.id,
+      validatedData,
+    );
+    res.status(200).send(updatedScore);
+  }
+
+  async updateStreakByUserId(req: Request, res: Response): Promise<void> {
+    const validatedData = updateStreakZodSchema.parse(req.body);
+
+    const updatedScore = await this.scoreRepository.updateStreakByUserId(
       req.user!.id,
       validatedData,
     );
