@@ -29,7 +29,7 @@ export const ToolBar = ({
       <HStack gap={6}>
         <Tooltip
           hasArrow
-          label="Current Streak"
+          label={`Current Streak: ${user?.score.streak ?? 0}`}
           aria-label="streak"
           bg="rgb(120, 0, 0)"
         >
@@ -55,6 +55,7 @@ export const ToolBar = ({
               bg: 'transparent',
             }}
             onClick={() => onOpen()}
+            onFocus={(e) => e.preventDefault()}
           >
             <QuestionOutlineIcon
               fontSize={'2xl'}
