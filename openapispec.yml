@@ -401,6 +401,94 @@ paths:
                     type: integer
       security:
         - Authorization: [ ]
+  /scores/streak:
+    put:
+      summary: Update Streak of User
+      tags: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    x-stoplight:
+                      id: jjt3hz8kirzci
+                    format: uuid
+                  streak:
+                    type: integer
+                    x-stoplight:
+                      id: yh56p6ft4o0os
+                  lastPlayed:
+                    type: string
+                    x-stoplight:
+                      id: lnw58g5ayhqwm
+                    format: date-time
+                  longestStreak:
+                    type: integer
+                    x-stoplight:
+                      id: 02b7ms5lzeja0
+                  recentScores:
+                    type: array
+                    x-stoplight:
+                      id: l7t5ty7atangg
+                    items:
+                      x-stoplight:
+                        id: c15mgczhinma3
+                      type: array
+                      items:
+                        x-stoplight:
+                          id: ih9a0t5z11kku
+                        type: integer
+                  dailyScore:
+                    type: array
+                    x-stoplight:
+                      id: 9ps7lnt9f15zb
+                    items:
+                      x-stoplight:
+                        id: dgaa2jj0mxxpc
+                      type: integer
+      operationId: putStreakScore
+      x-stoplight:
+        id: n0d01k1zj18qi
+      security:
+        - Authorization: [ ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - streak
+              properties:
+                streak:
+                  type: integer
+                  x-stoplight:
+                    id: bqkjq8cnrtkmd
+  '/characters/{_id}':
+    parameters:
+      - schema:
+          type: integer
+        name: _id
+        in: path
+        required: true
+    get:
+      summary: Get Character Info by Id
+      tags: [ ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Characters'
+      operationId: getCharacterById
+      x-stoplight:
+        id: 2ibel5gzrue0g
+      description: Get character for classic mode
   /characters:
     get:
       summary: Get All Characters

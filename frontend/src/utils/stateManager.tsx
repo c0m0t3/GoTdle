@@ -16,6 +16,7 @@ interface User {
 }
 
 interface Client {
+  putStreakScore: (data: { streak: number }) => void;
   putDailyScore: (data: { dailyScore: number[] }) => void;
   putScoreByUserId: (data: {
     recentScores: number[];
@@ -53,6 +54,10 @@ export const initializeDailyScore = (user: User, client: Client) => {
   user.score.dailyScore = [0, 0, 0];
   client.putDailyScore({
     dailyScore: user.score.dailyScore,
+  });
+  user.score.streak = 0;
+  client.putStreakScore({
+    streak: user.score.streak,
   });
 
   localStorage.removeItem(user.id || '');

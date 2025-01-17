@@ -404,6 +404,62 @@ export interface PutScoreByUserIdRequest {
 /**
  * 
  * @export
+ * @interface PutStreakScore200Response
+ */
+export interface PutStreakScore200Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof PutStreakScore200Response
+     */
+    'userId'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PutStreakScore200Response
+     */
+    'streak'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PutStreakScore200Response
+     */
+    'lastPlayed'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PutStreakScore200Response
+     */
+    'longestStreak'?: number;
+    /**
+     * 
+     * @type {Array<Array<number>>}
+     * @memberof PutStreakScore200Response
+     */
+    'recentScores'?: Array<Array<number>>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof PutStreakScore200Response
+     */
+    'dailyScore'?: Array<number>;
+}
+/**
+ * 
+ * @export
+ * @interface PutStreakScoreRequest
+ */
+export interface PutStreakScoreRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof PutStreakScoreRequest
+     */
+    'streak': number;
+}
+/**
+ * 
+ * @export
  * @interface PutUserByIdRequest
  */
 export interface PutUserByIdRequest {
@@ -539,6 +595,40 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(deleteUserByIdRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Get character for classic mode
+         * @summary Get Character Info by Id
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCharacterById: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getCharacterById', 'id', id)
+            const localVarPath = `/characters/{_id}`
+                .replace(`{${"_id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -827,6 +917,44 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
+         * 
+         * @summary Update Streak of User
+         * @param {PutStreakScoreRequest} [putStreakScoreRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putStreakScore: async (putStreakScoreRequest?: PutStreakScoreRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/scores/streak`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Authorization required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(putStreakScoreRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Update logged user. UserId in Auth-Token.
          * @summary Update User by User ID
          * @param {PutUserByIdRequest} [putUserByIdRequest] The user can optionally update their username, email, or password.   We need to ensure that empty input fields are handled properly to prevent the database from being updated with empty values.
@@ -885,6 +1013,19 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserById(deleteUserByIdRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.deleteUserById']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Get character for classic mode
+         * @summary Get Character Info by Id
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getCharacterById(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Characters>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getCharacterById(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.getCharacterById']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -989,6 +1130,19 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * 
+         * @summary Update Streak of User
+         * @param {PutStreakScoreRequest} [putStreakScoreRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async putStreakScore(putStreakScoreRequest?: PutStreakScoreRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PutStreakScore200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.putStreakScore(putStreakScoreRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.putStreakScore']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * Update logged user. UserId in Auth-Token.
          * @summary Update User by User ID
          * @param {PutUserByIdRequest} [putUserByIdRequest] The user can optionally update their username, email, or password.   We need to ensure that empty input fields are handled properly to prevent the database from being updated with empty values.
@@ -1020,6 +1174,16 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          */
         deleteUserById(deleteUserByIdRequest?: DeleteUserByIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.deleteUserById(deleteUserByIdRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Get character for classic mode
+         * @summary Get Character Info by Id
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCharacterById(id: number, options?: RawAxiosRequestConfig): AxiosPromise<Characters> {
+            return localVarFp.getCharacterById(id, options).then((request) => request(axios, basePath));
         },
         /**
          * Get all characters to use its name for the Answer-SelectControl-Options
@@ -1099,6 +1263,16 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.putScoreByUserId(putScoreByUserIdRequest, options).then((request) => request(axios, basePath));
         },
         /**
+         * 
+         * @summary Update Streak of User
+         * @param {PutStreakScoreRequest} [putStreakScoreRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putStreakScore(putStreakScoreRequest?: PutStreakScoreRequest, options?: RawAxiosRequestConfig): AxiosPromise<PutStreakScore200Response> {
+            return localVarFp.putStreakScore(putStreakScoreRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Update logged user. UserId in Auth-Token.
          * @summary Update User by User ID
          * @param {PutUserByIdRequest} [putUserByIdRequest] The user can optionally update their username, email, or password.   We need to ensure that empty input fields are handled properly to prevent the database from being updated with empty values.
@@ -1128,6 +1302,18 @@ export class DefaultApi extends BaseAPI {
      */
     public deleteUserById(deleteUserByIdRequest?: DeleteUserByIdRequest, options?: RawAxiosRequestConfig) {
         return DefaultApiFp(this.configuration).deleteUserById(deleteUserByIdRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get character for classic mode
+     * @summary Get Character Info by Id
+     * @param {number} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public getCharacterById(id: number, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getCharacterById(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1221,6 +1407,18 @@ export class DefaultApi extends BaseAPI {
      */
     public putScoreByUserId(putScoreByUserIdRequest?: PutScoreByUserIdRequest, options?: RawAxiosRequestConfig) {
         return DefaultApiFp(this.configuration).putScoreByUserId(putScoreByUserIdRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Update Streak of User
+     * @param {PutStreakScoreRequest} [putStreakScoreRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public putStreakScore(putStreakScoreRequest?: PutStreakScoreRequest, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).putStreakScore(putStreakScoreRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
