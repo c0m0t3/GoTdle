@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Divider,
+  Image,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -12,6 +13,8 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { CountdownTimer } from './CountdownTimer.tsx';
+import correctAnswer from '../../public/example_classic_correct.png';
+import incorrectAnswer from '../../public/example_classic_incorrect.png';
 
 type Property = {
   title: string;
@@ -84,6 +87,94 @@ export const HelpModal = ({
         Reveals the name of the actor who portrayed the character in the TV
         series.
       </Text>
+      <Text fontSize={'xl'} fontWeight={'semibold'} textAlign={'center'} mt={7}>
+        Example
+      </Text>
+      <Divider borderColor="rgb(120, 0, 0)" mt={3} mb={5} />
+      <Text>
+        Consider the correct answer is{' '}
+        <Text as="span" fontWeight="bold">
+          Jon Snow
+        </Text>{' '}
+      </Text>
+      <Text>
+        If you enter{' '}
+        <Text as="span" fontWeight="bold">
+          Robb Stark
+        </Text>
+        , these properties will appear:
+      </Text>
+      <Image src={incorrectAnswer} width={'auto'} height={'3em'} />
+      <Text mt={2}>
+        Gender:{' '}
+        <Text as="span" fontWeight="bold" color={'green.500'}>
+          Green
+        </Text>{' '}
+      </Text>
+      <Text mb={2}>It's an exact match; both characters are male.</Text>
+      <Text>
+        House:{' '}
+        <Text as="span" fontWeight="bold" color={'red.500'}>
+          Red
+        </Text>{' '}
+      </Text>
+      <Text mb={2}>
+        It's not a match, as Jon Snow does not belong to House Stark.
+      </Text>
+      <Text>
+        Origin:{' '}
+        <Text as="span" fontWeight="bold" color={'red.500'}>
+          Red
+        </Text>{' '}
+      </Text>
+      <Text mb={2}>
+        It's not a match, as Jon Snow's birthplace is the Tower of Joy.
+      </Text>
+      <Text>
+        Status:{' '}
+        <Text as="span" fontWeight="bold" color={'red.500'}>
+          Red
+        </Text>{' '}
+      </Text>
+      <Text mb={2}>It's not a match, as Jon Snow isn't dead.</Text>
+      <Text>
+        Religion:{' '}
+        <Text as="span" fontWeight="bold" color={'green.500'}>
+          Green
+        </Text>{' '}
+      </Text>
+      <Text mb={2}>
+        It's an exact match; both characters follow the same religion.
+      </Text>
+      <Text my={1}>
+        First Appearance:{' '}
+        <Text as="span" fontWeight="bold" color={'green.500'}>
+          Green
+        </Text>{' '}
+      </Text>
+      <Text mb={2}>
+        It's an exact match; both first appeared in season 1 of the TV series.
+      </Text>
+      <Text>
+        Last Appearance:{' '}
+        <Text as="span" fontWeight="bold" color={'red.500'}>
+          Red
+        </Text>{' '}
+        and a arrow up
+      </Text>
+      <Text mb={2}>
+        It's not a match. Jon Snow appeared in the series through to the final
+        season.
+      </Text>
+      <Text>
+        If you entered{' '}
+        <Text as="span" fontWeight="bold">
+          Jon Snow
+        </Text>
+        , here is what would come up:
+      </Text>
+      <Image src={correctAnswer} width={'auto'} height={'3em'} />
+      <Text mt={2}>GL HF</Text>
     </>
   );
   const properties: Property[] = [
@@ -150,6 +241,7 @@ export const HelpModal = ({
         can try again with a different character.
       </Text>
       <Text mt={2}>keep guessing until you find the correct character!</Text>
+      <Text mt={2}>GL HF</Text>
     </>
   );
 
@@ -182,6 +274,7 @@ export const HelpModal = ({
         next time.
       </Text>
       <Text mt={2}>keep guessing until you find the correct character!</Text>
+      <Text mt={2}>GL HF</Text>
     </>
   );
 
