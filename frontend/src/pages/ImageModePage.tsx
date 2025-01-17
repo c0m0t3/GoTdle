@@ -145,7 +145,7 @@ export const ImageModePage = () => {
       <VStack>
         <ModeNavigationBox />
         <BaseBox>
-          <ToolBar mode={'image'} />
+          <ToolBar mode={'image'} user={user} />
           <Text fontSize={'md'}>Which character is shown in this image?</Text>
           <Image
             src={apiData?.imageUrl}

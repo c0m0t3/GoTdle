@@ -137,7 +137,7 @@ export const QuoteModePage = () => {
         <ModeNavigationBox />
 
         <BaseBox>
-          <ToolBar mode={'quote'} />
+          <ToolBar mode={'quote'} user={user} />
           <Text fontSize={'md'}>Which characters says</Text>
           <Text fontSize={'xl'} py={5}>
             "{apiData?.sentence}"
