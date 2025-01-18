@@ -81,28 +81,28 @@
     }
   },
   {
-    "email": "daniel@bunte.bunterunte",
+    "email": "bunte@bunte.de",
     "password": "$2b$10$eY8/c9ZmowANNdEheRd2C.MswcALaNcGMjKWR1nXYsoCoB./3xF5",
-    "username": "Bunte Runte",
+    "username": "Bunte",
     "score": {
-      "streak": 0,
-      "lastPlayed": "2023-09-28",
-      "longestStreak": 0,
+      "streak": 42,
+      "lastPlayed": "1984-03-14",
+      "longestStreak": 1337,
       "dailyScore": [
-        0,
-        0,
-        0
+        1,
+        1,
+        1
       ],
       "recentScores": [
         [
-          0,
-          0,
-          0
+          1,
+          1,
+          1
         ],
         [
-          0,
-          0,
-          0
+          1,
+          1,
+          1
         ]
       ]
     }
