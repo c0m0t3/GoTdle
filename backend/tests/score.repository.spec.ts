@@ -82,7 +82,7 @@ describe('ScoreRepository', () => {
     });
   });
 
-  describe('updateDailyScoreByUserId', () => {
+  describe('updateDailyOrStreakByUserId', () => {
     it('should update the daily score by user ID', async () => {
       const user = await userRepository.createUser(TEST_USER);
       await scoreRepository.createScore(user.id);
@@ -91,7 +91,7 @@ describe('ScoreRepository', () => {
         dailyScore: [4, 5, 6],
       };
 
-      const updatedScore = await scoreRepository.updateDailyScoreByUserId(
+      const updatedScore = await scoreRepository.updateDailyOrStreakByUserId(
         user.id,
         updatedDailyScoreData,
       );

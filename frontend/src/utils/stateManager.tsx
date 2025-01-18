@@ -16,8 +16,10 @@ interface User {
 }
 
 interface Client {
-  putStreakScore: (data: { streak: number }) => void;
-  putDailyScore: (data: { dailyScore: number[] }) => void;
+  putDailyOrStreakScore: (data: {
+    streak?: number;
+    dailyScore?: number[];
+  }) => void;
   putScoreByUserId: (data: {
     recentScores: number[];
     streak: number;
@@ -52,13 +54,17 @@ export const initializeDailyScore = (user: User, client: Client) => {
   localStorage.setItem('userHash', hash);
 
   user.score.dailyScore = [0, 0, 0];
-  client.putDailyScore({
+  client.putDailyOrStreakScore({
     dailyScore: user.score.dailyScore,
   });
-  user.score.streak = 0;
-  client.putStreakScore({
-    streak: user.score.streak,
-  });
+
+  const yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd');
+  if (formattedLastPlayed !== yesterday) {
+    user.score.streak = 0;
+    client.putDailyOrStreakScore({
+      streak: user.score.streak,
+    });
+  }
 
   localStorage.removeItem(user.id || '');
 };
@@ -72,29 +78,29 @@ export const updateModeScore = (
   const storedHash = localStorage.getItem('userHash');
   const yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd');
 
-  if (storedHash) {
-    const hashYesterday = CryptoJS.SHA256(user.id + yesterday).toString();
-
-    if (storedHash === hashYesterday) {
-      user.score.streak += 1;
-    } else {
-      user.score.streak = 1;
-    }
-  } else {
-    user.score.streak = 1;
-  }
-
-  if (user.score.streak > user.score.longestStreak) {
-    user.score.longestStreak = user.score.streak;
-  }
-
   user.score.dailyScore[modeIndex] = incorrectGuesses + 1;
 
-  client.putDailyScore({
+  client.putDailyOrStreakScore({
     dailyScore: user.score.dailyScore,
   });
 
   if (user.score.dailyScore.every((score) => score !== 0)) {
+    if (storedHash) {
+      const hashYesterday = CryptoJS.SHA256(user.id + yesterday).toString();
+
+      if (storedHash === hashYesterday) {
+        user.score.streak += 1;
+      } else {
+        user.score.streak = 1;
+      }
+    } else {
+      user.score.streak = 1;
+    }
+
+    if (user.score.streak > user.score.longestStreak) {
+      user.score.longestStreak = user.score.streak;
+    }
+
     client.putScoreByUserId({
       recentScores: user.score.dailyScore,
       streak: user.score.streak,

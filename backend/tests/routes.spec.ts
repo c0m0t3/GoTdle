@@ -116,24 +116,19 @@ describe('Routes', () => {
     expect(userController.deleteUser).toHaveBeenCalled();
   }, 10000);
 
-  
   //Score Routes
   it('should call updateScoreByUserId', async () => {
-    await request(app)
-      .put(`/scores`)
-      .send({ streak: 5 })
-      .expect(200);
+    await request(app).put(`/scores`).send({ streak: 5 }).expect(200);
     expect(scoreController.updateScoreByUserId).toHaveBeenCalled();
   }, 10000);
-  
-  it('should call updateDailyScoreByUserId', async () => {
+
+  it('should call updateDailyOrStreakByUserId', async () => {
     await request(app)
-      .put(`/scores/daily`)
+      .put(`/scores/daily_streak`)
       .send({ dailyScore: [1, 2, 3] })
       .expect(200);
-    expect(scoreController.updateDailyScoreByUserId).toHaveBeenCalled();
+    expect(scoreController.updateDailyOrStreakByUserId).toHaveBeenCalled();
   }, 10000);
-
 
   //Character Routes
   it('should call getCharacters', async () => {
@@ -142,7 +137,10 @@ describe('Routes', () => {
   }, 10000);
 
   it('should call createCharacters', async () => {
-    await request(app).post(`/characters`).send([{ name: 'Jon Snow' }]).expect(200);
+    await request(app)
+      .post(`/characters`)
+      .send([{ name: 'Jon Snow' }])
+      .expect(200);
     expect(characterController.createCharacters).toHaveBeenCalled();
   }, 10000);
 

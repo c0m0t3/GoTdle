@@ -63,12 +63,10 @@ export class Routes {
       this.scoreController.updateScoreByUserId.bind(this.scoreController),
     );
     this.router.put(
-      '/scores/daily',
-      this.scoreController.updateDailyScoreByUserId.bind(this.scoreController),
-    );
-    this.router.put(
-      '/scores/streak',
-      this.scoreController.updateStreakByUserId.bind(this.scoreController),
+      '/scores/daily_streak',
+      this.scoreController.updateDailyOrStreakByUserId.bind(
+        this.scoreController,
+      ),
     );
 
     // Character routes
