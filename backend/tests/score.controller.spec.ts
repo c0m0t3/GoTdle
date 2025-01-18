@@ -65,13 +65,13 @@ describe('ScoreController', () => {
   describe('getScoreByUserId', () => {
     it('should return a score by user ID', async () => {
       req.body = TEST_USER;
-  
+
       await authController.registerUser(req as Request, res as Response);
-  
+
       req.params = { userId: TEST_USER.id };
-  
+
       await scoreController.getScoreByUserId(req as Request, res as Response);
-  
+
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledTimes(1);
       expect(res.json).toHaveBeenCalledWith(
@@ -89,11 +89,18 @@ describe('ScoreController', () => {
 
   describe('updateScoreByUserId', () => {
     it('should update a score by user ID', async () => {
-
-      req.body = { streak: 1, longestStreak: 1, recentScores: [2, 2, 2], dailyScore: [2, 2, 2] };
+      req.body = {
+        streak: 1,
+        longestStreak: 1,
+        recentScores: [2, 2, 2],
+        dailyScore: [2, 2, 2],
+      };
       req.user = { id: TEST_USER.id };
 
-      await scoreController.updateScoreByUserId(req as Request, res as Response);
+      await scoreController.updateScoreByUserId(
+        req as Request,
+        res as Response,
+      );
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledTimes(1);
@@ -101,26 +108,35 @@ describe('ScoreController', () => {
         userId: TEST_USER.id,
         streak: 1,
         longestStreak: 1,
-        recentScores: [[2, 2, 2], [0, 0, 0]],
+        recentScores: [
+          [2, 2, 2],
+          [0, 0, 0],
+        ],
         dailyScore: [0, 0, 0],
         lastPlayed: expect.any(Date),
       });
     });
   });
-  describe('updateDailyScoreByUserId', () => {
+  describe('updateDailyOrStreakByUserId', () => {
     it('should update the daily score by user ID', async () => {
       req.body = { dailyScore: [1, 2, 3] };
       req.user = { id: TEST_USER.id };
-    
-      await scoreController.updateDailyScoreByUserId(req as Request, res as Response);
-  
+
+      await scoreController.updateDailyOrStreakByUserId(
+        req as Request,
+        res as Response,
+      );
+
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledTimes(1);
       expect(res.send).toHaveBeenCalledWith({
         userId: TEST_USER.id,
         streak: 1,
         longestStreak: 1,
-        recentScores: [[2, 2, 2], [0, 0, 0]],
+        recentScores: [
+          [2, 2, 2],
+          [0, 0, 0],
+        ],
         dailyScore: [1, 2, 3],
         lastPlayed: expect.any(Date),
       });
