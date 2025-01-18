@@ -78,22 +78,6 @@ export const updateModeScore = (
   const storedHash = localStorage.getItem('userHash');
   const yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd');
 
-  if (storedHash) {
-    const hashYesterday = CryptoJS.SHA256(user.id + yesterday).toString();
-
-    if (storedHash === hashYesterday) {
-      user.score.streak += 1;
-    } else {
-      user.score.streak = 1;
-    }
-  } else {
-    user.score.streak = 1;
-  }
-
-  if (user.score.streak > user.score.longestStreak) {
-    user.score.longestStreak = user.score.streak;
-  }
-
   user.score.dailyScore[modeIndex] = incorrectGuesses + 1;
 
   client.putDailyOrStreakScore({
@@ -101,6 +85,22 @@ export const updateModeScore = (
   });
 
   if (user.score.dailyScore.every((score) => score !== 0)) {
+    if (storedHash) {
+      const hashYesterday = CryptoJS.SHA256(user.id + yesterday).toString();
+
+      if (storedHash === hashYesterday) {
+        user.score.streak += 1;
+      } else {
+        user.score.streak = 1;
+      }
+    } else {
+      user.score.streak = 1;
+    }
+
+    if (user.score.streak > user.score.longestStreak) {
+      user.score.longestStreak = user.score.streak;
+    }
+
     client.putScoreByUserId({
       recentScores: user.score.dailyScore,
       streak: user.score.streak,
