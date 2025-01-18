@@ -16,8 +16,10 @@ interface User {
 }
 
 interface Client {
-  putStreakScore: (data: { streak: number }) => void;
-  putDailyScore: (data: { dailyScore: number[] }) => void;
+  putDailyOrStreakScore: (data: {
+    streak?: number;
+    dailyScore?: number[];
+  }) => void;
   putScoreByUserId: (data: {
     recentScores: number[];
     streak: number;
@@ -52,13 +54,17 @@ export const initializeDailyScore = (user: User, client: Client) => {
   localStorage.setItem('userHash', hash);
 
   user.score.dailyScore = [0, 0, 0];
-  client.putDailyScore({
+  client.putDailyOrStreakScore({
     dailyScore: user.score.dailyScore,
   });
-  user.score.streak = 0;
-  client.putStreakScore({
-    streak: user.score.streak,
-  });
+
+  const yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd');
+  if (formattedLastPlayed !== yesterday) {
+    user.score.streak = 0;
+    client.putDailyOrStreakScore({
+      streak: user.score.streak,
+    });
+  }
 
   localStorage.removeItem(user.id || '');
 };
@@ -90,7 +96,7 @@ export const updateModeScore = (
 
   user.score.dailyScore[modeIndex] = incorrectGuesses + 1;
 
-  client.putDailyScore({
+  client.putDailyOrStreakScore({
     dailyScore: user.score.dailyScore,
   });
 

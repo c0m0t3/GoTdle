@@ -280,58 +280,64 @@ export interface PostUserRegisterRequest {
 /**
  * 
  * @export
- * @interface PutDailyScore200Response
+ * @interface PutDailyOrStreakScore200Response
  */
-export interface PutDailyScore200Response {
+export interface PutDailyOrStreakScore200Response {
     /**
      * 
      * @type {string}
-     * @memberof PutDailyScore200Response
+     * @memberof PutDailyOrStreakScore200Response
      */
     'userId'?: string;
     /**
      * 
      * @type {number}
-     * @memberof PutDailyScore200Response
+     * @memberof PutDailyOrStreakScore200Response
      */
     'streak'?: number;
     /**
      * 
      * @type {string}
-     * @memberof PutDailyScore200Response
+     * @memberof PutDailyOrStreakScore200Response
      */
     'lastPlayed'?: string;
     /**
      * 
      * @type {number}
-     * @memberof PutDailyScore200Response
+     * @memberof PutDailyOrStreakScore200Response
      */
     'longestStreak'?: number;
     /**
      * 
      * @type {Array<Array<number>>}
-     * @memberof PutDailyScore200Response
+     * @memberof PutDailyOrStreakScore200Response
      */
     'recentScores'?: Array<Array<number>>;
     /**
      * 
      * @type {Array<number>}
-     * @memberof PutDailyScore200Response
+     * @memberof PutDailyOrStreakScore200Response
      */
     'dailyScore'?: Array<number>;
 }
 /**
  * 
  * @export
- * @interface PutDailyScoreRequest
+ * @interface PutDailyOrStreakScoreRequest
  */
-export interface PutDailyScoreRequest {
+export interface PutDailyOrStreakScoreRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof PutDailyOrStreakScoreRequest
+     */
+    'streak'?: number;
     /**
      * 
      * @type {Array<number>}
-     * @memberof PutDailyScoreRequest
+     * @memberof PutDailyOrStreakScoreRequest
      */
-    'dailyScore': Array<number>;
+    'dailyScore'?: Array<number>;
 }
 /**
  * 
@@ -400,62 +406,6 @@ export interface PutScoreByUserIdRequest {
      * @memberof PutScoreByUserIdRequest
      */
     'recentScores': Array<number>;
-}
-/**
- * 
- * @export
- * @interface PutStreakScore200Response
- */
-export interface PutStreakScore200Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof PutStreakScore200Response
-     */
-    'userId'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof PutStreakScore200Response
-     */
-    'streak'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PutStreakScore200Response
-     */
-    'lastPlayed'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof PutStreakScore200Response
-     */
-    'longestStreak'?: number;
-    /**
-     * 
-     * @type {Array<Array<number>>}
-     * @memberof PutStreakScore200Response
-     */
-    'recentScores'?: Array<Array<number>>;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof PutStreakScore200Response
-     */
-    'dailyScore'?: Array<number>;
-}
-/**
- * 
- * @export
- * @interface PutStreakScoreRequest
- */
-export interface PutStreakScoreRequest {
-    /**
-     * 
-     * @type {number}
-     * @memberof PutStreakScoreRequest
-     */
-    'streak': number;
 }
 /**
  * 
@@ -842,13 +792,13 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @summary Update DailyScore of User
-         * @param {PutDailyScoreRequest} [putDailyScoreRequest] 
+         * @summary Update DailyScore Or Streak of User
+         * @param {PutDailyOrStreakScoreRequest} [putDailyOrStreakScoreRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        putDailyScore: async (putDailyScoreRequest?: PutDailyScoreRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/scores/daily`;
+        putDailyOrStreakScore: async (putDailyOrStreakScoreRequest?: PutDailyOrStreakScoreRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/scores/daily_streak`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -871,7 +821,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(putDailyScoreRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(putDailyOrStreakScoreRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -910,44 +860,6 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(putScoreByUserIdRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Update Streak of User
-         * @param {PutStreakScoreRequest} [putStreakScoreRequest] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        putStreakScore: async (putStreakScoreRequest?: PutStreakScoreRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/scores/streak`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Authorization required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(putStreakScoreRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1105,15 +1017,15 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Update DailyScore of User
-         * @param {PutDailyScoreRequest} [putDailyScoreRequest] 
+         * @summary Update DailyScore Or Streak of User
+         * @param {PutDailyOrStreakScoreRequest} [putDailyOrStreakScoreRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async putDailyScore(putDailyScoreRequest?: PutDailyScoreRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PutDailyScore200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.putDailyScore(putDailyScoreRequest, options);
+        async putDailyOrStreakScore(putDailyOrStreakScoreRequest?: PutDailyOrStreakScoreRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PutDailyOrStreakScore200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.putDailyOrStreakScore(putDailyOrStreakScoreRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DefaultApi.putDailyScore']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.putDailyOrStreakScore']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1127,19 +1039,6 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.putScoreByUserId(putScoreByUserIdRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.putScoreByUserId']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Update Streak of User
-         * @param {PutStreakScoreRequest} [putStreakScoreRequest] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async putStreakScore(putStreakScoreRequest?: PutStreakScoreRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PutStreakScore200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.putStreakScore(putStreakScoreRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DefaultApi.putStreakScore']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1244,13 +1143,13 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
-         * @summary Update DailyScore of User
-         * @param {PutDailyScoreRequest} [putDailyScoreRequest] 
+         * @summary Update DailyScore Or Streak of User
+         * @param {PutDailyOrStreakScoreRequest} [putDailyOrStreakScoreRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        putDailyScore(putDailyScoreRequest?: PutDailyScoreRequest, options?: RawAxiosRequestConfig): AxiosPromise<PutDailyScore200Response> {
-            return localVarFp.putDailyScore(putDailyScoreRequest, options).then((request) => request(axios, basePath));
+        putDailyOrStreakScore(putDailyOrStreakScoreRequest?: PutDailyOrStreakScoreRequest, options?: RawAxiosRequestConfig): AxiosPromise<PutDailyOrStreakScore200Response> {
+            return localVarFp.putDailyOrStreakScore(putDailyOrStreakScoreRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Update score of logged user. UserId in Auth-Token.
@@ -1261,16 +1160,6 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          */
         putScoreByUserId(putScoreByUserIdRequest?: PutScoreByUserIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<PutScoreByUserId200Response> {
             return localVarFp.putScoreByUserId(putScoreByUserIdRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Update Streak of User
-         * @param {PutStreakScoreRequest} [putStreakScoreRequest] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        putStreakScore(putStreakScoreRequest?: PutStreakScoreRequest, options?: RawAxiosRequestConfig): AxiosPromise<PutStreakScore200Response> {
-            return localVarFp.putStreakScore(putStreakScoreRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Update logged user. UserId in Auth-Token.
@@ -1387,14 +1276,14 @@ export class DefaultApi extends BaseAPI {
 
     /**
      * 
-     * @summary Update DailyScore of User
-     * @param {PutDailyScoreRequest} [putDailyScoreRequest] 
+     * @summary Update DailyScore Or Streak of User
+     * @param {PutDailyOrStreakScoreRequest} [putDailyOrStreakScoreRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public putDailyScore(putDailyScoreRequest?: PutDailyScoreRequest, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).putDailyScore(putDailyScoreRequest, options).then((request) => request(this.axios, this.basePath));
+    public putDailyOrStreakScore(putDailyOrStreakScoreRequest?: PutDailyOrStreakScoreRequest, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).putDailyOrStreakScore(putDailyOrStreakScoreRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1407,18 +1296,6 @@ export class DefaultApi extends BaseAPI {
      */
     public putScoreByUserId(putScoreByUserIdRequest?: PutScoreByUserIdRequest, options?: RawAxiosRequestConfig) {
         return DefaultApiFp(this.configuration).putScoreByUserId(putScoreByUserIdRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Update Streak of User
-     * @param {PutStreakScoreRequest} [putStreakScoreRequest] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public putStreakScore(putStreakScoreRequest?: PutStreakScoreRequest, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).putStreakScore(putStreakScoreRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
