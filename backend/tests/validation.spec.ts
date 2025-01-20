@@ -1,20 +1,11 @@
 import { z } from 'zod';
-import {
-  createCharacterZodSchema,
-  createUserZodSchema,
-  loginZodSchema,
-  updateDailyOrStreakZodSchema,
-  updateScoreZodSchema,
-  updateUserZodSchema,
-} from '../src/validation/validation';
+import { loginZodSchema, createUserZodSchema, updateUserZodSchema, createCharacterZodSchema, updateDailyOrStreakZodSchema, updateScoreZodSchema } from '../src/validation/validation';
 
 jest.mock('../src/dependency-injection', () => ({
   DI: {
     utils: {
       passwordHasher: {
-        hashPassword: jest.fn((password: string) =>
-          Promise.resolve(`hashed-${password}`),
-        ),
+        hashPassword: jest.fn((password: string) => Promise.resolve(`hashed-${password}`)),
       },
     },
   },
@@ -176,15 +167,15 @@ describe('Validation Schemas', () => {
     it('should fail validation for incorrect score update', () => {
       const invalidData = {
         streak: 5,
-        longestStreak: '10',
+        longestStreak: "10",
         recentScores: [1, 2, 5],
       };
 
       expect(() => updateScoreZodSchema.parse(invalidData)).toThrow(z.ZodError);
     });
   });
-
-  describe('updateDailyScoreZodSchema', () => {
+//ÜBERARBEITEN
+  describe('updateDailyOrStreakZodSchema', () => {
     it('should validate a correct daily score update', () => {
       const validData = {
         dailyScore: [1, 2, 3],
@@ -198,9 +189,7 @@ describe('Validation Schemas', () => {
         dailyScore: [1, 'two', 3],
       };
 
-      expect(() => updateDailyOrStreakZodSchema.parse(invalidData)).toThrow(
-        z.ZodError,
-      );
+      expect(() => updateDailyOrStreakZodSchema.parse(invalidData)).toThrow(z.ZodError);
     });
   });
 
@@ -217,7 +206,7 @@ describe('Validation Schemas', () => {
           status: 'Deceased',
           culture: 'Northmen',
           religion: 'Old Gods of the Forest',
-          titles: ["Lord Commander of the Night's Watch"],
+          titles: ['Lord Commander of the Night\'s Watch'],
           house: 'Stark',
           father: 'Rhaegar Targaryen',
           mother: 'Lyanna Stark',
@@ -245,7 +234,7 @@ describe('Validation Schemas', () => {
           status: 'Deceased',
           culture: 'Northmen',
           religion: 'Old Gods of the Forest',
-          titles: ["Lord Commander of the Night's Watch"],
+          titles: ['Lord Commander of the Night\'s Watch'],
           house: 'Stark',
           father: 'Rhaegar Targaryen',
           mother: 'Lyanna Stark',
@@ -258,9 +247,7 @@ describe('Validation Schemas', () => {
         },
       ];
 
-      expect(() => createCharacterZodSchema.parse(invalidData)).toThrow(
-        z.ZodError,
-      );
+      expect(() => createCharacterZodSchema.parse(invalidData)).toThrow(z.ZodError);
     });
     it('should fail validation for incorrect character creation', () => {
       const invalidData = [
@@ -274,7 +261,7 @@ describe('Validation Schemas', () => {
           status: 'Deceased',
           culture: 'Northmen',
           religion: 'Old Gods of the Forest',
-          titles: ["Lord Commander of the Night's Watch"],
+          titles: ['Lord Commander of the Night\'s Watch'],
           house: 'Stark',
           father: 'Rhaegar Targaryen',
           mother: 'Lyanna Stark',
@@ -287,9 +274,7 @@ describe('Validation Schemas', () => {
         },
       ];
 
-      expect(() => createCharacterZodSchema.parse(invalidData)).toThrow(
-        z.ZodError,
-      );
+      expect(() => createCharacterZodSchema.parse(invalidData)).toThrow(z.ZodError);
     });
   });
 });

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { globalErrorHandler } from '../src/utils/global-error';
 import { ZodError } from 'zod';
-import { TokenExpiredError } from 'jsonwebtoken';
+import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 
 describe('Global Error Handler', () => {
   let req: Partial<Request>;
@@ -24,6 +24,13 @@ describe('Global Error Handler', () => {
     expect(res.json).toHaveBeenCalledWith({ errors: error.errors });
   });
 
+  it('should handle JWT invalid token errors', () => {
+    const error = new JsonWebTokenError('invalid token');
+    globalErrorHandler(error, req as Request, res as Response, next);
+    expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.json).toHaveBeenCalledWith({ errors: ['Invalid token'] });
+  });
+   
   it('should handle JWT token expiration errors', () => {
     const error = new TokenExpiredError('jwt expired', new Date());
     globalErrorHandler(error, req as Request, res as Response, next);
@@ -31,6 +38,13 @@ describe('Global Error Handler', () => {
     expect(res.json).toHaveBeenCalledWith({ errors: ['Token expired'] });
   });
 
+  it('should handle JWT invalid token errors', () => {
+    const error = new JsonWebTokenError('invalid token');
+    globalErrorHandler(error, req as Request, res as Response, next);
+    expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.json).toHaveBeenCalledWith({ errors: ['Invalid token'] });
+  });
+  
   it('should handle other errors', () => {
     const error = new Error('Test error');
     globalErrorHandler(error, req as Request, res as Response, next);

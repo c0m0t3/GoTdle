@@ -58,6 +58,9 @@ describe('Routes', () => {
       updateDailyScoreByUserId: jest.fn((_req, res) =>
         res.status(200).json({ userId: TEST_IDS.USER_ID }),
       ),
+      updateStreakByUserId: jest.fn((_req, res) =>
+        res.status(200).json({ userId: TEST_IDS.USER_ID }),
+      ),
     } as unknown as ScoreController;
 
     characterController = {
@@ -116,19 +119,25 @@ describe('Routes', () => {
     expect(userController.deleteUser).toHaveBeenCalled();
   }, 10000);
 
+  
   //Score Routes
   it('should call updateScoreByUserId', async () => {
-    await request(app).put(`/scores`).send({ streak: 5 }).expect(200);
+    await request(app)
+      .put(`/scores`)
+      .send({ streak: 5 })
+      .expect(200);
     expect(scoreController.updateScoreByUserId).toHaveBeenCalled();
   }, 10000);
-
-  it('should call updateDailyOrStreakByUserId', async () => {
+  
+  //ÜBERARBEITEN NEUE ANFORDERUNG
+  it('should call updateDailyScoreByUserId', async () => {
     await request(app)
-      .put(`/scores/daily_streak`)
+      .put(`/scores/daily`)
       .send({ dailyScore: [1, 2, 3] })
       .expect(200);
     expect(scoreController.updateDailyOrStreakByUserId).toHaveBeenCalled();
   }, 10000);
+
 
   //Character Routes
   it('should call getCharacters', async () => {
@@ -137,10 +146,7 @@ describe('Routes', () => {
   }, 10000);
 
   it('should call createCharacters', async () => {
-    await request(app)
-      .post(`/characters`)
-      .send([{ name: 'Jon Snow' }])
-      .expect(200);
+    await request(app).post(`/characters`).send([{ name: 'Jon Snow' }]).expect(200);
     expect(characterController.createCharacters).toHaveBeenCalled();
   }, 10000);
 
