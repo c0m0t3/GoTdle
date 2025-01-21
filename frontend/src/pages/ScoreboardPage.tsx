@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { BaseLayout } from '../layout/BaseLayout';
 import {
   Box,
-  Button,
   Input,
   Table,
   Tbody,
@@ -71,14 +70,23 @@ export const ScoreboardPage = () => {
     fetchLoggedInUser();
   }, [client]);
 
-  const handleSearch = async () => {
-    try {
-      const response = await client.getSearchUserByUsername(searchQuery);
-      setUsers(response.data as User[]);
-    } catch (error) {
-      console.error('Error searching user:', error);
-    }
-  };
+  useEffect(() => {
+    const handleSearch = async () => {
+      if (searchQuery === '') {
+        const response = await client.getUsers();
+        setUsers(response.data);
+      } else {
+        try {
+          const response = await client.getSearchUserByUsername(searchQuery);
+          setUsers(response.data as User[]);
+        } catch (error) {
+          console.error('Error searching user:', error);
+        }
+      }
+    };
+
+    handleSearch();
+  }, [searchQuery, client]);
 
   const sortedUsers = [...users].sort((a, b) => {
     if (sortConfig !== null) {
@@ -165,7 +173,6 @@ export const ScoreboardPage = () => {
               width="300px"
               mr={2}
             />
-            <Button onClick={handleSearch}>Search</Button>
           </Box>
           {authError ? (
             <Text textAlign={'center'} color="red.500">
