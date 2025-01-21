@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { BaseLayout } from '../layout/BaseLayout';
 import {
   Box,
+  Button,
+  Input,
   Table,
   Tbody,
   Td,
@@ -40,6 +42,7 @@ export const ScoreboardPage = () => {
     direction: 'ascending' | 'descending';
   }>({ key: 'streak', direction: 'descending' });
   const [loggedInUserId, setLoggedInUserId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const client = useApiClient();
   const highlightTextColor = 'red';
 
@@ -67,6 +70,15 @@ export const ScoreboardPage = () => {
     fetchUsers();
     fetchLoggedInUser();
   }, [client]);
+
+  const handleSearch = async () => {
+    try {
+      const response = await client.getSearchUserByUsername(searchQuery);
+      setUsers(response.data as User[]);
+    } catch (error) {
+      console.error('Error searching user:', error);
+    }
+  };
 
   const sortedUsers = [...users].sort((a, b) => {
     if (sortConfig !== null) {
@@ -145,6 +157,16 @@ export const ScoreboardPage = () => {
           <Text textAlign={'center'} fontSize={'2em'}>
             Leaderboard
           </Text>
+          <Box display="flex" justifyContent="center" mb={4}>
+            <Input
+              placeholder="Search by username"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              width="300px"
+              mr={2}
+            />
+            <Button onClick={handleSearch}>Search</Button>
+          </Box>
           {authError ? (
             <Text textAlign={'center'} color="red.500">
               Authentication failed. Please log in to view the leaderboard.
