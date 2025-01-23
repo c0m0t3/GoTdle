@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { BaseLayout } from '../layout/BaseLayout';
 import {
   Box,
+  Input,
   Table,
   Tbody,
   Td,
@@ -40,6 +41,7 @@ export const ScoreboardPage = () => {
     direction: 'ascending' | 'descending';
   }>({ key: 'streak', direction: 'descending' });
   const [loggedInUserId, setLoggedInUserId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const client = useApiClient();
   const highlightTextColor = 'red';
 
@@ -67,6 +69,24 @@ export const ScoreboardPage = () => {
     fetchUsers();
     fetchLoggedInUser();
   }, [client]);
+
+  useEffect(() => {
+    const handleSearch = async () => {
+      if (searchQuery === '') {
+        const response = await client.getUsers();
+        setUsers(response.data);
+      } else {
+        try {
+          const response = await client.getSearchUserByUsername(searchQuery);
+          setUsers(response.data as User[]);
+        } catch (error) {
+          console.error('Error searching user:', error);
+        }
+      }
+    };
+
+    handleSearch();
+  }, [searchQuery, client]);
 
   const sortedUsers = [...users].sort((a, b) => {
     if (sortConfig !== null) {
@@ -142,18 +162,35 @@ export const ScoreboardPage = () => {
     <BaseLayout>
       <Box p={4}>
         <VStack spacing={4} align="stretch">
-          <Text textAlign={'center'} fontSize={'2em'}>
-            Leaderboard
-          </Text>
+          <BaseBox width="auto">
+            <Text textAlign={'center'} fontSize={'2em'}>
+              Leaderboard
+            </Text>
+          </BaseBox>
           {authError ? (
             <Text textAlign={'center'} color="red.500">
               Authentication failed. Please log in to view the leaderboard.
             </Text>
           ) : (
-            <BaseBox width="auto">
+            <BaseBox width="auto" padding={'0 2em'}>
+              <Box display="flex" justifyContent="center" margin={4}>
+                <Input
+                  placeholder="Search by username"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  width="20em"
+                  p={4}
+                  bg="gray.100"
+                  borderRadius="md"
+                  boxShadow="md"
+                  _hover={{ bg: 'gray.200' }}
+                  _focus={{ bg: 'white', borderColor: 'blue.500' }}
+                  mr={2}
+                />
+              </Box>
               <Table variant="simple">
                 <Thead>
-                  <Tr>
+                  <Tr sx={{ borderBottom: '2px solid black' }}>
                     <Th>Rank</Th>
                     <Th onClick={() => requestSort('username')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -194,7 +231,17 @@ export const ScoreboardPage = () => {
                 </Thead>
                 <Tbody>
                   {sortedUsers.map((user, index) => (
-                    <Tr key={index}>
+                    <Tr
+                      key={index}
+                      sx={{
+                        borderBottom:
+                          index === sortedUsers.length - 1
+                            ? 'none'
+                            : '2px solid black',
+                        margin: 0,
+                        padding: 0,
+                      }}
+                    >
                       <Td>{index + 1}</Td>
                       <Td
                         color={
