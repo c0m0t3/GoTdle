@@ -172,7 +172,7 @@ export const ScoreboardPage = () => {
               Authentication failed. Please log in to view the leaderboard.
             </Text>
           ) : (
-            <BaseBox width="auto">
+            <BaseBox width="auto" padding={'0 2em'}>
               <Box display="flex" justifyContent="center" margin={4}>
                 <Input
                   placeholder="Search by username"
@@ -190,7 +190,7 @@ export const ScoreboardPage = () => {
               </Box>
               <Table variant="simple">
                 <Thead>
-                  <Tr>
+                  <Tr sx={{ borderBottom: '2px solid black' }}>
                     <Th>Rank</Th>
                     <Th onClick={() => requestSort('username')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -231,7 +231,17 @@ export const ScoreboardPage = () => {
                 </Thead>
                 <Tbody>
                   {sortedUsers.map((user, index) => (
-                    <Tr key={index}>
+                    <Tr
+                      key={index}
+                      sx={{
+                        borderBottom:
+                          index === sortedUsers.length - 1
+                            ? 'none'
+                            : '2px solid black',
+                        margin: 0,
+                        padding: 0,
+                      }}
+                    >
                       <Td>{index + 1}</Td>
                       <Td
                         color={
