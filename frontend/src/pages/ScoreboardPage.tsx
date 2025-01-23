@@ -162,24 +162,26 @@ export const ScoreboardPage = () => {
     <BaseLayout>
       <Box p={4}>
         <VStack spacing={4} align="stretch">
-          <Text textAlign={'center'} fontSize={'2em'}>
-            Leaderboard
-          </Text>
-          <Box display="flex" justifyContent="center" mb={4}>
-            <Input
-              placeholder="Search by username"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              width="300px"
-              mr={2}
-            />
-          </Box>
+          <BaseBox width="auto">
+            <Text textAlign={'center'} fontSize={'2em'}>
+              Leaderboard
+            </Text>
+          </BaseBox>
           {authError ? (
             <Text textAlign={'center'} color="red.500">
               Authentication failed. Please log in to view the leaderboard.
             </Text>
           ) : (
             <BaseBox width="auto">
+              <Box display="flex" justifyContent="center" margin={4}>
+                <Input
+                  placeholder="Search by username"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  width="20em"
+                  mr={2}
+                />
+              </Box>
               <Table variant="simple">
                 <Thead>
                   <Tr>
