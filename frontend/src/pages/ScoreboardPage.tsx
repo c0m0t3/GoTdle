@@ -179,6 +179,12 @@ export const ScoreboardPage = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   width="20em"
+                  p={4}
+                  bg="gray.100"
+                  borderRadius="md"
+                  boxShadow="md"
+                  _hover={{ bg: 'gray.200' }}
+                  _focus={{ bg: 'white', borderColor: 'blue.500' }}
                   mr={2}
                 />
               </Box>
