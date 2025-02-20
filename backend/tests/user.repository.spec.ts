@@ -75,6 +75,11 @@ describe('UserRepository', () => {
         createdAt: createdUser.createdAt,
       });
     });
+    it('should return undefined if user does not exist', async () => {
+      const result = await userRepository.getUserById(TEST_IDS.NON_EXISTENT_USER);
+
+      expect(result).toBeUndefined();
+    });
   });
 
   describe('getUserByUsername', () => {
@@ -93,6 +98,11 @@ describe('UserRepository', () => {
         createdAt: createdUser.createdAt,
       });
     });
+    it('should return undefined if username does not exist', async () => {
+      const result = await userRepository.getUserByUsername('nonexistentuser');
+
+      expect(result).toBeUndefined();
+    });
   });
 
   describe('getUserByEmail', () => {
@@ -108,6 +118,11 @@ describe('UserRepository', () => {
         username: createdUser.username,
         createdAt: createdUser.createdAt,
       });
+    });
+    it('should return undefined if email does not exist', async () => {
+      const result = await userRepository.getUserByEmail('nonexistent@example.com');
+
+      expect(result).toBeUndefined();
     });
   });
 
