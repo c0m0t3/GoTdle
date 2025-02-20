@@ -9,7 +9,6 @@ describe('Server', () => {
   let serverInstance: Server;
 
   beforeEach(() => {
-    // Mock der App-Klasse
     mockApp = {
       listen: jest.fn((port: number, callback: () => void) => {
         callback();
@@ -23,7 +22,6 @@ describe('Server', () => {
       }),
     } as unknown as App;
 
-    // Mock der Konfiguration
     mockConfig = {
       PORT: 3000,
     } as EnvType;
@@ -51,7 +49,6 @@ describe('Server', () => {
           throw new Error(`process.exit called with code: ${code}`);
         });
       
-        // Simuliere einen unerwarteten Fehler
         const error = new Error('Unexpected error');
       
         expect(() => {
@@ -66,15 +63,12 @@ describe('Server', () => {
       const consoleInfoSpy = jest.spyOn(console, 'info');
       const serverCloseSpy = jest.fn();
 
-      // Mock des Server-Objekts
       const mockServer = {
         close: serverCloseSpy,
       } as unknown as http.Server;
 
-      // Setze den Server in der Instanz
       serverInstance['_handleSigterm'](mockServer);
 
-      // Simuliere das SIGTERM-Signal
       process.emit('SIGTERM');
 
       expect(consoleInfoSpy).toHaveBeenCalledWith('SIGTERM received');

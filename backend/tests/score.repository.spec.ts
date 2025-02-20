@@ -104,7 +104,7 @@ describe('ScoreRepository', () => {
       expect(result).toBeUndefined();
     });
   });
-//WEITERE TESTS
+  
   describe('updateDailyScoreByUserId', () => {
     it('should update the daily score by user ID', async () => {
       const user = await userRepository.createUser(TEST_USER);

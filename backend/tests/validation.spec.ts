@@ -174,7 +174,7 @@ describe('Validation Schemas', () => {
       expect(() => updateScoreZodSchema.parse(invalidData)).toThrow(z.ZodError);
     });
   });
-//ÜBERARBEITEN
+
   describe('updateDailyOrStreakZodSchema', () => {
     it('should validate a correct daily score update', () => {
       const validData = {
@@ -189,6 +189,21 @@ describe('Validation Schemas', () => {
         dailyScore: [1, 'two', 3],
       };
 
+      expect(() => updateDailyOrStreakZodSchema.parse(invalidData)).toThrow(z.ZodError);
+    });
+    it('should validate a correct streak update', () => {
+      const validData = {
+        streak: 5,
+      };
+  
+      expect(() => updateDailyOrStreakZodSchema.parse(validData)).not.toThrow();
+    });
+  
+    it('should fail validation for non-integer streak', () => {
+      const invalidData = {
+        streak: 'five',
+      };
+  
       expect(() => updateDailyOrStreakZodSchema.parse(invalidData)).toThrow(z.ZodError);
     });
   });
