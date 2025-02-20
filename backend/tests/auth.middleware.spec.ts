@@ -68,6 +68,30 @@ describe('prepareAuthentication', () => {
 
     expect(mockNext).toHaveBeenCalled();
   });
+  it('should throw an error if token is invalid', async () => {
+    (mockReq.get as jest.Mock).mockReturnValue('Bearer invalid-token');
+    (DI.utils.jwt.verifyToken as jest.Mock).mockImplementation(() => {
+      throw new Error('Invalid token');
+    });
+
+    await expect(prepareAuthentication(mockReq as Request, mockRes as Response, mockNext))
+      .rejects
+      .toThrow('Invalid token');
+
+    expect(mockNext).not.toHaveBeenCalled();
+  });
+  it('should call next if token verification fails', async () => {
+    (mockReq.get as jest.Mock).mockReturnValue('Bearer valid-token');
+    (DI.utils.jwt.verifyToken as jest.Mock).mockImplementation(() => {
+      throw new Error('Token verification failed');
+    });
+
+    await expect(prepareAuthentication(mockReq as Request, mockRes as Response, mockNext))
+      .rejects
+      .toThrow('Token verification failed');
+
+    expect(mockNext).not.toHaveBeenCalled();
+  });
 });
 
 describe('verifyAccess', () => {

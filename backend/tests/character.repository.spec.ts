@@ -75,6 +75,10 @@ describe('CharacterRepository', () => {
       expect(character).toBeDefined();
       expect(character!.name).toBe(TEST_CHARACTER.name);
     });
+    it('should return undefined if character does not exist', async () => {
+      const character = await characterRepository.getCharacterByName('Nonexistent Character');
+      expect(character).toBeUndefined();
+    });
   });
 
   describe('deleteAllCharacters', () => {
@@ -83,6 +87,9 @@ describe('CharacterRepository', () => {
       await characterRepository.deleteAllCharacters();
       const characters = await characterRepository.getCharacters();
       expect(characters.length).toBe(0);
+    });
+    it('should not throw an error if no characters exist', async () => {
+      await expect(characterRepository.deleteAllCharacters()).resolves.not.toThrow();
     });
   });
 });
