@@ -39,9 +39,9 @@ describe('ScoreController', () => {
     app = express();
     app.use(express.json());
     app.use((req, res, next) => {
-        req.user = TEST_USER;
-        next();
-      });
+      req.user = TEST_USER;
+      next();
+    });
     app.get(
       '/scores/:userId',
       scoreController.getScoreByUserId.bind(scoreController),
@@ -75,12 +75,12 @@ describe('ScoreController', () => {
         .expect(200);
 
       expect(response.body).toEqual(
-        expect.objectContaining({ 
-          userId: TEST_SCORE.userId, 
-          streak: TEST_SCORE.streak, 
-          longestStreak: TEST_SCORE.longestStreak, 
-          recentScores: TEST_SCORE.recentScores, 
-          dailyScore: TEST_SCORE.dailyScore 
+        expect.objectContaining({
+          userId: TEST_SCORE.userId,
+          streak: TEST_SCORE.streak,
+          longestStreak: TEST_SCORE.longestStreak,
+          recentScores: TEST_SCORE.recentScores,
+          dailyScore: TEST_SCORE.dailyScore,
         }),
       );
     });
@@ -92,6 +92,14 @@ describe('ScoreController', () => {
 
       expect(response.body.errors).toContain('Score not found');
     });
+
+    it('should return 400 if userId is not a valid UUID', async () => {
+      const response = await request(app)
+        .get('/scores/invalid-uuid')
+        .expect(400);
+
+      expect(response.body.errors).toBeDefined();
+    });
   });
 
   describe('PUT /scores', () => {
@@ -99,10 +107,10 @@ describe('ScoreController', () => {
       await userRepository.createUser(TEST_USER);
       await scoreRepository.createScore(TEST_USER.id);
 
-      const updatedScore = { 
-        streak: 1, 
-        longestStreak: 1, 
-        recentScores: [2, 2, 2], 
+      const updatedScore = {
+        streak: 1,
+        longestStreak: 1,
+        recentScores: [2, 2, 2],
       };
 
       const response = await request(app)
@@ -110,21 +118,32 @@ describe('ScoreController', () => {
         .send(updatedScore)
         .expect(200);
 
-        expect(response.body).toEqual(
-            expect.objectContaining({ 
-              userId: TEST_SCORE.userId, 
-              streak: updatedScore.streak, 
-              longestStreak: updatedScore.longestStreak, 
-              recentScores: [
-                [2, 2, 2],
-                [0, 0, 0]
-              ], 
-              dailyScore: [0, 0, 0],
-              lastPlayed: expect.any(String)
-            }),
-          );
-        });
-      });
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          userId: TEST_SCORE.userId,
+          streak: updatedScore.streak,
+          longestStreak: updatedScore.longestStreak,
+          recentScores: [
+            [2, 2, 2],
+            [0, 0, 0],
+          ],
+          dailyScore: [0, 0, 0],
+          lastPlayed: expect.any(String),
+        }),
+      );
+    });
+
+    it('should return 400 if request body is invalid', async () => {
+      const invalidData = { streak: 'invalid', longestStreak: 'invalid' };
+
+      const response = await request(app)
+        .put('/scores')
+        .send(invalidData)
+        .expect(400);
+
+      expect(response.body.errors).toBeDefined();
+    });
+  });
 
   describe('PUT /scores/daily_streak', () => {
     it('should update daily or streak by userId', async () => {
@@ -138,13 +157,24 @@ describe('ScoreController', () => {
         .send(updatedData)
         .expect(200);
 
-        expect(response.body).toEqual(
-            expect.objectContaining({ 
-              userId: TEST_SCORE.userId, 
-              dailyScore: updatedData.dailyScore, 
-              streak: updatedData.streak 
-            }),
-          );
-        });
-      });
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          userId: TEST_SCORE.userId,
+          dailyScore: updatedData.dailyScore,
+          streak: updatedData.streak,
+        }),
+      );
     });
+
+    it('should return 400 if request body is invalid', async () => {
+      const invalidData = { dailyScore: 'invalid', streak: 'invalid' };
+
+      const response = await request(app)
+        .put('/scores/daily_streak')
+        .send(invalidData)
+        .expect(400);
+
+      expect(response.body.errors).toBeDefined();
+    });
+  });
+});
