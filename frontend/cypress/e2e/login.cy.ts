@@ -1,21 +1,6 @@
+import { generateRandomString, generateRandomEmail } from './loginHelper';
+
 describe('template spec', () => {
-  function generateRandomString(length) {
-    const characters =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(
-        Math.floor(Math.random() * characters.length),
-      );
-    }
-    return result;
-  }
-
-  function generateRandomEmail() {
-    const randomString = generateRandomString(8);
-    return `${randomString}@example.com`;
-  }
-
   it('passes', () => {
     const randomUsername = generateRandomString(10);
     const randomEmail = generateRandomEmail();
