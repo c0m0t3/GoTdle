@@ -33,16 +33,16 @@ build-backend:
   script:
     - cd backend
     - echo "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY" "$CI_REGISTRY_USER"
-    - docker build -t $DOCKER_REGISTRY/$DOCKER_IMAGE_BACKEND:$DOCKER_TAG .
-    - docker push $DOCKER_REGISTRY/$DOCKER_IMAGE_BACKEND:$DOCKER_TAG
+    - docker build -t "$CI_REGISTRY_IMAGE/backend:$DOCKER_TAG" .
+    - docker push "$CI_REGISTRY_IMAGE/backend:$DOCKER_TAG"
 
 
 build-frontend:
   stage: build
   script:
     - cd frontend
-    - docker build -t $DOCKER_REGISTRY/$DOCKER_IMAGE_FRONTEND:$DOCKER_TAG .
-    - docker push $DOCKER_REGISTRY/$DOCKER_IMAGE_FRONTEND:$DOCKER_TAG
+    - docker build -t "$CI_REGISTRY_IMAGE/frontend:$DOCKER_TAG" .
+    - docker push "$CI_REGISTRY_IMAGE/frontend:$DOCKER_TAG"
 
 
 deploy:
