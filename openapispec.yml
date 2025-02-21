@@ -255,11 +255,6 @@ paths:
         name: userId
         in: path
         required: true
-      - schema:
-          type: string
-        name: userId
-        in: path
-        required: true
     put:
       summary: Update Admin State
       tags: [ ]
