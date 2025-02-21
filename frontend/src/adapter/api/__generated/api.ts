@@ -160,6 +160,127 @@ export interface DeleteUserByIdRequest {
 /**
  * 
  * @export
+ * @interface PostCreateCharactersRequestInner
+ */
+export interface PostCreateCharactersRequestInner {
+    /**
+     * 
+     * @type {number}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    '_id': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'gender'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'born'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'origin'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'death'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'status'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'culture'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'religion'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'titles'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'house'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'father'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'mother'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'spouse'?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'children'?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'siblings'?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'lovers'?: Array<string>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'seasons'?: Array<number>;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'actor'?: string;
+}
+/**
+ * 
+ * @export
  * @interface PostUserLogin200Response
  */
 export interface PostUserLogin200Response {
@@ -410,6 +531,19 @@ export interface PutScoreByUserIdRequest {
 /**
  * 
  * @export
+ * @interface PutUpdateAdminStateRequest
+ */
+export interface PutUpdateAdminStateRequest {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PutUpdateAdminStateRequest
+     */
+    'isAdmin': boolean;
+}
+/**
+ * 
+ * @export
  * @interface PutUserByIdRequest
  */
 export interface PutUserByIdRequest {
@@ -501,6 +635,12 @@ export interface User {
     'createdAt': string;
     /**
      * 
+     * @type {boolean}
+     * @memberof User
+     */
+    'isAdmin': boolean;
+    /**
+     * 
      * @type {Scores}
      * @memberof User
      */
@@ -513,6 +653,40 @@ export interface User {
  */
 export const DefaultApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @summary Delete All Characters
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteAllCharacters: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/characters`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Authorization required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * Delete logged user. UserId in Auth-Token.
          * @summary Delete User by User ID
@@ -552,40 +726,6 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * Get character for classic mode
-         * @summary Get Character Info by Id
-         * @param {number} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharacterById: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('getCharacterById', 'id', id)
-            const localVarPath = `/characters/{_id}`
-                .replace(`{${"_id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * Get all characters to use its name for the Answer-SelectControl-Options
          * @summary Get All Characters
          * @param {*} [options] Override http request option.
@@ -603,6 +743,10 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication Authorization required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
     
@@ -716,6 +860,44 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Create Characters
+         * @param {Array<PostCreateCharactersRequestInner>} [postCreateCharactersRequestInner] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postCreateCharacters: async (postCreateCharactersRequestInner?: Array<PostCreateCharactersRequestInner>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/characters`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Authorization required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(postCreateCharactersRequestInner, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -867,6 +1049,52 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
+         * 
+         * @summary Update Admin State
+         * @param {string} userId 
+         * @param {string} userId2 
+         * @param {PutUpdateAdminStateRequest} [putUpdateAdminStateRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putUpdateAdminState: async (userId: string, userId2: string, putUpdateAdminStateRequest?: PutUpdateAdminStateRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userId' is not null or undefined
+            assertParamExists('putUpdateAdminState', 'userId', userId)
+            // verify required parameter 'userId2' is not null or undefined
+            assertParamExists('putUpdateAdminState', 'userId2', userId2)
+            const localVarPath = `/users/is_admin/{userId}`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)))
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId2)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Authorization required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(putUpdateAdminStateRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Update logged user. UserId in Auth-Token.
          * @summary Update User by User ID
          * @param {PutUserByIdRequest} [putUserByIdRequest] The user can optionally update their username, email, or password.   We need to ensure that empty input fields are handled properly to prevent the database from being updated with empty values.
@@ -915,6 +1143,18 @@ export const DefaultApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = DefaultApiAxiosParamCreator(configuration)
     return {
         /**
+         * 
+         * @summary Delete All Characters
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteAllCharacters(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteAllCharacters(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.deleteAllCharacters']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * Delete logged user. UserId in Auth-Token.
          * @summary Delete User by User ID
          * @param {DeleteUserByIdRequest} [deleteUserByIdRequest] Confirm Deletion with password
@@ -925,19 +1165,6 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserById(deleteUserByIdRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.deleteUserById']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * Get character for classic mode
-         * @summary Get Character Info by Id
-         * @param {number} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getCharacterById(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Characters>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getCharacterById(id, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DefaultApi.getCharacterById']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -987,6 +1214,19 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getUsers(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.getUsers']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Create Characters
+         * @param {Array<PostCreateCharactersRequestInner>} [postCreateCharactersRequestInner] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postCreateCharacters(postCreateCharactersRequestInner?: Array<PostCreateCharactersRequestInner>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Characters>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postCreateCharacters(postCreateCharactersRequestInner, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.postCreateCharacters']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1042,6 +1282,21 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * 
+         * @summary Update Admin State
+         * @param {string} userId 
+         * @param {string} userId2 
+         * @param {PutUpdateAdminStateRequest} [putUpdateAdminStateRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async putUpdateAdminState(userId: string, userId2: string, putUpdateAdminStateRequest?: PutUpdateAdminStateRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.putUpdateAdminState(userId, userId2, putUpdateAdminStateRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.putUpdateAdminState']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * Update logged user. UserId in Auth-Token.
          * @summary Update User by User ID
          * @param {PutUserByIdRequest} [putUserByIdRequest] The user can optionally update their username, email, or password.   We need to ensure that empty input fields are handled properly to prevent the database from being updated with empty values.
@@ -1065,6 +1320,15 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
     const localVarFp = DefaultApiFp(configuration)
     return {
         /**
+         * 
+         * @summary Delete All Characters
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteAllCharacters(options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteAllCharacters(options).then((request) => request(axios, basePath));
+        },
+        /**
          * Delete logged user. UserId in Auth-Token.
          * @summary Delete User by User ID
          * @param {DeleteUserByIdRequest} [deleteUserByIdRequest] Confirm Deletion with password
@@ -1073,16 +1337,6 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          */
         deleteUserById(deleteUserByIdRequest?: DeleteUserByIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.deleteUserById(deleteUserByIdRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Get character for classic mode
-         * @summary Get Character Info by Id
-         * @param {number} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharacterById(id: number, options?: RawAxiosRequestConfig): AxiosPromise<Characters> {
-            return localVarFp.getCharacterById(id, options).then((request) => request(axios, basePath));
         },
         /**
          * Get all characters to use its name for the Answer-SelectControl-Options
@@ -1120,6 +1374,16 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          */
         getUsers(options?: RawAxiosRequestConfig): AxiosPromise<Array<User>> {
             return localVarFp.getUsers(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Create Characters
+         * @param {Array<PostCreateCharactersRequestInner>} [postCreateCharactersRequestInner] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postCreateCharacters(postCreateCharactersRequestInner?: Array<PostCreateCharactersRequestInner>, options?: RawAxiosRequestConfig): AxiosPromise<Array<Characters>> {
+            return localVarFp.postCreateCharacters(postCreateCharactersRequestInner, options).then((request) => request(axios, basePath));
         },
         /**
          * Login user with email or username.   If successfully logged in, the user receives an access token in return.
@@ -1162,6 +1426,18 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.putScoreByUserId(putScoreByUserIdRequest, options).then((request) => request(axios, basePath));
         },
         /**
+         * 
+         * @summary Update Admin State
+         * @param {string} userId 
+         * @param {string} userId2 
+         * @param {PutUpdateAdminStateRequest} [putUpdateAdminStateRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putUpdateAdminState(userId: string, userId2: string, putUpdateAdminStateRequest?: PutUpdateAdminStateRequest, options?: RawAxiosRequestConfig): AxiosPromise<User> {
+            return localVarFp.putUpdateAdminState(userId, userId2, putUpdateAdminStateRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Update logged user. UserId in Auth-Token.
          * @summary Update User by User ID
          * @param {PutUserByIdRequest} [putUserByIdRequest] The user can optionally update their username, email, or password.   We need to ensure that empty input fields are handled properly to prevent the database from being updated with empty values.
@@ -1182,6 +1458,17 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
  */
 export class DefaultApi extends BaseAPI {
     /**
+     * 
+     * @summary Delete All Characters
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public deleteAllCharacters(options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).deleteAllCharacters(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Delete logged user. UserId in Auth-Token.
      * @summary Delete User by User ID
      * @param {DeleteUserByIdRequest} [deleteUserByIdRequest] Confirm Deletion with password
@@ -1191,18 +1478,6 @@ export class DefaultApi extends BaseAPI {
      */
     public deleteUserById(deleteUserByIdRequest?: DeleteUserByIdRequest, options?: RawAxiosRequestConfig) {
         return DefaultApiFp(this.configuration).deleteUserById(deleteUserByIdRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Get character for classic mode
-     * @summary Get Character Info by Id
-     * @param {number} id 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public getCharacterById(id: number, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).getCharacterById(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1251,6 +1526,18 @@ export class DefaultApi extends BaseAPI {
     }
 
     /**
+     * 
+     * @summary Create Characters
+     * @param {Array<PostCreateCharactersRequestInner>} [postCreateCharactersRequestInner] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public postCreateCharacters(postCreateCharactersRequestInner?: Array<PostCreateCharactersRequestInner>, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).postCreateCharacters(postCreateCharactersRequestInner, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Login user with email or username.   If successfully logged in, the user receives an access token in return.
      * @summary Login User
      * @param {PostUserLoginRequest} [postUserLoginRequest] 
@@ -1296,6 +1583,20 @@ export class DefaultApi extends BaseAPI {
      */
     public putScoreByUserId(putScoreByUserIdRequest?: PutScoreByUserIdRequest, options?: RawAxiosRequestConfig) {
         return DefaultApiFp(this.configuration).putScoreByUserId(putScoreByUserIdRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Update Admin State
+     * @param {string} userId 
+     * @param {string} userId2 
+     * @param {PutUpdateAdminStateRequest} [putUpdateAdminStateRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public putUpdateAdminState(userId: string, userId2: string, putUpdateAdminStateRequest?: PutUpdateAdminStateRequest, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).putUpdateAdminState(userId, userId2, putUpdateAdminStateRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

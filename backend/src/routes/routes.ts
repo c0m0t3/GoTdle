@@ -3,7 +3,7 @@ import { AuthController } from '../controller/auth.controller';
 import { UserController } from '../controller/user.controller';
 import { ScoreController } from '../controller/score.controller';
 import { CharacterController } from '../controller/character.controller';
-import { verifyAccess } from '../middleware/auth.middleware';
+import { verifyAccess, verifyAdminAccess } from '../middleware/auth.middleware';
 
 export class Routes {
   private router: Router;
@@ -51,6 +51,11 @@ export class Routes {
       '/users',
       this.userController.updateUser.bind(this.userController),
     );
+    this.router.put(
+      '/users/is_admin/:userId',
+      verifyAdminAccess,
+      this.userController.updateAdminState.bind(this.userController),
+    );
     this.router.delete(
       '/users',
       this.userController.deleteUser.bind(this.userController),
@@ -70,8 +75,10 @@ export class Routes {
     );
 
     // Character routes
+    this.router.use('/characters', verifyAccess);
     this.router.post(
       '/characters',
+      verifyAdminAccess,
       this.characterController.createCharacters.bind(this.characterController),
     );
     this.router.get(
@@ -80,6 +87,7 @@ export class Routes {
     );
     this.router.delete(
       '/characters',
+      verifyAdminAccess,
       this.characterController.deleteAllCharacters.bind(
         this.characterController,
       ),

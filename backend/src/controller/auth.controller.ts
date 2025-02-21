@@ -67,6 +67,7 @@ export class AuthController {
       id: user.id,
       email: user.email,
       username: user.username,
+      isAdmin: user.isAdmin,
     });
 
     res.status(200).send({ accessToken: token });
