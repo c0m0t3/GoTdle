@@ -15,6 +15,7 @@ export class UserRepository {
         email: userSchema.email,
         username: userSchema.username,
         createdAt: userSchema.createdAt,
+        isAdmin: userSchema.isAdmin,
       });
     return createdUser;
   }
@@ -26,6 +27,7 @@ export class UserRepository {
         email: true,
         username: true,
         createdAt: true,
+        isAdmin: true,
       },
       with: includeScoreRelation
         ? {
@@ -51,6 +53,7 @@ export class UserRepository {
         email: true,
         username: true,
         createdAt: true,
+        isAdmin: true,
       },
       with: includeScoreRelation
         ? {
@@ -77,6 +80,7 @@ export class UserRepository {
         email: true,
         username: true,
         createdAt: true,
+        isAdmin: true,
       },
       with: includeScoreRelation
         ? {
