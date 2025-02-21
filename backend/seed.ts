@@ -21,8 +21,8 @@ async function seed() {
 
     for (const user of users) {
       const res = await client.query(
-        'INSERT INTO "user" (email, password, username) VALUES ($1, $2, $3) RETURNING id',
-        [user.email, user.password, user.username],
+        'INSERT INTO "user" (email, password, username, "isAdmin") VALUES ($1, $2, $3, $4) RETURNING id',
+        [user.email, user.password, user.username, user.isAdmin],
       );
       const userId = res.rows[0].id;
 
