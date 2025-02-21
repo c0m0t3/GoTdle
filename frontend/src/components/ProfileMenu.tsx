@@ -19,6 +19,7 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({ className }) => {
   const navigate = useNavigate();
   const {
     actions: { logout },
+    isAdmin,
   } = useAuth();
 
   return (
@@ -32,6 +33,11 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({ className }) => {
       </MenuButton>
       <MenuList>
         <MenuItem onClick={() => navigate('/profile')}>Profile</MenuItem>
+        {isAdmin && (
+          <MenuItem onClick={() => navigate('/admin/dashboard')}>
+            Admin Dashboard
+          </MenuItem>
+        )}
         <MenuItem onClick={logout}>Logout</MenuItem>
       </MenuList>
     </Menu>
