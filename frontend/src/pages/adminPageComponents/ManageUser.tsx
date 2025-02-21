@@ -18,6 +18,7 @@ import { UserData } from '../../hooks/useFetchUser.tsx';
 import { AxiosError } from 'axios';
 import { inputFieldStyles } from '../../styles/inputFieldStyles.ts';
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
+import { gotButtonStyleII } from '../../styles/buttonStyles.ts';
 
 export const ManageUser = () => {
   const client = useApiClient();
@@ -101,14 +102,7 @@ export const ManageUser = () => {
           boxShadow="md"
           sx={inputFieldStyles}
         />
-        <Button
-          onClick={toggleShowAdmins}
-          sx={{
-            background: 'rgb(250, 240, 220)',
-            border: '2px solid rgb(200, 160, 120)',
-            borderRadius: '8px',
-          }}
-        >
+        <Button onClick={toggleShowAdmins} sx={gotButtonStyleII}>
           {showOnlyAdmins ? 'Show All Users' : 'Show Admins'}
         </Button>
       </HStack>

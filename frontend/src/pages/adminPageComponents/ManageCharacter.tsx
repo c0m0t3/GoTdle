@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { useApiClient } from '../../hooks/useApiClient.ts';
 import { AxiosError } from 'axios';
+import { gotButtonStyleII } from '../../styles/buttonStyles.ts';
 
 export const ManageCharacter = () => {
   const client = useApiClient();
@@ -75,11 +76,7 @@ export const ManageCharacter = () => {
       <Button
         as="label"
         htmlFor="file-upload"
-        sx={{
-          background: 'rgb(250, 240, 220)',
-          border: '2px solid rgb(200, 160, 120)',
-          borderRadius: '8px',
-        }}
+        sx={gotButtonStyleII}
         _hover={{ cursor: 'pointer', bg: 'blue.600' }}
       >
         Upload JSON File
@@ -97,26 +94,14 @@ export const ManageCharacter = () => {
         height="200px"
         overflowY="scroll"
       />
-      <Button
-        onClick={handleSubmit}
-        sx={{
-          background: 'rgb(250, 240, 220)',
-          border: '2px solid rgb(200, 160, 120)',
-          borderRadius: '8px',
-        }}
-      >
+      <Button onClick={handleSubmit} sx={gotButtonStyleII}>
         Submit
       </Button>
 
       <Divider borderColor={'black'} my={'4'} />
 
       <Button
-        sx={{
-          background: 'rgb(250, 240, 220)',
-          border: '2px solid rgb(200, 160, 120)',
-          borderRadius: '8px',
-          color: 'red.600',
-        }}
+        sx={{ ...gotButtonStyleII, color: 'red.600' }}
         onClick={onDeleteAllCharacters}
       >
         Delete All Characters
