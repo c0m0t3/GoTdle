@@ -45,6 +45,5 @@ deploy:
   image: alpine
   script:
     - echo "Deploying to production..."
-    - ssh user@your-server "docker-compose pull && docker-compose up -d"
   only:
     - main
