@@ -3,8 +3,13 @@ import {
   HStack,
   IconButton,
   Input,
+  Tab,
   Table,
   TableContainer,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   Tbody,
   Td,
   Text,
@@ -97,71 +102,87 @@ export const AdminPage = () => {
   return (
     <BaseLayout>
       <VStack spacing={4} align="stretch" my={4}>
-        <BaseBox>
+        <BaseBox width={'40em'}>
           <Text textAlign={'center'} fontSize={'2em'}>
             Admin Dashboard
           </Text>
         </BaseBox>
-        <BaseBox>
-          <HStack m={2}>
-            <Input
-              placeholder="Search by username"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              width="20em"
-              boxShadow="md"
-              sx={inputFieldStyles}
-            />
-            <Button
-              onClick={toggleShowAdmins}
-              sx={{
-                background: 'rgb(250, 240, 220)',
-                border: '2px solid rgb(200, 160, 120)',
-                borderRadius: '8px',
-                fontWeight: 'light',
-              }}
-            >
-              {showOnlyAdmins ? 'Show All Users' : 'Show Admins'}
-            </Button>
-          </HStack>
-          <TableContainer>
-            <Table variant="simple">
-              <Thead>
-                <Tr>
-                  <Th width="40%">Username</Th>
-                  <Th width="40%">E-Mail</Th>
-                  <Th width="20%">Admin</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {filteredUsers.map((user) => {
-                  return (
-                    <Tr key={user.id}>
-                      <Td width="40%">{user.username}</Td>
-                      <Td width="40%">{user.email}</Td>
-                      <Td width="20%">
-                        <IconButton
-                          aria-label={
-                            user.isAdmin ? 'Remove Admin' : 'Make Admin'
-                          }
-                          icon={
-                            user.isAdmin ? (
-                              <CheckIcon color="green.500" />
-                            ) : (
-                              <CloseIcon color="red.500" />
-                            )
-                          }
-                          onClick={() =>
-                            onClickToggleIsAdmin(user.id, user.isAdmin)
-                          }
-                        />
-                      </Td>
-                    </Tr>
-                  );
-                })}
-              </Tbody>
-            </Table>
-          </TableContainer>
+
+        <BaseBox width={'40em'}>
+          <Tabs>
+            <TabList my={2}>
+              <Tab>User List</Tab>
+              <Tab>Manage Characters</Tab>
+            </TabList>
+
+            <TabPanels>
+              <TabPanel>
+                <HStack m={2} justifyContent={'space-evenly'}>
+                  <Input
+                    placeholder="Search by username"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    width="20em"
+                    boxShadow="md"
+                    sx={inputFieldStyles}
+                  />
+                  <Button
+                    onClick={toggleShowAdmins}
+                    sx={{
+                      background: 'rgb(250, 240, 220)',
+                      border: '2px solid rgb(200, 160, 120)',
+                      borderRadius: '8px',
+                      fontWeight: 'light',
+                    }}
+                  >
+                    {showOnlyAdmins ? 'Show All Users' : 'Show Admins'}
+                  </Button>
+                </HStack>
+                <TableContainer>
+                  <Table variant="simple">
+                    <Thead>
+                      <Tr>
+                        <Th width="40%">Username</Th>
+                        <Th width="40%">E-Mail</Th>
+                        <Th width="20%">Admin</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {filteredUsers.map((user) => {
+                        return (
+                          <Tr key={user.id}>
+                            <Td width="40%">{user.username}</Td>
+                            <Td width="40%">{user.email}</Td>
+                            <Td width="20%">
+                              <IconButton
+                                aria-label={
+                                  user.isAdmin ? 'Remove Admin' : 'Make Admin'
+                                }
+                                icon={
+                                  user.isAdmin ? (
+                                    <CheckIcon color="green.500" />
+                                  ) : (
+                                    <CloseIcon color="red.500" />
+                                  )
+                                }
+                                onClick={() =>
+                                  onClickToggleIsAdmin(user.id, user.isAdmin)
+                                }
+                              />
+                            </Td>
+                          </Tr>
+                        );
+                      })}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              </TabPanel>
+
+              <TabPanel>
+                <p>Manage Character</p>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         </BaseBox>
       </VStack>
     </BaseLayout>
