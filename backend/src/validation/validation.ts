@@ -38,6 +38,7 @@ export const createUserZodSchema = createInsertSchema(userSchema, {
     .string()
     .min(3)
     .regex(/^[^'";<>&]*$/, 'Input contains forbidden characters'),
+  isAdmin: z.boolean().optional(),
 }).transform(async (data) => {
   try {
     const hashedPassword = await DI.utils.passwordHasher.hashPassword(
