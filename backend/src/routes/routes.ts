@@ -51,6 +51,11 @@ export class Routes {
       '/users',
       this.userController.updateUser.bind(this.userController),
     );
+    this.router.put(
+      '/users/is_admin/:userId',
+      verifyAdminAccess,
+      this.userController.updateAdminState.bind(this.userController),
+    );
     this.router.delete(
       '/users',
       this.userController.deleteUser.bind(this.userController),
