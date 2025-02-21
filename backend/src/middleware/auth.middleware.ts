@@ -27,3 +27,11 @@ export const verifyAccess: RequestHandler = (req: Request, res, next) => {
   }
   next();
 };
+
+export const verifyAdminAccess: RequestHandler = (req: Request, res, next) => {
+  if (!req.user || !req.user.isAdmin) {
+    res.status(403).json({ errors: ['Access denied: Admins only'] });
+    return;
+  }
+  next();
+};
