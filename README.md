@@ -337,17 +337,30 @@ __Auth Routes:__
     - Response: 200 access token
     - Error: 401 Invalid credentials
 
-## Test and Deploy
+## CI/CD Pipeline
 
-Use the built-in continuous integration in GitLab.
+This project uses GitLab CI/CD to automate the testing, building, and deployment of the application. The pipeline is
+defined in the `.gitlab-ci.yml` file and consists of the following stages:
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### Stages
 
-***
+1. **Test**: Runs the tests for the backend.
+2. **Build**: Builds Docker images for the backend and frontend.
+3. **Deploy**: Deploys the application to the production server.
+
+### Steps
+
+1. **Before Script**: Logs in to the Docker registry.
+2. **Test**:
+    - Uses the `node:21` image.
+    - Installs dependencies and runs tests for the backend.
+3. **Build Backend**:
+    - Builds the Docker image for the backend.
+4. **Build Frontend**:
+    - Builds the Docker image for the frontend.
+5. **Deploy**:
+    - Uses the `alpine` image.
+    - Deploys the application to the production server using `docker-compose`.
 
 ## Description
 
