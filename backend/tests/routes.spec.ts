@@ -10,6 +10,9 @@ jest.mock('../src/middleware/auth.middleware', () => ({
   verifyAccess: (_req: Request, _res: Response, next: NextFunction) => {
     next();
   },
+  verifyAdminAccess: (_req: Request, _res: Response, next: NextFunction) => {
+    next();
+  },
 }));
 
 const TEST_IDS = {
@@ -33,7 +36,7 @@ describe('Routes', () => {
 
     userController = {
       getUserById: jest.fn((_req: Request, res: Response) =>
-        res.status(200).json({ id: TEST_IDS.USER_ID })),
+        res.status(200).json({ id: TEST_IDS.USER_ID })), 
       updateUser: jest.fn((_req: Request, res: Response) =>
         res.status(200).json({ id: TEST_IDS.USER_ID })),
       deleteUser: jest.fn((_req: Request, res: Response) =>
@@ -42,6 +45,8 @@ describe('Routes', () => {
         res.status(200).json([{ id: TEST_IDS.USER_ID }])),
       getUsersByNameSearch: jest.fn((_req: Request, res: Response) =>
         res.status(200).json([{ id: TEST_IDS.USER_ID }])),
+      updateAdminState: jest.fn((_req: Request, res: Response) =>
+        res.status(200).json({ id: TEST_IDS.USER_ID, isAdmin: true })),
     } as unknown as UserController;
 
     scoreController = {
@@ -105,6 +110,14 @@ describe('Routes', () => {
   it('should call deleteUser', async () => {
     await request(app).delete('/users').expect(200);
     expect(userController.deleteUser).toHaveBeenCalled();
+  }, 10000);
+
+  it('should call updateAdminState', async () => {
+    await request(app)
+      .put(`/users/is_admin/${TEST_IDS.USER_ID}`)
+      .send({ isAdmin: true })
+      .expect(200);
+    expect(userController.updateAdminState).toHaveBeenCalled();
   }, 10000);
 
   // Score Routes
