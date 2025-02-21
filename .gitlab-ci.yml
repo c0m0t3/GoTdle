@@ -32,7 +32,7 @@ build-backend:
   stage: build
   script:
     - cd backend
-    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -U $CI_REGISTRY_USER
+    - echo "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY" "$CI_REGISTRY_USER"
     - docker build -t $DOCKER_REGISTRY/$DOCKER_IMAGE_BACKEND:$DOCKER_TAG .
 
 build-frontend:
