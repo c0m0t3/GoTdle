@@ -19,7 +19,7 @@ services:
       - default
     env_file:
       - .env.backend
-    command: sh -c "npm run db:migrate && npm start"
+    command: sh -c "npm run build && npm run db:migrate && npm start"
     depends_on:
       - fwe-gotdle-db
 
