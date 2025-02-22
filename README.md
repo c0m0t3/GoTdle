@@ -272,6 +272,16 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
     - The user can grant or revoke admin rights to another user by simply clicking the ✔ or ❌ icons.
     - The user can search for a user by username.
     - The user can use the 'Show Admins' button to display only the admins in the list.
+- **Manage Characters:**
+    - The user can create and delete characters.
+    - For creating a character, the user needs to upload a json file with the character data.
+    - The uploaded file will be shown in the text field, which is also editable.
+    - For deleting characters, simply press the delete button. All characters will be deleted.
+    - Below the Create/Delete box, the user can see all saved characters in card format.
+    - Each card shows only a few details about the character. When the user clicks on a card, a modal opens with all the
+      character's information.
+
+![Admin Dashboard_CharacterCard](frontend/src/assets/characterCard-detailed.png)
 
 ## Login
 
