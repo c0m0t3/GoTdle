@@ -320,6 +320,11 @@ __User Routes:__
     - Request: User object
     - Response: 200 User object
     - Error: 400 Email/Username already exists
+- [ ] PUT /users/is_admin/:userId
+    - Description: Grant or revoke admin rights to a user
+    - Request: Params: userId & Body: {isAdmin: boolean}
+    - Response: 200 User object
+    - Error: 404 User not found / 400 Cannot change own admin state
 - [ ] DELETE /users
     - Description: Delete the current user
     - Response: 204 No Content
