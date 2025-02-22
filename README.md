@@ -344,21 +344,24 @@ defined in the `.gitlab-ci.yml` file and consists of the following stages:
 
 ### Stages
 
-1. **Test**: Runs the tests for the backend.
+1. **Test**: Runs the tests for the backend and frontend.
 2. **Build**: Builds Docker images for the backend and frontend.
 3. **Deploy**: Deploys the application to the production server.
 
 ### Steps
 
 1. **Before Script**: Logs in to the Docker registry.
-2. **Test**:
-    - Uses the `node:21` image.
+2. **Test Backend**:
+    - Uses the `node:22` image.
     - Installs dependencies and runs tests for the backend.
-3. **Build Backend**:
+3. **Test Frontend**:
+    - Uses the `node:22` image.
+    - Installs dependencies and runs tests for the frontend.
+4. **Build Backend**:
     - Builds the Docker image for the backend.
-4. **Build Frontend**:
+5. **Build Frontend**:
     - Builds the Docker image for the frontend.
-5. **Deploy**:
+6. **Deploy**:
     - Uses the `alpine` image.
     - Deploys the application to the production server using `docker-compose`.
 
