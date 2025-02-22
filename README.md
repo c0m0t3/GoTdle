@@ -154,6 +154,7 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 - [Score Box](#score-box)
 - [Scoreboard](#scoreboard)
 - [Profile](#profile)
+- [Admin Dashboard](#admin-dashboard)
 - [Login](#login)
 - [Register](#register)
 
@@ -256,6 +257,21 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
   played.
 - The user can change the username and email and passwort.
 - The user can delete the account after entering the password.
+
+## Admin Dashboard
+
+![Admin Dashboard_User](frontend/src/assets/adminDashboard-userList.png)
+![Admin Dashboard_Character](frontend/src/assets/adminDashboard-manageCharacter.png)
+![Admin Dashboard_User](frontend/src/assets/adminLine-Menu.png)
+
+- [ ] **Displayed when the user clicks the admin dashboard button. This button is visible only to users with admin
+  rights:**
+- On the dashboard page, the user can navigate between two tabs: User List and Manage Characters.
+- **User List:**
+    - Shows a table of all users.
+    - The user can grant or revoke admin rights to another user by simply clicking the ✔ or ❌ icons.
+    - The user can search for a user by username.
+    - The user can use the 'Show Admins' button to display only the admins in the list.
 
 ## Login
 
