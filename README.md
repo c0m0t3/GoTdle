@@ -5,7 +5,7 @@
 1. [Getting started](#getting-started)
 2. [Application Functionalities](#application-functionalities)
 3. [Routes](#routes)
-4. [Testing](#testing)
+4. [CI/CD Pipeline](#cicd-pipeline)
 
 ## Getting started
 
