@@ -13,8 +13,7 @@ variables:
   JWT_SECRET: 'Y3ENPeUZytfd5ReL5e4Yb92azjUMNmC8'
 
 stages:
-  - testBackend
-  - testFrontend
+  - test
   - build
   - deploy
 
@@ -22,20 +21,19 @@ before_script:
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_JOB_TOKEN" "$CI_REGISTRY"
 
 testBackend:
-  stage: testBackend
-  image: node:21
+  stage: test
+  image: node:22
   script:
     - cd backend
     - npm install
     - npm test
 
 testFrontend:
-  stage: testFrontend
-  image: node:21
+  stage: test
+  image: node:22
   script:
-    - pwd
-    - rm -rf node_modules package-lock.json
     - cd frontend
+    - rm package-lock.json
     - npm install
     - npm test
 
