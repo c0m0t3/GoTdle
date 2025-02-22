@@ -207,6 +207,11 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
     - **Green:** The quote matches the character.
     - **Red:** The quote does not match the character.
 
+### Hints
+
+- [ ] **House:** Shows which house the character belongs to.
+    - enabled after 10 incorrect guesses
+
 ## Image Mode
 
 ![Image Mode](frontend/src/assets/image-mode.png)
@@ -218,6 +223,11 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 - The color of the box of the character will reveal the guess:
     - **Green:** The image matches the character.
     - **Red:** The image does not match the character.
+
+### Hints
+
+- [ ] **Title:** Shows a character's title.
+    - enabled after 10 incorrect guesses
 
 ## Success Box
 
