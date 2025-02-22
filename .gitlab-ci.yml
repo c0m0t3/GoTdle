@@ -21,7 +21,7 @@ before_script:
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_JOB_TOKEN" "$CI_REGISTRY"
 
 testCypress:
-stage: test
+  stage: test
   image: node:22
   script:
     - cd backend
