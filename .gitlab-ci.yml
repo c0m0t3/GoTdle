@@ -28,7 +28,7 @@ testBackend:
     - npm install
     - npm test
 
-testFrontend:
+testFrontendComponent:
   stage: test
   image: node:22
   script:
@@ -36,6 +36,15 @@ testFrontend:
     - rm package-lock.json
     - npm install
     - npm test
+
+cypress_tests:
+  image: cypress/included:12.0.0
+  stage: test
+  script:
+    - cd frontend
+    - rm package-lock.json
+    - npm install
+    - npx cypress run
 
 build-backend:
   stage: build
