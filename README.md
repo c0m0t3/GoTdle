@@ -154,6 +154,7 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 - [Score Box](#score-box)
 - [Scoreboard](#scoreboard)
 - [Profile](#profile)
+- [Admin Dashboard](#admin-dashboard)
 - [Login](#login)
 - [Register](#register)
 - [Admin Dashboard](#admin-dashboard)
@@ -258,6 +259,31 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 - The user can change the username and email and passwort.
 - The user can delete the account after entering the password.
 
+## Admin Dashboard
+
+![Admin Dashboard_User](frontend/src/assets/adminDashboard-userList.png)
+![Admin Dashboard_Character](frontend/src/assets/adminDashboard-manageCharacter.png)
+![Admin Dashboard_User](frontend/src/assets/adminLine-Menu.png)
+
+- [ ] **Displayed when the user clicks the admin dashboard button. This button is visible only to users with admin
+  rights:**
+- On the dashboard page, the user can navigate between two tabs: User List and Manage Characters.
+- **User List:**
+    - Shows a table of all users.
+    - The user can grant or revoke admin rights to another user by simply clicking the ✔ or ❌ icons.
+    - The user can search for a user by username.
+    - The user can use the 'Show Admins' button to display only the admins in the list.
+- **Manage Characters:**
+    - The user can create and delete characters.
+    - For creating a character, the user needs to upload a json file with the character data.
+    - The uploaded file will be shown in the text field, which is also editable.
+    - For deleting characters, simply press the delete button. All characters will be deleted.
+    - Below the Create/Delete box, the user can see all saved characters in card format.
+    - Each card shows only a few details about the character. When the user clicks on a card, a modal opens with all the
+      character's information.
+
+![Admin Dashboard_CharacterCard](frontend/src/assets/characterCard-detailed.png)
+
 ## Login
 
 ![Login](frontend/src/assets/login.png)
@@ -295,6 +321,9 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 
 ## Routes
 
+All routes, except for user registration/login, are secured so that only authenticated users, meaning logged-in users,
+have access. Additionally, some routes are also protected so that only users with admin rights can access them.
+
 __User Routes:__
 
 - [ ] GET /users
@@ -311,6 +340,11 @@ __User Routes:__
     - Request: User object
     - Response: 200 User object
     - Error: 400 Email/Username already exists
+- [ ] PUT /users/is_admin/:userId
+    - Description: Grant or revoke admin rights to a user
+    - Request: Params: userId & Body: {isAdmin: boolean}
+    - Response: 200 User object
+    - Error: 404 User not found / 400 Cannot change own admin state
 - [ ] DELETE /users
     - Description: Delete the current user
     - Response: 204 No Content
