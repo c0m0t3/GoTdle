@@ -8,10 +8,7 @@ import { Jwt } from '../src/utils/jwt';
 import { DI } from '../src/dependency-injection';
 import { TestDatabase } from './helpers/database';
 import { globalErrorHandler } from '../src/utils/global-error';
-
-const TEST_IDS = {
-  USER_ID: '123e4567-e89b-12d3-a456-426614174000',
-} as const;
+import { TEST_IDS } from './helpers/helpData';
 
 describe('AuthController', () => {
   let app: Application;
@@ -246,6 +243,31 @@ describe('AuthController', () => {
             path: ['password'],
           }),
         ]),
+      );
+    });
+
+    it('should include isAdmin in the token payload', async () => {
+      const response = await request(app)
+        .post('/auth/login')
+        .send({
+          type: 'email',
+          identifier: 'test@example.com',
+          password: 'password123',
+        })
+        .expect(200);
+
+      expect(response.body).toHaveProperty('accessToken');
+
+      const token = response.body.accessToken;
+      const decodedToken = DI.utils.jwt.verifyToken(token);
+
+      expect(decodedToken).toEqual(
+        expect.objectContaining({
+          id: TEST_IDS.USER_ID,
+          email: 'test@example.com',
+          username: 'testuser',
+          isAdmin: false,
+        }),
       );
     });
   });
