@@ -33,7 +33,7 @@ testFrontend:
   image: node:22
   script:
     - cd frontend
-    - npm install --no-optional
+    - npm install --omit=optional
     - npm test
 
 build-backend:
