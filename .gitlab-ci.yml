@@ -29,6 +29,7 @@ testCypress:
     - npm dev &
     - cd ..
     - cd frontend
+    - rm package-lock.json
     - npm install
     - npm run dev &
     - sleep 10
