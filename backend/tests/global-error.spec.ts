@@ -30,7 +30,7 @@ describe('Global Error Handler', () => {
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({ errors: ['Invalid token'] });
   });
-   
+
   it('should handle JWT token expiration errors', () => {
     const error = new TokenExpiredError('jwt expired', new Date());
     globalErrorHandler(error, req as Request, res as Response, next);
@@ -44,7 +44,7 @@ describe('Global Error Handler', () => {
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({ errors: ['Invalid token'] });
   });
-  
+
   it('should handle other errors', () => {
     const error = new Error('Test error');
     globalErrorHandler(error, req as Request, res as Response, next);

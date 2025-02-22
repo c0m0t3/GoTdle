@@ -13,8 +13,8 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { CountdownTimer } from './CountdownTimer.tsx';
-import correctAnswer from '../../public/example_classic_correct.png';
-import incorrectAnswer from '../../public/example_classic_incorrect.png';
+import correctAnswer from '../assets/example_classic_correct.png';
+import incorrectAnswer from '../assets/example_classic_incorrect.png';
 
 type Property = {
   title: string;
@@ -217,7 +217,8 @@ const ImageHelp = () => (
       </Text>{' '}
       : If your guess is correct, a green box will appear with the name of the
       character you guessed. This means you’ve correctly identified the
-      character, and the image will be completely revealed without any blur.{' '}
+      character, and the image will be completely revealed without any
+      blur.{' '}
     </Text>
     <Text>
       <Text as="span" color={'red.500'} fontWeight="bold">
