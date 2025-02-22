@@ -1,32 +1,28 @@
-version: '3.8'
-
 services:
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: fwe-gotdle-backend
-    volumes:
-      - ./backend/:/app
-      - /app/node_modules/
-    ports:
-      - 0.0.0.0:3000:3000
-    command: npm run dev
-    networks:
-      - default
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
     container_name: fwe-gotdle-frontend
-    volumes:
-      - ./frontend/:/app
-      - /app/node_modules/
+    image: registry.code.fbi.h-da.de/sthiohnoo/gotdle/frontend:latest
     ports:
       - 0.0.0.0:5173:5173
     networks:
       - default
+    env_file:
+      - .env.frontend
+
+  backend:
+    container_name: fwe-gotdle-backend
+    image: registry.code.fbi.h-da.de/sthiohnoo/gotdle/backend:latest
+    ports:
+      - 0.0.0.0:3000:3000
+    networks:
+      - default
+    env_file:
+      - .env.backend
+    command: sh -c "npm run db:migrate && npm start"
+    depends_on:
+      - fwe-gotdle-db
+
 
   fwe-gotdle-db:
     image: postgres:latest
