@@ -5,18 +5,12 @@ import { CreateCharacter } from '../../validation/validation';
 export class CharacterRepository {
   constructor(private readonly database: Database) {}
 
-  async createCharacter(data: CreateCharacter) {
+  async createCharacters(data: CreateCharacter) {
     return this.database.insert(characterSchema).values(data).returning();
   }
 
   async getCharacters() {
     return this.database.query.characterSchema.findMany();
-  }
-
-  async getCharacterById(id: number) {
-    return this.database.query.characterSchema.findFirst({
-      where: (character, { eq }) => eq(character._id, id),
-    });
   }
 
   async getCharacterByName(name: string) {

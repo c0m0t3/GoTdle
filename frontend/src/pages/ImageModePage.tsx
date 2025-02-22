@@ -1,5 +1,5 @@
 import { BaseLayout } from '../layout/BaseLayout.tsx';
-import { Box, Button, Image, Text, VStack } from '@chakra-ui/react';
+import { Box, Image, Text, VStack } from '@chakra-ui/react';
 import { ImageData, useImageApi } from '../hooks/useImageApi.ts';
 import { useEffect, useRef, useState } from 'react';
 import { CharacterSelect } from '../components/CharacterSelect.tsx';
@@ -9,20 +9,18 @@ import { BaseBox } from '../components/BaseBox.tsx';
 import { ModeNavigationBox } from '../components/ModeNavigationBox.tsx';
 import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
-import { useAuth } from '../providers/AuthProvider.tsx';
 import { UserGuessesText } from '../components/UserGuessesText.tsx';
+import { useApiClient } from '../hooks/useApiClient.ts';
+import { updateModeScore } from '../utils/stateManager.tsx';
+import { ScoreModal } from '../components/ScoreModal.tsx';
+import { useFetchUser } from '../hooks/useFetchUser.tsx';
+import { useNavigationData } from '../hooks/useNavigationData.ts';
+import { ToolBar } from '../components/ToolBar.tsx';
 
 interface ImageModeState {
   imageAttempts?: number;
   imageAnswers: string[];
   imageFinished?: boolean;
-}
-
-interface FinalStates {
-  quoteAttempts: number;
-  imageAttempts: number;
-  quoteFinished: boolean;
-  imageFinished: boolean;
 }
 
 interface CharacterOption extends OptionBase {
@@ -36,10 +34,11 @@ export const ImageModePage = () => {
   const [correctGuess, setCorrectGuess] = useState<string>('');
   const [selectedCharacter, setSelectedCharacter] =
     useState<CharacterOption | null>(null);
-  const { user } = useAuth();
-  const userId = user?.id;
   const prevApiDataRef = useRef<ImageData | null>(null);
-  const [finalStates, setFinalStates] = useState<FinalStates | null>(null);
+  const client = useApiClient();
+  const [isScoreModalOpen, setIsScoreModalOpen] = useState<boolean>(false);
+  const { user, isPlayedToday } = useFetchUser(2);
+  const { label, navigationUrl } = useNavigationData(user?.id);
 
   useEffect(() => {
     fetchApi().catch((error) => {
@@ -56,28 +55,13 @@ export const ImageModePage = () => {
         setIncorrectGuesses([]);
         setCorrectGuess('');
         setSelectedCharacter(null);
-
-        const storedPageStates = localStorage.getItem(userId || '');
-        let currentPageStates = storedPageStates
-          ? JSON.parse(storedPageStates)
-          : {};
-        const resetImageState: ImageModeState = {
-          imageAttempts: 0,
-          imageAnswers: [],
-          imageFinished: false,
-        };
-        currentPageStates = {
-          ...currentPageStates,
-          ...resetImageState,
-        };
-        localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
       }
       prevApiDataRef.current = apiData;
     }
-  }, [userId, apiData]);
+  }, [user?.id, apiData]);
 
   useEffect(() => {
-    const pageState = localStorage.getItem(userId || '');
+    const pageState = localStorage.getItem(user?.id || '');
     if (pageState) {
       const { imageAnswers, imageFinished } = JSON.parse(pageState);
       if (imageFinished) {
@@ -87,16 +71,7 @@ export const ImageModePage = () => {
         setIncorrectGuesses(imageAnswers || []);
       }
     }
-  }, [userId]);
-
-  useEffect(() => {
-    if (correctGuess) {
-      const storedPageStates = localStorage.getItem(userId || '');
-      if (storedPageStates) {
-        setFinalStates(JSON.parse(storedPageStates));
-      }
-    }
-  }, [correctGuess, userId]);
+  }, [user?.id]);
 
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
@@ -114,10 +89,15 @@ export const ImageModePage = () => {
           imageAttempts: incorrectGuesses.length + 1,
           imageFinished: true,
         };
+        if (user) {
+          if (updateModeScore(user, 2, incorrectGuesses.length, client)) {
+            setIsScoreModalOpen(true);
+          }
+        }
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
-      const storedPageStates = localStorage.getItem(userId || '');
+      const storedPageStates = localStorage.getItem(user?.id || '');
       let currentPageStates = storedPageStates
         ? JSON.parse(storedPageStates)
         : {};
@@ -125,7 +105,7 @@ export const ImageModePage = () => {
         ...currentPageStates,
         ...imageModeState,
       };
-      localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
+      localStorage.setItem(user?.id || '', JSON.stringify(currentPageStates));
       setSelectedCharacter(null);
     }
   };
@@ -165,6 +145,7 @@ export const ImageModePage = () => {
       <VStack>
         <ModeNavigationBox />
         <BaseBox>
+          <ToolBar mode={'image'} user={user} />
           <Text fontSize={'md'}>Which character is shown in this image?</Text>
           <Image
             src={apiData?.imageUrl}
@@ -194,7 +175,7 @@ export const ImageModePage = () => {
               },
               onChange: handleCharacterSelect,
               value: selectedCharacter,
-              isDisabled: !!correctGuess,
+              isDisabled: !!correctGuess || isPlayedToday,
             }}
           />
         </BaseBox>
@@ -203,8 +184,8 @@ export const ImageModePage = () => {
           <ModeSuccessBox
             correctGuess={correctGuess}
             attempts={incorrectGuesses.length + 1}
-            label="Jump to Scoreboard"
-            url="/scoreboard"
+            label={label}
+            url={navigationUrl}
           />
         )}
 
@@ -220,17 +201,12 @@ export const ImageModePage = () => {
             </UserGuessesText>
           ))}
         </Box>
-
-        {finalStates?.imageFinished && finalStates?.quoteFinished && (
-          <VStack>
-            <Text>Congratulations, you finished today's GoTdle!!</Text>
-            <Text>Here are your Scores!</Text>
-            <Text>Classic: {localStorage.getItem('classicModeAttempts')}</Text>
-            <Text>Quote: {finalStates?.quoteAttempts}</Text>
-            <Text>Image: {finalStates?.imageAttempts}</Text>
-            <Text>Actual Streak: ...</Text>
-            <Button mt={4}>Jump to Scoreboard</Button>
-          </VStack>
+        {user && (
+          <ScoreModal
+            user={user}
+            show={isScoreModalOpen}
+            handleClose={() => setIsScoreModalOpen(false)}
+          />
         )}
       </VStack>
     </BaseLayout>

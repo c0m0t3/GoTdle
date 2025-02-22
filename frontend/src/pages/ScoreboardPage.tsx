@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { BaseLayout } from '../layout/BaseLayout';
 import {
   Box,
+  Input,
   Table,
   Tbody,
   Td,
@@ -12,8 +13,9 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useApiClient } from '../hooks/useApiClient';
-import { BaseBox } from '../components/BaseBox.tsx';
+import { BaseBox } from '../components/BaseBox';
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
+import { formatDateShort } from '../utils/formatDate.ts';
 
 interface Score {
   streak: number;
@@ -28,17 +30,18 @@ interface User {
   email: string;
   username: string;
   createdAt: string;
-  score: Score;
+  score?: Score;
 }
 
 export const ScoreboardPage = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [authError, setAuthError] = useState<boolean>(false);
   const [sortConfig, setSortConfig] = useState<{
-    key: keyof User | keyof Score;
+    key: keyof User | keyof Score | 'classicMode' | 'quoteMode' | 'imageMode';
     direction: 'ascending' | 'descending';
   }>({ key: 'streak', direction: 'descending' });
   const [loggedInUserId, setLoggedInUserId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const client = useApiClient();
   const highlightTextColor = 'red';
 
@@ -67,13 +70,50 @@ export const ScoreboardPage = () => {
     fetchLoggedInUser();
   }, [client]);
 
+  useEffect(() => {
+    const handleSearch = async () => {
+      if (searchQuery === '') {
+        const response = await client.getUsers();
+        setUsers(response.data);
+      } else {
+        try {
+          const response = await client.getSearchUserByUsername(searchQuery);
+          setUsers(response.data as User[]);
+        } catch (error) {
+          console.error('Error searching user:', error);
+        }
+      }
+    };
+
+    handleSearch();
+  }, [searchQuery, client]);
+
   const sortedUsers = [...users].sort((a, b) => {
     if (sortConfig !== null) {
       const { key, direction } = sortConfig;
-      const aValue =
-        key in a ? a[key as keyof User] : (a.score[key as keyof Score] ?? null);
-      const bValue =
-        key in b ? b[key as keyof User] : (b.score[key as keyof Score] ?? null);
+      let aValue: number | string | null;
+      let bValue: number | string | null;
+
+      if (key === 'classicMode') {
+        aValue = a.score?.dailyScore[0] ?? null;
+        bValue = b.score?.dailyScore[0] ?? null;
+      } else if (key === 'quoteMode') {
+        aValue = a.score?.dailyScore[1] ?? null;
+        bValue = b.score?.dailyScore[1] ?? null;
+      } else if (key === 'imageMode') {
+        aValue = a.score?.dailyScore[2] ?? null;
+        bValue = b.score?.dailyScore[2] ?? null;
+      } else {
+        aValue =
+          key in a
+            ? (a[key as keyof User] as string | number | null)
+            : (a.score?.[key as keyof Score] as string | number | null);
+        bValue =
+          key in b
+            ? (b[key as keyof User] as string | number | null)
+            : (b.score?.[key as keyof Score] as string | number | null);
+      }
+
       if (aValue !== null && bValue !== null) {
         if (aValue < bValue) {
           return direction === 'ascending' ? -1 : 1;
@@ -87,7 +127,9 @@ export const ScoreboardPage = () => {
     return 0;
   });
 
-  const requestSort = (key: keyof User | keyof Score) => {
+  const requestSort = (
+    key: keyof User | keyof Score | 'classicMode' | 'quoteMode' | 'imageMode',
+  ) => {
     let direction: 'ascending' | 'descending' = 'ascending';
     if (
       sortConfig &&
@@ -99,7 +141,9 @@ export const ScoreboardPage = () => {
     setSortConfig({ key, direction });
   };
 
-  const getSortIcon = (key: keyof User | keyof Score) => {
+  const getSortIcon = (
+    key: keyof User | keyof Score | 'classicMode' | 'quoteMode' | 'imageMode',
+  ) => {
     if (sortConfig?.key === key) {
       return sortConfig.direction === 'ascending' ? (
         <span style={{ marginLeft: '0.5em' }}>
@@ -118,18 +162,36 @@ export const ScoreboardPage = () => {
     <BaseLayout>
       <Box p={4}>
         <VStack spacing={4} align="stretch">
-          <Text textAlign={'center'} fontSize={'2em'}>
-            Leaderboard
-          </Text>
+          <BaseBox width="auto">
+            <Text textAlign={'center'} fontSize={'2em'}>
+              Leaderboard
+            </Text>
+          </BaseBox>
           {authError ? (
             <Text textAlign={'center'} color="red.500">
               Authentication failed. Please log in to view the leaderboard.
             </Text>
           ) : (
-            <BaseBox width="auto">
+            <BaseBox width="auto" padding={'0 2em'}>
+              <Box display="flex" justifyContent="center" margin={4}>
+                <Input
+                  placeholder="Search by username"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  width="20em"
+                  p={4}
+                  bg="gray.100"
+                  borderRadius="md"
+                  boxShadow="md"
+                  _hover={{ bg: 'gray.200' }}
+                  _focus={{ bg: 'white', borderColor: 'blue.500' }}
+                  mr={2}
+                />
+              </Box>
               <Table variant="simple">
                 <Thead>
-                  <Tr>
+                  <Tr sx={{ borderBottom: '2px solid black' }}>
+                    <Th>Rank</Th>
                     <Th onClick={() => requestSort('username')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Name {getSortIcon('username')}
@@ -150,16 +212,37 @@ export const ScoreboardPage = () => {
                         Longest Streak {getSortIcon('longestStreak')}
                       </div>
                     </Th>
-                    <Th onClick={() => requestSort('dailyScore')}>
+                    <Th onClick={() => requestSort('classicMode')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
-                        Latest Daily Score {getSortIcon('dailyScore')}
+                        Classic Mode {getSortIcon('classicMode')}
+                      </div>
+                    </Th>
+                    <Th onClick={() => requestSort('quoteMode')}>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        Quote Mode {getSortIcon('quoteMode')}
+                      </div>
+                    </Th>
+                    <Th onClick={() => requestSort('imageMode')}>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        Image Mode {getSortIcon('imageMode')}
                       </div>
                     </Th>
                   </Tr>
                 </Thead>
                 <Tbody>
                   {sortedUsers.map((user, index) => (
-                    <Tr key={index}>
+                    <Tr
+                      key={index}
+                      sx={{
+                        borderBottom:
+                          index === sortedUsers.length - 1
+                            ? 'none'
+                            : '2px solid black',
+                        margin: 0,
+                        padding: 0,
+                      }}
+                    >
+                      <Td>{index + 1}</Td>
                       <Td
                         color={
                           user.id === loggedInUserId
@@ -176,7 +259,7 @@ export const ScoreboardPage = () => {
                             : 'inherit'
                         }
                       >
-                        {new Date(user.createdAt).toLocaleDateString('de-DE')}
+                        {formatDateShort(user.createdAt)}
                       </Td>
                       <Td
                         color={
@@ -185,7 +268,7 @@ export const ScoreboardPage = () => {
                             : 'inherit'
                         }
                       >
-                        {user.score.streak}
+                        {user.score?.streak ?? '-'}
                       </Td>
                       <Td
                         color={
@@ -194,7 +277,7 @@ export const ScoreboardPage = () => {
                             : 'inherit'
                         }
                       >
-                        {user.score.longestStreak}
+                        {user.score?.longestStreak ?? '-'}
                       </Td>
                       <Td
                         color={
@@ -203,7 +286,25 @@ export const ScoreboardPage = () => {
                             : 'inherit'
                         }
                       >
-                        {user.score.dailyScore[0]?.[0] || '-'}
+                        {user.score?.dailyScore[0] ?? '-'}
+                      </Td>
+                      <Td
+                        color={
+                          user.id === loggedInUserId
+                            ? highlightTextColor
+                            : 'inherit'
+                        }
+                      >
+                        {user.score?.dailyScore[1] ?? '-'}
+                      </Td>
+                      <Td
+                        color={
+                          user.id === loggedInUserId
+                            ? highlightTextColor
+                            : 'inherit'
+                        }
+                      >
+                        {user.score?.dailyScore[2] ?? '-'}
                       </Td>
                     </Tr>
                   ))}

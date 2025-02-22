@@ -15,6 +15,7 @@ export class UserRepository {
         email: userSchema.email,
         username: userSchema.username,
         createdAt: userSchema.createdAt,
+        isAdmin: userSchema.isAdmin,
       });
     return createdUser;
   }
@@ -26,6 +27,7 @@ export class UserRepository {
         email: true,
         username: true,
         createdAt: true,
+        isAdmin: true,
       },
       with: includeScoreRelation
         ? {
@@ -51,6 +53,7 @@ export class UserRepository {
         email: true,
         username: true,
         createdAt: true,
+        isAdmin: true,
       },
       with: includeScoreRelation
         ? {
@@ -77,6 +80,7 @@ export class UserRepository {
         email: true,
         username: true,
         createdAt: true,
+        isAdmin: true,
       },
       with: includeScoreRelation
         ? {
@@ -122,6 +126,22 @@ export class UserRepository {
         email: userSchema.email,
         username: userSchema.username,
         createdAt: userSchema.createdAt,
+        isAdmin: userSchema.isAdmin,
+      });
+    return updatedUser;
+  }
+
+  async updateAdminState(userId: string, isAdmin: boolean) {
+    const [updatedUser] = await this.database
+      .update(userSchema)
+      .set({ isAdmin })
+      .where(eq(userSchema.id, userId))
+      .returning({
+        id: userSchema.id,
+        email: userSchema.email,
+        username: userSchema.username,
+        createdAt: userSchema.createdAt,
+        isAdmin: userSchema.isAdmin,
       });
     return updatedUser;
   }

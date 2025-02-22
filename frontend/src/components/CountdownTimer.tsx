@@ -6,7 +6,18 @@ export const CountdownTimer = () => {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
+      const newTimeLeft = calculateTimeLeft();
+      setTimeLeft(newTimeLeft);
+
+      if (
+        newTimeLeft.hours === 0 &&
+        newTimeLeft.minutes === 0 &&
+        newTimeLeft.seconds === 0
+      ) {
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
     }, 1000);
 
     return () => clearInterval(intervalId);

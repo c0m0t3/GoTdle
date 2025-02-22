@@ -89,8 +89,9 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({
       borderRadius="md"
       textColor={'white'}
       className={'character-grid'}
+      minWidth={'90em'}
     >
-      <Grid templateColumns={`repeat(${initialColumns.length}, 1fr)`} gap={4}>
+      <Grid templateColumns="1.1fr 1fr 1fr 1.1fr 1fr 1.1fr 0.9fr 0.9fr" gap={2}>
         {characters.map((row, rowIndex) =>
           row.map((char: string, colIndex: number) => (
             <GridItem

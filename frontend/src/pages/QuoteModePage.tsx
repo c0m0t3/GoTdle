@@ -9,8 +9,13 @@ import { BaseBox } from '../components/BaseBox.tsx';
 import { ModeNavigationBox } from '../components/ModeNavigationBox.tsx';
 import { ModeSuccessBox } from '../components/ModeSuccessBox.tsx';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions.tsx';
-import { useAuth } from '../providers/AuthProvider.tsx';
 import { UserGuessesText } from '../components/UserGuessesText.tsx';
+import { useApiClient } from '../hooks/useApiClient.ts';
+import { updateModeScore } from '../utils/stateManager.tsx';
+import { ScoreModal } from '../components/ScoreModal.tsx';
+import { useFetchUser } from '../hooks/useFetchUser.tsx';
+import { useNavigationData } from '../hooks/useNavigationData.ts';
+import { ToolBar } from '../components/ToolBar.tsx';
 
 interface QuoteModeState {
   quoteAttempts?: number;
@@ -30,8 +35,10 @@ export const QuoteModePage = () => {
   const [selectedCharacter, setSelectedCharacter] =
     useState<CharacterOption | null>(null);
   const prevApiDataRef = useRef<QuoteData | null>(null);
-  const { user } = useAuth();
-  const userId = user?.id;
+  const [isScoreModalOpen, setIsScoreModalOpen] = useState<boolean>(false);
+  const client = useApiClient();
+  const { user, isPlayedToday } = useFetchUser(1);
+  const { label, navigationUrl } = useNavigationData(user?.id);
 
   useEffect(() => {
     fetchApi().catch((error) => {
@@ -48,28 +55,13 @@ export const QuoteModePage = () => {
         setIncorrectGuesses([]);
         setCorrectGuess('');
         setSelectedCharacter(null);
-
-        const storedPageStates = localStorage.getItem(userId || '');
-        let currentPageStates = storedPageStates
-          ? JSON.parse(storedPageStates)
-          : {};
-        const resetQuoteState: QuoteModeState = {
-          quoteAttempts: 0,
-          quoteAnswers: [],
-          quoteFinished: false,
-        };
-        currentPageStates = {
-          ...currentPageStates,
-          ...resetQuoteState,
-        };
-        localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
       }
       prevApiDataRef.current = apiData;
     }
-  }, [userId, apiData]);
+  }, [user, apiData]);
 
   useEffect(() => {
-    const pageState = localStorage.getItem(userId || '');
+    const pageState = localStorage.getItem(user?.id || '');
     if (pageState) {
       const { quoteAnswers, quoteFinished } = JSON.parse(pageState);
       if (quoteFinished) {
@@ -79,7 +71,7 @@ export const QuoteModePage = () => {
         setIncorrectGuesses(quoteAnswers || []);
       }
     }
-  }, [userId]);
+  }, [user?.id]);
 
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
@@ -98,10 +90,15 @@ export const QuoteModePage = () => {
           quoteAttempts: incorrectGuesses.length + 1,
           quoteFinished: true,
         };
+        if (user) {
+          if (updateModeScore(user, 1, incorrectGuesses.length, client)) {
+            setIsScoreModalOpen(true);
+          }
+        }
       } else {
         setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
-      const storedPageStates = localStorage.getItem(userId || '');
+      const storedPageStates = localStorage.getItem(user?.id || '');
       let currentPageStates = storedPageStates
         ? JSON.parse(storedPageStates)
         : {};
@@ -109,7 +106,7 @@ export const QuoteModePage = () => {
         ...currentPageStates,
         ...quoteModeState,
       };
-      localStorage.setItem(userId || '', JSON.stringify(currentPageStates));
+      localStorage.setItem(user?.id || '', JSON.stringify(currentPageStates));
       setSelectedCharacter(null);
     }
   };
@@ -140,6 +137,7 @@ export const QuoteModePage = () => {
         <ModeNavigationBox />
 
         <BaseBox>
+          <ToolBar mode={'quote'} user={user} />
           <Text fontSize={'md'}>Which characters says</Text>
           <Text fontSize={'xl'} py={5}>
             "{apiData?.sentence}"
@@ -163,7 +161,7 @@ export const QuoteModePage = () => {
               },
               onChange: handleCharacterSelect,
               value: selectedCharacter,
-              isDisabled: !!correctGuess,
+              isDisabled: !!correctGuess || isPlayedToday,
             }}
           />
         </BaseBox>
@@ -172,8 +170,8 @@ export const QuoteModePage = () => {
           <ModeSuccessBox
             correctGuess={correctGuess}
             attempts={incorrectGuesses.length + 1}
-            label="Image"
-            url="/image"
+            label={label}
+            url={navigationUrl}
           />
         )}
 
@@ -189,6 +187,13 @@ export const QuoteModePage = () => {
             </UserGuessesText>
           ))}
         </Box>
+        {user && isScoreModalOpen && (
+          <ScoreModal
+            user={user}
+            show={isScoreModalOpen}
+            handleClose={() => setIsScoreModalOpen(false)}
+          />
+        )}
       </VStack>
     </BaseLayout>
   );

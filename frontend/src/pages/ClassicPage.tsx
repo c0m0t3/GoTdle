@@ -1,7 +1,7 @@
+import { useEffect, useState } from 'react';
 import { BaseLayout } from '../layout/BaseLayout';
 import { Button, HStack, Text, VStack } from '@chakra-ui/react';
 import { CharacterGrid } from '../layout/CharacterGrid';
-import { useEffect, useState } from 'react';
 import { useApiClient } from '../hooks/useApiClient';
 import { CharacterSelect } from '../components/CharacterSelect';
 import { GroupBase } from 'react-select';
@@ -13,6 +13,16 @@ import { ModeSuccessBox } from '../components/ModeSuccessBox';
 import { useLoadCharacterOptions } from '../utils/loadCharacterOptions';
 import { gotButtonStyle } from '../styles/buttonStyles.ts';
 import '../styles/ClassicPage.css';
+import {
+  checkIfModePlayedToday,
+  updateModeScore,
+} from '../utils/stateManager.tsx';
+import { isToday, parseISO } from 'date-fns';
+import { ScoreModal } from '../components/ScoreModal';
+import { useFetchUser, UserData } from '../hooks/useFetchUser.tsx';
+import { getBerlinDateString } from '../utils/formatDate.ts';
+import { useNavigationData } from '../hooks/useNavigationData.ts';
+import { ToolBar } from '../components/ToolBar.tsx';
 
 interface Character {
   name: string;
@@ -23,11 +33,19 @@ interface Character {
   religion: string;
   seasons: number[];
   titles: string[];
+  actor: string;
 }
 
 interface CharacterOption extends OptionBase {
   label: string;
   value: string;
+}
+
+interface ClassicModeState {
+  classicAttempts?: number;
+  classicAnswers: string[];
+  classicFinished?: boolean;
+  selectedCharacter: Character[];
 }
 
 export const ClassicPage: React.FC = () => {
@@ -38,26 +56,49 @@ export const ClassicPage: React.FC = () => {
     null,
   );
   const [correctGuess, setCorrectGuess] = useState<string>('');
-  const [isOpen, setIsOpen] = useState(false);
+  const [isTitleOpen, setIsTitleOpen] = useState(false);
+  const [isActorOpen, setIsActorOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const client = useApiClient();
+  const { user, isPlayedToday, setIsPlayedToday } = useFetchUser(0);
+  const { label, navigationUrl } = useNavigationData(user?.id);
 
   const getCharacterOfTheDay = (characters: Character[]) => {
-    const date = new Date();
-    const berlinTime = date.toLocaleString('en-US', {
-      timeZone: 'Europe/Berlin',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
-    const hash = murmurhash.v3(berlinTime);
+    const hash = murmurhash.v3(getBerlinDateString());
     const index = hash % characters.length;
     return characters[index];
   };
 
-  useEffect(() => {
-    setIncorrectGuesses([]);
-    setSelectedCharacter([]);
+  const checkIfModePlayedTodayWrapper = (
+    user: UserData,
+    modeIndex: number,
+  ): boolean => {
+    const lastPlayedDate = user.score.lastPlayed
+      ? parseISO(user.score.lastPlayed)
+      : null;
 
+    if (!(lastPlayedDate && isToday(lastPlayedDate))) {
+      initializeClassicModeState(user.id);
+    }
+    return checkIfModePlayedToday(user, modeIndex, client);
+  };
+
+  const initializeClassicModeState = (userId: string | undefined) => {
+    const pageState = localStorage.getItem(userId || '');
+    if (pageState) {
+      const { classicAnswers, classicFinished, selectedCharacter } =
+        JSON.parse(pageState);
+      if (classicFinished) {
+        setCorrectGuess(classicAnswers[0]);
+        setIncorrectGuesses(classicAnswers.slice(1));
+      } else {
+        setIncorrectGuesses(classicAnswers || []);
+      }
+      setSelectedCharacter(selectedCharacter || []);
+    }
+  };
+
+  useEffect(() => {
     const fetchCharacters = async () => {
       try {
         const response = await client.getCharacters();
@@ -79,11 +120,25 @@ export const ClassicPage: React.FC = () => {
     fetchCharacters();
   }, [client]);
 
+  useEffect(() => {
+    if (user) {
+      const playedToday = checkIfModePlayedTodayWrapper(user, 0);
+      setIsPlayedToday(playedToday);
+      initializeClassicModeState(user.id);
+    }
+  }, [user, setIsPlayedToday]);
+
   const handleCharacterSelect = (selected: CharacterOption | null) => {
     if (selected) {
       const selectedChar = allCharacters.find(
         (char) => char.name === selected.value,
       );
+      let classicModeStates: ClassicModeState = {
+        classicAnswers: [selected.value, ...incorrectGuesses],
+        selectedCharacter: selectedChar
+          ? [selectedChar, ...selectedCharacter]
+          : selectedCharacter,
+      };
       if (selectedChar) {
         setSelectedCharacter([selectedChar, ...selectedCharacter]);
         setAllCharacters(
@@ -92,11 +147,29 @@ export const ClassicPage: React.FC = () => {
       }
       if (solutionCharacter && selected.value === solutionCharacter.name) {
         setCorrectGuess(selected.value);
-        const attempts = incorrectGuesses.length + 1;
-        localStorage.setItem('classicModeAttempts', attempts.toString());
+        classicModeStates = {
+          ...classicModeStates,
+          classicAttempts: incorrectGuesses.length + 1,
+          classicFinished: true,
+        };
+
+        if (user) {
+          if (updateModeScore(user, 0, incorrectGuesses.length, client)) {
+            setIsModalOpen(true);
+          }
+        }
       } else {
-        setIncorrectGuesses([...incorrectGuesses, selected.value]);
+        setIncorrectGuesses([selected.value, ...incorrectGuesses]);
       }
+      const storedPageStates = localStorage.getItem(user?.id || '');
+      let currentPageStates = storedPageStates
+        ? JSON.parse(storedPageStates)
+        : {};
+      currentPageStates = {
+        ...currentPageStates,
+        ...classicModeStates,
+      };
+      localStorage.setItem(user?.id || '', JSON.stringify(currentPageStates));
     }
   };
 
@@ -107,6 +180,7 @@ export const ClassicPage: React.FC = () => {
       <VStack spacing={4} className="classic-page">
         <ModeNavigationBox />
         <BaseBox className="classic-box">
+          <ToolBar mode={'classic'} user={user} />
           <Text textAlign="center">
             Guess today's Game of Thrones character!
           </Text>
@@ -115,18 +189,48 @@ export const ClassicPage: React.FC = () => {
           <Text textAlign="center">{solutionCharacter?.name}</Text>
           <HStack justifyContent="center">
             <Button
-              onClick={() => setIsOpen(true)}
-              isDisabled={incorrectGuesses.length < 5}
+              onClick={() => setIsTitleOpen(!isTitleOpen)}
+              isDisabled={incorrectGuesses.length < 3}
               sx={gotButtonStyle}
             >
               Titles
             </Button>
+            <Button
+              onClick={() => setIsActorOpen(!isActorOpen)}
+              isDisabled={incorrectGuesses.length < 6}
+              sx={gotButtonStyle}
+            >
+              Actor
+            </Button>
           </HStack>
-          {isOpen && (
-            <VStack mt={4} alignItems="center">
+          {isTitleOpen && (
+            <VStack
+              mt={4}
+              alignItems="center"
+              border="1px solid"
+              borderColor="gray.300"
+              borderRadius="md"
+              p={4}
+              bg="rgb(120, 0, 0)"
+              textColor={'white'}
+            >
               {solutionCharacter?.titles.map((title, index) => (
                 <Text key={index}>{title}</Text>
               ))}
+            </VStack>
+          )}
+          {isActorOpen && (
+            <VStack
+              mt={4}
+              alignItems="center"
+              border="1px solid"
+              borderColor="gray.300"
+              borderRadius="md"
+              p={4}
+              bg="rgb(120, 0, 0)"
+              textColor={'white'}
+            >
+              <Text>{solutionCharacter?.actor}</Text>
             </VStack>
           )}
         </BaseBox>
@@ -144,7 +248,8 @@ export const ClassicPage: React.FC = () => {
               },
               onChange: handleCharacterSelect,
               value: null,
-              isDisabled: !!correctGuess,
+              isDisabled: !!correctGuess || isPlayedToday,
+              components: { DropdownIndicator: () => null },
             }}
           />
         </BaseBox>
@@ -152,14 +257,21 @@ export const ClassicPage: React.FC = () => {
           <ModeSuccessBox
             correctGuess={correctGuess}
             attempts={incorrectGuesses.length + 1}
-            label="Quote"
-            url="/quote"
+            label={label}
+            url={navigationUrl}
           />
         )}
         <CharacterGrid
           characterData={selectedCharacter}
           solutionCharacter={solutionCharacter}
         />
+        {user && isModalOpen && (
+          <ScoreModal
+            user={user}
+            show={isModalOpen}
+            handleClose={() => setIsModalOpen(false)}
+          />
+        )}
       </VStack>
     </BaseLayout>
   );

@@ -3,7 +3,7 @@ import { AuthController } from '../controller/auth.controller';
 import { UserController } from '../controller/user.controller';
 import { ScoreController } from '../controller/score.controller';
 import { CharacterController } from '../controller/character.controller';
-import { verifyAccess } from '../middleware/auth.middleware';
+import { verifyAccess, verifyAdminAccess } from '../middleware/auth.middleware';
 
 export class Routes {
   private router: Router;
@@ -47,17 +47,14 @@ export class Routes {
       '/users/search',
       this.userController.getUsersByNameSearch.bind(this.userController),
     );
-    this.router.get(
-      '/users/username/:username',
-      this.userController.getUserByUsername.bind(this.userController),
-    );
-    this.router.get(
-      '/users/email/:email',
-      this.userController.getUserByEmail.bind(this.userController),
-    );
     this.router.put(
       '/users',
       this.userController.updateUser.bind(this.userController),
+    );
+    this.router.put(
+      '/users/is_admin/:userId',
+      verifyAdminAccess,
+      this.userController.updateAdminState.bind(this.userController),
     );
     this.router.delete(
       '/users',
@@ -66,34 +63,31 @@ export class Routes {
 
     // Score routes
     this.router.use('/scores', verifyAccess);
-    this.router.get(
-      '/scores/:userId',
-      this.scoreController.getScoreByUserId.bind(this.scoreController),
-    );
     this.router.put(
       '/scores',
       this.scoreController.updateScoreByUserId.bind(this.scoreController),
     );
     this.router.put(
-      '/scores/daily',
-      this.scoreController.updateDailyScoreByUserId.bind(this.scoreController),
+      '/scores/daily_streak',
+      this.scoreController.updateDailyOrStreakByUserId.bind(
+        this.scoreController,
+      ),
     );
 
     // Character routes
+    this.router.use('/characters', verifyAccess);
     this.router.post(
       '/characters',
-      this.characterController.createCharacter.bind(this.characterController),
+      verifyAdminAccess,
+      this.characterController.createCharacters.bind(this.characterController),
     );
     this.router.get(
       '/characters',
       this.characterController.getCharacters.bind(this.characterController),
     );
-    this.router.get(
-      '/characters/:_id',
-      this.characterController.getCharacterById.bind(this.characterController),
-    );
     this.router.delete(
       '/characters',
+      verifyAdminAccess,
       this.characterController.deleteAllCharacters.bind(
         this.characterController,
       ),

@@ -1,11 +1,16 @@
 import { AuthController } from '../src/controller/auth.controller';
 import { UserRepository } from '../src/database/repository/user.repository';
 import { TestDatabase } from './helpers/database';
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { PasswordHasher } from '../src/utils/password-hasher';
 import { Jwt } from '../src/utils/jwt';
 import { DI } from '../src/dependency-injection';
 import { ScoreRepository } from '../src/database/repository/score.repository';
+import { globalErrorHandler } from '../src/utils/global-error';
+
+interface CustomError extends Error {
+  statusCode?: number;
+}
 
 const TEST_IDS = {
   USER_ID: '123e4567-e89b-12d3-a456-426614174000',
@@ -17,6 +22,7 @@ describe('AuthController', () => {
   let scoreRepository: ScoreRepository;
   let req: Partial<Request>;
   let res: Partial<Response>;
+  let next: Partial<NextFunction>;
   let testDatabase: TestDatabase;
 
   beforeAll(async () => {
@@ -45,12 +51,21 @@ describe('AuthController', () => {
       json: jest.fn(),
       send: jest.fn(),
     };
+    next = jest.fn();
   });
 
   afterAll(async () => {
     await testDatabase.clearDatabase();
     await testDatabase.teardown();
   });
+
+  const executeWithErrorHandler = async (fn: () => Promise<void>) => {
+    try {
+      await fn();
+    } catch (err) {
+      globalErrorHandler(err as CustomError, req as Request, res as Response, next as NextFunction);
+    }
+  };
 
   describe('registerUser', () => {
     it('should register a new user', async () => {
@@ -61,7 +76,7 @@ describe('AuthController', () => {
         username: 'testuser',
       };
 
-      await authController.registerUser(req as Request, res as Response);
+      await executeWithErrorHandler(() => authController.registerUser(req as Request, res as Response));
 
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.send).toHaveBeenCalledWith(
@@ -74,18 +89,32 @@ describe('AuthController', () => {
       );
     });
 
-    it('should return 400 if email or username already exists', async () => {
+    it('should return 400 if username already exists', async () => {
       req.body = {
         id: TEST_IDS.USER_ID,
-        email: 'test@example.com',
+        email: 'testdifferent@example.com',
         password: 'password123',
         username: 'testuser',
       };
 
-      await authController.registerUser(req as Request, res as Response);
+      await executeWithErrorHandler(() => authController.registerUser(req as Request, res as Response));
 
       expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.send).toHaveBeenCalledWith('User already exists');
+      expect(res.send).toHaveBeenCalledWith({ errors: ['Username already in use'] });
+    });
+
+    it('should return 400 if email already exists', async () => {
+      req.body = {
+        id: TEST_IDS.USER_ID,
+        email: 'test@example.com',
+        password: 'password123',
+        username: 'testuserdifferent',
+      };
+
+      await executeWithErrorHandler(() => authController.registerUser(req as Request, res as Response));
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.send).toHaveBeenCalledWith({ errors: ['Email already in use'] });
     });
 
     it('should return 400 if the input data is invalid', async () => {
@@ -95,15 +124,18 @@ describe('AuthController', () => {
         username: 'testuser',
       };
 
-      await authController.registerUser(req as Request, res as Response);
+      await executeWithErrorHandler(() => authController.registerUser(req as Request, res as Response));
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({
-        errors: expect.arrayContaining([
-          expect.objectContaining({
+        errors: [
+          {
+            validation: 'email',
+            code: 'invalid_string',
             message: 'Invalid email',
-          }),
-        ]),
+            path: ['email'],
+          },
+        ],
       });
     });
   });
@@ -116,7 +148,7 @@ describe('AuthController', () => {
         password: 'password123',
       };
 
-      await authController.loginUser(req as Request, res as Response);
+      await executeWithErrorHandler(() => authController.loginUser(req as Request, res as Response));
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledWith(
@@ -133,7 +165,7 @@ describe('AuthController', () => {
         password: 'password123',
       };
 
-      await authController.loginUser(req as Request, res as Response);
+      await executeWithErrorHandler(() => authController.loginUser(req as Request, res as Response));
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledWith(
@@ -150,7 +182,7 @@ describe('AuthController', () => {
         password: 'password123',
       };
 
-      await authController.loginUser(req as Request, res as Response);
+      await executeWithErrorHandler(() => authController.loginUser(req as Request, res as Response));
 
       expect(res.status).toHaveBeenCalledWith(401);
       expect(res.json).toHaveBeenCalledWith({
@@ -165,7 +197,7 @@ describe('AuthController', () => {
         password: 'wrongpassword',
       };
 
-      await authController.loginUser(req as Request, res as Response);
+      await executeWithErrorHandler(() => authController.loginUser(req as Request, res as Response));
 
       expect(res.status).toHaveBeenCalledWith(401);
       expect(res.send).toHaveBeenCalledWith({
@@ -180,7 +212,7 @@ describe('AuthController', () => {
         password: 'password123',
       };
 
-      await authController.loginUser(req as Request, res as Response);
+      await executeWithErrorHandler(() => authController.loginUser(req as Request, res as Response));
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({
@@ -195,7 +227,7 @@ describe('AuthController', () => {
         password: 'password123',
       };
 
-      await authController.loginUser(req as Request, res as Response);
+      await executeWithErrorHandler(() => authController.loginUser(req as Request, res as Response));
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({
@@ -210,7 +242,7 @@ describe('AuthController', () => {
         password: 'short',
       };
 
-      await authController.loginUser(req as Request, res as Response);
+      await executeWithErrorHandler(() => authController.loginUser(req as Request, res as Response));
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({

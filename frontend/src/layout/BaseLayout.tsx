@@ -52,6 +52,30 @@ export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
       >
         {children}
       </chakra.main>
+      <Box
+        as="footer"
+        p={4}
+        bg={'rgb(110, 18, 11)'}
+        color="white"
+        textAlign="center"
+        mt={10}
+      >
+        <Box mb={4}>
+          <a href="mailto:support@GoTdle.com">Contact Us</a>
+        </Box>
+        <Box mb={4}>
+          <a
+            href="https://code.fbi.h-da.de/sthiohnoo/gotdle"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            About
+          </a>
+        </Box>
+        <Box mb={4}>
+          &copy; {new Date().getFullYear()} HiCo-BenRun. All rights reserved.
+        </Box>
+      </Box>
     </Box>
   );
 };
