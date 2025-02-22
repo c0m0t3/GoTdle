@@ -33,7 +33,7 @@ testCypress:
     - npm install
     - npm run dev &
     - sleep 10
-    - npx cypress run --browser firefox
+    - npx cypress run --browser firefox --reporter spec
 
 
 testBackend:
