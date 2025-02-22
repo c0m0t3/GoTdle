@@ -303,22 +303,6 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 - The username needs to be unique and the email needs to be a valid email address.
 - The password needs to be at least 8 characters long.
 
-## Admin Dashboard
-
-- [ ] **Displayed when the user is logged in and has the role of an admin:**
-- The dashboard can toggle between User List and Manage Characters.
-- In User List the admin can:
-    - Make other users admins or remove the admin role from other admins.
-    - View all users, which can be filtered by admin role or searched by username.
-    - Note: The admin can't remove the admin role from himself.
-- In Manage Characters the admin can:
-    - Upload a JSON file to create new characters in the database.
-        - A preview is provided to show the characters.
-    - Manually type character information to create new characters.
-    - Delete all characters.
-    - A list of all characters is displayed below.
-        - Clicking on a character shows a more detailed view.
-
 ## Routes
 
 All routes, except for user registration/login, are secured so that only authenticated users, meaning logged-in users,
