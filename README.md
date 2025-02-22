@@ -156,6 +156,7 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 - [Profile](#profile)
 - [Login](#login)
 - [Register](#register)
+- [Admin Dashboard](#admin-dashboard)
 
 ## Base
 
@@ -275,6 +276,13 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 - If the user is already registered, the user can click on the "Log in here!" text to change to the login page.
 - The username needs to be unique and the email needs to be a valid email address.
 - The password needs to be at least 8 characters long.
+
+## Admin Dashboard
+
+- [ ] **Displayed when the user is logged in and has the role of an admin:**
+- The admin can make other users admins or remove the admin role from other admins.
+- The admin can't remove the admin role from himself.
+- The admin can manage the characters.
 
 ## Routes
 
