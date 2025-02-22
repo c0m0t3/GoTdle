@@ -247,6 +247,7 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 - Shows a table of all users
 - contains the user's name, rank, created at, current streak, longest streak and scores in each mode.
 - can be sorted by all columns by clicking on the column name and will be indicated by an arrow.
+- The user can search for a user by username.
 
 ## Profile
 
