@@ -145,18 +145,25 @@ export const ScoreboardPage = () => {
   const getSortIcon = (
     key: keyof User | keyof Score | 'classicMode' | 'quoteMode' | 'imageMode',
   ) => {
-    if (sortConfig?.key === key) {
-      return sortConfig.direction === 'ascending' ? (
-        <span style={{ marginLeft: '0.5em' }}>
-          <FaArrowUp />
-        </span>
-      ) : (
-        <span style={{ marginLeft: '0.5em' }}>
-          <FaArrowDown />
-        </span>
-      );
-    }
-    return null;
+    const isActive = sortConfig?.key === key;
+    const activeDirection =
+      sortConfig?.direction === 'ascending' ? 'up' : 'down';
+
+    return (
+      <span
+        style={{ marginLeft: '0.5em', display: 'flex', alignItems: 'center' }}
+      >
+        <FaArrowUp
+          size={isActive && activeDirection === 'up' ? 18 : 12}
+          color={isActive && activeDirection === 'up' ? 'black' : 'lightgray'}
+          style={{ marginRight: '4px' }}
+        />
+        <FaArrowDown
+          size={isActive && activeDirection === 'down' ? 18 : 12}
+          color={isActive && activeDirection === 'down' ? 'black' : 'lightgray'}
+        />
+      </span>
+    );
   };
 
   return (
