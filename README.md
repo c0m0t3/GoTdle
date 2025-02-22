@@ -304,6 +304,9 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 
 ## Routes
 
+All routes, except for user registration/login, are secured so that only authenticated users, meaning logged-in users,
+have access. Additionally, some routes are also protected so that only users with admin rights can access them.
+
 __User Routes:__
 
 - [ ] GET /users
