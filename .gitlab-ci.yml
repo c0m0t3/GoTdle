@@ -20,6 +20,17 @@ stages:
 before_script:
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_JOB_TOKEN" "$CI_REGISTRY"
 
+
+cypress_tests:
+  image: cypress/included:12.0.0
+  stage: test
+  script:
+    - cd frontend
+    - rm package-lock.json
+    - npm install
+    - npx cypress install
+    - npx cypress run
+
 testBackend:
   stage: test
   image: node:22
@@ -36,15 +47,6 @@ testFrontendComponent:
     - rm package-lock.json
     - npm install
     - npm test
-
-cypress_tests:
-  image: cypress/included:12.0.0
-  stage: test
-  script:
-    - cd frontend
-    - rm package-lock.json
-    - npm install
-    - npx cypress run
 
 build-backend:
   stage: build
