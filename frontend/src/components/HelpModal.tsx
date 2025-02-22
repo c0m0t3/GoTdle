@@ -195,6 +195,21 @@ const QuoteHelp = () => (
       character you guessed. This indicates that your guess was wrong, and you
       can try again with a different character.
     </Text>
+    <Text fontSize={'xl'} fontWeight={'semibold'} textAlign={'center'} mt={7}>
+      Clues
+    </Text>
+    <Divider borderColor="rgb(120, 0, 0)" mt={3} mb={5} />
+    <Text mb={2}>
+      To help you find the character, you'll unlock clues after making several
+      guesses.
+    </Text>
+    <Text>
+      <Text as="span" fontWeight="bold">
+        House:
+      </Text>{' '}
+      Indicates which house the character belongs to.
+    </Text>
+    <Divider borderColor="rgb(120, 0, 0)" mt={3} mb={5} />
     <Text mt={2}>keep guessing until you find the correct character!</Text>
     <Text mt={2}>GL HF</Text>
   </>
@@ -229,6 +244,21 @@ const ImageHelp = () => (
       the image will be reduced, allowing you to make a more informed guess next
       time.
     </Text>
+    <Text fontSize={'xl'} fontWeight={'semibold'} textAlign={'center'} mt={7}>
+      Clues
+    </Text>
+    <Divider borderColor="rgb(120, 0, 0)" mt={3} mb={5} />
+    <Text mb={2}>
+      To help you find the character, you'll unlock clues after making several
+      guesses.
+    </Text>
+    <Text>
+      <Text as="span" fontWeight="bold">
+        Title:
+      </Text>{' '}
+      Provides a title of the character.
+    </Text>
+    <Divider borderColor="rgb(120, 0, 0)" mt={3} mb={5} />
     <Text mt={2}>keep guessing until you find the correct character!</Text>
     <Text mt={2}>GL HF</Text>
   </>
