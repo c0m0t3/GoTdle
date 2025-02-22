@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
-import profileIcon from '../assets/profile-icon.png';
+import profileIcon from '../assets/profileIcon.png';
 import { useAuth } from '../providers/AuthProvider.tsx';
 
 interface ProfileMenuProps {
