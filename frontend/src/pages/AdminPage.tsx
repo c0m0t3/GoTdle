@@ -14,6 +14,7 @@ import { ManageCharacter } from './adminPageComponents/ManageCharacter.tsx';
 import { ManageUser } from './adminPageComponents/ManageUser.tsx';
 import { useState } from 'react';
 import { CharacterCard } from './adminPageComponents/CharacterCard.tsx';
+import { TodaysCharacter } from './adminPageComponents/TodaysCharacter.tsx';
 
 export const AdminPage = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -30,6 +31,7 @@ export const AdminPage = () => {
               <TabList mt={2}>
                 <Tab>User List</Tab>
                 <Tab>Manage Characters</Tab>
+                <Tab>Today's Characters</Tab>
               </TabList>
             </BaseBox>
 
@@ -40,6 +42,9 @@ export const AdminPage = () => {
                 </TabPanel>
                 <TabPanel>
                   <ManageCharacter />
+                </TabPanel>
+                <TabPanel>
+                  <TodaysCharacter />
                 </TabPanel>
               </TabPanels>
             </BaseBox>
