@@ -7,6 +7,7 @@ export interface UserData {
   email: string;
   username: string;
   createdAt: string;
+  isAdmin: boolean;
   score: {
     streak: number;
     lastPlayed: string | null;

@@ -47,7 +47,6 @@ export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
         alignItems="center"
         ml="auto"
         mr="auto"
-        maxWidth="90rem"
         width="100%"
       >
         {children}

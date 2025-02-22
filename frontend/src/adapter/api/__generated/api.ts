@@ -1052,19 +1052,15 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
          * 
          * @summary Update Admin State
          * @param {string} userId 
-         * @param {string} userId2 
          * @param {PutUpdateAdminStateRequest} [putUpdateAdminStateRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        putUpdateAdminState: async (userId: string, userId2: string, putUpdateAdminStateRequest?: PutUpdateAdminStateRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        putUpdateAdminState: async (userId: string, putUpdateAdminStateRequest?: PutUpdateAdminStateRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'userId' is not null or undefined
             assertParamExists('putUpdateAdminState', 'userId', userId)
-            // verify required parameter 'userId2' is not null or undefined
-            assertParamExists('putUpdateAdminState', 'userId2', userId2)
             const localVarPath = `/users/is_admin/{userId}`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)))
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId2)));
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1285,13 +1281,12 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * 
          * @summary Update Admin State
          * @param {string} userId 
-         * @param {string} userId2 
          * @param {PutUpdateAdminStateRequest} [putUpdateAdminStateRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async putUpdateAdminState(userId: string, userId2: string, putUpdateAdminStateRequest?: PutUpdateAdminStateRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.putUpdateAdminState(userId, userId2, putUpdateAdminStateRequest, options);
+        async putUpdateAdminState(userId: string, putUpdateAdminStateRequest?: PutUpdateAdminStateRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.putUpdateAdminState(userId, putUpdateAdminStateRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.putUpdateAdminState']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1429,13 +1424,12 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * 
          * @summary Update Admin State
          * @param {string} userId 
-         * @param {string} userId2 
          * @param {PutUpdateAdminStateRequest} [putUpdateAdminStateRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        putUpdateAdminState(userId: string, userId2: string, putUpdateAdminStateRequest?: PutUpdateAdminStateRequest, options?: RawAxiosRequestConfig): AxiosPromise<User> {
-            return localVarFp.putUpdateAdminState(userId, userId2, putUpdateAdminStateRequest, options).then((request) => request(axios, basePath));
+        putUpdateAdminState(userId: string, putUpdateAdminStateRequest?: PutUpdateAdminStateRequest, options?: RawAxiosRequestConfig): AxiosPromise<User> {
+            return localVarFp.putUpdateAdminState(userId, putUpdateAdminStateRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Update logged user. UserId in Auth-Token.
@@ -1589,14 +1583,13 @@ export class DefaultApi extends BaseAPI {
      * 
      * @summary Update Admin State
      * @param {string} userId 
-     * @param {string} userId2 
      * @param {PutUpdateAdminStateRequest} [putUpdateAdminStateRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public putUpdateAdminState(userId: string, userId2: string, putUpdateAdminStateRequest?: PutUpdateAdminStateRequest, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).putUpdateAdminState(userId, userId2, putUpdateAdminStateRequest, options).then((request) => request(this.axios, this.basePath));
+    public putUpdateAdminState(userId: string, putUpdateAdminStateRequest?: PutUpdateAdminStateRequest, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).putUpdateAdminState(userId, putUpdateAdminStateRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
