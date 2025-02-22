@@ -16,3 +16,9 @@ export const gotButtonStyle = {
     borderColor: '#8B4513',
   },
 };
+
+export const gotButtonStyleII = {
+  background: 'rgb(250, 240, 220)',
+  border: '2px solid rgb(200, 160, 120)',
+  borderRadius: '8px',
+};
