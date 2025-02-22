@@ -129,6 +129,25 @@ describe('UserController', () => {
       expect(res.status).toHaveBeenCalledWith(204);
       expect(res.send).toHaveBeenCalled();
     });
+
+    it('should return 401 if password is incorrect', async () => {
+      const hashedPassword = await passwordHasher.hashPassword(
+        TEST_USER_NON_ADMIN.password,
+      );
+      const createdUser = await userRepository.createUser({
+        ...TEST_USER_NON_ADMIN,
+        password: hashedPassword,
+      });
+      req.user = { id: createdUser.id, password: hashedPassword };
+      req.body = { password: 'wrongpassword' };
+
+      await userController.deleteUser(req as Request, res as Response);
+
+      expect(res.status).toHaveBeenCalledWith(401);
+      expect(res.send).toHaveBeenCalledWith({
+        errors: ['The provided password is incorrect. Please try again.'],
+      });
+    });
   });
 
   describe('getUsersByNameSearch', () => {
@@ -186,6 +205,7 @@ describe('UserController', () => {
       );
     });
   });
+
   describe('updateAdminState', () => {
     it('should update the admin state of a user', async () => {
       req.params = { userId: TEST_USER.id };

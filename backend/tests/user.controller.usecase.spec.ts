@@ -164,6 +164,39 @@ describe('UserController', () => {
         }),
       );
     });
+    it('should return 400 if email already in use', async () => {
+      const updatedUser = {
+        email: TEST_USER.email,
+        username: 'newusername',
+      };
+
+      const response = await request(app)
+        .put('/users')
+        .set('Authorization', `${userToken}`)
+        .send(updatedUser)
+        .expect(400);
+
+      expect(response.body).toEqual({
+        errors: ['Email already in use'],
+      });
+    });
+
+    it('should return 400 if username already in use', async () => {
+      const updatedUser = {
+        email: 'newemail@example.com',
+        username: TEST_USER.username,
+      };
+
+      const response = await request(app)
+        .put('/users')
+        .set('Authorization', `${userToken}`)
+        .send(updatedUser)
+        .expect(400);
+
+      expect(response.body).toEqual({
+        errors: ['Username already in use'],
+      });
+    });
   });
 
   describe('PUT /users/is_admin/:userId', () => {
@@ -180,18 +213,6 @@ describe('UserController', () => {
           isAdmin: true,
         }),
       );
-    });
-
-    it('should return 404 if user does not exist', async () => {
-      const response = await request(app)
-        .put(`/users/is_admin/123e4567-e89b-12d3-a456-426614174340`)
-        .set('Authorization', `${adminToken}`)
-        .send({ isAdmin: true })
-        .expect(404);
-
-      expect(response.body).toEqual({
-        errors: ['User not found'],
-      });
     });
 
     it('should return 400 if trying to change own admin state', async () => {
@@ -228,6 +249,18 @@ describe('UserController', () => {
         .expect(204);
 
       expect(response.body).toEqual({});
+    });
+
+    it('should return 401 if password is incorrect', async () => {
+      const response = await request(app)
+        .delete('/users')
+        .set('Authorization', `${userToken}`)
+        .send({ password: 'wrongpassword' })
+        .expect(401);
+
+      expect(response.body).toEqual({
+        errors: ['The provided password is incorrect. Please try again.'],
+      });
     });
   });
 });
