@@ -26,7 +26,7 @@ testCypress:
   script:
     - cd backend
     - npm install
-    - npm dev &
+    - npm run dev &
     - cd ..
     - cd frontend
     - rm package-lock.json
