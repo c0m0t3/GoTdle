@@ -3,20 +3,8 @@ import { UserRepository } from '../src/database/repository/user.repository';
 import { UserController } from '../src/controller/user.controller';
 import { Request, Response } from 'express';
 import { PasswordHasher } from '../src/utils/password-hasher';
-
-const TEST_USER = {
-  id: '123e4567-e89b-12d3-a456-426614174000',
-  email: 'test@example.com',
-  password: 'password123',
-  username: 'testuser',
-  createdAt: new Date(),
-};
-
-const TEST_USER2 = {
-  email: 'test@example2.com',
-  password: 'password123',
-  username: 'testuser2',
-};
+import { verifyAdminAccess } from '../src/middleware/auth.middleware';
+import { TEST_USER, TEST_USER_NON_ADMIN } from './helpers/helpData';
 
 describe('UserController', () => {
   let testDatabase: TestDatabase;
@@ -34,16 +22,16 @@ describe('UserController', () => {
     userController = new UserController(userRepository, passwordHasher);
   }, 100000);
 
-  beforeEach(() => {
+  beforeEach(async () => {
     req = {
       query: {},
-      user: { id: TEST_USER.id },
     };
     res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
       send: jest.fn(),
     };
+    await userRepository.createUser(TEST_USER);
   });
 
   afterEach(async () => {
@@ -56,15 +44,13 @@ describe('UserController', () => {
 
   describe('getAllUsers', () => {
     it('should return all users', async () => {
-      await userRepository.createUser(TEST_USER);
-
       await userController.getAllUsers(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledWith(
         expect.arrayContaining([
           expect.objectContaining({
-            username: 'testuser',
+            username: 'adminuser',
           }),
         ]),
       );
@@ -73,15 +59,14 @@ describe('UserController', () => {
 
   describe('getUserById', () => {
     it('should return a user by ID', async () => {
-      const createdUser = await userRepository.createUser(TEST_USER);
-      req.user = { id: createdUser.id };
+      req.user = { id: TEST_USER.id };
 
       await userController.getUserById(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledWith(
         expect.objectContaining({
-          username: 'testuser',
+          username: 'adminuser',
         }),
       );
     });
@@ -89,8 +74,7 @@ describe('UserController', () => {
 
   describe('updateUser', () => {
     it('should update a user', async () => {
-      const createdUser = await userRepository.createUser(TEST_USER);
-      req.user = { id: createdUser.id };
+      req.user = { id: TEST_USER.id };
       req.body = { username: 'updateduser' };
 
       await userController.updateUser(req as Request, res as Response);
@@ -104,9 +88,8 @@ describe('UserController', () => {
     });
 
     it('should return 400 if email already in use', async () => {
-      await userRepository.createUser(TEST_USER);
       req.user = { id: TEST_USER.id };
-      req.body = { email: 'test@example.com' };
+      req.body = { email: 'admin@example.com' };
 
       await userController.updateUser(req as Request, res as Response);
 
@@ -117,9 +100,8 @@ describe('UserController', () => {
     });
 
     it('should return 400 if username already in use', async () => {
-      await userRepository.createUser(TEST_USER);
       req.user = { id: TEST_USER.id };
-      req.body = { username: 'testuser' };
+      req.body = { username: 'adminuser' };
 
       await userController.updateUser(req as Request, res as Response);
 
@@ -132,8 +114,13 @@ describe('UserController', () => {
 
   describe('deleteUser', () => {
     it('should delete a user', async () => {
-      const hashedPassword = await passwordHasher.hashPassword(TEST_USER.password);
-      const createdUser = await userRepository.createUser({ ...TEST_USER, password: hashedPassword });
+      const hashedPassword = await passwordHasher.hashPassword(
+        TEST_USER_NON_ADMIN.password,
+      );
+      const createdUser = await userRepository.createUser({
+        ...TEST_USER_NON_ADMIN,
+        password: hashedPassword,
+      });
       req.user = { id: createdUser.id, password: hashedPassword };
       req.body = { password: 'password123' };
 
@@ -142,61 +129,138 @@ describe('UserController', () => {
       expect(res.status).toHaveBeenCalledWith(204);
       expect(res.send).toHaveBeenCalled();
     });
+
+    it('should return 401 if password is incorrect', async () => {
+      const hashedPassword = await passwordHasher.hashPassword(
+        TEST_USER_NON_ADMIN.password,
+      );
+      const createdUser = await userRepository.createUser({
+        ...TEST_USER_NON_ADMIN,
+        password: hashedPassword,
+      });
+      req.user = { id: createdUser.id, password: hashedPassword };
+      req.body = { password: 'wrongpassword' };
+
+      await userController.deleteUser(req as Request, res as Response);
+
+      expect(res.status).toHaveBeenCalledWith(401);
+      expect(res.send).toHaveBeenCalledWith({
+        errors: ['The provided password is incorrect. Please try again.'],
+      });
+    });
   });
 
   describe('getUsersByNameSearch', () => {
     it('should return users by name search', async () => {
-      await userRepository.createUser(TEST_USER);
-      await userRepository.createUser(TEST_USER2);
+      req.query = { username: 'adminuser' };
 
-      req.query = { username: 'testuser' };
-
-      await userController.getUsersByNameSearch(req as Request, res as Response);
+      await userController.getUsersByNameSearch(
+        req as Request,
+        res as Response,
+      );
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledWith(
         expect.arrayContaining([
           expect.objectContaining({
-            username: 'testuser',
+            username: 'adminuser',
           }),
         ]),
       );
     });
 
     it('should return users by name search with score relation', async () => {
-      await userRepository.createUser(TEST_USER);
-      await userRepository.createUser(TEST_USER2);
+      req.query = { username: 'adminuser', withScoreRelation: 'true' };
 
-      req.query = { username: 'testuser', withScoreRelation: 'true' };
-
-      await userController.getUsersByNameSearch(req as Request, res as Response);
+      await userController.getUsersByNameSearch(
+        req as Request,
+        res as Response,
+      );
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledWith(
         expect.arrayContaining([
           expect.objectContaining({
-            username: 'testuser',
+            username: 'adminuser',
           }),
         ]),
       );
     });
 
     it('should return users by name search without score relation', async () => {
-      await userRepository.createUser(TEST_USER);
-      await userRepository.createUser(TEST_USER2);
+      req.query = { username: 'adminuser', withScoreRelation: 'false' };
 
-      req.query = { username: 'testuser', withScoreRelation: 'false' };
-
-      await userController.getUsersByNameSearch(req as Request, res as Response);
+      await userController.getUsersByNameSearch(
+        req as Request,
+        res as Response,
+      );
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledWith(
         expect.arrayContaining([
           expect.objectContaining({
-            username: 'testuser',
+            username: 'adminuser',
           }),
         ]),
       );
+    });
+  });
+
+  describe('updateAdminState', () => {
+    it('should update the admin state of a user', async () => {
+      req.params = { userId: TEST_USER.id };
+      req.user = { isAdmin: true };
+      req.body = { isAdmin: true };
+
+      await verifyAdminAccess(req as Request, res as Response, jest.fn());
+      await userController.updateAdminState(req as Request, res as Response);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: TEST_USER.id,
+          isAdmin: true,
+        }),
+      );
+    });
+
+    it('should return 404 if user does not exist', async () => {
+      req.params = { userId: '123e4567-e89b-12d3-a456-556614774000' };
+      req.user = { isAdmin: true };
+      req.body = { isAdmin: true };
+
+      await userController.updateAdminState(req as Request, res as Response);
+
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.send).toHaveBeenCalledWith({
+        errors: ['User not found'],
+      });
+    });
+
+    it('should return 403 if user is not an admin', async () => {
+      req.params = { userId: TEST_USER_NON_ADMIN.id };
+      req.user = { isAdmin: false };
+      req.body = { isAdmin: true };
+
+      await verifyAdminAccess(req as Request, res as Response, jest.fn());
+
+      expect(res.status).toHaveBeenCalledWith(403);
+      expect(res.json).toHaveBeenCalledWith({
+        errors: ['Access denied: Admins only'],
+      });
+    });
+
+    it('should return 400 if trying to change own admin state', async () => {
+      req.params = { userId: TEST_USER.id };
+      req.user = { id: TEST_USER.id, isAdmin: true };
+      req.body = { isAdmin: true };
+
+      await userController.updateAdminState(req as Request, res as Response);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.send).toHaveBeenCalledWith({
+        errors: ['Cannot change own admin state'],
+      });
     });
   });
 });

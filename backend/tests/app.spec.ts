@@ -1,10 +1,11 @@
 import request from 'supertest';
 import { Application } from 'express';
 import { initializeDependencyInjection, DI } from '../src/dependency-injection';
+import { Server } from 'http';
 
 describe('App', () => {
   let app: Application;
-  let server: any;
+  let server: Server;
 
   beforeEach(() => {
     initializeDependencyInjection();

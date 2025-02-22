@@ -4,32 +4,42 @@ import { CharacterController } from '../src/controller/character.controller';
 import { CharacterRepository } from '../src/database/repository/character.repository';
 import { TestDatabase } from './helpers/database';
 import { globalErrorHandler } from '../src/utils/global-error';
-
-const TEST_CHARACTER = {
-  _id: 1,
-  name: 'Jon Snow',
-};
-
-const TEST_CHARACTER2 = {
-  _id: 2,
-  name: 'Jon Snow',
-};
+import {
+  prepareAuthentication,
+  verifyAccess,
+  verifyAdminAccess,
+} from '../src/middleware/auth.middleware';
+import { setupTestApp } from './helpers/auth.helper';
+import {
+  TEST_CHARACTER,
+  TEST_CHARACTER2,
+  TEST_USER,
+  TEST_USER_NON_ADMIN,
+} from './helpers/helpData';
 
 describe('CharacterController', () => {
   let app: Application;
   let testDatabase: TestDatabase;
   let characterRepository: CharacterRepository;
   let characterController: CharacterController;
+  let adminToken: string;
+  let userToken: string;
 
   beforeAll(async () => {
     testDatabase = new TestDatabase();
     await testDatabase.setup();
+
     characterRepository = new CharacterRepository(testDatabase.database);
     characterController = new CharacterController(characterRepository);
+
     app = express();
     app.use(express.json());
+    app.use(prepareAuthentication);
+
+    app.use('/characters', verifyAccess);
     app.post(
       '/characters',
+      verifyAdminAccess,
       characterController.createCharacters.bind(characterController),
     );
     app.get(
@@ -38,13 +48,19 @@ describe('CharacterController', () => {
     );
     app.delete(
       '/characters',
+      verifyAdminAccess,
       characterController.deleteAllCharacters.bind(characterController),
     );
+
     app.use(globalErrorHandler);
   }, 100000);
 
-  afterEach(async () => {
+  beforeEach(async () => {
     await testDatabase.clearDatabase();
+    adminToken = (await setupTestApp(TEST_USER, app, testDatabase)).token;
+
+    userToken = (await setupTestApp(TEST_USER_NON_ADMIN, app, testDatabase))
+      .token;
   });
 
   afterAll(async () => {
@@ -55,6 +71,7 @@ describe('CharacterController', () => {
     it('should create a character', async () => {
       const response = await request(app)
         .post('/characters')
+        .set('Authorization', `${adminToken}`)
         .send([TEST_CHARACTER])
         .expect(201);
 
@@ -63,11 +80,25 @@ describe('CharacterController', () => {
       );
     });
 
+    it('should return 403 if user is not an admin', async () => {
+      const response = await request(app)
+        .post('/characters')
+        .set('Authorization', `${userToken}`)
+        .send([TEST_CHARACTER])
+        .expect(403);
+
+      expect(response.body.errors).toContain('Access denied: Admins only');
+    });
+
     it('should return 409 if character name already exists', async () => {
-      await request(app).post('/characters').send([TEST_CHARACTER]);
+      await request(app)
+        .post('/characters')
+        .set('Authorization', `${adminToken}`)
+        .send([TEST_CHARACTER]);
 
       const response = await request(app)
         .post('/characters')
+        .set('Authorization', `${adminToken}`)
         .send([TEST_CHARACTER2])
         .expect(409);
 
@@ -76,9 +107,10 @@ describe('CharacterController', () => {
       );
     });
 
-    it('should return 409 if character name already exists when adding multiple characters', async () => {
+    it('should return 409 if character name already is duplicate when adding multiple characters', async () => {
       const response = await request(app)
         .post('/characters')
+        .set('Authorization', `${adminToken}`)
         .send([TEST_CHARACTER, TEST_CHARACTER2])
         .expect(409);
 
@@ -90,9 +122,15 @@ describe('CharacterController', () => {
 
   describe('GET /characters', () => {
     it('should return all characters', async () => {
-      await request(app).post('/characters').send([TEST_CHARACTER]);
+      await request(app)
+        .post('/characters')
+        .set('Authorization', `${adminToken}`)
+        .send([TEST_CHARACTER]);
 
-      const response = await request(app).get('/characters').expect(200);
+      const response = await request(app)
+        .get('/characters')
+        .set('Authorization', `${adminToken}`)
+        .expect(200);
 
       expect(response.body).toEqual(
         expect.arrayContaining([
@@ -106,11 +144,26 @@ describe('CharacterController', () => {
 
   describe('DELETE /characters', () => {
     it('should delete all characters', async () => {
-      await request(app).post('/characters').send([TEST_CHARACTER]);
+      await request(app)
+        .post('/characters')
+        .set('Authorization', `${adminToken}`)
+        .send([TEST_CHARACTER]);
 
-      const response = await request(app).delete('/characters').expect(204);
+      const response = await request(app)
+        .delete('/characters')
+        .set('Authorization', `${adminToken}`)
+        .expect(204);
 
       expect(response.body).toEqual({});
+    });
+
+    it('should return 403 if user is not an admin', async () => {
+      const response = await request(app)
+        .delete('/characters')
+        .set('Authorization', `${userToken}`)
+        .expect(403);
+
+      expect(response.body.errors).toContain('Access denied: Admins only');
     });
   });
 });

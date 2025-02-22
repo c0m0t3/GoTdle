@@ -29,40 +29,53 @@ describe('Routes', () => {
   beforeAll(() => {
     authController = {
       loginUser: jest.fn((_req: Request, res: Response) =>
-        res.status(200).json({ token: 'test-token' })),
+        res.status(200).json({ token: 'test-token' }),
+      ),
       registerUser: jest.fn((_req: Request, res: Response) =>
-        res.status(201).json({ id: TEST_IDS.USER_ID })),
+        res.status(201).json({ id: TEST_IDS.USER_ID }),
+      ),
     } as unknown as AuthController;
 
     userController = {
       getUserById: jest.fn((_req: Request, res: Response) =>
-        res.status(200).json({ id: TEST_IDS.USER_ID })), 
+        res.status(200).json({ id: TEST_IDS.USER_ID }),
+      ),
       updateUser: jest.fn((_req: Request, res: Response) =>
-        res.status(200).json({ id: TEST_IDS.USER_ID })),
+        res.status(200).json({ id: TEST_IDS.USER_ID }),
+      ),
       deleteUser: jest.fn((_req: Request, res: Response) =>
-        res.status(200).json({ id: TEST_IDS.USER_ID })),
+        res.status(200).json({ id: TEST_IDS.USER_ID }),
+      ),
       getAllUsers: jest.fn((_req: Request, res: Response) =>
-        res.status(200).json([{ id: TEST_IDS.USER_ID }])),
+        res.status(200).json([{ id: TEST_IDS.USER_ID }]),
+      ),
       getUsersByNameSearch: jest.fn((_req: Request, res: Response) =>
-        res.status(200).json([{ id: TEST_IDS.USER_ID }])),
+        res.status(200).json([{ id: TEST_IDS.USER_ID }]),
+      ),
       updateAdminState: jest.fn((_req: Request, res: Response) =>
-        res.status(200).json({ id: TEST_IDS.USER_ID, isAdmin: true })),
+        res.status(200).json({ id: TEST_IDS.USER_ID, isAdmin: true }),
+      ),
     } as unknown as UserController;
 
     scoreController = {
       updateScoreByUserId: jest.fn((_req: Request, res: Response) =>
-        res.status(200).json({ userId: TEST_IDS.USER_ID })),
+        res.status(200).json({ userId: TEST_IDS.USER_ID }),
+      ),
       updateDailyOrStreakByUserId: jest.fn((_req: Request, res: Response) =>
-        res.status(200).json({ userId: TEST_IDS.USER_ID })),
+        res.status(200).json({ userId: TEST_IDS.USER_ID }),
+      ),
     } as unknown as ScoreController;
 
     characterController = {
       getCharacters: jest.fn((_req: Request, res: Response) =>
-        res.status(200).json({ userId: TEST_IDS.USER_ID })),
+        res.status(200).json({ userId: TEST_IDS.USER_ID }),
+      ),
       createCharacters: jest.fn((_req: Request, res: Response) =>
-        res.status(200).json({ userId: TEST_IDS.USER_ID })),
+        res.status(200).json({ userId: TEST_IDS.USER_ID }),
+      ),
       deleteAllCharacters: jest.fn((_req: Request, res: Response) =>
-        res.status(204).json({})),
+        res.status(204).json({}),
+      ),
     } as unknown as CharacterController;
 
     const routes = new Routes(
@@ -122,10 +135,7 @@ describe('Routes', () => {
 
   // Score Routes
   it('should call updateScoreByUserId', async () => {
-    await request(app)
-      .put('/scores')
-      .send({ streak: 5 })
-      .expect(200);
+    await request(app).put('/scores').send({ streak: 5 }).expect(200);
     expect(scoreController.updateScoreByUserId).toHaveBeenCalled();
   }, 10000);
 
