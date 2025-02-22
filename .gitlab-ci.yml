@@ -33,6 +33,8 @@ testFrontend:
   stage: testFrontend
   image: node:21
   script:
+    - pwd
+    - rm -rf node_modules package-lock.json
     - cd frontend
     - npm install
     - npm test
