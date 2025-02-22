@@ -193,60 +193,39 @@ export const ScoreboardPage = () => {
               </Box>
               <Table variant="simple">
                 <Thead>
-                  <Tr sx={{ borderBottom: '2px solid black' }}>
+                  <Tr sx={{ borderBottom: '2px solid black' }} cursor="pointer">
                     <Th>Rank</Th>
-                    <Th
-                      onClick={() => requestSort('username')}
-                      sx={{ cursor: 'pointer' }}
-                    >
+                    <Th onClick={() => requestSort('username')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Name {getSortIcon('username')}
                       </div>
                     </Th>
-                    <Th
-                      onClick={() => requestSort('createdAt')}
-                      sx={{ cursor: 'pointer' }}
-                    >
+                    <Th onClick={() => requestSort('createdAt')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Created At {getSortIcon('createdAt')}
                       </div>
                     </Th>
-                    <Th
-                      onClick={() => requestSort('streak')}
-                      sx={{ cursor: 'pointer' }}
-                    >
+                    <Th onClick={() => requestSort('streak')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Current Streak {getSortIcon('streak')}
                       </div>
                     </Th>
-                    <Th
-                      onClick={() => requestSort('longestStreak')}
-                      sx={{ cursor: 'pointer' }}
-                    >
+                    <Th onClick={() => requestSort('longestStreak')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Longest Streak {getSortIcon('longestStreak')}
                       </div>
                     </Th>
-                    <Th
-                      onClick={() => requestSort('classicMode')}
-                      sx={{ cursor: 'pointer' }}
-                    >
+                    <Th onClick={() => requestSort('classicMode')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Classic Mode {getSortIcon('classicMode')}
                       </div>
                     </Th>
-                    <Th
-                      onClick={() => requestSort('quoteMode')}
-                      sx={{ cursor: 'pointer' }}
-                    >
+                    <Th onClick={() => requestSort('quoteMode')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Quote Mode {getSortIcon('quoteMode')}
                       </div>
                     </Th>
-                    <Th
-                      onClick={() => requestSort('imageMode')}
-                      sx={{ cursor: 'pointer' }}
-                    >
+                    <Th onClick={() => requestSort('imageMode')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Image Mode {getSortIcon('imageMode')}
                       </div>
