@@ -149,12 +149,14 @@ export const ManageCharacter = () => {
             return `Object at index ${index}: ${message}`;
           })
           .join('\n');
-      } else if (error instanceof Error) {
-        errorMessage = error.message;
-      } else {
+      } else if (error instanceof AxiosError) {
         const axiosError = error as AxiosError<{ errors?: string[] }>;
         errorMessage =
           axiosError.response?.data?.errors?.[0] || 'An unknown error occurred';
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      } else {
+        errorMessage = 'An unknown error occurred';
       }
       toast({
         title: 'Error',
