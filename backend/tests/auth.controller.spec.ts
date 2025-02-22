@@ -249,5 +249,33 @@ describe('AuthController', () => {
         errors: expect.any(Array),
       });
     });
-  });
+    it('should include isAdmin in the token payload', async () => {
+      req.body = {
+        type: 'email',
+        identifier: 'test@example.com',
+        password: 'password123',
+      };
+
+      await executeWithErrorHandler(() => authController.loginUser(req as Request, res as Response));
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          accessToken: expect.any(String),
+        }),
+      );
+
+      const token = (res.send as jest.Mock).mock.calls[0][0].accessToken;
+      const decodedToken = DI.utils.jwt.verifyToken(token);
+
+      expect(decodedToken).toEqual(
+        expect.objectContaining({
+          id: TEST_IDS.USER_ID,
+          email: "test@example.com",
+          username: "testuser",
+          isAdmin: false,
+        }),
+      );
+    });
+  }); 
 });

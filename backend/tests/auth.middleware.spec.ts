@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { prepareAuthentication, verifyAccess } from '../src/middleware/auth.middleware';
+import { prepareAuthentication, verifyAccess, verifyAdminAccess } from '../src/middleware/auth.middleware';
 import { DI } from '../src/dependency-injection';
 
 jest.mock('../src/dependency-injection', () => ({
@@ -125,4 +125,46 @@ describe('verifyAccess', () => {
     expect(mockRes.status).not.toHaveBeenCalled();
     expect(mockRes.json).not.toHaveBeenCalled();
   });
-});
+});  
+  describe('verifyAdminAccess', () => {
+    let mockReq: Partial<Request>;
+    let mockRes: Partial<Response>;
+    let mockNext: jest.MockedFunction<NextFunction>;
+  
+    beforeEach(() => {
+      mockReq = {};
+      mockRes = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+      mockNext = jest.fn();
+    });
+  
+    it('should return 403 if user is not present in the request', () => {
+      verifyAdminAccess(mockReq as Request, mockRes as Response, mockNext);
+  
+      expect(mockRes.status).toHaveBeenCalledWith(403);
+      expect(mockRes.json).toHaveBeenCalledWith({ errors: ['Access denied: Admins only'] });
+      expect(mockNext).not.toHaveBeenCalled();
+    });
+  
+    it('should return 403 if user is not an admin', () => {
+      mockReq.user = { id: 'user-id', name: 'Test User', isAdmin: false };
+  
+      verifyAdminAccess(mockReq as Request, mockRes as Response, mockNext);
+  
+      expect(mockRes.status).toHaveBeenCalledWith(403);
+      expect(mockRes.json).toHaveBeenCalledWith({ errors: ['Access denied: Admins only'] });
+      expect(mockNext).not.toHaveBeenCalled();
+    });
+  
+    it('should call next if user is an admin', () => {
+      mockReq.user = { id: 'user-id', name: 'Test User', isAdmin: true };
+  
+      verifyAdminAccess(mockReq as Request, mockRes as Response, mockNext);
+  
+      expect(mockNext).toHaveBeenCalled();
+      expect(mockRes.status).not.toHaveBeenCalled();
+      expect(mockRes.json).not.toHaveBeenCalled();
+    });
+  });

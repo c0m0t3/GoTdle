@@ -36,14 +36,13 @@ export function globalErrorHandler(
     return;
   }
 
-    // Handle database unique constraint errors
-    if (err.code === '23505') {
-      res.status(409).json({
-        errors: ['Conflict: Duplicate entry detected'],
-      });
-      return;
-    }
-  
+  // Handle database unique constraint errors
+  if (err.code === '23505') {
+    res.status(409).json({
+      errors: ['Conflict: Duplicate entry detected'],
+    });
+    return;
+  }
 
   console.error('Unhandled error:', err);
 

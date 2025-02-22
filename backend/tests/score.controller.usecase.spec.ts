@@ -38,7 +38,7 @@ describe('ScoreController', () => {
     scoreController = new ScoreController(scoreRepository);
     app = express();
     app.use(express.json());
-    app.use((req, res, next) => {
+    app.use((req, _res, next) => {
       req.user = TEST_USER;
       next();
     });

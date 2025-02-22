@@ -10,7 +10,7 @@ describe('Server', () => {
 
   beforeEach(() => {
     mockApp = {
-      listen: jest.fn((port: number, callback: () => void) => {
+      listen: jest.fn((_port: number, callback: () => void) => {
         callback();
         return {
           close: jest.fn((callback?: () => void) => {
@@ -106,7 +106,7 @@ describe('Server', () => {
       
         try {
           serverInstance['_handleExit'](null as unknown as http.Server);
-        } catch (error) {
+        } catch (_error) {
           // Fehler abfangen, damit der Test nicht abbricht
         }
       

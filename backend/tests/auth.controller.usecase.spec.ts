@@ -248,5 +248,30 @@ describe('AuthController', () => {
         ]),
       );
     });
+
+    it('should include isAdmin in the token payload', async () => {
+      const response = await request(app)
+        .post('/auth/login')
+        .send({
+          type: 'email',
+          identifier: 'test@example.com',
+          password: 'password123',
+        })
+        .expect(200);
+
+      expect(response.body).toHaveProperty('accessToken');
+
+      const token = response.body.accessToken;
+      const decodedToken = DI.utils.jwt.verifyToken(token);
+
+      expect(decodedToken).toEqual(
+        expect.objectContaining({
+          id: TEST_IDS.USER_ID,
+          email: "test@example.com",
+          username: "testuser",
+          isAdmin: false,
+        }),
+      );
+    });
   });
 });

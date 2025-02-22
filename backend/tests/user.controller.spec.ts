@@ -199,4 +199,46 @@ describe('UserController', () => {
       );
     });
   });
+  describe('updateAdminState', () => {
+    it('should update the admin state of a user', async () => {
+      const createdUser2 = await userRepository.createUser(TEST_USER2);
+      req.params = { userId: createdUser2.id };
+      req.body = { isAdmin: true };
+
+      await userController.updateAdminState(req as Request, res as Response);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: createdUser2.id,
+          isAdmin: true,
+        }),
+      );
+    });
+
+    it('should return 404 if user does not exist', async () => {
+      req.params = { userId: '123e4567-e89b-12d3-a456-556614174000' };
+      req.body = { isAdmin: true };
+
+      await userController.updateAdminState(req as Request, res as Response);
+
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.send).toHaveBeenCalledWith({
+        errors: ['User not found'],
+      });
+    });
+
+    it('should return 400 if trying to change own admin state', async () => {
+      const createdUser = await userRepository.createUser(TEST_USER);
+      req.params = { userId: createdUser.id };
+      req.body = { isAdmin: true };
+
+      await userController.updateAdminState(req as Request, res as Response);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.send).toHaveBeenCalledWith({
+        errors: ['Cannot change own admin state'],
+      });
+    });
+  });
 });
