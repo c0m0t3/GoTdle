@@ -5,43 +5,31 @@ import { ScoreRepository } from '../src/database/repository/score.repository';
 import { UserRepository } from '../src/database/repository/user.repository';
 import { TestDatabase } from './helpers/database';
 import { globalErrorHandler } from '../src/utils/global-error';
-
-const TEST_USER = {
-  id: '123e4567-e89b-12d3-a456-426614174000',
-  email: 'test@example.com',
-  password: 'password123',
-  username: 'testuser',
-  createdAt: new Date(),
-};
-
-const TEST_SCORE = {
-  userId: TEST_USER.id,
-  streak: 0,
-  lastPlayed: null,
-  longestStreak: 0,
-  recentScores: [[0, 0, 0]],
-  dailyScore: [0, 0, 0],
-};
+import {
+  prepareAuthentication,
+  verifyAccess,
+} from '../src/middleware/auth.middleware';
+import { setupTestApp } from './helpers/auth.helper';
+import { TEST_USER, TEST_SCORE } from './helpers/helpData';
 
 describe('ScoreController', () => {
   let app: Application;
   let testDatabase: TestDatabase;
-  let userRepository: UserRepository;
+  let _userRepository: UserRepository;
   let scoreRepository: ScoreRepository;
   let scoreController: ScoreController;
+  let userToken: string;
 
   beforeAll(async () => {
     testDatabase = new TestDatabase();
     await testDatabase.setup();
-    userRepository = new UserRepository(testDatabase.database);
+    _userRepository = new UserRepository(testDatabase.database);
     scoreRepository = new ScoreRepository(testDatabase.database);
     scoreController = new ScoreController(scoreRepository);
     app = express();
     app.use(express.json());
-    app.use((req, _res, next) => {
-      req.user = TEST_USER;
-      next();
-    });
+    app.use(prepareAuthentication);
+    app.use('/scores', verifyAccess);
     app.get(
       '/scores/:userId',
       scoreController.getScoreByUserId.bind(scoreController),
@@ -57,8 +45,9 @@ describe('ScoreController', () => {
     app.use(globalErrorHandler);
   }, 100000);
 
-  afterEach(async () => {
+  beforeEach(async () => {
     await testDatabase.clearDatabase();
+    userToken = (await setupTestApp(TEST_USER, app, testDatabase)).token;
   });
 
   afterAll(async () => {
@@ -67,11 +56,9 @@ describe('ScoreController', () => {
 
   describe('GET /scores/:userId', () => {
     it('should return score by userId', async () => {
-      await userRepository.createUser(TEST_USER);
-      await scoreRepository.createScore(TEST_USER.id);
-
       const response = await request(app)
         .get(`/scores/${TEST_SCORE.userId}`)
+        .set('Authorization', `${userToken}`)
         .expect(200);
 
       expect(response.body).toEqual(
@@ -88,6 +75,7 @@ describe('ScoreController', () => {
     it('should return 404 if score not found', async () => {
       const response = await request(app)
         .get('/scores/123e4567-e89b-12d3-a456-426614174001')
+        .set('Authorization', `${userToken}`)
         .expect(404);
 
       expect(response.body.errors).toContain('Score not found');
@@ -96,17 +84,25 @@ describe('ScoreController', () => {
     it('should return 400 if userId is not a valid UUID', async () => {
       const response = await request(app)
         .get('/scores/invalid-uuid')
+        .set('Authorization', `${userToken}`)
         .expect(400);
 
       expect(response.body.errors).toBeDefined();
+    });
+
+    it('should return 401 if no valid token is provided', async () => {
+      const response = await request(app)
+        .get(`/scores/${TEST_SCORE.userId}`)
+        .expect(401);
+
+      expect(response.body.errors).toContain(
+        'No or invalid authentication provided',
+      );
     });
   });
 
   describe('PUT /scores', () => {
     it('should update score by userId', async () => {
-      await userRepository.createUser(TEST_USER);
-      await scoreRepository.createScore(TEST_USER.id);
-
       const updatedScore = {
         streak: 1,
         longestStreak: 1,
@@ -115,6 +111,7 @@ describe('ScoreController', () => {
 
       const response = await request(app)
         .put('/scores')
+        .set('Authorization', `${userToken}`)
         .send(updatedScore)
         .expect(200);
 
@@ -138,22 +135,38 @@ describe('ScoreController', () => {
 
       const response = await request(app)
         .put('/scores')
+        .set('Authorization', `${userToken}`)
         .send(invalidData)
         .expect(400);
 
       expect(response.body.errors).toBeDefined();
     });
+
+    it('should return 401 if no valid token is provided', async () => {
+      const updatedScore = {
+        streak: 1,
+        longestStreak: 1,
+        recentScores: [2, 2, 2],
+      };
+
+      const response = await request(app)
+        .put('/scores')
+        .send(updatedScore)
+        .expect(401);
+
+      expect(response.body.errors).toContain(
+        'No or invalid authentication provided',
+      );
+    });
   });
 
   describe('PUT /scores/daily_streak', () => {
     it('should update daily or streak by userId', async () => {
-      await userRepository.createUser(TEST_USER);
-      await scoreRepository.createScore(TEST_USER.id);
-
       const updatedData = { dailyScore: [1, 2, 3], streak: 1 };
 
       const response = await request(app)
         .put('/scores/daily_streak')
+        .set('Authorization', `${userToken}`)
         .send(updatedData)
         .expect(200);
 
@@ -171,10 +184,24 @@ describe('ScoreController', () => {
 
       const response = await request(app)
         .put('/scores/daily_streak')
+        .set('Authorization', `${userToken}`)
         .send(invalidData)
         .expect(400);
 
       expect(response.body.errors).toBeDefined();
+    });
+
+    it('should return 401 if no valid token is provided', async () => {
+      const updatedData = { dailyScore: [1, 2, 3], streak: 1 };
+
+      const response = await request(app)
+        .put('/scores/daily_streak')
+        .send(updatedData)
+        .expect(401);
+
+      expect(response.body.errors).toContain(
+        'No or invalid authentication provided',
+      );
     });
   });
 });

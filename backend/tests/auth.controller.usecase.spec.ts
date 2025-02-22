@@ -8,10 +8,7 @@ import { Jwt } from '../src/utils/jwt';
 import { DI } from '../src/dependency-injection';
 import { TestDatabase } from './helpers/database';
 import { globalErrorHandler } from '../src/utils/global-error';
-
-const TEST_IDS = {
-  USER_ID: '123e4567-e89b-12d3-a456-426614174000',
-} as const;
+import { TEST_IDS } from './helpers/helpData';
 
 describe('AuthController', () => {
   let app: Application;
@@ -267,8 +264,8 @@ describe('AuthController', () => {
       expect(decodedToken).toEqual(
         expect.objectContaining({
           id: TEST_IDS.USER_ID,
-          email: "test@example.com",
-          username: "testuser",
+          email: 'test@example.com',
+          username: 'testuser',
           isAdmin: false,
         }),
       );

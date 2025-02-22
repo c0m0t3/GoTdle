@@ -3,11 +3,7 @@ import { CharacterRepository } from '../src/database/repository/character.reposi
 import { CharacterController } from '../src/controller/character.controller';
 import { Request, Response } from 'express';
 import { verifyAdminAccess } from '../src/middleware/auth.middleware';
-
-const TEST_CHARACTER = {
-  _id: 1,
-  name: 'Jon Snow',
-};
+import { TEST_CHARACTER } from './helpers/helpData';
 
 describe('CharacterController', () => {
   let testDatabase: TestDatabase;
@@ -51,7 +47,9 @@ describe('CharacterController', () => {
       );
 
       expect(res.status).toHaveBeenCalledWith(201);
-      expect(res.send).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({ name: 'Jon Snow' })]));
+      expect(res.send).toHaveBeenCalledWith(
+        expect.arrayContaining([expect.objectContaining({ name: 'Jon Snow' })]),
+      );
     });
 
     it('should return 403 if user is not an admin', async () => {
@@ -61,7 +59,9 @@ describe('CharacterController', () => {
       await verifyAdminAccess(req as Request, res as Response, jest.fn());
 
       expect(res.status).toHaveBeenCalledWith(403);
-      expect(res.json).toHaveBeenCalledWith({ errors: ['Access denied: Admins only'] });
+      expect(res.json).toHaveBeenCalledWith({
+        errors: ['Access denied: Admins only'],
+      });
     });
   });
 
@@ -102,7 +102,9 @@ describe('CharacterController', () => {
       await verifyAdminAccess(req as Request, res as Response, jest.fn());
 
       expect(res.status).toHaveBeenCalledWith(403);
-      expect(res.json).toHaveBeenCalledWith({ errors: ['Access denied: Admins only'] });
+      expect(res.json).toHaveBeenCalledWith({
+        errors: ['Access denied: Admins only'],
+      });
     });
   });
 });

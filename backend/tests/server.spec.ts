@@ -39,25 +39,36 @@ describe('Server', () => {
 
       await serverInstance.start();
 
-      expect(mockApp.listen).toHaveBeenCalledWith(mockConfig.PORT, expect.any(Function));
-      expect(consoleSpy).toHaveBeenCalledWith(`Listening to port ${mockConfig.PORT}`);
+      expect(mockApp.listen).toHaveBeenCalledWith(
+        mockConfig.PORT,
+        expect.any(Function),
+      );
+      expect(consoleSpy).toHaveBeenCalledWith(
+        `Listening to port ${mockConfig.PORT}`,
+      );
     });
 
     it('should handle unexpected errors', async () => {
-        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-        const processExitSpy = jest.spyOn(process, 'exit').mockImplementation((code?: string | number | null | undefined): never => {
-          throw new Error(`process.exit called with code: ${code}`);
-        });
-      
-        const error = new Error('Unexpected error');
-      
-        expect(() => {
-          process.emit('uncaughtException', error);
-        }).toThrow(`process.exit called with code: 1`);
-      
-        expect(consoleErrorSpy).toHaveBeenCalledWith(error);
-        expect(processExitSpy).toHaveBeenCalledWith(1);
-      });
+      const consoleErrorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      const processExitSpy = jest
+        .spyOn(process, 'exit')
+        .mockImplementation(
+          (code?: string | number | null | undefined): never => {
+            throw new Error(`process.exit called with code: ${code}`);
+          },
+        );
+
+      const error = new Error('Unexpected error');
+
+      expect(() => {
+        process.emit('uncaughtException', error);
+      }).toThrow(`process.exit called with code: 1`);
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(error);
+      expect(processExitSpy).toHaveBeenCalledWith(1);
+    });
 
     it('should handle SIGTERM signal', async () => {
       const consoleInfoSpy = jest.spyOn(console, 'info');
@@ -78,41 +89,48 @@ describe('Server', () => {
 
   describe('_handleExit', () => {
     it('should close the server and exit the process', () => {
-        const serverCloseSpy = jest.fn((callback?: () => void) => {
-          if (callback) {
-            callback();
-          }
-        });
-        const processExitSpy = jest.spyOn(process, 'exit').mockImplementation((code?: string | number | null | undefined): never => {
-          throw new Error(`process.exit called with code: ${code}`);
-        });
-      
-        const mockServer = {
-          close: serverCloseSpy,
-        } as unknown as http.Server;
-      
-        expect(() => {
-          serverInstance['_handleExit'](mockServer);
-        }).toThrow(`process.exit called with code: 1`);
-      
-        expect(serverCloseSpy).toHaveBeenCalled();
-        expect(processExitSpy).toHaveBeenCalledWith(1);
-      });      
-
-      it('should exit the process if server is not provided', () => {
-        const processExitSpy = jest.spyOn(process, 'exit').mockImplementation((code?: string | number | null | undefined): never => {
-          throw new Error(`process.exit called with code: ${code}`);
-        });
-      
-        try {
-          serverInstance['_handleExit'](null as unknown as http.Server);
-        } catch (_error) {
-          // Fehler abfangen, damit der Test nicht abbricht
+      const serverCloseSpy = jest.fn((callback?: () => void) => {
+        if (callback) {
+          callback();
         }
-      
-        expect(processExitSpy).toHaveBeenCalledWith(1);
-        processExitSpy.mockRestore();
       });
-      
+      const processExitSpy = jest
+        .spyOn(process, 'exit')
+        .mockImplementation(
+          (code?: string | number | null | undefined): never => {
+            throw new Error(`process.exit called with code: ${code}`);
+          },
+        );
+
+      const mockServer = {
+        close: serverCloseSpy,
+      } as unknown as http.Server;
+
+      expect(() => {
+        serverInstance['_handleExit'](mockServer);
+      }).toThrow(`process.exit called with code: 1`);
+
+      expect(serverCloseSpy).toHaveBeenCalled();
+      expect(processExitSpy).toHaveBeenCalledWith(1);
+    });
+
+    it('should exit the process if server is not provided', () => {
+      const processExitSpy = jest
+        .spyOn(process, 'exit')
+        .mockImplementation(
+          (code?: string | number | null | undefined): never => {
+            throw new Error(`process.exit called with code: ${code}`);
+          },
+        );
+
+      try {
+        serverInstance['_handleExit'](null as unknown as http.Server);
+      } catch (_error) {
+        // Fehler abfangen, damit der Test nicht abbricht
+      }
+
+      expect(processExitSpy).toHaveBeenCalledWith(1);
+      processExitSpy.mockRestore();
+    });
   });
 });

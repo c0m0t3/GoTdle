@@ -28,7 +28,10 @@ describe('PasswordHasher', () => {
     it('should return true if password matches hash', async () => {
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
-      const result = await passwordHasher.comparePasswordWithHash(password, hash);
+      const result = await passwordHasher.comparePasswordWithHash(
+        password,
+        hash,
+      );
 
       expect(bcrypt.compare).toHaveBeenCalledWith(password, hash);
       expect(result).toBe(true);
@@ -37,7 +40,10 @@ describe('PasswordHasher', () => {
     it('should return false if password does not match hash', async () => {
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      const result = await passwordHasher.comparePasswordWithHash(password, hash);
+      const result = await passwordHasher.comparePasswordWithHash(
+        password,
+        hash,
+      );
 
       expect(bcrypt.compare).toHaveBeenCalledWith(password, hash);
       expect(result).toBe(false);
@@ -48,7 +54,10 @@ describe('PasswordHasher', () => {
         throw new Error('compare error');
       });
 
-      const result = await passwordHasher.comparePasswordWithHash(password, hash);
+      const result = await passwordHasher.comparePasswordWithHash(
+        password,
+        hash,
+      );
 
       expect(bcrypt.compare).toHaveBeenCalledWith(password, hash);
       expect(result).toBe(false);

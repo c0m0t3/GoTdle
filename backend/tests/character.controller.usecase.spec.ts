@@ -4,36 +4,18 @@ import { CharacterController } from '../src/controller/character.controller';
 import { CharacterRepository } from '../src/database/repository/character.repository';
 import { TestDatabase } from './helpers/database';
 import { globalErrorHandler } from '../src/utils/global-error';
-import { prepareAuthentication, verifyAccess, verifyAdminAccess } from '../src/middleware/auth.middleware';
+import {
+  prepareAuthentication,
+  verifyAccess,
+  verifyAdminAccess,
+} from '../src/middleware/auth.middleware';
 import { setupTestApp } from './helpers/auth.helper';
-
-const TEST_CHARACTER = {
-  _id: 1,
-  name: 'Jon Snow',
-};
-
-const TEST_CHARACTER2 = {
-  _id: 2,
-  name: 'Jon Snow',
-};
-
-const TEST_USER = {
-  id: '123e4567-e89b-12d3-a456-426614174000',
-  email: 'admin@example.com',
-  password: 'password123',
-  username: 'adminuser',
-  createdAt: new Date(),
-  isAdmin: true,
-};
-
-const TEST_USER_NON_ADMIN = {
-  id: '123e4567-e89b-12d3-a456-426614174001',
-  email: 'user@example.com',
-  password: 'password123',
-  username: 'normaluser',
-  createdAt: new Date(),
-  isAdmin: false,
-};
+import {
+  TEST_CHARACTER,
+  TEST_CHARACTER2,
+  TEST_USER,
+  TEST_USER_NON_ADMIN,
+} from './helpers/helpData';
 
 describe('CharacterController', () => {
   let app: Application;
@@ -53,7 +35,7 @@ describe('CharacterController', () => {
     app = express();
     app.use(express.json());
     app.use(prepareAuthentication);
-    
+
     app.use('/characters', verifyAccess);
     app.post(
       '/characters',
@@ -71,14 +53,14 @@ describe('CharacterController', () => {
     );
 
     app.use(globalErrorHandler);
-
   }, 100000);
 
   beforeEach(async () => {
     await testDatabase.clearDatabase();
     adminToken = (await setupTestApp(TEST_USER, app, testDatabase)).token;
 
-    userToken = (await setupTestApp(TEST_USER_NON_ADMIN, app, testDatabase)).token;
+    userToken = (await setupTestApp(TEST_USER_NON_ADMIN, app, testDatabase))
+      .token;
   });
 
   afterAll(async () => {
@@ -185,4 +167,3 @@ describe('CharacterController', () => {
     });
   });
 });
-

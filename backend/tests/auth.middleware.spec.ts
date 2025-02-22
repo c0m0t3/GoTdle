@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import { prepareAuthentication, verifyAccess, verifyAdminAccess } from '../src/middleware/auth.middleware';
+import {
+  prepareAuthentication,
+  verifyAccess,
+  verifyAdminAccess,
+} from '../src/middleware/auth.middleware';
 import { DI } from '../src/dependency-injection';
 
 jest.mock('../src/dependency-injection', () => ({
@@ -40,7 +44,11 @@ describe('prepareAuthentication', () => {
     (DI.utils.jwt.verifyToken as jest.Mock).mockReturnValue(token);
     (DI.repositories.user.getUserById as jest.Mock).mockResolvedValue(user);
 
-    await prepareAuthentication(mockReq as Request, mockRes as Response, mockNext);
+    await prepareAuthentication(
+      mockReq as Request,
+      mockRes as Response,
+      mockNext,
+    );
 
     expect(mockReq.user).toEqual(user);
     expect(mockReq.token).toEqual(token);
@@ -54,9 +62,9 @@ describe('prepareAuthentication', () => {
     (DI.utils.jwt.verifyToken as jest.Mock).mockReturnValue(token);
     (DI.repositories.user.getUserById as jest.Mock).mockResolvedValue(null);
 
-    await expect(prepareAuthentication(mockReq as Request, mockRes as Response, mockNext))
-      .rejects
-      .toThrow('User not found');
+    await expect(
+      prepareAuthentication(mockReq as Request, mockRes as Response, mockNext),
+    ).rejects.toThrow('User not found');
 
     expect(mockNext).not.toHaveBeenCalled();
   });
@@ -64,7 +72,11 @@ describe('prepareAuthentication', () => {
   it('should call next if no Authorization header is present', async () => {
     (mockReq.get as jest.Mock).mockReturnValue(null);
 
-    await prepareAuthentication(mockReq as Request, mockRes as Response, mockNext);
+    await prepareAuthentication(
+      mockReq as Request,
+      mockRes as Response,
+      mockNext,
+    );
 
     expect(mockNext).toHaveBeenCalled();
   });
@@ -74,9 +86,9 @@ describe('prepareAuthentication', () => {
       throw new Error('Invalid token');
     });
 
-    await expect(prepareAuthentication(mockReq as Request, mockRes as Response, mockNext))
-      .rejects
-      .toThrow('Invalid token');
+    await expect(
+      prepareAuthentication(mockReq as Request, mockRes as Response, mockNext),
+    ).rejects.toThrow('Invalid token');
 
     expect(mockNext).not.toHaveBeenCalled();
   });
@@ -86,9 +98,9 @@ describe('prepareAuthentication', () => {
       throw new Error('Token verification failed');
     });
 
-    await expect(prepareAuthentication(mockReq as Request, mockRes as Response, mockNext))
-      .rejects
-      .toThrow('Token verification failed');
+    await expect(
+      prepareAuthentication(mockReq as Request, mockRes as Response, mockNext),
+    ).rejects.toThrow('Token verification failed');
 
     expect(mockNext).not.toHaveBeenCalled();
   });
@@ -112,7 +124,9 @@ describe('verifyAccess', () => {
     verifyAccess(mockReq as Request, mockRes as Response, mockNext);
 
     expect(mockRes.status).toHaveBeenCalledWith(401);
-    expect(mockRes.json).toHaveBeenCalledWith({ errors: ['No or invalid authentication provided'] });
+    expect(mockRes.json).toHaveBeenCalledWith({
+      errors: ['No or invalid authentication provided'],
+    });
     expect(mockNext).not.toHaveBeenCalled();
   });
 
@@ -125,46 +139,50 @@ describe('verifyAccess', () => {
     expect(mockRes.status).not.toHaveBeenCalled();
     expect(mockRes.json).not.toHaveBeenCalled();
   });
-});  
-  describe('verifyAdminAccess', () => {
-    let mockReq: Partial<Request>;
-    let mockRes: Partial<Response>;
-    let mockNext: jest.MockedFunction<NextFunction>;
-  
-    beforeEach(() => {
-      mockReq = {};
-      mockRes = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn(),
-      };
-      mockNext = jest.fn();
-    });
-  
-    it('should return 403 if user is not present in the request', () => {
-      verifyAdminAccess(mockReq as Request, mockRes as Response, mockNext);
-  
-      expect(mockRes.status).toHaveBeenCalledWith(403);
-      expect(mockRes.json).toHaveBeenCalledWith({ errors: ['Access denied: Admins only'] });
-      expect(mockNext).not.toHaveBeenCalled();
-    });
-  
-    it('should return 403 if user is not an admin', () => {
-      mockReq.user = { id: 'user-id', name: 'Test User', isAdmin: false };
-  
-      verifyAdminAccess(mockReq as Request, mockRes as Response, mockNext);
-  
-      expect(mockRes.status).toHaveBeenCalledWith(403);
-      expect(mockRes.json).toHaveBeenCalledWith({ errors: ['Access denied: Admins only'] });
-      expect(mockNext).not.toHaveBeenCalled();
-    });
-  
-    it('should call next if user is an admin', () => {
-      mockReq.user = { id: 'user-id', name: 'Test User', isAdmin: true };
-  
-      verifyAdminAccess(mockReq as Request, mockRes as Response, mockNext);
-  
-      expect(mockNext).toHaveBeenCalled();
-      expect(mockRes.status).not.toHaveBeenCalled();
-      expect(mockRes.json).not.toHaveBeenCalled();
-    });
+});
+describe('verifyAdminAccess', () => {
+  let mockReq: Partial<Request>;
+  let mockRes: Partial<Response>;
+  let mockNext: jest.MockedFunction<NextFunction>;
+
+  beforeEach(() => {
+    mockReq = {};
+    mockRes = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    mockNext = jest.fn();
   });
+
+  it('should return 403 if user is not present in the request', () => {
+    verifyAdminAccess(mockReq as Request, mockRes as Response, mockNext);
+
+    expect(mockRes.status).toHaveBeenCalledWith(403);
+    expect(mockRes.json).toHaveBeenCalledWith({
+      errors: ['Access denied: Admins only'],
+    });
+    expect(mockNext).not.toHaveBeenCalled();
+  });
+
+  it('should return 403 if user is not an admin', () => {
+    mockReq.user = { id: 'user-id', name: 'Test User', isAdmin: false };
+
+    verifyAdminAccess(mockReq as Request, mockRes as Response, mockNext);
+
+    expect(mockRes.status).toHaveBeenCalledWith(403);
+    expect(mockRes.json).toHaveBeenCalledWith({
+      errors: ['Access denied: Admins only'],
+    });
+    expect(mockNext).not.toHaveBeenCalled();
+  });
+
+  it('should call next if user is an admin', () => {
+    mockReq.user = { id: 'user-id', name: 'Test User', isAdmin: true };
+
+    verifyAdminAccess(mockReq as Request, mockRes as Response, mockNext);
+
+    expect(mockNext).toHaveBeenCalled();
+    expect(mockRes.status).not.toHaveBeenCalled();
+    expect(mockRes.json).not.toHaveBeenCalled();
+  });
+});

@@ -9,18 +9,11 @@ import { PasswordHasher } from '../src/utils/password-hasher';
 import { Jwt } from '../src/utils/jwt';
 import { ENV } from '../src/config/env.config';
 import { globalErrorHandler } from '../src/utils/global-error';
+import { TEST_USER } from './helpers/helpData';
 
 interface CustomError extends Error {
   statusCode?: number;
 }
-
-const TEST_USER = {
-  id: '123e4567-e89b-12d3-a456-426614174000',
-  email: 'test@example.com',
-  password: 'password123',
-  username: 'testuser',
-  createdAt: new Date(),
-};
 
 describe('ScoreController', () => {
   let testDatabase: TestDatabase;
@@ -52,7 +45,7 @@ describe('ScoreController', () => {
     scoreController = new ScoreController(scoreRepository);
   }, 100000);
 
-  beforeEach(() => {
+  beforeEach(async () => {
     req = {
       query: {},
       user: { id: TEST_USER.id },
@@ -65,6 +58,9 @@ describe('ScoreController', () => {
       send: jest.fn(),
     };
     next = jest.fn();
+    req.body = TEST_USER;
+    await testDatabase.clearDatabase();
+    await authController.registerUser(req as Request, res as Response);
   });
 
   afterAll(async () => {
@@ -75,15 +71,17 @@ describe('ScoreController', () => {
     try {
       await fn();
     } catch (err) {
-      globalErrorHandler(err as CustomError, req as Request, res as Response, next as NextFunction);
+      globalErrorHandler(
+        err as CustomError,
+        req as Request,
+        res as Response,
+        next as NextFunction,
+      );
     }
   };
-  
+
   describe('getScoreByUserId', () => {
     it('should return a score by user ID', async () => {
-      req.body = TEST_USER;
-      await authController.registerUser(req as Request, res as Response);
-
       req.params = { userId: TEST_USER.id };
       await scoreController.getScoreByUserId(req as Request, res as Response);
 
@@ -101,7 +99,7 @@ describe('ScoreController', () => {
     });
 
     it('should return 404 if score not found', async () => {
-      req.params = { userId: "123e4567-e89b-12d3-a456-426614174333" };
+      req.params = { userId: '123e4567-e89b-12d3-a456-426614174333' };
       await scoreController.getScoreByUserId(req as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(404);
@@ -110,7 +108,9 @@ describe('ScoreController', () => {
 
     it('should return 400 if userId is not a valid UUID', async () => {
       req.params = { userId: 'invalid-uuid' };
-      await executeWithErrorHandler(() =>  scoreController.getScoreByUserId(req as Request, res as Response));
+      await executeWithErrorHandler(() =>
+        scoreController.getScoreByUserId(req as Request, res as Response),
+      );
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith(
@@ -126,7 +126,10 @@ describe('ScoreController', () => {
       req.body = { streak: 1, longestStreak: 1, recentScores: [2, 2, 2] };
       req.user = { id: TEST_USER.id };
 
-      await scoreController.updateScoreByUserId(req as Request, res as Response);
+      await scoreController.updateScoreByUserId(
+        req as Request,
+        res as Response,
+      );
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledWith(
@@ -134,7 +137,10 @@ describe('ScoreController', () => {
           userId: TEST_USER.id,
           streak: 1,
           longestStreak: 1,
-          recentScores: [[2, 2, 2], [0, 0, 0]],
+          recentScores: [
+            [2, 2, 2],
+            [0, 0, 0],
+          ],
           dailyScore: [0, 0, 0],
           lastPlayed: expect.any(Date),
         }),
@@ -145,7 +151,9 @@ describe('ScoreController', () => {
       req.body = { streak: 'invalid', longestStreak: 'invalid' };
       req.user = { id: TEST_USER.id };
 
-      await executeWithErrorHandler(() =>  scoreController.updateScoreByUserId(req as Request, res as Response));
+      await executeWithErrorHandler(() =>
+        scoreController.updateScoreByUserId(req as Request, res as Response),
+      );
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith(
@@ -161,7 +169,10 @@ describe('ScoreController', () => {
       req.body = { dailyScore: [1, 2, 3], streak: 1 };
       req.user = { id: TEST_USER.id };
 
-      await scoreController.updateDailyOrStreakByUserId(req as Request, res as Response);
+      await scoreController.updateDailyOrStreakByUserId(
+        req as Request,
+        res as Response,
+      );
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledWith(
@@ -177,7 +188,12 @@ describe('ScoreController', () => {
       req.body = { dailyScore: 'invalid', streak: 'invalid' };
       req.user = { id: TEST_USER.id };
 
-      await executeWithErrorHandler(() =>  scoreController.updateDailyOrStreakByUserId(req as Request, res as Response));
+      await executeWithErrorHandler(() =>
+        scoreController.updateDailyOrStreakByUserId(
+          req as Request,
+          res as Response,
+        ),
+      );
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith(

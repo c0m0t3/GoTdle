@@ -7,7 +7,11 @@ describe('Jwt', () => {
   const secret = 'test-secret';
   const options = { expiresIn: '1h' };
   const jwtInstance = new Jwt(secret, options);
-  const payload = { id: '123', email: 'test@example.com', username: 'testuser' };
+  const payload = {
+    id: '123',
+    email: 'test@example.com',
+    username: 'testuser',
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -26,7 +30,10 @@ describe('Jwt', () => {
 
   describe('verifyToken', () => {
     it('should verify a token and return the payload', () => {
-      (jwt.verify as jest.Mock).mockReturnValue({ ...payload, iat: 1234567890 });
+      (jwt.verify as jest.Mock).mockReturnValue({
+        ...payload,
+        iat: 1234567890,
+      });
 
       const token = 'test-token';
       const result = jwtInstance.verifyToken(token);
