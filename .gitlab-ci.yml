@@ -33,8 +33,7 @@ testFrontend:
   image: node:22
   script:
     - cd frontend
-    - rm package-lock.json
-    - npm install
+    - npm install --no-optional
     - npm test
 
 build-backend:
