@@ -4,6 +4,7 @@ import {
   Divider,
   HStack,
   Input,
+  Spinner,
   Text,
   Textarea,
   useToast,
@@ -15,28 +16,8 @@ import { gotButtonStyleII } from '../../styles/buttonStyles.ts';
 import * as yup from 'yup';
 import { array, number, object, string } from 'yup';
 import { inputFieldStyles } from '../../styles/inputFieldStyles.ts';
+import { CharacterData } from './CharacterCard.tsx';
 
-type Character = {
-  _id: number;
-  name: string;
-  gender?: string;
-  born?: string;
-  origin?: string;
-  death?: string;
-  status?: string;
-  culture?: string;
-  religion?: string;
-  titles?: string[];
-  house?: string;
-  father?: string;
-  mother?: string;
-  spouse?: string[];
-  children?: string[];
-  siblings?: string[];
-  lovers?: string[];
-  seasons?: number[];
-  actor?: string;
-};
 const expectedKeys = [
   '_id',
   'name',
@@ -59,7 +40,7 @@ const expectedKeys = [
   'actor',
 ];
 const validateKeys = (
-  data: Character | Character[],
+  data: CharacterData | CharacterData[],
   isArray: boolean,
   index?: number,
 ) => {
@@ -120,6 +101,7 @@ export const ManageCharacter = () => {
   const client = useApiClient();
   const toast = useToast();
   const [jsonContent, setJsonContent] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -134,6 +116,7 @@ export const ManageCharacter = () => {
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     try {
       const parsedJson = JSON.parse(jsonContent);
 
@@ -183,6 +166,8 @@ export const ManageCharacter = () => {
         isClosable: true,
         position: 'top',
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -235,10 +220,11 @@ export const ManageCharacter = () => {
         </Button>
         <Button
           onClick={handleSubmit}
+          size={'md'}
           sx={gotButtonStyleII}
-          disabled={!jsonContent}
+          disabled={!jsonContent || isLoading}
         >
-          Create
+          {isLoading ? <Spinner /> : 'Create'}
         </Button>
       </HStack>
 
