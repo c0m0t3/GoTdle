@@ -22,18 +22,16 @@ before_script:
 
 testCypress:
   stage: test
-  image: node:22
+  image: cypress/base:node-22
   script:
     - cd backend
     - npm install
-    - npm run dev &
-    - cd ..
-    - cd frontend
-    - rm package-lock.json
+    - npm run dev -- --host 0.0.0.0 &
+    - cd ../frontend
     - npm install
-    - npm run dev &
-    - sleep 10
-    - npx cypress run --headless e2e
+    - npm run dev -- --host 0.0.0.0 &
+    - npx wait-on http://localhost:3000 http://localhost:3001
+    - npx cypress run --browser firefox --headless
 
 
 testBackend:
