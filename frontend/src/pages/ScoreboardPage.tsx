@@ -16,6 +16,7 @@ import { useApiClient } from '../hooks/useApiClient';
 import { BaseBox } from '../components/BaseBox';
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
 import { formatDateShort } from '../utils/formatDate.ts';
+import { inputFieldStyles } from '../styles/inputFieldStyles.ts';
 
 interface Score {
   streak: number;
@@ -179,50 +180,66 @@ export const ScoreboardPage = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   width="20em"
-                  p={4}
-                  bg="gray.100"
-                  borderRadius="md"
                   boxShadow="md"
-                  _hover={{ bg: 'gray.200' }}
-                  _focus={{ bg: 'white', borderColor: 'blue.500' }}
-                  mr={2}
+                  sx={inputFieldStyles}
                 />
               </Box>
               <Table variant="simple">
                 <Thead>
                   <Tr sx={{ borderBottom: '2px solid black' }}>
                     <Th>Rank</Th>
-                    <Th onClick={() => requestSort('username')}>
+                    <Th
+                      onClick={() => requestSort('username')}
+                      sx={{ cursor: 'pointer' }}
+                    >
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Name {getSortIcon('username')}
                       </div>
                     </Th>
-                    <Th onClick={() => requestSort('createdAt')}>
+                    <Th
+                      onClick={() => requestSort('createdAt')}
+                      sx={{ cursor: 'pointer' }}
+                    >
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Created At {getSortIcon('createdAt')}
                       </div>
                     </Th>
-                    <Th onClick={() => requestSort('streak')}>
+                    <Th
+                      onClick={() => requestSort('streak')}
+                      sx={{ cursor: 'pointer' }}
+                    >
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Current Streak {getSortIcon('streak')}
                       </div>
                     </Th>
-                    <Th onClick={() => requestSort('longestStreak')}>
+                    <Th
+                      onClick={() => requestSort('longestStreak')}
+                      sx={{ cursor: 'pointer' }}
+                    >
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Longest Streak {getSortIcon('longestStreak')}
                       </div>
                     </Th>
-                    <Th onClick={() => requestSort('classicMode')}>
+                    <Th
+                      onClick={() => requestSort('classicMode')}
+                      sx={{ cursor: 'pointer' }}
+                    >
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Classic Mode {getSortIcon('classicMode')}
                       </div>
                     </Th>
-                    <Th onClick={() => requestSort('quoteMode')}>
+                    <Th
+                      onClick={() => requestSort('quoteMode')}
+                      sx={{ cursor: 'pointer' }}
+                    >
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Quote Mode {getSortIcon('quoteMode')}
                       </div>
                     </Th>
-                    <Th onClick={() => requestSort('imageMode')}>
+                    <Th
+                      onClick={() => requestSort('imageMode')}
+                      sx={{ cursor: 'pointer' }}
+                    >
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Image Mode {getSortIcon('imageMode')}
                       </div>
