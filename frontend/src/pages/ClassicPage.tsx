@@ -185,8 +185,6 @@ export const ClassicPage: React.FC = () => {
             Guess today's Game of Thrones character!
           </Text>
           <Text textAlign="center">Type any character to begin.</Text>
-          <Text textAlign="center">DEBUG: The Solution is</Text>
-          <Text textAlign="center">{solutionCharacter?.name}</Text>
           <HStack justifyContent="center">
             <Button
               onClick={() => setIsTitleOpen(!isTitleOpen)}

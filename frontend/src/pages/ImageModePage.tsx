@@ -159,7 +159,6 @@ export const ImageModePage = () => {
             mx={'auto'}
             py={5}
           />
-          <Text fontSize={'sm'}> Pssst...answer is...{apiData?.fullName}</Text>
         </BaseBox>
         <BaseBox textAlign={'left'}>
           <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
