@@ -264,11 +264,12 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 
 ![Admin Dashboard_User](frontend/src/assets/adminDashboard-userList.png)
 ![Admin Dashboard_Character](frontend/src/assets/adminDashboard-manageCharacter.png)
+![Admin Dashboard_todaysChar](frontend/src/assets/adminDashboard-todaysCharacter.png)
 ![Admin Dashboard_User](frontend/src/assets/adminLine-Menu.png)
 
 - [ ] **Displayed when the user clicks the admin dashboard button. This button is visible only to users with admin
   rights:**
-- On the dashboard page, the user can navigate between two tabs: User List and Manage Characters.
+- On the dashboard page, the user can navigate between three tabs: User List, Manage Characters and Today's Character.
 - **User List:**
     - Shows a table of all users.
     - The user can grant or revoke admin rights to another user by simply clicking the ✔ or ❌ icons.
@@ -284,6 +285,9 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
       character's information.
 
 ![Admin Dashboard_CharacterCard](frontend/src/assets/characterCard-detailed.png)
+
+- **Today's Character:**
+    - The user can see the characters of the day for each mode.
 
 ## Login
 
