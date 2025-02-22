@@ -63,12 +63,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       toast({
         description: 'Your session has expired. Please log in again.',
         status: 'error',
-        duration: null,
+        duration: 5000,
         isClosable: true,
         position: 'top',
-        containerStyle: {
-          fontSize: '3xl',
-        },
       });
       navigate('/auth/login', { replace: true });
     }

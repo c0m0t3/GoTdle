@@ -69,7 +69,7 @@ const ClassicHelp = ({ properties }: { properties: Property[] }) => (
       <Text as="span" fontWeight="bold">
         Title:
       </Text>{' '}
-      Provides a random title of the character.
+      Provides all titles of the character.
     </Text>
     <Text>
       <Text as="span" fontWeight="bold">
