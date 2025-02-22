@@ -2,16 +2,8 @@ import { TestDatabase } from './helpers/database';
 import { CharacterRepository } from '../src/database/repository/character.repository';
 import { CharacterController } from '../src/controller/character.controller';
 import { Request, Response } from 'express';
-
-const TEST_CHARACTER = {
-  _id: 1,
-  name: 'Jon Snow',
-};
-
-const TEST_CHARACTER2 = {
-  _id: 2,
-  name: 'Jon Snow'
-};
+import { verifyAdminAccess } from '../src/middleware/auth.middleware';
+import { TEST_CHARACTER } from './helpers/helpData';
 
 describe('CharacterController', () => {
   let testDatabase: TestDatabase;
@@ -47,6 +39,7 @@ describe('CharacterController', () => {
   describe('createCharacter', () => {
     it('should create a character', async () => {
       req.body = [TEST_CHARACTER];
+      req.user = { isAdmin: true };
 
       await characterController.createCharacters(
         req as Request,
@@ -54,27 +47,20 @@ describe('CharacterController', () => {
       );
 
       expect(res.status).toHaveBeenCalledWith(201);
-      expect(res.send).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({ name: 'Jon Snow' })]));
+      expect(res.send).toHaveBeenCalledWith(
+        expect.arrayContaining([expect.objectContaining({ name: 'Jon Snow' })]),
+      );
     });
 
-    it('should return 409 if character name already exists', async () => {
+    it('should return 403 if user is not an admin', async () => {
       req.body = [TEST_CHARACTER];
+      req.user = { isAdmin: false };
 
-      await characterController.createCharacters(
-        req as Request,
-        res as Response,
-      );
+      await verifyAdminAccess(req as Request, res as Response, jest.fn());
 
-      req.body = [TEST_CHARACTER2];
-
-      await characterController.createCharacters(
-        req as Request,
-        res as Response,
-      );
-
-      expect(res.status).toHaveBeenCalledWith(409);
-      expect(res.send).toHaveBeenCalledWith({
-        errors: ['Creation canceled! CharacterName already exists'],
+      expect(res.status).toHaveBeenCalledWith(403);
+      expect(res.json).toHaveBeenCalledWith({
+        errors: ['Access denied: Admins only'],
       });
     });
   });
@@ -96,10 +82,10 @@ describe('CharacterController', () => {
     });
   });
 
-
   describe('deleteAllCharacters', () => {
     it('should delete all characters', async () => {
       await characterRepository.createCharacters([TEST_CHARACTER]);
+      req.user = { isAdmin: true };
 
       await characterController.deleteAllCharacters(
         req as Request,
@@ -108,6 +94,17 @@ describe('CharacterController', () => {
 
       expect(res.status).toHaveBeenCalledWith(204);
       expect(res.send).toHaveBeenCalled();
+    });
+
+    it('should return 403 if user is not an admin', async () => {
+      req.user = { isAdmin: false };
+
+      await verifyAdminAccess(req as Request, res as Response, jest.fn());
+
+      expect(res.status).toHaveBeenCalledWith(403);
+      expect(res.json).toHaveBeenCalledWith({
+        errors: ['Access denied: Admins only'],
+      });
     });
   });
 });

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { BaseLayout } from '../layout/BaseLayout';
 import {
   Box,
+  Input,
   Table,
   Tbody,
   Td,
@@ -15,6 +16,7 @@ import { useApiClient } from '../hooks/useApiClient';
 import { BaseBox } from '../components/BaseBox';
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
 import { formatDateShort } from '../utils/formatDate.ts';
+import { inputFieldStyles } from '../styles/inputFieldStyles.ts';
 
 interface Score {
   streak: number;
@@ -40,6 +42,7 @@ export const ScoreboardPage = () => {
     direction: 'ascending' | 'descending';
   }>({ key: 'streak', direction: 'descending' });
   const [loggedInUserId, setLoggedInUserId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const client = useApiClient();
   const highlightTextColor = 'red';
 
@@ -67,6 +70,24 @@ export const ScoreboardPage = () => {
     fetchUsers();
     fetchLoggedInUser();
   }, [client]);
+
+  useEffect(() => {
+    const handleSearch = async () => {
+      if (searchQuery === '') {
+        const response = await client.getUsers();
+        setUsers(response.data);
+      } else {
+        try {
+          const response = await client.getSearchUserByUsername(searchQuery);
+          setUsers(response.data as User[]);
+        } catch (error) {
+          console.error('Error searching user:', error);
+        }
+      }
+    };
+
+    handleSearch();
+  }, [searchQuery, client]);
 
   const sortedUsers = [...users].sort((a, b) => {
     if (sortConfig !== null) {
@@ -142,50 +163,83 @@ export const ScoreboardPage = () => {
     <BaseLayout>
       <Box p={4}>
         <VStack spacing={4} align="stretch">
-          <Text textAlign={'center'} fontSize={'2em'}>
-            Scoreboard
-          </Text>
+          <BaseBox width="auto">
+            <Text textAlign={'center'} fontSize={'2em'}>
+              Scoreboard
+            </Text>
+          </BaseBox>
           {authError ? (
             <Text textAlign={'center'} color="red.500">
               Authentication failed. Please log in to view the leaderboard.
             </Text>
           ) : (
-            <BaseBox width="auto">
+            <BaseBox width="auto" padding={'0 2em'}>
+              <Box display="flex" justifyContent="center" margin={4}>
+                <Input
+                  placeholder="Search by username"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  width="20em"
+                  boxShadow="md"
+                  sx={inputFieldStyles}
+                />
+              </Box>
               <Table variant="simple">
                 <Thead>
-                  <Tr>
+                  <Tr sx={{ borderBottom: '2px solid black' }}>
                     <Th>Rank</Th>
-                    <Th onClick={() => requestSort('username')}>
+                    <Th
+                      onClick={() => requestSort('username')}
+                      sx={{ cursor: 'pointer' }}
+                    >
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Name {getSortIcon('username')}
                       </div>
                     </Th>
-                    <Th onClick={() => requestSort('createdAt')}>
+                    <Th
+                      onClick={() => requestSort('createdAt')}
+                      sx={{ cursor: 'pointer' }}
+                    >
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Created At {getSortIcon('createdAt')}
                       </div>
                     </Th>
-                    <Th onClick={() => requestSort('streak')}>
+                    <Th
+                      onClick={() => requestSort('streak')}
+                      sx={{ cursor: 'pointer' }}
+                    >
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Current Streak {getSortIcon('streak')}
                       </div>
                     </Th>
-                    <Th onClick={() => requestSort('longestStreak')}>
+                    <Th
+                      onClick={() => requestSort('longestStreak')}
+                      sx={{ cursor: 'pointer' }}
+                    >
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Longest Streak {getSortIcon('longestStreak')}
                       </div>
                     </Th>
-                    <Th onClick={() => requestSort('classicMode')}>
+                    <Th
+                      onClick={() => requestSort('classicMode')}
+                      sx={{ cursor: 'pointer' }}
+                    >
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Classic Mode {getSortIcon('classicMode')}
                       </div>
                     </Th>
-                    <Th onClick={() => requestSort('quoteMode')}>
+                    <Th
+                      onClick={() => requestSort('quoteMode')}
+                      sx={{ cursor: 'pointer' }}
+                    >
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Quote Mode {getSortIcon('quoteMode')}
                       </div>
                     </Th>
-                    <Th onClick={() => requestSort('imageMode')}>
+                    <Th
+                      onClick={() => requestSort('imageMode')}
+                      sx={{ cursor: 'pointer' }}
+                    >
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Image Mode {getSortIcon('imageMode')}
                       </div>
@@ -194,7 +248,17 @@ export const ScoreboardPage = () => {
                 </Thead>
                 <Tbody>
                   {sortedUsers.map((user, index) => (
-                    <Tr key={index}>
+                    <Tr
+                      key={index}
+                      sx={{
+                        borderBottom:
+                          index === sortedUsers.length - 1
+                            ? 'none'
+                            : '2px solid black',
+                        margin: 0,
+                        padding: 0,
+                      }}
+                    >
                       <Td>{index + 1}</Td>
                       <Td
                         color={

@@ -1,8 +1,9 @@
 [
   {
     "email": "colin@moissl.de",
-    "password": "$2b$10$iY8/c9AmowANNdEheEd2C.OswcYcLaNcGMjIWR1nBYsuCoB./1cW2",
+    "password": "$2a$12$IrciIpJF2ivtyHCJfAUVru6UwOo7G1nhctwydF4nzt1dZwNKFZKsG",
     "username": "Colin",
+    "isAdmin": true,
     "score": {
       "streak": 5,
       "lastPlayed": "2023-10-01",
@@ -28,8 +29,9 @@
   },
   {
     "email": "hiroyuki@Ohno.jp",
-    "password": "$2b$10$yH5/c2AmqweANNdEheEd2C.KlM3LaNcGMjIYR3nBYsoPaD./2vF3",
+    "password": "$2a$12$IrciIpJF2ivtyHCJfAUVru6UwOo7G1nhctwydF4nzt1dZwNKFZKsG",
     "username": "Hiro",
+    "isAdmin": true,
     "score": {
       "streak": 3,
       "lastPlayed": "2023-09-30",
@@ -55,8 +57,9 @@
   },
   {
     "email": "benjamin@Piwon.nz",
-    "password": "$2b$10$aJ8/c9AmowBNNdEheEd2C.PswcTLbNcFMjIWR3nXYsoCoB./1cW2",
+    "password": "$2a$12$IrciIpJF2ivtyHCJfAUVru6UwOo7G1nhctwydF4nzt1dZwNKFZKsG",
     "username": "Benjamin",
+    "isAdmin": true,
     "score": {
       "streak": 1,
       "lastPlayed": "2023-09-29",
@@ -81,28 +84,29 @@
     }
   },
   {
-    "email": "daniel@bunte.bunterunte",
-    "password": "$2b$10$eY8/c9ZmowANNdEheRd2C.MswcALaNcGMjKWR1nXYsoCoB./3xF5",
-    "username": "Bunte Runte",
+    "email": "bunte@bunte.de",
+    "password": "$2a$12$IrciIpJF2ivtyHCJfAUVru6UwOo7G1nhctwydF4nzt1dZwNKFZKsG",
+    "username": "Bunte",
+    "isAdmin": true,
     "score": {
-      "streak": 0,
-      "lastPlayed": "2023-09-28",
-      "longestStreak": 0,
+      "streak": 42,
+      "lastPlayed": "1984-03-14",
+      "longestStreak": 1337,
       "dailyScore": [
-        0,
-        0,
-        0
+        1,
+        1,
+        1
       ],
       "recentScores": [
         [
-          0,
-          0,
-          0
+          1,
+          1,
+          1
         ],
         [
-          0,
-          0,
-          0
+          1,
+          1,
+          1
         ]
       ]
     }

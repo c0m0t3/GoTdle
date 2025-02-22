@@ -160,6 +160,127 @@ export interface DeleteUserByIdRequest {
 /**
  * 
  * @export
+ * @interface PostCreateCharactersRequestInner
+ */
+export interface PostCreateCharactersRequestInner {
+    /**
+     * 
+     * @type {number}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    '_id': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'gender'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'born'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'origin'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'death'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'status'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'culture'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'religion'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'titles'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'house'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'father'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'mother'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'spouse'?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'children'?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'siblings'?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'lovers'?: Array<string>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'seasons'?: Array<number>;
+    /**
+     * 
+     * @type {string}
+     * @memberof PostCreateCharactersRequestInner
+     */
+    'actor'?: string;
+}
+/**
+ * 
+ * @export
  * @interface PostUserLogin200Response
  */
 export interface PostUserLogin200Response {
@@ -280,58 +401,64 @@ export interface PostUserRegisterRequest {
 /**
  * 
  * @export
- * @interface PutDailyScore200Response
+ * @interface PutDailyOrStreakScore200Response
  */
-export interface PutDailyScore200Response {
+export interface PutDailyOrStreakScore200Response {
     /**
      * 
      * @type {string}
-     * @memberof PutDailyScore200Response
+     * @memberof PutDailyOrStreakScore200Response
      */
     'userId'?: string;
     /**
      * 
      * @type {number}
-     * @memberof PutDailyScore200Response
+     * @memberof PutDailyOrStreakScore200Response
      */
     'streak'?: number;
     /**
      * 
      * @type {string}
-     * @memberof PutDailyScore200Response
+     * @memberof PutDailyOrStreakScore200Response
      */
     'lastPlayed'?: string;
     /**
      * 
      * @type {number}
-     * @memberof PutDailyScore200Response
+     * @memberof PutDailyOrStreakScore200Response
      */
     'longestStreak'?: number;
     /**
      * 
      * @type {Array<Array<number>>}
-     * @memberof PutDailyScore200Response
+     * @memberof PutDailyOrStreakScore200Response
      */
     'recentScores'?: Array<Array<number>>;
     /**
      * 
      * @type {Array<number>}
-     * @memberof PutDailyScore200Response
+     * @memberof PutDailyOrStreakScore200Response
      */
     'dailyScore'?: Array<number>;
 }
 /**
  * 
  * @export
- * @interface PutDailyScoreRequest
+ * @interface PutDailyOrStreakScoreRequest
  */
-export interface PutDailyScoreRequest {
+export interface PutDailyOrStreakScoreRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof PutDailyOrStreakScoreRequest
+     */
+    'streak'?: number;
     /**
      * 
      * @type {Array<number>}
-     * @memberof PutDailyScoreRequest
+     * @memberof PutDailyOrStreakScoreRequest
      */
-    'dailyScore': Array<number>;
+    'dailyScore'?: Array<number>;
 }
 /**
  * 
@@ -400,6 +527,19 @@ export interface PutScoreByUserIdRequest {
      * @memberof PutScoreByUserIdRequest
      */
     'recentScores': Array<number>;
+}
+/**
+ * 
+ * @export
+ * @interface PutUpdateAdminStateRequest
+ */
+export interface PutUpdateAdminStateRequest {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PutUpdateAdminStateRequest
+     */
+    'isAdmin': boolean;
 }
 /**
  * 
@@ -495,6 +635,12 @@ export interface User {
     'createdAt': string;
     /**
      * 
+     * @type {boolean}
+     * @memberof User
+     */
+    'isAdmin': boolean;
+    /**
+     * 
      * @type {Scores}
      * @memberof User
      */
@@ -507,6 +653,40 @@ export interface User {
  */
 export const DefaultApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @summary Delete All Characters
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteAllCharacters: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/characters`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Authorization required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * Delete logged user. UserId in Auth-Token.
          * @summary Delete User by User ID
@@ -563,6 +743,10 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            // authentication Authorization required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
 
     
@@ -683,6 +867,44 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
+         * 
+         * @summary Create Characters
+         * @param {Array<PostCreateCharactersRequestInner>} [postCreateCharactersRequestInner] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postCreateCharacters: async (postCreateCharactersRequestInner?: Array<PostCreateCharactersRequestInner>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/characters`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Authorization required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(postCreateCharactersRequestInner, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Login user with email or username.   If successfully logged in, the user receives an access token in return.
          * @summary Login User
          * @param {PostUserLoginRequest} [postUserLoginRequest] 
@@ -752,13 +974,13 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @summary Update DailyScore of User
-         * @param {PutDailyScoreRequest} [putDailyScoreRequest] 
+         * @summary Update DailyScore Or Streak of User
+         * @param {PutDailyOrStreakScoreRequest} [putDailyOrStreakScoreRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        putDailyScore: async (putDailyScoreRequest?: PutDailyScoreRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/scores/daily`;
+        putDailyOrStreakScore: async (putDailyOrStreakScoreRequest?: PutDailyOrStreakScoreRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/scores/daily_streak`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -781,7 +1003,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(putDailyScoreRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(putDailyOrStreakScoreRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -820,6 +1042,48 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(putScoreByUserIdRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Update Admin State
+         * @param {string} userId 
+         * @param {PutUpdateAdminStateRequest} [putUpdateAdminStateRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putUpdateAdminState: async (userId: string, putUpdateAdminStateRequest?: PutUpdateAdminStateRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userId' is not null or undefined
+            assertParamExists('putUpdateAdminState', 'userId', userId)
+            const localVarPath = `/users/is_admin/{userId}`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Authorization required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(putUpdateAdminStateRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -874,6 +1138,18 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
 export const DefaultApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = DefaultApiAxiosParamCreator(configuration)
     return {
+        /**
+         * 
+         * @summary Delete All Characters
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteAllCharacters(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteAllCharacters(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.deleteAllCharacters']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
         /**
          * Delete logged user. UserId in Auth-Token.
          * @summary Delete User by User ID
@@ -937,6 +1213,19 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * 
+         * @summary Create Characters
+         * @param {Array<PostCreateCharactersRequestInner>} [postCreateCharactersRequestInner] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postCreateCharacters(postCreateCharactersRequestInner?: Array<PostCreateCharactersRequestInner>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Characters>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postCreateCharacters(postCreateCharactersRequestInner, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.postCreateCharacters']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * Login user with email or username.   If successfully logged in, the user receives an access token in return.
          * @summary Login User
          * @param {PostUserLoginRequest} [postUserLoginRequest] 
@@ -964,15 +1253,15 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Update DailyScore of User
-         * @param {PutDailyScoreRequest} [putDailyScoreRequest] 
+         * @summary Update DailyScore Or Streak of User
+         * @param {PutDailyOrStreakScoreRequest} [putDailyOrStreakScoreRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async putDailyScore(putDailyScoreRequest?: PutDailyScoreRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PutDailyScore200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.putDailyScore(putDailyScoreRequest, options);
+        async putDailyOrStreakScore(putDailyOrStreakScoreRequest?: PutDailyOrStreakScoreRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PutDailyOrStreakScore200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.putDailyOrStreakScore(putDailyOrStreakScoreRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DefaultApi.putDailyScore']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.putDailyOrStreakScore']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -986,6 +1275,20 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.putScoreByUserId(putScoreByUserIdRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.putScoreByUserId']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Update Admin State
+         * @param {string} userId 
+         * @param {PutUpdateAdminStateRequest} [putUpdateAdminStateRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async putUpdateAdminState(userId: string, putUpdateAdminStateRequest?: PutUpdateAdminStateRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.putUpdateAdminState(userId, putUpdateAdminStateRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.putUpdateAdminState']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1011,6 +1314,15 @@ export const DefaultApiFp = function(configuration?: Configuration) {
 export const DefaultApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = DefaultApiFp(configuration)
     return {
+        /**
+         * 
+         * @summary Delete All Characters
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteAllCharacters(options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteAllCharacters(options).then((request) => request(axios, basePath));
+        },
         /**
          * Delete logged user. UserId in Auth-Token.
          * @summary Delete User by User ID
@@ -1059,6 +1371,16 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.getUsers(options).then((request) => request(axios, basePath));
         },
         /**
+         * 
+         * @summary Create Characters
+         * @param {Array<PostCreateCharactersRequestInner>} [postCreateCharactersRequestInner] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postCreateCharacters(postCreateCharactersRequestInner?: Array<PostCreateCharactersRequestInner>, options?: RawAxiosRequestConfig): AxiosPromise<Array<Characters>> {
+            return localVarFp.postCreateCharacters(postCreateCharactersRequestInner, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Login user with email or username.   If successfully logged in, the user receives an access token in return.
          * @summary Login User
          * @param {PostUserLoginRequest} [postUserLoginRequest] 
@@ -1080,13 +1402,13 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
-         * @summary Update DailyScore of User
-         * @param {PutDailyScoreRequest} [putDailyScoreRequest] 
+         * @summary Update DailyScore Or Streak of User
+         * @param {PutDailyOrStreakScoreRequest} [putDailyOrStreakScoreRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        putDailyScore(putDailyScoreRequest?: PutDailyScoreRequest, options?: RawAxiosRequestConfig): AxiosPromise<PutDailyScore200Response> {
-            return localVarFp.putDailyScore(putDailyScoreRequest, options).then((request) => request(axios, basePath));
+        putDailyOrStreakScore(putDailyOrStreakScoreRequest?: PutDailyOrStreakScoreRequest, options?: RawAxiosRequestConfig): AxiosPromise<PutDailyOrStreakScore200Response> {
+            return localVarFp.putDailyOrStreakScore(putDailyOrStreakScoreRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Update score of logged user. UserId in Auth-Token.
@@ -1097,6 +1419,17 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          */
         putScoreByUserId(putScoreByUserIdRequest?: PutScoreByUserIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<PutScoreByUserId200Response> {
             return localVarFp.putScoreByUserId(putScoreByUserIdRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Update Admin State
+         * @param {string} userId 
+         * @param {PutUpdateAdminStateRequest} [putUpdateAdminStateRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        putUpdateAdminState(userId: string, putUpdateAdminStateRequest?: PutUpdateAdminStateRequest, options?: RawAxiosRequestConfig): AxiosPromise<User> {
+            return localVarFp.putUpdateAdminState(userId, putUpdateAdminStateRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Update logged user. UserId in Auth-Token.
@@ -1118,6 +1451,17 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
  * @extends {BaseAPI}
  */
 export class DefaultApi extends BaseAPI {
+    /**
+     * 
+     * @summary Delete All Characters
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public deleteAllCharacters(options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).deleteAllCharacters(options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * Delete logged user. UserId in Auth-Token.
      * @summary Delete User by User ID
@@ -1176,6 +1520,18 @@ export class DefaultApi extends BaseAPI {
     }
 
     /**
+     * 
+     * @summary Create Characters
+     * @param {Array<PostCreateCharactersRequestInner>} [postCreateCharactersRequestInner] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public postCreateCharacters(postCreateCharactersRequestInner?: Array<PostCreateCharactersRequestInner>, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).postCreateCharacters(postCreateCharactersRequestInner, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Login user with email or username.   If successfully logged in, the user receives an access token in return.
      * @summary Login User
      * @param {PostUserLoginRequest} [postUserLoginRequest] 
@@ -1201,14 +1557,14 @@ export class DefaultApi extends BaseAPI {
 
     /**
      * 
-     * @summary Update DailyScore of User
-     * @param {PutDailyScoreRequest} [putDailyScoreRequest] 
+     * @summary Update DailyScore Or Streak of User
+     * @param {PutDailyOrStreakScoreRequest} [putDailyOrStreakScoreRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public putDailyScore(putDailyScoreRequest?: PutDailyScoreRequest, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).putDailyScore(putDailyScoreRequest, options).then((request) => request(this.axios, this.basePath));
+    public putDailyOrStreakScore(putDailyOrStreakScoreRequest?: PutDailyOrStreakScoreRequest, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).putDailyOrStreakScore(putDailyOrStreakScoreRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1221,6 +1577,19 @@ export class DefaultApi extends BaseAPI {
      */
     public putScoreByUserId(putScoreByUserIdRequest?: PutScoreByUserIdRequest, options?: RawAxiosRequestConfig) {
         return DefaultApiFp(this.configuration).putScoreByUserId(putScoreByUserIdRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Update Admin State
+     * @param {string} userId 
+     * @param {PutUpdateAdminStateRequest} [putUpdateAdminStateRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public putUpdateAdminState(userId: string, putUpdateAdminStateRequest?: PutUpdateAdminStateRequest, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).putUpdateAdminState(userId, putUpdateAdminStateRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

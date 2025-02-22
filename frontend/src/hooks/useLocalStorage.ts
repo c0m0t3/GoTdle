@@ -1,9 +1,6 @@
 import React from 'react';
 
-export function useLocalStorage<Type extends any>(
-  keyName: string,
-  defaultValue: Type,
-) {
+export function useLocalStorage<Type>(keyName: string, defaultValue: Type) {
   const [storedValue, setStoredValue] = React.useState(() => {
     try {
       const value = window.localStorage.getItem(keyName);
@@ -14,7 +11,7 @@ export function useLocalStorage<Type extends any>(
         window.localStorage.setItem(keyName, JSON.stringify(defaultValue));
         return defaultValue;
       }
-    } catch (err) {
+    } catch (_err) {
       return defaultValue;
     }
   });
@@ -22,7 +19,9 @@ export function useLocalStorage<Type extends any>(
   const setValue = (newValue: Type) => {
     try {
       window.localStorage.setItem(keyName, JSON.stringify(newValue));
-    } catch (err) {}
+    } catch (err) {
+      console.error(`Error saving to localStorage:`, err);
+    }
     setStoredValue(newValue);
   };
 

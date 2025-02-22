@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
-import profileIcon from '../../public/icons/profileIcon.png';
+import profileIcon from '../assets/profileIcon.png';
 import { useAuth } from '../providers/AuthProvider.tsx';
 
 interface ProfileMenuProps {
@@ -19,6 +19,7 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({ className }) => {
   const navigate = useNavigate();
   const {
     actions: { logout },
+    isAdmin,
   } = useAuth();
 
   return (
@@ -32,6 +33,11 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({ className }) => {
       </MenuButton>
       <MenuList>
         <MenuItem onClick={() => navigate('/profile')}>Profile</MenuItem>
+        {isAdmin && (
+          <MenuItem onClick={() => navigate('/admin/dashboard')}>
+            Admin Dashboard
+          </MenuItem>
+        )}
         <MenuItem onClick={logout}>Logout</MenuItem>
       </MenuList>
     </Menu>

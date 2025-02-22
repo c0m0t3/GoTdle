@@ -11,6 +11,7 @@ import { QuoteModePage } from './pages/QuoteModePage.tsx';
 import { ImageModePage } from './pages/ImageModePage.tsx';
 import { ScoreboardPage } from './pages/ScoreboardPage.tsx';
 import { ProfilePage } from './pages/ProfilePage.tsx';
+import { AdminPage } from './pages/AdminPage.tsx';
 import { LoginPage } from './pages/LoginPage.tsx';
 import { RegisterPage } from './pages/RegisterPage.tsx';
 import { useAuth } from './providers/AuthProvider.tsx';
@@ -18,6 +19,7 @@ import { useAuth } from './providers/AuthProvider.tsx';
 export type RouteConfig = RouteProps & {
   path: string;
   isPrivate?: boolean;
+  adminRequired?: boolean;
 };
 
 export const appRoutes: RouteConfig[] = [
@@ -56,6 +58,12 @@ export const appRoutes: RouteConfig[] = [
     isPrivate: true,
   },
   {
+    path: '/admin/dashboard',
+    element: <AdminPage />,
+    isPrivate: true,
+    adminRequired: true,
+  },
+  {
     path: '/auth/login',
     element: <LoginPage />,
   },
@@ -65,9 +73,14 @@ export const appRoutes: RouteConfig[] = [
   },
 ];
 
-const renderRouteMap = ({ isPrivate, element, ...restRoute }: RouteConfig) => {
+const renderRouteMap = ({
+  isPrivate,
+  adminRequired,
+  element,
+  ...restRoute
+}: RouteConfig) => {
   const authRequiredElement = isPrivate ? (
-    <AuthRequired>{element}</AuthRequired>
+    <AuthRequired adminRequired={adminRequired}>{element}</AuthRequired>
   ) : (
     element
   );
@@ -80,13 +93,24 @@ export const AppRoutes = () => {
   return <Routes>{appRoutes.map(renderRouteMap)}</Routes>;
 };
 
-const AuthRequired = ({ children }: { children: React.ReactNode }) => {
-  const { isLoggedIn } = useAuth();
+const AuthRequired = ({
+  children,
+  adminRequired = false,
+}: {
+  children: React.ReactNode;
+  adminRequired?: boolean;
+}) => {
+  const { isLoggedIn, isAdmin } = useAuth();
   const loginPage = '/auth/login';
+  const homePage = '/home';
   const { pathname, search } = useLocation();
 
   if (!isLoggedIn) {
     return <Navigate to={`${loginPage}?redirect=${pathname}${search}`} />;
   }
+  if (adminRequired && !isAdmin) {
+    return <Navigate to={`${homePage}?redirect=${pathname}${search}`} />;
+  }
+
   return <>{children}</>;
 };

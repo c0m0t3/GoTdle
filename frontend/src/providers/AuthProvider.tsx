@@ -17,6 +17,7 @@ export type User = {
   id: string;
   email: string;
   username: string;
+  isAdmin: boolean;
   iat: number;
   exp: number;
   iss: string;
@@ -26,6 +27,7 @@ type AuthContext = {
   user: User | null;
   accessToken: string | null;
   isLoggedIn: boolean;
+  isAdmin: boolean;
   actions: {
     logout: () => void;
     login: (loginData: LoginData) => Promise<void>;
@@ -61,12 +63,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       toast({
         description: 'Your session has expired. Please log in again.',
         status: 'error',
-        duration: null,
+        duration: 5000,
         isClosable: true,
         position: 'top',
-        containerStyle: {
-          fontSize: '3xl',
-        },
       });
       navigate('/auth/login', { replace: true });
     }
@@ -135,6 +134,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         user,
         accessToken,
         isLoggedIn: !!user,
+        isAdmin: user?.isAdmin ?? false,
         actions: {
           logout: onLogout,
           login: onLogin,

@@ -17,6 +17,4 @@ export class UserTestHelper {
   }) {
     return this.userRepository.createUser(data);
   }
-
-  
 }

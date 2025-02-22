@@ -38,6 +38,7 @@ export const createUserZodSchema = createInsertSchema(userSchema, {
     .string()
     .min(3)
     .regex(/^[^'";<>&]*$/, 'Input contains forbidden characters'),
+  isAdmin: z.boolean().optional(),
 }).transform(async (data) => {
   try {
     const hashedPassword = await DI.utils.passwordHasher.hashPassword(
@@ -90,8 +91,9 @@ export const updateScoreZodSchema = z.object({
   recentScores: z.array(z.number().int()),
 });
 
-export const updateDailyScoreZodSchema = z.object({
-  dailyScore: z.array(z.number()),
+export const updateDailyOrStreakZodSchema = z.object({
+  streak: z.number().int().optional(),
+  dailyScore: z.array(z.number()).optional(),
 });
 
 export const createCharacterZodSchema = z.array(
@@ -120,6 +122,6 @@ export const createCharacterZodSchema = z.array(
 
 export type CreateUser = z.infer<typeof createUserZodSchema>;
 export type UpdateScore = z.infer<typeof updateScoreZodSchema>;
-export type UpdateDailyScore = z.infer<typeof updateDailyScoreZodSchema>;
+export type UpdateDailyOrStreak = z.infer<typeof updateDailyOrStreakZodSchema>;
 export type UpdateUser = z.infer<typeof updateUserZodSchema>;
 export type CreateCharacter = z.infer<typeof createCharacterZodSchema>;

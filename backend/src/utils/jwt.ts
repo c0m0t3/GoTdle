@@ -5,6 +5,7 @@ export class Jwt {
     private readonly secret: string,
     private readonly options: SignOptions,
   ) {}
+
   generateToken(payload: JwtPayload): string {
     return jwt.sign(payload, this.secret, this.options);
   }
@@ -18,6 +19,7 @@ type JwtUserData = {
   id: string;
   email: string;
   username: string;
+  isAdmin: boolean;
 };
 
 export type JwtToken = JwtUserData & JwtPayload;

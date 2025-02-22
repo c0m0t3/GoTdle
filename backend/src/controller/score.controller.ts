@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { ScoreRepository } from '../database/repository/score.repository';
 import { z } from 'zod';
 import {
-  updateDailyScoreZodSchema,
+  updateDailyOrStreakZodSchema,
   updateScoreZodSchema,
 } from '../validation/validation';
 
@@ -44,10 +44,13 @@ export class ScoreController {
     res.status(200).send(updatedScore);
   }
 
-  async updateDailyScoreByUserId(req: Request, res: Response): Promise<void> {
-    const validatedData = updateDailyScoreZodSchema.parse(req.body);
+  async updateDailyOrStreakByUserId(
+    req: Request,
+    res: Response,
+  ): Promise<void> {
+    const validatedData = updateDailyOrStreakZodSchema.parse(req.body);
 
-    const updatedScore = await this.scoreRepository.updateDailyScoreByUserId(
+    const updatedScore = await this.scoreRepository.updateDailyOrStreakByUserId(
       req.user!.id,
       validatedData,
     );
