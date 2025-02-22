@@ -4,9 +4,10 @@ services:
     container_name: fwe-gotdle-frontend
     image: registry.code.fbi.h-da.de/sthiohnoo/gotdle/frontend:latest
     ports:
-      - 0.0.0.0:5173:5173
+      - 0.0.0.0:4173:4173
     networks:
       - default
+    command: sh -c "npm run build && npm run preview"
     env_file:
       - .env.frontend
 
@@ -19,7 +20,7 @@ services:
       - default
     env_file:
       - .env.backend
-    command: sh -c "npm run db:migrate && npm start"
+    command: sh -c "npm run build && npm run db:migrate && npm run start"
     depends_on:
       - fwe-gotdle-db
 
@@ -51,3 +52,4 @@ volumes:
 networks:
   default:
     driver: bridge
+    
