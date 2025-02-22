@@ -1,65 +1,113 @@
 [
   {
     "email": "colin@moissl.de",
-    "password": "$2b$10$iY8/c9AmowANNdEheEd2C.OswcYcLaNcGMjIWR1nBYsuCoB./1cW2",
+    "password": "$2a$12$IrciIpJF2ivtyHCJfAUVru6UwOo7G1nhctwydF4nzt1dZwNKFZKsG",
     "username": "Colin",
     "isAdmin": true,
     "score": {
       "streak": 5,
       "lastPlayed": "2023-10-01",
       "longestStreak": 10,
-      "dailyScore": [1, 1, 1],
+      "dailyScore": [
+        1,
+        1,
+        1
+      ],
       "recentScores": [
-        [1, 1, 1],
-        [4, 5, 12]
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          4,
+          5,
+          12
+        ]
       ]
     }
   },
   {
     "email": "hiroyuki@Ohno.jp",
-    "password": "$2b$10$yH5/c2AmqweANNdEheEd2C.KlM3LaNcGMjIYR3nBYsoPaD./2vF3",
+    "password": "$2a$12$IrciIpJF2ivtyHCJfAUVru6UwOo7G1nhctwydF4nzt1dZwNKFZKsG",
     "username": "Hiro",
     "isAdmin": true,
     "score": {
       "streak": 3,
       "lastPlayed": "2023-09-30",
       "longestStreak": 7,
-      "dailyScore": [1, 2, 3],
+      "dailyScore": [
+        1,
+        2,
+        3
+      ],
       "recentScores": [
-        [1, 2, 3],
-        [44, 55, 66]
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          44,
+          55,
+          66
+        ]
       ]
     }
   },
   {
     "email": "benjamin@Piwon.nz",
-    "password": "$2b$10$aJ8/c9AmowBNNdEheEd2C.PswcTLbNcFMjIWR3nXYsoCoB./1cW2",
+    "password": "$2a$12$IrciIpJF2ivtyHCJfAUVru6UwOo7G1nhctwydF4nzt1dZwNKFZKsG",
     "username": "Benjamin",
     "isAdmin": true,
     "score": {
       "streak": 1,
       "lastPlayed": "2023-09-29",
       "longestStreak": 3,
-      "dailyScore": [1, 1, 1],
+      "dailyScore": [
+        1,
+        1,
+        1
+      ],
       "recentScores": [
-        [1, 1, 1],
-        [4, 5, 12]
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          4,
+          5,
+          12
+        ]
       ]
     }
   },
   {
     "email": "bunte@bunte.de",
-    "password": "$2b$10$eY8/c9ZmowANNdEheRd2C.MswcALaNcGMjKWR1nXYsoCoB./3xF5",
+    "password": "$2a$12$IrciIpJF2ivtyHCJfAUVru6UwOo7G1nhctwydF4nzt1dZwNKFZKsG",
     "username": "Bunte",
     "isAdmin": true,
     "score": {
       "streak": 42,
       "lastPlayed": "1984-03-14",
       "longestStreak": 1337,
-      "dailyScore": [1, 1, 1],
+      "dailyScore": [
+        1,
+        1,
+        1
+      ],
       "recentScores": [
-        [1, 1, 1],
-        [1, 1, 1]
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ]
       ]
     }
   }
