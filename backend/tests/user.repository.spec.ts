@@ -13,6 +13,7 @@ const userData = {
   password: 'password123',
   username: 'testuser',
   id: TEST_IDS.USER_ID,
+  isAdmin: false,
 };
 
 const userData2 = {
@@ -20,6 +21,7 @@ const userData2 = {
   password: 'password123',
   username: 'testuser2',
   id: TEST_IDS.USER_ID2,
+  isAdmin: false,
 };
 
 const scoreData = {
@@ -58,6 +60,7 @@ describe('UserRepository', () => {
       expect(createdUser).toHaveProperty('id');
       expect(createdUser.email).toBe(userData.email);
       expect(createdUser.username).toBe(userData.username);
+      expect(createdUser.isAdmin).toBe(userData.isAdmin);
     });
   });
 
@@ -73,7 +76,13 @@ describe('UserRepository', () => {
         password: userData.password,
         username: createdUser.username,
         createdAt: createdUser.createdAt,
+        isAdmin: createdUser.isAdmin,
       });
+    });
+    it('should return undefined if user does not exist', async () => {
+      const result = await userRepository.getUserById(TEST_IDS.NON_EXISTENT_USER);
+
+      expect(result).toBeUndefined();
     });
   });
 
@@ -91,7 +100,13 @@ describe('UserRepository', () => {
         password: userData.password,
         username: createdUser.username,
         createdAt: createdUser.createdAt,
+        isAdmin: createdUser.isAdmin,
       });
+    });
+    it('should return undefined if username does not exist', async () => {
+      const result = await userRepository.getUserByUsername('nonexistentuser');
+
+      expect(result).toBeUndefined();
     });
   });
 
@@ -107,7 +122,13 @@ describe('UserRepository', () => {
         password: userData.password,
         username: createdUser.username,
         createdAt: createdUser.createdAt,
+        isAdmin: createdUser.isAdmin,
       });
+    });
+    it('should return undefined if email does not exist', async () => {
+      const result = await userRepository.getUserByEmail('nonexistent@example.com');
+
+      expect(result).toBeUndefined();
     });
   });
 
@@ -152,6 +173,7 @@ describe('UserRepository', () => {
         email: createdUser.email,
         username: createdUser.username,
         createdAt: createdUser.createdAt,
+        isAdmin: createdUser.isAdmin,
         score: {
           streak: 0,
           lastPlayed: null,
@@ -173,6 +195,7 @@ describe('UserRepository', () => {
         email: createdUser.email,
         username: createdUser.username,
         createdAt: createdUser.createdAt,
+        isAdmin: createdUser.isAdmin,
       });
     });
 
@@ -251,6 +274,7 @@ describe('UserRepository', () => {
         email: updatedUserData.email,
         username: updatedUserData.username,
         createdAt: createdUser.createdAt,
+        isAdmin: createdUser.isAdmin,
       });
     });
 
@@ -263,6 +287,33 @@ describe('UserRepository', () => {
       const result = await userRepository.updateUserById(
         TEST_IDS.NON_EXISTENT_USER,
         updatedUserData,
+      );
+
+      expect(result).toBeUndefined();
+    });
+  });
+  describe('updateAdminState', () => {
+    it('should update the admin state of a user', async () => {
+      const createdUser = await userRepository.createUser(userData);
+
+      const updatedUser = await userRepository.updateAdminState(
+        createdUser.id,
+        true,
+      );
+
+      expect(updatedUser).toEqual({
+        id: createdUser.id,
+        email: createdUser.email,
+        username: createdUser.username,
+        createdAt: createdUser.createdAt,
+        isAdmin: true,
+      });
+    });
+
+    it('should return undefined if user does not exist', async () => {
+      const result = await userRepository.updateAdminState(
+        TEST_IDS.NON_EXISTENT_USER,
+        true,
       );
 
       expect(result).toBeUndefined();

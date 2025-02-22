@@ -8,11 +8,6 @@ const TEST_CHARACTER = {
   name: 'Jon Snow',
 };
 
-const TEST_CHARACTER2 = {
-  _id: 2,
-  name: 'Jon Snow'
-};
-
 describe('CharacterController', () => {
   let testDatabase: TestDatabase;
   let characterRepository: CharacterRepository;
@@ -36,6 +31,7 @@ describe('CharacterController', () => {
     };
   });
 
+
   afterEach(async () => {
     await testDatabase.clearDatabase();
   });
@@ -55,27 +51,6 @@ describe('CharacterController', () => {
 
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.send).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({ name: 'Jon Snow' })]));
-    });
-
-    it('should return 409 if character name already exists', async () => {
-      req.body = [TEST_CHARACTER];
-
-      await characterController.createCharacters(
-        req as Request,
-        res as Response,
-      );
-
-      req.body = [TEST_CHARACTER2];
-
-      await characterController.createCharacters(
-        req as Request,
-        res as Response,
-      );
-
-      expect(res.status).toHaveBeenCalledWith(409);
-      expect(res.send).toHaveBeenCalledWith({
-        errors: ['Creation canceled! CharacterName already exists'],
-      });
     });
   });
 

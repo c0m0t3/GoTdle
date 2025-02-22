@@ -3,7 +3,7 @@ import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { ZodError } from 'zod';
 
 interface CustomError extends Error {
-  statusCode?: number;
+  code?: string;
 }
 
 export function globalErrorHandler(
@@ -35,6 +35,15 @@ export function globalErrorHandler(
     });
     return;
   }
+
+    // Handle database unique constraint errors
+    if (err.code === '23505') {
+      res.status(409).json({
+        errors: ['Conflict: Duplicate entry detected'],
+      });
+      return;
+    }
+  
 
   console.error('Unhandled error:', err);
 
