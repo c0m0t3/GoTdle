@@ -33,7 +33,7 @@ testFrontend:
   stage: testFrontend
   image: node:21
   script:
-    - cda frontend
+    - cd frontend
     - npm install
     - npm test
 
