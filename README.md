@@ -280,9 +280,18 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 ## Admin Dashboard
 
 - [ ] **Displayed when the user is logged in and has the role of an admin:**
-- The admin can make other users admins or remove the admin role from other admins.
-- The admin can't remove the admin role from himself.
-- The admin can manage the characters.
+- The dashboard can toggle between User List and Manage Characters.
+- In User List the admin can:
+    - Make other users admins or remove the admin role from other admins.
+    - View all users, which can be filtered by admin role or searched by username.
+    - Note: The admin can't remove the admin role from himself.
+- In Manage Characters the admin can:
+    - Upload a JSON file to create new characters in the database.
+        - A preview is provided to show the characters.
+    - Manually type character information to create new characters.
+    - Delete all characters.
+    - A list of all characters is displayed below.
+        - Clicking on a character shows a more detailed view.
 
 ## Routes
 
