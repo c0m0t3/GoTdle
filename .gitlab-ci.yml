@@ -28,6 +28,7 @@ testCypress:
     - npm install
     - npm run dev -- --host 0.0.0.0 &
     - cd ../frontend
+    - rm package-lock.json
     - npm install
     - npm run dev -- --host 0.0.0.0 &
     - npx wait-on http://localhost:3000 http://localhost:3001
