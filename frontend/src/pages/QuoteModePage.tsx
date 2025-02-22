@@ -1,5 +1,5 @@
 import { BaseLayout } from '../layout/BaseLayout.tsx';
-import { Box, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Text, VStack } from '@chakra-ui/react';
 import { QuoteData, useQuoteApi } from '../hooks/useQuoteApi.ts';
 import { useEffect, useRef, useState } from 'react';
 import { OptionBase } from 'chakra-react-select';
@@ -16,6 +16,7 @@ import { ScoreModal } from '../components/ScoreModal.tsx';
 import { useFetchUser } from '../hooks/useFetchUser.tsx';
 import { useNavigationData } from '../hooks/useNavigationData.ts';
 import { ToolBar } from '../components/ToolBar.tsx';
+import { gotButtonStyle } from '../styles/buttonStyles.ts';
 
 interface QuoteModeState {
   quoteAttempts?: number;
@@ -39,6 +40,7 @@ export const QuoteModePage = () => {
   const client = useApiClient();
   const { user, isPlayedToday } = useFetchUser(1);
   const { label, navigationUrl } = useNavigationData(user?.id);
+  const [isHouseOpen, setIsHouseOpen] = useState(false);
 
   useEffect(() => {
     fetchApi().catch((error) => {
@@ -142,10 +144,27 @@ export const QuoteModePage = () => {
           <Text fontSize={'xl'} py={5}>
             "{apiData?.sentence}"
           </Text>
-          <Text fontSize={'sm'}>
-            {' '}
-            Pssst...answer is...{apiData?.character.name}
-          </Text>
+          <Button
+            onClick={() => setIsHouseOpen(!isHouseOpen)}
+            isDisabled={incorrectGuesses.length < 10}
+            sx={gotButtonStyle}
+          >
+            House
+          </Button>
+          {isHouseOpen && (
+            <VStack
+              mt={4}
+              alignItems="center"
+              border="1px solid"
+              borderColor="gray.300"
+              borderRadius="md"
+              p={4}
+              bg="rgb(120, 0, 0)"
+              textColor={'white'}
+            >
+              <Text>{apiData?.character.house}</Text>
+            </VStack>
+          )}
         </BaseBox>
         <BaseBox textAlign={'left'}>
           <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>

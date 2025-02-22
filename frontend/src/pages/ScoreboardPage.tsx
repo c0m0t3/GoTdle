@@ -18,6 +18,20 @@ import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
 import { formatDateShort } from '../utils/formatDate.ts';
 import { inputFieldStyles } from '../styles/inputFieldStyles.ts';
 
+type SortableKey =
+  | keyof User
+  | keyof Score
+  | 'classicMode'
+  | 'quoteMode'
+  | 'imageMode';
+
+type SortValue = number | string | null;
+
+interface SortConfig {
+  key: SortableKey;
+  direction: 'ascending' | 'descending';
+}
+
 interface Score {
   streak: number;
   lastPlayed: string | null;
@@ -37,10 +51,10 @@ interface User {
 export const ScoreboardPage = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [authError, setAuthError] = useState<boolean>(false);
-  const [sortConfig, setSortConfig] = useState<{
-    key: keyof User | keyof Score | 'classicMode' | 'quoteMode' | 'imageMode';
-    direction: 'ascending' | 'descending';
-  }>({ key: 'streak', direction: 'descending' });
+  const [sortConfig, setSortConfig] = useState<SortConfig>({
+    key: 'streak',
+    direction: 'descending',
+  });
   const [loggedInUserId, setLoggedInUserId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const client = useApiClient();
@@ -92,8 +106,8 @@ export const ScoreboardPage = () => {
   const sortedUsers = [...users].sort((a, b) => {
     if (sortConfig !== null) {
       const { key, direction } = sortConfig;
-      let aValue: number | string | null;
-      let bValue: number | string | null;
+      let aValue: SortValue;
+      let bValue: SortValue;
 
       if (key === 'classicMode') {
         aValue = a.score?.dailyScore[0] ?? null;
@@ -107,12 +121,12 @@ export const ScoreboardPage = () => {
       } else {
         aValue =
           key in a
-            ? (a[key as keyof User] as string | number | null)
-            : (a.score?.[key as keyof Score] as string | number | null);
+            ? (a[key as keyof User] as SortValue)
+            : (a.score?.[key as keyof Score] as SortValue);
         bValue =
           key in b
-            ? (b[key as keyof User] as string | number | null)
-            : (b.score?.[key as keyof Score] as string | number | null);
+            ? (b[key as keyof User] as SortValue)
+            : (b.score?.[key as keyof Score] as SortValue);
       }
 
       if (aValue !== null && bValue !== null) {
@@ -145,18 +159,25 @@ export const ScoreboardPage = () => {
   const getSortIcon = (
     key: keyof User | keyof Score | 'classicMode' | 'quoteMode' | 'imageMode',
   ) => {
-    if (sortConfig?.key === key) {
-      return sortConfig.direction === 'ascending' ? (
-        <span style={{ marginLeft: '0.5em' }}>
-          <FaArrowUp />
-        </span>
-      ) : (
-        <span style={{ marginLeft: '0.5em' }}>
-          <FaArrowDown />
-        </span>
-      );
-    }
-    return null;
+    const isActive = sortConfig?.key === key;
+    const activeDirection =
+      sortConfig?.direction === 'ascending' ? 'up' : 'down';
+
+    return (
+      <span
+        style={{ marginLeft: '0.5em', display: 'flex', alignItems: 'center' }}
+      >
+        <FaArrowUp
+          size={isActive && activeDirection === 'up' ? 18 : 12}
+          color={isActive && activeDirection === 'up' ? 'black' : 'lightgray'}
+          style={{ marginRight: '4px' }}
+        />
+        <FaArrowDown
+          size={isActive && activeDirection === 'down' ? 18 : 12}
+          color={isActive && activeDirection === 'down' ? 'black' : 'lightgray'}
+        />
+      </span>
+    );
   };
 
   return (
@@ -186,60 +207,39 @@ export const ScoreboardPage = () => {
               </Box>
               <Table variant="simple">
                 <Thead>
-                  <Tr sx={{ borderBottom: '2px solid black' }}>
+                  <Tr sx={{ borderBottom: '2px solid black' }} cursor="pointer">
                     <Th>Rank</Th>
-                    <Th
-                      onClick={() => requestSort('username')}
-                      sx={{ cursor: 'pointer' }}
-                    >
+                    <Th onClick={() => requestSort('username')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Name {getSortIcon('username')}
                       </div>
                     </Th>
-                    <Th
-                      onClick={() => requestSort('createdAt')}
-                      sx={{ cursor: 'pointer' }}
-                    >
+                    <Th onClick={() => requestSort('createdAt')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Created At {getSortIcon('createdAt')}
                       </div>
                     </Th>
-                    <Th
-                      onClick={() => requestSort('streak')}
-                      sx={{ cursor: 'pointer' }}
-                    >
+                    <Th onClick={() => requestSort('streak')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Current Streak {getSortIcon('streak')}
                       </div>
                     </Th>
-                    <Th
-                      onClick={() => requestSort('longestStreak')}
-                      sx={{ cursor: 'pointer' }}
-                    >
+                    <Th onClick={() => requestSort('longestStreak')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Longest Streak {getSortIcon('longestStreak')}
                       </div>
                     </Th>
-                    <Th
-                      onClick={() => requestSort('classicMode')}
-                      sx={{ cursor: 'pointer' }}
-                    >
+                    <Th onClick={() => requestSort('classicMode')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Classic Mode {getSortIcon('classicMode')}
                       </div>
                     </Th>
-                    <Th
-                      onClick={() => requestSort('quoteMode')}
-                      sx={{ cursor: 'pointer' }}
-                    >
+                    <Th onClick={() => requestSort('quoteMode')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Quote Mode {getSortIcon('quoteMode')}
                       </div>
                     </Th>
-                    <Th
-                      onClick={() => requestSort('imageMode')}
-                      sx={{ cursor: 'pointer' }}
-                    >
+                    <Th onClick={() => requestSort('imageMode')}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         Image Mode {getSortIcon('imageMode')}
                       </div>
@@ -249,7 +249,7 @@ export const ScoreboardPage = () => {
                 <Tbody>
                   {sortedUsers.map((user, index) => (
                     <Tr
-                      key={index}
+                      key={user.id}
                       sx={{
                         borderBottom:
                           index === sortedUsers.length - 1
