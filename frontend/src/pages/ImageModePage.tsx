@@ -1,5 +1,5 @@
 import { BaseLayout } from '../layout/BaseLayout.tsx';
-import { Box, Image, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Image, Text, VStack } from '@chakra-ui/react';
 import { ImageData, useImageApi } from '../hooks/useImageApi.ts';
 import { useEffect, useRef, useState } from 'react';
 import { CharacterSelect } from '../components/CharacterSelect.tsx';
@@ -16,6 +16,7 @@ import { ScoreModal } from '../components/ScoreModal.tsx';
 import { useFetchUser } from '../hooks/useFetchUser.tsx';
 import { useNavigationData } from '../hooks/useNavigationData.ts';
 import { ToolBar } from '../components/ToolBar.tsx';
+import { gotButtonStyle } from '../styles/buttonStyles.ts';
 
 interface ImageModeState {
   imageAttempts?: number;
@@ -39,6 +40,7 @@ export const ImageModePage = () => {
   const [isScoreModalOpen, setIsScoreModalOpen] = useState<boolean>(false);
   const { user, isPlayedToday } = useFetchUser(2);
   const { label, navigationUrl } = useNavigationData(user?.id);
+  const [isTitleOpen, setIsTitleOpen] = useState(false);
 
   useEffect(() => {
     fetchApi().catch((error) => {
@@ -159,6 +161,28 @@ export const ImageModePage = () => {
             mx={'auto'}
             py={5}
           />
+          <Button
+            onClick={() => setIsTitleOpen(!isTitleOpen)}
+            isDisabled={incorrectGuesses.length < 10}
+            sx={gotButtonStyle}
+            my={2}
+          >
+            Title
+          </Button>
+          {isTitleOpen && (
+            <VStack
+              mt={4}
+              alignItems="center"
+              border="1px solid"
+              borderColor="gray.300"
+              borderRadius="md"
+              p={4}
+              bg="rgb(120, 0, 0)"
+              textColor={'white'}
+            >
+              <Text>{apiData?.title}</Text>
+            </VStack>
+          )}
         </BaseBox>
         <BaseBox textAlign={'left'}>
           <CharacterSelect<CharacterOption, false, GroupBase<CharacterOption>>
