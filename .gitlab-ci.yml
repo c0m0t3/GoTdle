@@ -21,22 +21,22 @@ before_script:
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_JOB_TOKEN" "$CI_REGISTRY"
 
 
-# testBackend:
-#   stage: test
-#   image: node:22
-#   script:
-#     - cd backend
-#     - npm install
-#     - npm test
+testBackend:
+  stage: test
+  image: node:22
+  script:
+    - cd backend
+    - npm install
+    - npm test
 
-# testFrontendComponent:
-#   stage: test
-#   image: node:22
-#   script:
-#     - cd frontend
-#     - rm package-lock.json
-#     - npm install
-#     - npm test
+testFrontendComponent:
+  stage: test
+  image: node:22
+  script:
+    - cd frontend
+    - rm package-lock.json
+    - npm install
+    - npm test
 
 build-backend:
   stage: build
@@ -66,6 +66,9 @@ deploy:
     - ssh-keyscan -H "$SSH_DEPLOY_IP" > ~/.ssh/known_hosts
   script:
     - ssh -i key $SSH_DEPLOY_USER@$SSH_DEPLOY_IP 'cd /home/ubuntu/dev/gotdle && export $productionToken && ./deploy.sh'
+  only:
+      - main
+
   
 
 
