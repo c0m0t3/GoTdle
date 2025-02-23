@@ -17,9 +17,6 @@ stages:
   - build
   - deploy
 
-before_script:
-  - docker login -u "$CI_REGISTRY_USER" -p "$CI_JOB_TOKEN" "$CI_REGISTRY"
-
 
 testBackend:
   stage: test
@@ -28,6 +25,8 @@ testBackend:
     - cd backend
     - npm install
     - npm test
+  except:
+    - main
 
 testFrontendComponent:
   stage: test
@@ -37,9 +36,13 @@ testFrontendComponent:
     - rm package-lock.json
     - npm install
     - npm test
+  except:
+    - main
 
 build-backend:
   stage: build
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_JOB_TOKEN" "$CI_REGISTRY"
   script:
     - cd backend
     - echo "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY" "$CI_REGISTRY_USER"
@@ -50,6 +53,8 @@ build-backend:
 
 build-frontend:
   stage: build
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_JOB_TOKEN" "$CI_REGISTRY"
   script:
     - cd frontend
     - docker build -t "$CI_REGISTRY_IMAGE/frontend:$DOCKER_TAG" .
