@@ -91,8 +91,8 @@ export const ScoreModal: React.FC<ScoreModalProps> = ({
             </BaseBox>
             <Text fontSize="md" textAlign="center">
               {' '}
-              <Text as="a" href="https://gotdle.net">
-                https://gotdle.net
+              <Text as="a" href="https://gotdle.tech/">
+                https://gotdle.tech/
               </Text>
             </Text>
             <HStack spacing={4}>
