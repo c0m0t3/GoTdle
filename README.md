@@ -157,7 +157,6 @@ Open a browser and navigate to `http://localhost:4173/` or click the link in the
 - [Admin Dashboard](#admin-dashboard)
 - [Login](#login)
 - [Register](#register)
-- [Admin Dashboard](#admin-dashboard)
 
 ## Base
 
@@ -412,5 +411,5 @@ defined in the `.gitlab-ci.yml` file and consists of the following stages:
 5. **Build Frontend**:
     - Builds the Docker image for the frontend.
 6. **Deploy**:
-    - Uses the `alpine` image.
+    - Uses the `debian` image.
     - Deploys the application to the production server using `docker-compose`.
