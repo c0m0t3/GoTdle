@@ -63,7 +63,7 @@ deploy:
   before_script:
     - echo $SSH_DEPLOY_KEY > key
   script:
-    - ssh -i key $SSH_DEPLOY_USER@$SSH_DEPLOY_IP 'touch foobar.txt'
+    - ssh -i key $SSH_DEPLOY_USER@$SSH_DEPLOY_IP 'touch foobar.txt && exit'
   
 
 
