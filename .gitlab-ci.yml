@@ -28,6 +28,8 @@ testBackend:
     - cd backend
     - npm install
     - npm test
+  except:
+    - main
 
 testFrontendComponent:
   stage: test
@@ -37,6 +39,8 @@ testFrontendComponent:
     - rm package-lock.json
     - npm install
     - npm test
+  except:
+    - main
 
 build-backend:
   stage: build
