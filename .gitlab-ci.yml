@@ -17,9 +17,6 @@ stages:
   - build
   - deploy
 
-before_script:
-  - docker login -u "$CI_REGISTRY_USER" -p "$CI_JOB_TOKEN" "$CI_REGISTRY"
-
 
 testBackend:
   stage: test
@@ -44,6 +41,8 @@ testFrontendComponent:
 
 build-backend:
   stage: build
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_JOB_TOKEN" "$CI_REGISTRY"
   script:
     - cd backend
     - echo "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY" "$CI_REGISTRY_USER"
@@ -54,6 +53,8 @@ build-backend:
 
 build-frontend:
   stage: build
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_JOB_TOKEN" "$CI_REGISTRY"
   script:
     - cd frontend
     - docker build -t "$CI_REGISTRY_IMAGE/frontend:$DOCKER_TAG" .
