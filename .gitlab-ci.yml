@@ -62,7 +62,8 @@ deploy:
   image: debian
   before_script:
     - echo "$SSH_DEPLOY_KEY" | base64 -d > key
-    - ssh-keyscan -H $SSH_DEPLOY_IP > ~/.ssh/known_hosts
+    - chmod 600 key
+    - ssh-keyscan -H "$SSH_DEPLOY_IP" > ~/.ssh/known_hosts
   script:
     - ssh -i key $SSH_DEPLOY_USER@$SSH_DEPLOY_IP 'touch foobar.txt && exit'
   
