@@ -106,13 +106,21 @@ Run the database migrations to create the necessary tables:
 npm run db:migrate
 ```
 
-### Step 6: Build the Backend
+### Step 6: Seed the Database
+
+Seed the database with characters and sample users:
+
+```bash
+npm run seed
+```
+
+### Step 7: Build the Backend
 
 ```bash
 npm run build
 ```
 
-### Step 7: Start the Backend
+### Step 8: Start the Backend
 
 ```bash
 npm start
@@ -123,6 +131,7 @@ npm start
 ### Step 1: Navigate to the frontend directory:
 
 ```bash
+cd ..
 cd frontend
 ```
 
