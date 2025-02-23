@@ -1,98 +1,440 @@
-# GOTdle
+# FWE WS24/25 Project GoTdle
 
+## Table of Contents
 
+1. [Getting started](#getting-started)
+2. [Application Functionalities](#application-functionalities)
+3. [Routes](#routes)
+4. [CI/CD Pipeline](#cicd-pipeline)
+5. [API Reference](#api-reference)
+6. [Authors](#authors)
 
 ## Getting started
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+Not interested in instructions and just want to play? No problem! Simply visit
+the [GoTdle](https://gotdle.tech/) website and start playing!
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+### Prerequisites
 
-## Add your files
+Ensure the following software components are installed on your PC:
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+- [ ] Node.js (JavaScript runtime environment)
+- [ ] npm (Node Package Manager)
+- [ ] Git
+- [ ] Docker and Docker Compose
 
+1. Install __Node.js__ and __npm__
+
+   Visit the [Node.js website](https://nodejs.org/).
+   Download the recommended version for your platform (LTS version is recommended).
+   Follow the installation instructions for your operating system.
+   Verify the installation:
+
+    ```bash
+    node -v
+    npm -v
+    ```
+
+2. Install __Git__
+
+   Visit the [Git website](https://git-scm.com/).
+   Download the recommended version for your platform.
+   Follow the installation instructions for your operating system.
+   Verify the installation:
+
+    ```bash
+    git --version
+    ```
+
+3. Install __Docker__ and __Docker Compose__
+
+   Visit the [Docker website](https://www.docker.com/).
+   Download the recommended version for your platform.
+   Follow the installation instructions for your operating system.
+   Verify the installation:
+
+    ```bash
+    docker --version
+    docker-compose --version
+    ```
+
+### Clone the Repository
+
+Clone the repository to your local machine:
+
+```bash
+git clone https://code.fbi.h-da.de/sthiohnoo/gotdle.git
 ```
-cd existing_repo
-git remote add origin https://code.fbi.h-da.de/sthiohnoo/gotdle.git
-git branch -M main
-git push -uf origin main
+
+### Backend Setup
+
+### Step 1: Navigate to the Backend Directory
+
+```bash
+cd gotdle/backend
 ```
 
-## Integrate with your tools
+### Step 2: Install Dependencies
 
-- [ ] [Set up project integrations](https://code.fbi.h-da.de/sthiohnoo/gotdle/-/settings/integrations)
+Install the necessary dependencies using npm:
 
-## Collaborate with your team
+```bash
+npm install
+```
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+### Step 3: Set Up Environment Variables
 
-## Test and Deploy
+To configure the application to use the database in Docker, follow these steps:
 
-Use the built-in continuous integration in GitLab.
+1. Create a `.env` file in the src directory and copy the `.env.example` file content into it.
+2. Edit the `.env` file and replace the placeholders(user, password, database) with the actual values from
+   `docker-compose.yml`
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### Step 4: Set Up the Database
 
-***
+Set up the database using Docker Compose:
 
-# Editing this README
+```bash
+docker-compose up -d
+```
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### Step 5: Migrate the Database
 
-## Suggestions for a good README
+Run the database migrations to create the necessary tables:
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+```bash
+npm run db:migrate
+```
 
-## Name
-Choose a self-explaining name for your project.
+### Step 6: Build the Backend
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+```bash
+npm run build
+```
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+### Step 7: Start the Backend
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+```bash
+npm start
+```
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+## Frontend Setup
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+### Step 1: Navigate to the frontend directory:
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+```bash
+cd frontend
+```
 
-## Roadmap
-### Stand? Ende der letzten Staffel?
-- Klassik Mode: Charaktere erraten -> Alter, Geschlecht, Haus, Tod, Religion
-- Quotes Mode: Zitate erraten
-- Emoji Mode: Anhand von Emojis Charaktere erraten
-- Bilder Mode: Anhand von Bildern die hereingezoomt sind Charaktere erraten
-- Karten Mode: Orte auf einer Karte erraten
+### Step 2: Install Dependencies
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+Install the necessary dependencies using npm:
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+```bash
+npm install
+```
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+### Step 3: Build the Frontend
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+```bash
+npm run build
+```
 
-## License
-For open source projects, say how it is licensed.
+### Step 4: Start the Frontend
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+```bash
+npm run preview
+```
+
+### Step 4: Access the Application
+
+Open a browser and navigate to `http://localhost:4173/` or click the link in the terminal.
+
+## Application Functionalities
+
+- [Classic Mode](#classic-mode)
+- [Quotes Mode](#quotes-mode)
+- [Image Mode](#image-mode)
+- [Success Box](#success-box)
+- [Score Box](#score-box)
+- [Scoreboard](#scoreboard)
+- [Profile](#profile)
+- [Admin Dashboard](#admin-dashboard)
+- [Login](#login)
+- [Register](#register)
+
+## Base
+
+- [ ] __Manage Users:__ Create, read, update, and delete users.
+- [ ] __Manage Scores:__ Playing the game will update the user's score and can be seen in the leaderboard.
+- [ ] __Manage Streaks:__ Playing all Modes will increase the user's streak and can be seen in the leaderboard.
+- [ ] __Play Game:__ Play the 3 Modes with daily updated questions with internal and external APIs.
+
+## Classic Mode
+
+![Classic Mode](frontend/src/assets/classic-mode.png)
+
+- [ ] **Guess Characters:**  
+  Try to guess a character, and your guess will be added to a grid.  
+  The grid reveals whether the attributes match the correct character:
+    - **Green:** The attribute matches.
+    - **Red:** The attribute does not match.  
+      For **First Appearance** and **Last Appearance**, incorrect guesses will display an arrow indicating if the
+      correct value is higher or lower.
+
+### Character Attributes
+
+| **Attribute**        | **Examples**                     | **Description**                               |
+|----------------------|----------------------------------|-----------------------------------------------|
+| **Gender**           | Female, Male                     | Specifies the character's gender.             |
+| **House**            | Targaryen, Stark, etc.           | Indicates the house the character belongs to. |
+| **Origin**           | Winterfell, King's Landing, etc. | Defines the character's place of origin.      |
+| **Status**           | Alive, Deceased, Unknown         | Shows the character's current status.         |
+| **Religion**         | Old Gods, Many-Faced God, etc.   | The religion the character follows.           |
+| **First Appearance** | S1 - S8                          | The season when the character first appeared. |
+| **Last Appearance**  | S1 - S8                          | The season when the character last appeared.  |
+
+### Hints
+
+- [ ] **Titles:** Shows the character's titles.
+    - enabled after 3 incorrect guesses
+- [ ] **Actor:** Shows the actor who played the character.
+    - enabled after 6 incorrect guesses
+
+## Quotes Mode
+
+![Quotes Mode](frontend/src/assets/quote-mode.png)
+
+- [ ] **Guess Quotes:**
+- Try to guess the character who said the quote.
+- The color of the box of the character will reveal the guess:
+    - **Green:** The quote matches the character.
+    - **Red:** The quote does not match the character.
+
+### Hints
+
+- [ ] **House:** Shows which house the character belongs to.
+    - enabled after 10 incorrect guesses
+
+## Image Mode
+
+![Image Mode](frontend/src/assets/image-mode.png)
+
+- [ ] **Guess Characters by a blurred image:**
+- Try to guess the character from the image.
+- The image will be blurred initially, and every incorrect guess will make the image slightly less blurred.
+    - Up to 20 times
+- The color of the box of the character will reveal the guess:
+    - **Green:** The image matches the character.
+    - **Red:** The image does not match the character.
+
+### Hints
+
+- [ ] **Title:** Shows a character's title.
+    - enabled after 10 incorrect guesses
+
+## Success Box
+
+![Success Box](frontend/src/assets/success-box.png)
+
+- [ ] **Displayed everytime a mode is completed:**
+- Shows the correct answer and the user's score.
+- The user can choose to play the next mode
+    - when all modes are completed, it directs the user to the leaderboard.
+- The time until the next character is revealed
+
+## Score Box
+
+![Score Box](frontend/src/assets/score-box.png)
+
+- [ ] **Displayed when all modes are completed:**
+- Shows the user's score in each mode and the total score.
+- Shows the streak of the user (length of daily made completions of the game without missing a day).
+- The user can copy the score to the clipboard and share it with friends.
+- The user can share directly to Twitter.
+
+## Scoreboard
+
+![Scoreboard](frontend/src/assets/scoreboard.png)
+
+- [ ] **Displayed when the user clicks on the leaderboard button:**
+- Shows a table of all users
+- contains the user's name, rank, created at, current streak, longest streak and scores in each mode.
+- can be sorted by all columns by clicking on the column name and will be indicated by an arrow.
+- The user can search for a user by username.
+
+## Profile
+
+![Profile](frontend/src/assets/profile.png)
+
+- [ ] **Displayed when the user clicks on the profile button:**
+- Shows the username, email, member since, current streak, longest streak, last played and scores in each mode.
+- For every mode the user can see the improvement or decrease in the score compared to the last time the mode was
+  played.
+- The user can change the username and email and passwort.
+- The user can delete the account after entering the password.
+
+## Admin Dashboard
+
+![Admin Dashboard_User](frontend/src/assets/adminDashboard-userList.png)
+![Admin Dashboard_Character](frontend/src/assets/adminDashboard-manageCharacter.png)
+![Admin Dashboard_todaysChar](frontend/src/assets/adminDashboard-todaysCharacter.png)
+![Admin Dashboard_User](frontend/src/assets/adminLine-Menu.png)
+
+- [ ] **Displayed when the user clicks the admin dashboard button. This button is visible only to users with admin
+  rights:**
+- On the dashboard page, the user can navigate between three tabs: User List, Manage Characters and Today's Character.
+- **User List:**
+    - Shows a table of all users.
+    - The user can grant or revoke admin rights to another user by simply clicking the ✔ or ❌ icons.
+    - The user can search for a user by username.
+    - The user can use the 'Show Admins' button to display only the admins in the list.
+- **Manage Characters:**
+    - The user can create and delete characters.
+    - For creating a character, the user needs to upload a json file with the character data.
+    - The uploaded file will be shown in the text field, which is also editable.
+    - For deleting characters, simply press the delete button. All characters will be deleted.
+    - Below the Create/Delete box, the user can see all saved characters in card format.
+    - Each card shows only a few details about the character. When the user clicks on a card, a modal opens with all the
+      character's information.
+
+![Admin Dashboard_CharacterCard](frontend/src/assets/characterCard-detailed.png)
+
+- **Today's Character:**
+    - The user can see the characters of the day for each mode.
+
+## Login
+
+![Login](frontend/src/assets/login.png)
+
+- [ ] **Displayed when the user is not logged in or clicks on the login button:**
+- The user can log in with the username or email and password.
+- The user can swap between login with username or email.
+- The user can click on the register button to register a new account.
+
+## Register
+
+![Register](frontend/src/assets/register.png)
+
+- [ ] **Displayed when the user clicks on the register button:**
+- The user can register with a username, email and password.
+- If the user is already registered, the user can click on the "Log in here!" text to change to the login page.
+- The username needs to be unique and the email needs to be a valid email address.
+- The password needs to be at least 8 characters long.
+
+## Routes
+
+All routes, except for user registration/login, are secured so that only authenticated users, meaning logged-in users,
+have access. Additionally, some routes are also protected so that only users with admin rights can access them.
+
+__User Routes:__
+
+- [ ] GET /users
+    - Description: Get all users
+    - Response: 200 Array of user objects
+- [ ] GET /users/me
+    - Description: Get the current user
+    - Response: 200 User object
+- [ ] GET /users/search
+    - Description: Search for users by username
+    - Response: 200 Array of user objects
+- [ ] PUT /users
+    - Description: Update the current user
+    - Request: User object
+    - Response: 200 User object
+    - Error: 400 Email/Username already exists
+- [ ] PUT /users/is_admin/:userId
+    - Description: Grant or revoke admin rights to a user
+    - Request: Params: userId & Body: {isAdmin: boolean}
+    - Response: 200 User object
+    - Error: 404 User not found / 400 Cannot change own admin state
+- [ ] DELETE /users
+    - Description: Delete the current user
+    - Response: 204 No Content
+    - Error: 401 Password incorrect
+
+__Score Routes:__
+
+- [ ] PUT /scores
+    - Description: Update the current user's scores
+    - Request: Score object
+    - Response: 200 Score object
+- [ ] PUT /scores/daily
+    - Description: Update the current user's daily streak
+    - Request: Score object
+    - Response: 200 Score object
+
+__Character Routes:__
+
+- [ ] POST /characters
+    - Description: Create a new character
+    - Request: Character object
+    - Response: 201 Character object
+    - Error: 409 Characters Name already exists
+- [ ] GET /characters
+    - Description: Get all characters
+    - Response: 200 Array of character objects
+- [ ] DELETE /characters
+    - Description: Delete all characters
+    - Response: 204 No Content
+
+__Auth Routes:__
+
+- [ ] POST /auth/register
+    - Description: Register a new user
+    - Request: User object
+    - Response: 201 User object
+    - Error: 400 Bad Request
+- [ ] POST /auth/login
+    - Description: Log in the user
+    - Request: User object
+    - Response: 200 access token
+    - Error: 401 Invalid credentials
+
+## CI/CD Pipeline
+
+This project uses GitLab CI/CD to automate the testing, building, and deployment of the application. The pipeline is
+defined in the `.gitlab-ci.yml` file and consists of the following stages:
+
+### Stages
+
+1. **Test**: Runs the tests for the backend and frontend.
+2. **Build**: Builds Docker images for the backend and frontend.
+3. **Deploy**: Deploys the application to the production server.
+
+### Steps
+
+1. **Before Script**: Logs in to the Docker registry.
+2. **Test Backend**:
+    - Uses the `node:22` image.
+    - Installs dependencies and runs tests for the backend.
+3. **Test Frontend**:
+    - Uses the `node:22` image.
+    - Installs dependencies and runs tests for the frontend.
+4. **Build Backend**:
+    - Builds the Docker image for the backend.
+5. **Build Frontend**:
+    - Builds the Docker image for the frontend.
+6. **Deploy**:
+    - Uses the `debian` image.
+    - Deploys the application to the production server using `docker-compose`.
+
+## API Reference
+
+This project fetches data from the following APIs to retrieve and display character-related information:
+
+1. [Game Of Thrones Quotes API](https://gameofthronesquotes.xyz/) - Used to fetch the quotes of Game of Thrones
+   characters.
+2. [Game of Thrones API](https://thronesapi.com/) - Used to fetch a image of Game of Thrones characters.
+
+[AGOT API Characters JSON](https://github.com/marceaudavid/agotapi/blob/master/data/characters.json) - The project also
+uses the characters JSON file from this GitHub repository, which has been slightly modified to suit our needs.
+
+## Authors
+
+This project was developed by:
+
+- [ ] stcomoiss
+- [ ] stbepiwon
+- [ ] stdarunte
+- [ ] sthiohnoo
