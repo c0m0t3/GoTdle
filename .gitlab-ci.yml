@@ -61,7 +61,7 @@ deploy:
   stage: deploy
   image: debian
   before_script:
-    - echo $SSH_DEPLOY_KEY > key
+    - echo "$SSH_DEPLOY_KEY" | base64 -d > key
   script:
     - ssh -i key $SSH_DEPLOY_USER@$SSH_DEPLOY_IP 'touch foobar.txt && exit'
   
