@@ -65,7 +65,7 @@ deploy:
     - chmod 600 key
     - ssh-keyscan -H "$SSH_DEPLOY_IP" > ~/.ssh/known_hosts
   script:
-    - ssh -i key $SSH_DEPLOY_USER@$SSH_DEPLOY_IP 'cd /home/ubuntu/dev/gotdle; export $productionToken; ./deploy.sh'
+    - ssh -i key $SSH_DEPLOY_USER@$SSH_DEPLOY_IP 'cd /home/ubuntu/dev/gotdle && export $productionToken && ./deploy.sh'
   
 
 
