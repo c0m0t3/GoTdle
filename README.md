@@ -43,7 +43,7 @@ Ensure the following software components are installed on your PC:
    Verify the installation:
 
     ```bash
-    git --version
+    git -v
     ```
 
 3. Install __Docker__ and __Docker Compose__
@@ -54,8 +54,8 @@ Ensure the following software components are installed on your PC:
    Verify the installation:
 
     ```bash
-    docker --version
-    docker-compose --version
+    docker -v
+    docker-compose -v
     ```
 
 ### Clone the Repository
