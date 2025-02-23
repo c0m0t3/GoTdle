@@ -6,8 +6,13 @@
 2. [Application Functionalities](#application-functionalities)
 3. [Routes](#routes)
 4. [CI/CD Pipeline](#cicd-pipeline)
+5. [API Reference](#api-reference)
+6. [Authors](#authors)
 
 ## Getting started
+
+Not interested in instructions and just want to play? No problem! Simply visit
+the [GoTdle](https://gotdle.tech/) website and start playing!
 
 ### Prerequisites
 
@@ -413,3 +418,23 @@ defined in the `.gitlab-ci.yml` file and consists of the following stages:
 6. **Deploy**:
     - Uses the `debian` image.
     - Deploys the application to the production server using `docker-compose`.
+
+## API Reference
+
+This project fetches data from the following APIs to retrieve and display character-related information:
+
+1. [Game Of Thrones Quotes API](https://gameofthronesquotes.xyz/) - Used to fetch the quotes of Game of Thrones
+   characters.
+2. [Game of Thrones API](https://thronesapi.com/) - Used to fetch a image of Game of Thrones characters.
+
+[AGOT API Characters JSON](https://github.com/marceaudavid/agotapi/blob/master/data/characters.json) - The project also
+uses the characters JSON file from this GitHub repository, which has been slightly modified to suit our needs.
+
+## Authors
+
+This project was developed by:
+
+- [ ] stcomoiss
+- [ ] stbepiwon
+- [ ] stdarunte
+- [ ] sthiohnoo
