@@ -60,7 +60,7 @@ export const BaseLayout = ({ children }: { children: React.ReactNode }) => {
         mt={10}
       >
         <Box mb={4}>
-          <a href="mailto:support@GoTdle.com">Contact Us</a>
+          <a href="mailto:support@GoTdle.tech">Contact Us</a>
         </Box>
         <Box mb={4}>
           <a
