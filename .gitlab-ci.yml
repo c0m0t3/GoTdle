@@ -20,6 +20,7 @@ stages:
 before_script:
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_JOB_TOKEN" "$CI_REGISTRY"
 
+
 testBackend:
   stage: test
   image: node:22
@@ -28,7 +29,7 @@ testBackend:
     - npm install
     - npm test
 
-testFrontend:
+testFrontendComponent:
   stage: test
   image: node:22
   script:
@@ -44,6 +45,8 @@ build-backend:
     - echo "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY" "$CI_REGISTRY_USER"
     - docker build -t "$CI_REGISTRY_IMAGE/backend:$DOCKER_TAG" .
     - docker push "$CI_REGISTRY_IMAGE/backend:$DOCKER_TAG"
+  only:
+      - main
 
 build-frontend:
   stage: build
@@ -51,11 +54,21 @@ build-frontend:
     - cd frontend
     - docker build -t "$CI_REGISTRY_IMAGE/frontend:$DOCKER_TAG" .
     - docker push "$CI_REGISTRY_IMAGE/frontend:$DOCKER_TAG"
+  only:
+      - main
 
 deploy:
   stage: deploy
-  image: alpine
+  image: debian
+  before_script:
+    - echo "$SSH_DEPLOY_KEY" | base64 -d > key
+    - chmod 600 key
+    - ssh-keyscan -H "$SSH_DEPLOY_IP" > ~/.ssh/known_hosts
   script:
-    - echo "Deploying to production..."
+    - ssh -i key $SSH_DEPLOY_USER@$SSH_DEPLOY_IP 'cd /home/ubuntu/dev/gotdle && export $productionToken && ./deploy.sh'
   only:
-    - main
+      - main
+
+  
+
+
