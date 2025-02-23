@@ -185,8 +185,6 @@ export const ClassicPage: React.FC = () => {
             Guess today's Game of Thrones character!
           </Text>
           <Text textAlign="center">Type any character to begin.</Text>
-          <Text textAlign="center">DEBUG: The Solution is</Text>
-          <Text textAlign="center">{solutionCharacter?.name}</Text>
           <HStack justifyContent="center">
             <Button
               onClick={() => setIsTitleOpen(!isTitleOpen)}
@@ -214,9 +212,14 @@ export const ClassicPage: React.FC = () => {
               bg="rgb(120, 0, 0)"
               textColor={'white'}
             >
-              {solutionCharacter?.titles.map((title, index) => (
-                <Text key={index}>{title}</Text>
-              ))}
+              {solutionCharacter?.titles &&
+              solutionCharacter.titles.length > 0 ? (
+                solutionCharacter.titles.map((title) => (
+                  <Text key={title}>{title}</Text>
+                ))
+              ) : (
+                <Text>No title available for this character</Text>
+              )}
             </VStack>
           )}
           {isActorOpen && (

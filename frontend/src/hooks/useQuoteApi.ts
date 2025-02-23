@@ -16,6 +16,7 @@ export interface QuoteData {
   sentence: string;
   character: {
     name: string;
+    house: string;
   };
 }
 
@@ -27,6 +28,7 @@ const getCharacterOfTheDay = (characters: CharacterData[]) => {
   return {
     character,
     quote: character.quotes[quoteIndex],
+    house: character.house.name,
   };
 };
 
@@ -45,6 +47,7 @@ export const useQuoteApi = () => {
       sentence: quote,
       character: {
         name: character.name,
+        house: character.house.name,
       },
     };
 
