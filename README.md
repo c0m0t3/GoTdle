@@ -63,7 +63,7 @@ Ensure the following software components are installed on your PC:
 Clone the repository to your local machine:
 
 ```bash
-git clone https://code.fbi.h-da.de/sthiohnoo/gotdle.git
+https://github.com/c0m0t3/GoTdle.git
 ```
 
 ### Backend Setup
